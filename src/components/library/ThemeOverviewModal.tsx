@@ -181,6 +181,10 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
         </div>
 
         <div className="flex-1 flex overflow-hidden relative">
+          {theme.customCss && (
+            <style dangerouslySetInnerHTML={{ __html: theme.customCss }} />
+          )}
+
           <div className="flex-1 flex flex-col h-full overflow-hidden relative">
             <div 
               className="absolute inset-0 z-0 pointer-events-none transition-all duration-300"

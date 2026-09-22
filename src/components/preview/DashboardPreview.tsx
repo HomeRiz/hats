@@ -43,6 +43,10 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
 
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden select-none">
+      {theme.customCss && (
+        <style dangerouslySetInnerHTML={{ __html: theme.customCss }} />
+      )}
+
       <div 
         className="absolute inset-0 z-0 transition-all duration-300"
         style={bgStyle}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sliders, Sparkles, Shield, Eye, Box, Menu } from 'lucide-react';
+import { Sliders, Sparkles, Box, Menu, Eye } from 'lucide-react';
 import { ThemeConfig, EngineType } from '../../types/theme';
 
 interface EngineSettingsProps {
@@ -20,6 +20,8 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           saturateAmount: 1.45,
           brightnessAmount: 1.0,
           cardRadius: 30,
+          badgeRadius: 24,
+          mushRadius: 24,
           borderWidth: 0,
           glassTint: 'rgba(255, 255, 255, 0.06)',
           sheenOpacity: 0.22,
@@ -41,6 +43,8 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           saturateAmount: 1.6,
           brightnessAmount: 1.05,
           cardRadius: 36,
+          badgeRadius: 28,
+          mushRadius: 28,
           borderWidth: 2,
           borderColor: 'rgba(255, 255, 255, 0.35)',
           glassTint: 'rgba(255, 255, 255, 0.12)',
@@ -63,6 +67,8 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           saturateAmount: 1.15,
           brightnessAmount: 0.95,
           cardRadius: 18,
+          badgeRadius: 16,
+          mushRadius: 16,
           borderWidth: 1,
           borderColor: 'rgba(205, 214, 244, 0.10)',
           glassTint: 'rgba(49, 50, 68, 0.42)',
@@ -85,6 +91,8 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           saturateAmount: 1.8,
           brightnessAmount: 0.92,
           cardRadius: 12,
+          badgeRadius: 10,
+          mushRadius: 10,
           borderWidth: 1,
           borderColor: 'rgba(0, 240, 255, 0.45)',
           glassTint: 'rgba(6, 8, 16, 0.55)',
@@ -114,29 +122,58 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
   return (
     <div className="space-y-6 text-slate-200 text-xs">
       <div className="space-y-2">
-        <label className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs">
+        <label 
+          className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs"
+          title="Choose a baseline visual physics engine preset for shadows, blurs, and corner curvature"
+        >
           <Sliders className="w-3.5 h-3.5 text-blue-400" />
           <span>Core Visual Engine</span>
         </label>
 
         <div className="grid grid-cols-2 gap-2">
           {[
-            { type: 'glass', label: 'Liquid Glass', desc: 'Deep blur, 30px radii, specular rim' },
-            { type: 'kids', label: 'Kids & Playful', desc: 'Bubbly 36px radii, candy glow' },
-            { type: 'velvet', label: 'Velvet Matte', desc: 'Soft 12px blur, 18px radii, cozy' },
-            { type: 'neon', label: 'Cyber Neon', desc: 'Hard 12px, glowing borders, scanlines' },
+            { 
+              type: 'glass', 
+              label: 'Liquid Glass', 
+              desc: 'Deep blur, 30px radii, specular rim',
+              tooltip: 'Liquid Glass: Apple Vision Pro inspired frosted glass with 16px blur, 30px card radius, specular reflections, and translucent sidebar'
+            },
+            { 
+              type: 'kids', 
+              label: 'Kids & Playful', 
+              desc: 'Bubbly 36px radii, candy glow',
+              tooltip: 'Kids & Playful: Ultra-rounded 36px pillowy radii, high color saturation, playful glowing borders, and bouncy feel'
+            },
+            { 
+              type: 'velvet', 
+              label: 'Velvet Matte', 
+              desc: 'Soft 12px blur, 18px radii, cozy',
+              tooltip: 'Velvet Matte: Minimalist frosted dark matte aesthetic, 18px radii, soft ambient shadows, and solid high-contrast sidebar'
+            },
+            { 
+              type: 'neon', 
+              label: 'Cyber Neon', 
+              desc: 'Hard 12px, glowing borders, scanlines',
+              tooltip: 'Cyber Neon: Cyberpunk holographic aesthetic, crisp 12px radii, electric accent border glows, and CRT scanlines'
+            },
           ].map((item) => (
             <button
               key={item.type}
               type="button"
               onClick={() => handleEngineTypeChange(item.type as EngineType)}
+              title={item.tooltip}
               className={`p-2.5 rounded-xl border text-left transition-all ${
                 engine.engineType === item.type
                   ? 'bg-blue-600/20 border-blue-500 text-white shadow-sm'
                   : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-400'
               }`}
             >
-              <div className="font-semibold text-xs text-white">{item.label}</div>
+              <div className="font-semibold text-xs text-white flex items-center justify-between">
+                <span>{item.label}</span>
+                {engine.engineType === item.type && (
+                  <span className="w-2 h-2 rounded-full bg-blue-400 shadow-sm" />
+                )}
+              </div>
               <div className="text-[10px] text-slate-400 mt-0.5 leading-tight">{item.desc}</div>
             </button>
           ))}
@@ -144,14 +181,19 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
       </div>
 
       <div className="space-y-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
-        <div className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs">
+        <div 
+          className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs"
+          title="Configure card corner curvature and outline border widths"
+        >
           <Box className="w-3.5 h-3.5 text-indigo-400" />
           <span>Card Geometry & Radii</span>
         </div>
 
         <div className="space-y-1">
           <div className="flex justify-between text-slate-400">
-            <span>Card Border Radius</span>
+            <span title="Controls the border-radius for standard Lovelace cards (--ha-card-border-radius)">
+              Card Border Radius
+            </span>
             <span className="font-mono text-slate-200">{engine.cardRadius}px</span>
           </div>
           <input
@@ -160,13 +202,16 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
             max="48"
             value={engine.cardRadius}
             onChange={(e) => updateEngine({ cardRadius: parseInt(e.target.value) })}
+            title={`Card border radius: ${engine.cardRadius}px. Controls how rounded card corners are in Home Assistant.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>
 
         <div className="space-y-1">
           <div className="flex justify-between text-slate-400">
-            <span>Badge & Chip Radius</span>
+            <span title="Sets the corner radius for mushroom chips, info badges, and pill tags">
+              Badge & Chip Radius
+            </span>
             <span className="font-mono text-slate-200">{engine.badgeRadius}px</span>
           </div>
           <input
@@ -175,13 +220,16 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
             max="32"
             value={engine.badgeRadius}
             onChange={(e) => updateEngine({ badgeRadius: parseInt(e.target.value) })}
+            title={`Badge radius: ${engine.badgeRadius}px. Controls curvature for mushroom chips and status badges.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>
 
         <div className="space-y-1">
           <div className="flex justify-between text-slate-400">
-            <span>Border Width</span>
+            <span title="Sets the stroke border width in pixels around cards (--ha-card-border-width)">
+              Border Width
+            </span>
             <span className="font-mono text-slate-200">{engine.borderWidth}px</span>
           </div>
           <input
@@ -190,6 +238,7 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
             max="4"
             value={engine.borderWidth}
             onChange={(e) => updateEngine({ borderWidth: parseInt(e.target.value) })}
+            title={`Border width: ${engine.borderWidth}px. Set to 0 for borderless glass or 1-2px for outline styling.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>
@@ -197,25 +246,44 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
 
       <div className="space-y-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
         <div className="font-semibold text-slate-300 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5">
+          <div 
+            className="flex items-center gap-1.5"
+            title="Configure how the Home Assistant left navigation sidebar renders against your theme background"
+          >
             <Menu className="w-3.5 h-3.5 text-cyan-400" />
             <span>Sidebar Menu Glass & Opacity</span>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300 font-mono capitalize border border-slate-700">
+          <span 
+            className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300 font-mono capitalize border border-slate-700"
+            title={`Active sidebar style mode: ${engine.sidebarStyle || 'translucent'}`}
+          >
             {engine.sidebarStyle || 'translucent'}
           </span>
         </div>
 
         <div className="grid grid-cols-3 gap-1.5">
           {[
-            { id: 'translucent', label: 'Translucent' },
-            { id: 'opaque', label: 'Opaque' },
-            { id: 'transparent', label: 'Ultra Clear' },
+            { 
+              id: 'translucent', 
+              label: 'Translucent',
+              tooltip: 'Translucent: Frosted glass sidebar with custom opacity and background blur allowing wallpaper bleed-through'
+            },
+            { 
+              id: 'opaque', 
+              label: 'Opaque',
+              tooltip: 'Opaque: Solid high-contrast background sidebar, ideal for maximum legibility and reduced GPU load'
+            },
+            { 
+              id: 'transparent', 
+              label: 'Ultra Clear',
+              tooltip: 'Ultra Clear: Fully transparent glass sidebar showing the full background with soft blur'
+            },
           ].map((mode) => (
             <button
               key={mode.id}
               type="button"
               onClick={() => updateEngine({ sidebarStyle: mode.id as any })}
+              title={mode.tooltip}
               className={`py-1.5 px-2 rounded-lg text-center text-xs font-semibold transition-all border ${
                 (engine.sidebarStyle || 'translucent') === mode.id
                   ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
@@ -231,7 +299,9 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           <>
             <div className="space-y-1 pt-1">
               <div className="flex justify-between text-slate-400 text-[11px]">
-                <span>Sidebar Glass Opacity</span>
+                <span title="Controls the background alpha transparency of the Home Assistant sidebar">
+                  Sidebar Glass Opacity
+                </span>
                 <span className="font-mono text-slate-200">{Math.round((engine.sidebarOpacity ?? 0.45) * 100)}%</span>
               </div>
               <input
@@ -241,13 +311,16 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
                 step="0.05"
                 value={engine.sidebarOpacity ?? 0.45}
                 onChange={(e) => updateEngine({ sidebarOpacity: parseFloat(e.target.value) })}
+                title={`Sidebar opacity: ${Math.round((engine.sidebarOpacity ?? 0.45) * 100)}%. Lower values create more transparent glass.`}
                 className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
             </div>
 
             <div className="space-y-1">
               <div className="flex justify-between text-slate-400 text-[11px]">
-                <span>Sidebar Backdrop Blur</span>
+                <span title="Controls the backdrop blur filter applied behind the navigation sidebar">
+                  Sidebar Backdrop Blur
+                </span>
                 <span className="font-mono text-slate-200">{engine.sidebarBlur ?? 20}px</span>
               </div>
               <input
@@ -256,6 +329,7 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
                 max="32"
                 value={engine.sidebarBlur ?? 20}
                 onChange={(e) => updateEngine({ sidebarBlur: parseInt(e.target.value) })}
+                title={`Sidebar backdrop blur: ${engine.sidebarBlur ?? 20}px. Higher blur diffuses background artwork.`}
                 className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
             </div>
@@ -264,14 +338,19 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
       </div>
 
       <div className="space-y-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
-        <div className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs">
+        <div 
+          className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs"
+          title="Configure card backdrop frosted glass filters, specular rim sheen, and interactive hover effects"
+        >
           <Eye className="w-3.5 h-3.5 text-pink-400" />
           <span>Glass Character & Blurs</span>
         </div>
 
         <div className="space-y-1">
           <div className="flex justify-between text-slate-400">
-            <span>Backdrop Blur Amount</span>
+            <span title="Backdrop filter blur in pixels applied under cards (--ha-card-backdrop-filter)">
+              Backdrop Blur Amount
+            </span>
             <span className="font-mono text-slate-200">{engine.blurAmount}px</span>
           </div>
           <input
@@ -280,13 +359,16 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
             max="32"
             value={engine.blurAmount}
             onChange={(e) => updateEngine({ blurAmount: parseInt(e.target.value) })}
+            title={`Card blur: ${engine.blurAmount}px. Renders frosted glass diffusion behind card contents.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>
 
         <div className="space-y-1">
           <div className="flex justify-between text-slate-400">
-            <span>Specular Rim Sheen Opacity</span>
+            <span title="Controls the intensity of the simulated top-edge specular glass reflection">
+              Specular Rim Sheen Opacity
+            </span>
             <span className="font-mono text-slate-200">{Math.round(engine.sheenOpacity * 100)}%</span>
           </div>
           <input
@@ -296,31 +378,39 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
             step="0.05"
             value={engine.sheenOpacity}
             onChange={(e) => updateEngine({ sheenOpacity: parseFloat(e.target.value) })}
+            title={`Sheen opacity: ${Math.round(engine.sheenOpacity * 100)}%. Simulates physical glass rim reflections.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>
 
-        <div className="flex items-center justify-between pt-2">
+        <div 
+          className="flex items-center justify-between pt-2 cursor-pointer"
+          title="When enabled, cards glow with the theme's primary accent color when the cursor hovers over them"
+        >
           <span className="text-slate-300 font-medium">Hover Glow Effect</span>
           <input
             type="checkbox"
             checked={engine.hoverGlow}
             onChange={(e) => updateEngine({ hoverGlow: e.target.checked })}
-            className="w-4 h-4 rounded text-blue-600 bg-slate-800 border-slate-700"
+            title="When enabled, cards glow with the theme's primary accent color when the cursor hovers over them"
+            className="w-4 h-4 rounded text-blue-600 bg-slate-800 border-slate-700 cursor-pointer"
           />
         </div>
 
-        <div className="flex items-center justify-between pt-1">
+        <div 
+          className="flex items-center justify-between pt-1 cursor-pointer"
+          title="Toggles CRT / Cyberpunk holographic horizontal scanlines overlay across the dashboard"
+        >
           <span className="text-slate-300 font-medium">Cyber Scanlines Overlay</span>
           <input
             type="checkbox"
             checked={engine.scanlines}
             onChange={(e) => updateEngine({ scanlines: e.target.checked })}
-            className="w-4 h-4 rounded text-blue-600 bg-slate-800 border-slate-700"
+            title="Toggles CRT / Cyberpunk holographic horizontal scanlines overlay across the dashboard"
+            className="w-4 h-4 rounded text-blue-600 bg-slate-800 border-slate-700 cursor-pointer"
           />
         </div>
       </div>
     </div>
   );
 };
-
