@@ -212,25 +212,6 @@ ${tokenBlock}
     :host {
       background: none !important;
     }
-    :host::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: var(--ultimate-background);
-      background-size: cover;
-      background-position: center;
-      background-repeat: repeat;
-      z-index: -2;
-      pointer-events: none;
-    }
-    :host::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: ${engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)'};
-      z-index: -1;
-      pointer-events: none;
-    }
     .menu,
     .panels-list {
       backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
@@ -253,6 +234,14 @@ ${tokenBlock}
       --md-list-item-leading-icon-color: var(--sidebar-icon-color, var(--sidebar-text-color)) !important;
       --md-list-item-trailing-icon-color: var(--sidebar-icon-color, var(--sidebar-text-color)) !important;
       transition: background-color 150ms ease, color 150ms ease !important;
+    }
+    ha-list-item-button,
+    ha-list-item-button.selected::before,
+    ha-md-list-item,
+    ha-md-list-item.selected::before,
+    paper-icon-item {
+      border-radius: var(--ha-card-border-radius, 16px) !important;
+      --ha-list-item-focus-radius: var(--ha-card-border-radius, 16px) !important;
     }
     ha-md-list-item:hover,
     paper-icon-item:hover,
@@ -287,48 +276,16 @@ ${tokenBlock}
     hui-view {
       background: none !important;
     }
-    hui-view::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: var(--ultimate-view-background, var(--ultimate-background));
-      background-size: cover;
-      background-position: center;
-      background-repeat: repeat;
-      z-index: -2;
-      pointer-events: none;
-      opacity: var(--ultimate-view-background-opacity, 1);
-    }
 
   card-mod-config: |
     ha-drawer {
       background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
       background-size: cover;
       background-position: center;
-      background-repeat: repeat;
+      background-repeat: no-repeat;
       background-attachment: fixed;
     }
     ha-panel-config,
-    partial-panel-resolver {
-      background: transparent !important;
-    }
-    ha-card {
-      background: var(--ha-card-glass-tint, ${engine.glassTint}) !important;
-      backdrop-filter: var(--ha-card-backdrop-filter);
-      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
-      border-radius: var(--ha-card-border-radius, ${engine.cardRadius}px) !important;
-      box-shadow: var(--ha-card-glass-inset-shadow, ${engine.insetShadow}) !important;
-    }
-
-  card-mod-profile: |
-    ha-drawer {
-      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
-      background-size: cover;
-      background-position: center;
-      background-repeat: repeat;
-      background-attachment: fixed;
-    }
-    ha-panel-profile,
     partial-panel-resolver {
       background: transparent !important;
     }
@@ -345,32 +302,10 @@ ${tokenBlock}
       background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
       background-size: cover;
       background-position: center;
-      background-repeat: repeat;
+      background-repeat: no-repeat;
       background-attachment: fixed;
     }
     ha-panel-custom,
-    partial-panel-resolver {
-      background: transparent !important;
-    }
-
-  card-mod-panel-iframe: |
-    ha-drawer {
-      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
-      background-size: cover;
-      background-position: center;
-      background-repeat: repeat;
-      background-attachment: fixed;
-    }
-
-  card-mod-panel-developer-tools: |
-    ha-drawer {
-      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
-      background-size: cover;
-      background-position: center;
-      background-repeat: repeat;
-      background-attachment: fixed;
-    }
-    ha-panel-developer-tools,
     partial-panel-resolver {
       background: transparent !important;
     }
