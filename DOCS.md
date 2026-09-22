@@ -4,10 +4,8 @@
 
 1. In Home Assistant, navigate to **Settings** → **Add-ons** → **Add-on Store**.
 2. Click the three dots (**⋮**) in the top right corner and select **Repositories**.
-3. Add this repository URL:
-   ```
-   https://github.com/HomeRiz/hats
-   ```
+3. Add the repository URL:
+   - **Public Repository**: `https://github.com/HomeRiz/hats`
 4. Find **HATS - Home Assistant Theme Store** in the store list and click **Install**.
 5. Enable **Show in sidebar** and click **Start**.
 6. Open **HATS** from your Home Assistant sidebar! 🎩
