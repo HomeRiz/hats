@@ -6,6 +6,7 @@ interface MockCardProps {
   children: React.ReactNode;
   className?: string;
   glowOnHover?: boolean;
+  previewMode?: 'dark' | 'light';
 }
 
 export const MockCard: React.FC<MockCardProps> = ({
@@ -13,18 +14,24 @@ export const MockCard: React.FC<MockCardProps> = ({
   children,
   className = '',
   glowOnHover = true,
+  previewMode = 'dark',
 }) => {
   const { engine } = theme;
+  const isLight = previewMode === 'light';
 
   const sheenGradient = `linear-gradient(${engine.sheenAngle}deg, rgba(255,255,255,${engine.sheenOpacity}) 0%, rgba(255,255,255,${engine.sheenOpacity * 0.25}) 22%, rgba(255,255,255,0) 45%)`;
+
+  const cardBg = isLight
+    ? (theme.light?.cardBackground || 'rgba(245, 247, 252, 0.55)')
+    : (engine.glassTint || 'rgba(255, 255, 255, 0.08)');
 
   return (
     <div
       className={`relative group transition-all duration-200 overflow-hidden ${className}`}
       style={{
         borderRadius: `${engine.cardRadius}px`,
-        border: `${engine.borderWidth}px solid ${engine.borderColor}`,
-        backgroundColor: engine.glassTint,
+        border: `${engine.borderWidth}px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : engine.borderColor}`,
+        backgroundColor: cardBg,
         boxShadow: engine.insetShadow,
       }}
     >

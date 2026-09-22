@@ -19,10 +19,15 @@ import { MockCard } from './MockCard';
 
 interface SmartHomeDashboardProps {
   theme: ThemeConfig;
+  previewMode?: 'dark' | 'light';
 }
 
-export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme }) => {
+export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ 
+  theme,
+  previewMode = 'dark',
+}) => {
   const { palette } = theme;
+  const isLight = previewMode === 'light';
 
   const [livingRoomOn, setLivingRoomOn] = useState(false);
   const [kitchenOn, setKitchenOn] = useState(false);
@@ -35,12 +40,16 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
   const [sceneState, setSceneState] = useState<'Home' | 'Away' | 'Night'>('Home');
 
   const activeAccentColor = palette.accent || palette.primary || '#f59e0b';
+  const headingColor = isLight ? (theme.light?.textPrimary || '#0f172a') : (theme.dark?.textPrimary || '#FFFFFF');
+  const subtextColor = isLight ? (theme.light?.textSecondary || '#475569') : (theme.dark?.textSecondary || '#cbd5e1');
+  const dividerColor = isLight ? 'border-black/10' : 'border-white/10';
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8 select-none">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Living Room"
           state={livingRoomOn ? 'On' : 'Off'}
           isActive={livingRoomOn}
@@ -51,6 +60,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Kitchen"
           state={kitchenOn ? 'On' : 'Off'}
           isActive={kitchenOn}
@@ -61,6 +71,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Bedroom"
           state={bedroomOn ? 'On' : 'Off'}
           isActive={bedroomOn}
@@ -71,6 +82,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Garden"
           state={gardenOn ? 'On' : 'Off'}
           isActive={gardenOn}
@@ -81,6 +93,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Thermostat"
           state={thermostatOn ? 'On' : 'Off'}
           isActive={thermostatOn}
@@ -91,6 +104,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="TV"
           state={tvOn ? 'On' : 'Off'}
           isActive={tvOn}
@@ -101,6 +115,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Vacuum"
           state={vacuumOn ? 'On' : 'Off'}
           isActive={vacuumOn}
@@ -111,6 +126,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Alarm"
           state={alarmArmed ? 'armed_home' : 'disarmed'}
           isActive={alarmArmed}
@@ -121,6 +137,7 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
 
         <MockTileCard
           theme={theme}
+          previewMode={previewMode}
           title="Scene"
           state={sceneState}
           isActive={sceneState !== 'Away'}
@@ -130,25 +147,25 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
         />
       </div>
 
-      <MockCard theme={theme}>
+      <MockCard theme={theme} previewMode={previewMode}>
         <div className="flex items-center justify-between px-2 py-1">
           <div className="flex items-center gap-3.5">
             <div className="relative flex items-center justify-center">
               <CloudSun className="w-10 h-10 text-amber-300 drop-shadow-md" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white leading-tight">
+              <h3 className="text-base sm:text-lg font-bold leading-tight" style={{ color: headingColor }}>
                 Partly cloudy
               </h3>
-              <p className="text-xs text-slate-400 font-medium">Weather</p>
+              <p className="text-xs font-medium" style={{ color: subtextColor }}>Weather</p>
             </div>
           </div>
 
           <div className="text-right">
-            <div className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <div className="text-xl sm:text-2xl font-bold tracking-tight" style={{ color: headingColor }}>
               11.4 °C
             </div>
-            <div className="flex items-center justify-end gap-1 text-xs text-slate-300 font-semibold mt-0.5">
+            <div className="flex items-center justify-end gap-1 text-xs font-semibold mt-0.5" style={{ color: subtextColor }}>
               <Droplets className="w-3.5 h-3.5 text-blue-400" />
               <span>92%</span>
             </div>
@@ -156,29 +173,29 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ theme })
         </div>
       </MockCard>
 
-      <MockCard theme={theme}>
+      <MockCard theme={theme} previewMode={previewMode}>
         <div className="p-2 space-y-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight" style={{ color: headingColor }}>
               Welcome Home
             </h2>
-            <p className="text-xs text-slate-300 mt-1 font-medium">
+            <p className="text-xs mt-1 font-medium" style={{ color: subtextColor }}>
               Your smart home is ready!
             </p>
           </div>
 
-          <div className="space-y-1.5 text-xs text-slate-200 font-normal leading-relaxed pt-1 border-t border-white/10">
+          <div className={`space-y-1.5 text-xs font-normal leading-relaxed pt-1 border-t ${dividerColor}`} style={{ color: subtextColor }}>
             <p>
-              <strong className="text-white font-semibold">• Lights:</strong> Toggle from the tiles above
+              <strong className="font-semibold" style={{ color: headingColor }}>• Lights:</strong> Toggle from the tiles above
             </p>
             <p>
-              <strong className="text-white font-semibold">• Climate:</strong> Set your preferred temperature
+              <strong className="font-semibold" style={{ color: headingColor }}>• Climate:</strong> Set your preferred temperature
             </p>
             <p>
-              <strong className="text-white font-semibold">• Scenes:</strong> Choose from Home, Away, Sleep, Movie, or Party
+              <strong className="font-semibold" style={{ color: headingColor }}>• Scenes:</strong> Choose from Home, Away, Sleep, Movie, or Party
             </p>
             <p>
-              <strong className="text-white font-semibold">• Security:</strong> Arm/disarm the alarm system
+              <strong className="font-semibold" style={{ color: headingColor }}>• Security:</strong> Arm/disarm the alarm system
             </p>
           </div>
         </div>

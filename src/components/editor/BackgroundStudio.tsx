@@ -53,11 +53,11 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
 
   const backgroundPresets = [
     {
-      name: 'Whimsical Kids Space',
+      name: 'Liquid Glass Dark Violet',
       type: 'gradient' as const,
-      gradient: 'linear-gradient(135deg, #1C0A35 0%, #0F1E4A 50%, #0B3C49 100%)',
-      avg: '#151538',
-      accent: '#FFB800',
+      gradient: 'linear-gradient(140deg, #1b1030 0%, #0b0d14 55%, #12202e 100%)',
+      avg: '#120f21',
+      accent: '#BF5AF2',
     },
     {
       name: 'Pastel Storybook Dreams',
@@ -67,25 +67,46 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
       accent: '#FF70A6',
     },
     {
-      name: 'Ultimate Dark Violet',
+      name: 'Whimsical Kids Space Nebula',
       type: 'gradient' as const,
-      gradient: 'linear-gradient(140deg, #1b1030 0%, #0b0d14 55%, #12202e 100%)',
-      avg: '#120f21',
-      accent: '#BF5AF2',
+      gradient: 'linear-gradient(135deg, #1C0A35 0%, #0F1E4A 50%, #0B3C49 100%)',
+      avg: '#151538',
+      accent: '#FFB800',
     },
     {
-      name: 'Blade Runner Neon',
+      name: 'Blade Runner Cyber Neon',
       type: 'gradient' as const,
       gradient: 'linear-gradient(140deg, #12002b 0%, #04050a 55%, #001a2b 100%)',
       avg: '#080812',
       accent: '#00F0FF',
     },
     {
-      name: 'Velvet Catppuccin',
+      name: 'Velvet Catppuccin Mocha',
       type: 'gradient' as const,
       gradient: 'linear-gradient(140deg, #313244 0%, #1e1e2e 55%, #181825 100%)',
       avg: '#202030',
       accent: '#FAB387',
+    },
+    {
+      name: 'Nordic Emerald Aurora',
+      type: 'gradient' as const,
+      gradient: 'linear-gradient(140deg, #062b24 0%, #08141e 50%, #120a2a 100%)',
+      avg: '#0a1e1b',
+      accent: '#00FFB2',
+    },
+    {
+      name: 'Sunset Crimson Horizon',
+      type: 'gradient' as const,
+      gradient: 'linear-gradient(140deg, #3a0d24 0%, #1a081e 50%, #080e22 100%)',
+      avg: '#1f091a',
+      accent: '#FF375F',
+    },
+    {
+      name: 'Deep Abyssal Ocean',
+      type: 'gradient' as const,
+      gradient: 'linear-gradient(140deg, #081d38 0%, #050e20 50%, #02060f 100%)',
+      avg: '#061324',
+      accent: '#0A84FF',
     },
   ];
 

@@ -7,43 +7,7 @@ const STORAGE_KEY_THEMES = 'ha_theme_studio_themes_v1';
 const STORAGE_KEY_ACTIVE = 'ha_theme_studio_active_v1';
 const STORAGE_KEY_COMMUNITY = 'ha_theme_studio_community_v1';
 
-const initialCommunitySubmissions: CommunityThemeSubmission[] = [
-  {
-    id: 'comm-1',
-    theme: defaultKidsTheme,
-    status: 'approved',
-    upvotes: 42,
-    downvotes: 1,
-    prUrl: 'https://github.com/HomeRiz/hats/pull/124',
-    commentsCount: 9,
-  },
-  {
-    id: 'comm-2',
-    theme: {
-      ...defaultGlassTheme,
-      id: 'hats-aurora-borealis',
-      name: 'HATS Signature Aurora - Borealis Glow',
-      category: 'Nature',
-      author: 'NordicSmartHome',
-      description: 'Dynamic emerald and cyan auroral ribbons on deep polar night.',
-      palette: {
-        ...defaultGlassTheme.palette,
-        primary: '#00FFB2',
-        accent: '#00E5FF',
-      },
-      engine: {
-        ...defaultGlassTheme.engine,
-        glowColor: '#00FFB2',
-        cardRadius: 26,
-      }
-    },
-    status: 'pending',
-    upvotes: 28,
-    downvotes: 2,
-    prUrl: 'https://github.com/HomeRiz/hats/pull/128',
-    commentsCount: 4,
-  }
-];
+const initialCommunitySubmissions: CommunityThemeSubmission[] = [];
 
 export function useThemeStore() {
   const [themes, setThemes] = useState<ThemeConfig[]>(() => {
@@ -57,9 +21,9 @@ export function useThemeStore() {
 
   const [activeThemeId, setActiveThemeId] = useState<string>(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY_ACTIVE) || defaultThemes[1].id;
+      return localStorage.getItem(STORAGE_KEY_ACTIVE) || defaultThemes[0].id;
     } catch {
-      return defaultThemes[1].id;
+      return defaultThemes[0].id;
     }
   });
 
@@ -136,12 +100,12 @@ export function useThemeStore() {
   const createNewTheme = (template: Partial<ThemeConfig> = {}) => {
     const newId = `custom-theme-${Date.now().toString(36)}`;
     const newTheme: ThemeConfig = {
-      ...defaultKidsTheme,
+      ...defaultGlassTheme,
       id: newId,
-      name: template.name || 'New Custom Theme',
-      category: template.category || 'Kids',
+      name: template.name || 'New Liquid Glass Theme',
+      category: template.category || 'Glass',
       author: 'You',
-      description: 'A custom designed Home Assistant theme.',
+      description: 'A custom designed Home Assistant liquid glass theme.',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isCustom: true,

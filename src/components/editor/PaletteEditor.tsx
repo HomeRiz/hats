@@ -26,11 +26,14 @@ export const PaletteEditor: React.FC<PaletteEditorProps> = ({ theme, onChange })
   };
 
   const presetPalettes = [
-    { name: 'Kids Candy', primary: '#FF6B8B', accent: '#FFB800', blue: '#4DD0E1', green: '#81C784' },
     { name: 'Apple Glass Violet', primary: '#BF5AF2', accent: '#BF5AF2', blue: '#0A84FF', green: '#32D74B' },
+    { name: 'Kids Playful Candy', primary: '#FF6B8B', accent: '#FFB800', blue: '#4DD0E1', green: '#81C784' },
     { name: 'Cyberpunk Neon', primary: '#00F0FF', accent: '#FF2D55', blue: '#00A3FF', green: '#39FF14' },
     { name: 'Velvet Amber', primary: '#FAB387', accent: '#FAB387', blue: '#89b4fa', green: '#a6e3a1' },
     { name: 'Emerald Forest', primary: '#2ECC71', accent: '#F1C40F', blue: '#3498DB', green: '#27AE60' },
+    { name: 'Nordic Aurora', primary: '#00FFB2', accent: '#00E5FF', blue: '#0A84FF', green: '#32D74B' },
+    { name: 'Sunset Crimson', primary: '#FF375F', accent: '#FF9F0A', blue: '#5E5CE6', green: '#FFD60A' },
+    { name: 'Deep Cobalt', primary: '#0A84FF', accent: '#66D4CF', blue: '#0A84FF', green: '#5AC8F5' },
   ];
 
   return (

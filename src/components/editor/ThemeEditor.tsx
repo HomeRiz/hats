@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap } from 'lucide-react';
+import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap, Edit3 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { EngineSettings } from './EngineSettings';
 import { PaletteEditor } from './PaletteEditor';
@@ -27,20 +27,27 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
 
   return (
     <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
-      <div className="p-4 border-b border-slate-800/80 space-y-2 shrink-0">
+      <div className="p-4 border-b border-slate-800/80 space-y-2.5 shrink-0">
         <div className="flex items-center justify-between gap-2">
-          <input
-            type="text"
-            value={theme.name}
-            onChange={(e) => onChange({ name: e.target.value })}
-            placeholder="Theme Name..."
-            className="bg-transparent font-bold text-base text-white focus:outline-none focus:ring-1 focus:ring-blue-500 rounded px-1.5 py-0.5 w-full"
-          />
+          <div className="relative flex-1 group">
+            <input
+              type="text"
+              value={theme.name}
+              onChange={(e) => onChange({ name: e.target.value })}
+              placeholder="Theme Name..."
+              title="Click to edit theme name"
+              className="w-full bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-blue-500/60 focus:border-blue-500 font-bold text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded-xl pl-3 pr-8 py-1.5 transition-all shadow-inner"
+            />
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-400 transition-colors">
+              <Edit3 className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
           {onOpenExport && (
             <button
               onClick={onOpenExport}
               title={theme.isInstalled ? "Save Changes to Home Assistant" : "Install Theme to Home Assistant"}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 shrink-0 ${
                 theme.isInstalled 
                   ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20' 
                   : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20'

@@ -91,11 +91,39 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   };
 
   const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${exactCardModUrl}`;
+  const themesDirectiveOnly = `frontend:\n  themes: !include_dir_merge_named themes`;
+  const cardModDirectiveOnly = `frontend:\n  extra_module_url:\n    - ${exactCardModUrl}`;
 
-  const handleCopyYaml = () => {
-    navigator.clipboard.writeText(yamlSnippet);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = async (text: string): Promise<boolean> => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (_) {}
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return successful;
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const handleCopyYaml = async (textToCopy: string = yamlSnippet) => {
+    const ok = await copyToClipboard(textToCopy);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const isCardModOnDisk = Boolean(diagnostics?.cardModOnDisk);
@@ -103,7 +131,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const isCardModNeedsConfig = Boolean(diagnostics?.cardModNeedsConfig);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
       <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
           <div className="flex items-center gap-3">
@@ -353,22 +381,44 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
           )}
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                 <FileCode className="w-3.5 h-3.5 text-blue-400" />
                 Manual YAML Reference (<code className="text-xs text-blue-300">configuration.yaml</code>)
               </label>
-              <button
-                onClick={handleCopyYaml}
-                className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition-colors"
-              >
-                {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                <span>{copied ? 'Copied' : 'Copy'}</span>
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => handleCopyYaml(themesDirectiveOnly)}
+                  title="Copy only the themes directive"
+                  className="text-[10px] text-slate-300 hover:text-white flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700"
+                >
+                  <Copy className="w-2.5 h-2.5" />
+                  <span>Copy Themes Only</span>
+                </button>
+                <button
+                  onClick={() => handleCopyYaml(cardModDirectiveOnly)}
+                  title="Copy only the card-mod extra_module_url directive"
+                  className="text-[10px] text-slate-300 hover:text-white flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700"
+                >
+                  <Copy className="w-2.5 h-2.5" />
+                  <span>Copy card-mod Only</span>
+                </button>
+                <button
+                  onClick={() => handleCopyYaml(yamlSnippet)}
+                  title="Copy entire frontend YAML block"
+                  className="text-[11px] text-slate-200 hover:text-white font-semibold flex items-center gap-1 px-2.5 py-0.5 rounded bg-blue-600 hover:bg-blue-500 transition-colors"
+                >
+                  {copied ? <Check className="w-3 h-3 text-emerald-300" /> : <Copy className="w-3 h-3" />}
+                  <span>{copied ? 'Copied All!' : 'Copy All'}</span>
+                </button>
+              </div>
             </div>
-            <pre className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-mono text-[11px] overflow-x-auto leading-relaxed">
+            <pre className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-mono text-[11px] overflow-x-auto leading-relaxed select-text cursor-text">
               {yamlSnippet}
             </pre>
+            <p className="text-[11px] text-slate-500">
+              Tip: You can manually highlight and select any part of the text above, or click the individual copy buttons.
+            </p>
           </div>
 
           <div className="space-y-2.5">
