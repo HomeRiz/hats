@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   X, 
   ChevronLeft, 
@@ -6,15 +6,24 @@ import {
   Palette, 
   Zap, 
   Copy, 
-  HardDrive, 
-  Sliders, 
   Sparkles, 
   Layers, 
   ShieldCheck, 
-  ExternalLink,
-  CheckCircle2
+  CheckCircle2,
+  Info,
+  Check,
+  Sun,
+  Moon,
+  Sliders,
+  Maximize2,
+  Tv,
+  Fan
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import { MockHeader } from '../preview/MockHeader';
+import { MockSidebar } from '../preview/MockSidebar';
+import { MockCard } from '../preview/MockCard';
+import { MockMushroomCard } from '../preview/MockMushroomCard';
 
 interface ThemeOverviewModalProps {
   isOpen: boolean;
@@ -37,8 +46,17 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onApplyTheme,
   onDuplicateTheme,
 }) => {
+  const [activeView, setActiveView] = useState<'home' | 'climate' | 'media' | 'security'>('home');
+  const [sidebarItem, setSidebarItem] = useState('Overview');
+  const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [temperature, setTemperature] = useState(21.5);
+  const [lightBrightness, setLightBrightness] = useState(85);
+
   const currentIndex = allThemes.findIndex((t) => t.id === theme.id);
   const hasMultiple = allThemes.length > 1;
+  const prevTheme = hasMultiple ? allThemes[(currentIndex - 1 + allThemes.length) % allThemes.length] : null;
+  const nextTheme = hasMultiple ? allThemes[(currentIndex + 1) % allThemes.length] : null;
 
   const handleNext = useCallback(() => {
     if (!hasMultiple) return;
@@ -83,6 +101,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
+      filter: `brightness(${1 - (background.darken || 0)}) blur(${background.blur || 0}px) saturate(${background.saturation || 1})`,
     };
   } else if (background.type === 'gradient' && background.gradientString) {
     bgStyle = {
@@ -97,32 +116,32 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/85 backdrop-blur-md animate-fade-in select-none">
       {hasMultiple && (
         <button
           onClick={handlePrev}
-          title="Previous Theme (Left Arrow Key)"
-          className="absolute left-3 md:left-6 z-50 p-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95"
+          title={`Previous Theme: ${prevTheme?.name} (Left Arrow Key)`}
+          className="absolute left-2 sm:left-4 md:left-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
         </button>
       )}
 
       {hasMultiple && (
         <button
           onClick={handleNext}
-          title="Next Theme (Right Arrow Key)"
-          className="absolute right-3 md:right-6 z-50 p-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95"
+          title={`Next Theme: ${nextTheme?.name} (Right Arrow Key)`}
+          className="absolute right-2 sm:right-4 md:right-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
         </button>
       )}
 
       <div 
-        className="relative w-full max-w-4xl max-h-[90vh] bg-slate-900/95 border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-6xl h-[92vh] bg-slate-900/95 border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80 backdrop-blur-md shrink-0">
+        <div className="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 backdrop-blur-md shrink-0">
           <div className="flex items-center gap-3">
             <div 
               className="w-3.5 h-3.5 rounded-full shadow" 
@@ -130,25 +149,39 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
             />
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">{theme.name}</h2>
-                {theme.isInstalled && (
+                <h2 className="text-base font-bold text-white tracking-tight">{theme.name}</h2>
+                {theme.isInstalled ? (
                   <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
                     <CheckCircle2 className="w-3 h-3" />
-                    <span>Installed</span>
+                    <span>Installed in HA</span>
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                    {theme.category}
                   </span>
                 )}
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                  {theme.category}
-                </span>
               </div>
-              <p className="text-xs text-slate-400">Created by {theme.author || 'Community'}</p>
+              <p className="text-[11px] text-slate-400">By {theme.author || 'Community Designer'}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 font-mono hidden sm:inline mr-2">
-              {currentIndex + 1} of {allThemes.length}
+            <button
+              onClick={() => setShowSpecsDrawer(!showSpecsDrawer)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-colors ${
+                showSpecsDrawer 
+                  ? 'bg-blue-600 text-white border-blue-500' 
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{showSpecsDrawer ? 'Hide Details' : 'Theme Specs & Palette'}</span>
+            </button>
+
+            <span className="text-xs text-slate-400 font-mono hidden sm:inline px-2 py-1 bg-slate-900 rounded-lg border border-slate-800">
+              {currentIndex + 1} / {allThemes.length}
             </span>
+
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
@@ -158,15 +191,15 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
           </div>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-6 flex-1">
-          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl p-6 min-h-[260px] flex flex-col justify-between">
+        <div className="flex-1 flex overflow-hidden relative">
+          <div className="flex-1 flex flex-col h-full overflow-hidden relative">
             <div 
-              className="absolute inset-0 z-0 pointer-events-none"
+              className="absolute inset-0 z-0 pointer-events-none transition-all duration-300"
               style={bgStyle}
             />
             {customSvgOverlay && customSvgOverlay.trim().startsWith('<svg') && (
               <div 
-                className="absolute inset-0 z-0 pointer-events-none opacity-30"
+                className="absolute inset-0 z-0 pointer-events-none opacity-35"
                 style={{
                   backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(customSvgOverlay)}")`,
                   backgroundRepeat: 'repeat',
@@ -174,177 +207,323 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
                 }}
               />
             )}
-            <div className="absolute inset-0 z-0 bg-black/25 pointer-events-none" />
+            <div 
+              className="absolute inset-0 z-0 pointer-events-none transition-colors"
+              style={{ background: engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)' }}
+            />
 
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <div 
-                className="p-4 border shadow-lg backdrop-blur-md flex items-center justify-between"
-                style={{
-                  backgroundColor: engine.glassTint || 'rgba(255,255,255,0.08)',
-                  borderRadius: `${engine.cardRadius || 24}px`,
-                  borderColor: engine.borderColor || 'rgba(255,255,255,0.2)',
-                  borderWidth: `${engine.borderWidth || 1}px`,
-                  boxShadow: engine.insetShadow || 'none',
-                }}
-              >
-                <div className="flex items-center gap-3">
+            <MockHeader 
+              theme={theme} 
+              activeView={activeView} 
+              setActiveView={setActiveView} 
+            />
+
+            <div className="flex-1 flex overflow-hidden relative z-10">
+              <MockSidebar 
+                theme={theme} 
+                activeItem={sidebarItem}
+                onSelectItem={(label) => setSidebarItem(label)}
+              />
+
+              <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
                   <div 
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow"
-                    style={{ backgroundColor: palette.primary }}
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
+                    style={{
+                      borderRadius: `${engine.badgeRadius || 20}px`,
+                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    }}
                   >
-                    <Sparkles className="w-5 h-5" />
+                    <Zap className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Solar: 3.8 kW</span>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white leading-none">Living Room</h4>
-                    <span className="text-[10px] text-slate-300">85% Brightness</span>
+
+                  <div 
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
+                    style={{
+                      borderRadius: `${engine.badgeRadius || 20}px`,
+                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    }}
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Armed Home</span>
+                  </div>
+
+                  <div 
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
+                    style={{
+                      borderRadius: `${engine.badgeRadius || 20}px`,
+                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    }}
+                  >
+                    <Sparkles className="w-3.5 h-3.5" style={{ color: palette.primary }} />
+                    <span>Theme: {theme.name}</span>
                   </div>
                 </div>
-                <div className="w-3 h-3 rounded-full animate-ping" style={{ backgroundColor: palette.primary }} />
-              </div>
 
-              <div 
-                className="p-4 border shadow-lg backdrop-blur-md flex items-center justify-between"
-                style={{
-                  backgroundColor: engine.glassTint || 'rgba(255,255,255,0.08)',
-                  borderRadius: `${engine.cardRadius || 24}px`,
-                  borderColor: engine.borderColor || 'rgba(255,255,255,0.2)',
-                  borderWidth: `${engine.borderWidth || 1}px`,
-                  boxShadow: engine.insetShadow || 'none',
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow"
-                    style={{ backgroundColor: palette.accent || palette.orange }}
-                  >
-                    <Sliders className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white leading-none">Climate</h4>
-                    <span className="text-[10px] text-slate-300">Heating • 21.5°C</span>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div 
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
+                          style={{ backgroundColor: palette.primary }}
+                        >
+                          <Sparkles className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-white leading-none">Living Room Lights</h4>
+                          <span className="text-[10px] text-slate-300">{lightBrightness}% Brightness</span>
+                        </div>
+                      </div>
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: palette.primary }} />
+                    </div>
+
+                    <div className="space-y-1 mt-2">
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="100" 
+                        value={lightBrightness} 
+                        onChange={(e) => setLightBrightness(Number(e.target.value))}
+                        className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                        style={{ accentColor: palette.primary }}
+                      />
+                    </div>
+                  </MockCard>
+
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div 
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
+                          style={{ backgroundColor: palette.accent || palette.primary }}
+                        >
+                          <Sliders className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-white leading-none">Climate Control</h4>
+                          <span className="text-[10px] text-slate-300">Heating • Target {temperature}°C</span>
+                        </div>
+                      </div>
+                      <span className="text-sm font-extrabold text-white">{temperature}°C</span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-white/10 mt-2">
+                      <button 
+                        onClick={() => setTemperature((prev) => +(prev - 0.5).toFixed(1))}
+                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs"
+                      >
+                        -0.5°
+                      </button>
+                      <span className="text-xs font-semibold text-slate-200">Set Temp</span>
+                      <button 
+                        onClick={() => setTemperature((prev) => +(prev + 0.5).toFixed(1))}
+                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs"
+                      >
+                        +0.5°
+                      </button>
+                    </div>
+                  </MockCard>
+
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold uppercase tracking-wider text-white/70">Mushroom Quick Actions</span>
+                      <span className="text-[10px] text-emerald-400 font-semibold">Active</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <MockMushroomCard
+                        theme={theme}
+                        title="Smart TV"
+                        subtitle="Netflix 4K"
+                        icon={<Tv className="w-4 h-4" />}
+                        defaultActive={true}
+                        activeColor={palette.primary}
+                      />
+                      <MockMushroomCard
+                        theme={theme}
+                        title="Living Fan"
+                        subtitle="Speed 2"
+                        icon={<Fan className="w-4 h-4" />}
+                        defaultActive={true}
+                        activeColor={palette.green}
+                      />
+                    </div>
+                  </MockCard>
+
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div 
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
+                          style={{ backgroundColor: palette.purple }}
+                        >
+                          <Zap className="w-4 h-4" />
+                        </div>
+                        <div className="truncate max-w-[140px]">
+                          <h4 className="text-xs font-bold text-white leading-none truncate">Spotify Soundbar</h4>
+                          <span className="text-[10px] text-slate-300 truncate">Midnight City - M83</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setIsPlaying(!isPlaying)}
+                        className="p-1.5 rounded-full bg-white/20 text-white hover:scale-105 transition-transform"
+                      >
+                        {isPlaying ? '⏸' : '▶'}
+                      </button>
+                    </div>
+                  </MockCard>
+
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="text-xs font-bold text-white">Weather Forecast</h4>
+                      <span className="text-xs font-extrabold text-white">24°C</span>
+                    </div>
+                    <p className="text-[10px] text-slate-300">Partly Cloudy • Humidity: 48% • Wind: 12 km/h</p>
+                  </MockCard>
+
+                  <MockCard theme={theme}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div 
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
+                          style={{ backgroundColor: palette.green }}
+                        >
+                          <ShieldCheck className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-white leading-none">Home Security</h4>
+                          <span className="text-[10px] text-emerald-300">All Sensors Normal</span>
+                        </div>
+                      </div>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                    </div>
+                  </MockCard>
                 </div>
-                <span className="text-sm font-extrabold text-white">21.5°</span>
-              </div>
-
-              <div 
-                className="p-4 border shadow-lg backdrop-blur-md flex items-center justify-between sm:col-span-2 md:col-span-1"
-                style={{
-                  backgroundColor: engine.glassTint || 'rgba(255,255,255,0.08)',
-                  borderRadius: `${engine.cardRadius || 24}px`,
-                  borderColor: engine.borderColor || 'rgba(255,255,255,0.2)',
-                  borderWidth: `${engine.borderWidth || 1}px`,
-                  boxShadow: engine.insetShadow || 'none',
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow"
-                    style={{ backgroundColor: palette.green }}
-                  >
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white leading-none">Home Shield</h4>
-                    <span className="text-[10px] text-emerald-300">Armed Home</span>
-                  </div>
-                </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-              </div>
-            </div>
-
-            <div className="relative z-10 mt-4 flex items-center justify-between text-[11px] text-slate-300">
-              <span>{theme.description || 'Full Home Assistant glassmorphism theme suite.'}</span>
-              <span className="font-mono text-[10px] opacity-75">Radius: {engine.cardRadius}px • Blur: {engine.blurAmount}px</span>
+              </main>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Palette className="w-3.5 h-3.5 text-blue-400" />
-                <span>Theme Color Palette</span>
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { label: 'Primary', color: palette.primary },
-                  { label: 'Accent', color: palette.accent || palette.primary },
-                  { label: 'Glow', color: engine.glowColor || palette.primary },
-                  { label: 'Purple', color: palette.purple },
-                  { label: 'Blue', color: palette.blue },
-                  { label: 'Green', color: palette.green },
-                  { label: 'Yellow', color: palette.yellow },
-                  { label: 'Red', color: palette.red },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-200">
-                    <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
-                    <span className="font-medium">{item.label}</span>
-                    <span className="text-slate-500 font-mono text-[10px]">{item.color}</span>
-                  </div>
-                ))}
+          {showSpecsDrawer && (
+            <div className="w-80 h-full border-l border-slate-800 bg-slate-950/95 backdrop-blur-xl p-5 overflow-y-auto space-y-5 animate-fade-in z-20">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <Palette className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Theme Specifications</span>
+                </h3>
+                <button
+                  onClick={() => setShowSpecsDrawer(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-            </div>
 
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Card & System Integrations</span>
-              </h4>
-              <div className="flex flex-wrap gap-2 text-xs">
-                <span className="px-2.5 py-1 rounded-lg bg-indigo-950/70 text-indigo-300 border border-indigo-700/50 font-medium">
-                  ✦ Card-Mod 3.0+
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-amber-950/70 text-amber-300 border border-amber-700/50 font-medium">
-                  ★ Mushroom Cards
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-blue-950/70 text-blue-300 border border-blue-700/50 font-medium">
-                  ● Bubble Card Ready
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-emerald-950/70 text-emerald-300 border border-emerald-700/50 font-medium">
-                  ◆ Layout-Card Support
-                </span>
+              <div className="space-y-2">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Colors</span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {[
+                    { label: 'Primary', color: palette.primary },
+                    { label: 'Accent', color: palette.accent || palette.primary },
+                    { label: 'Red', color: palette.red },
+                    { label: 'Green', color: palette.green },
+                    { label: 'Blue', color: palette.blue },
+                    { label: 'Purple', color: palette.purple },
+                    { label: 'Yellow', color: palette.yellow },
+                    { label: 'Orange', color: palette.orange },
+                  ].map((c, i) => (
+                    <div key={i} className="p-2 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2 text-[10px]">
+                      <span className="w-3 h-3 rounded-full shrink-0 shadow" style={{ backgroundColor: c.color }} />
+                      <span className="font-semibold text-slate-300 truncate">{c.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Includes seamless fixed sidebar background, card-mod theme variables, and Web-Awesome tokens for Home Assistant 2024-2026.
-              </p>
+
+              <div className="space-y-2 border-t border-slate-800 pt-3 text-[11px]">
+                <span className="font-bold text-slate-400 uppercase">Glass Tokens</span>
+                <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5 text-slate-300">
+                  <div className="flex justify-between">
+                    <span>Card Radius:</span>
+                    <span className="font-mono text-white">{engine.cardRadius}px</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Backdrop Blur:</span>
+                    <span className="font-mono text-white">{engine.blurAmount}px</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Saturation:</span>
+                    <span className="font-mono text-white">{engine.saturateAmount}x</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-800 pt-3 text-[11px] text-slate-400">
+                <p>{theme.description}</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-800 bg-slate-900/90 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div className="px-5 py-3 border-t border-slate-800 bg-slate-950/90 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2 w-full sm:w-auto">
+            {hasMultiple && prevTheme && (
+              <button
+                onClick={handlePrev}
+                className="flex-1 sm:flex-none flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors"
+                title={`Previous: ${prevTheme.name}`}
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span className="truncate max-w-[100px]">{prevTheme.name}</span>
+              </button>
+            )}
+
+            {hasMultiple && nextTheme && (
+              <button
+                onClick={handleNext}
+                className="flex-1 sm:flex-none flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors"
+                title={`Next: ${nextTheme.name}`}
+              >
+                <span className="truncate max-w-[100px]">{nextTheme.name}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             <button
               onClick={() => {
                 onClose();
                 onDuplicateTheme(theme.id);
               }}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
             >
               <Copy className="w-3.5 h-3.5" />
               <span>Duplicate</span>
             </button>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <button
               onClick={() => {
                 onClose();
                 onEditTheme(theme.id);
               }}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1.5"
             >
-              <Palette className="w-3.5 h-3.5 text-blue-400" />
+              <Sliders className="w-3.5 h-3.5 text-blue-400" />
               <span>Edit in Designer</span>
             </button>
-          </div>
 
-          <button
-            onClick={() => {
-              onClose();
-              onApplyTheme(theme);
-            }}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Zap className="w-4 h-4" />
-            <span>{theme.isInstalled ? 'Apply / Save to Home Assistant' : 'Install Directly to Home Assistant'}</span>
-          </button>
+            <button
+              onClick={() => {
+                onClose();
+                onApplyTheme(theme);
+              }}
+              className="flex items-center justify-center gap-2 px-5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Zap className="w-4 h-4" />
+              <span>{theme.isInstalled ? 'Apply / Save to HA' : 'Install Directly to Home Assistant'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
