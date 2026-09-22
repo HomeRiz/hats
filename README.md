@@ -59,18 +59,16 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
 
 ## 🩺 Environment & Prerequisites Doctor
 
-Modern Home Assistant themes (such as those in the Ultimate Theme Pack) require two core elements to render properly:
-1. **Themes Directive in `configuration.yaml`**:
-   ```yaml
-   frontend:
-     themes: !include_dir_merge_named themes
-   ```
-2. **`lovelace-card-mod` Registration**:
-   ```yaml
-   frontend:
-     extra_module_url:
-       - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
-   ```
+Modern Home Assistant themes (such as those in the Ultimate Theme Pack) require two core configuration elements: the themes merge directory directive and the `lovelace-card-mod` custom module registration.
+
+In Home Assistant's `configuration.yaml`, the root `frontend:` key must only appear once. Both elements must be merged together under this single `frontend:` block:
+
+```yaml
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
+```
 
 ### How the Doctor Streamlines Setup:
 - **Missing Plugin**: HATS displays a direct **"Install via HACS"** button opening `http://<ha-host>:8123/hacs/repository/190927524`.
@@ -127,7 +125,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:4287](http://localhost:4287) in your browser.
 
 ---
 
