@@ -1,0 +1,203 @@
+import React, { useState } from 'react';
+import { 
+  GitPullRequest, 
+  X, 
+  CheckCircle2, 
+  AlertTriangle, 
+  ExternalLink, 
+  Github, 
+  Send 
+} from 'lucide-react';
+import { ThemeConfig } from '../../types/theme';
+import { validateThemeForSubmission, submitThemePullRequest } from '../../services/githubService';
+
+interface SubmitPrModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  theme: ThemeConfig;
+  onSubmitSuccess: (theme: ThemeConfig, prUrl: string) => void;
+}
+
+export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
+  isOpen,
+  onClose,
+  theme,
+  onSubmitSuccess,
+}) => {
+  const [githubToken, setGithubToken] = useState('');
+  const [prTitle, setPrTitle] = useState(`Add new theme: ${theme.name} (${theme.category})`);
+  const [prDescription, setPrDescription] = useState(
+    `Proposed new theme for the official Ultimate Themes repository.\n\n` +
+    `**Aesthetic / Category:** ${theme.category}\n` +
+    `**Engine:** ${theme.engine.engineType}\n` +
+    `**Description:** ${theme.description}`
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedPrUrl, setSubmittedPrUrl] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  if (!isOpen) return null;
+
+  const validationIssues = validateThemeForSubmission(theme);
+  const hasErrors = validationIssues.some(i => i.type === 'error');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (hasErrors) return;
+
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    const res = await submitThemePullRequest({
+      githubToken,
+      theme,
+      customPrTitle: prTitle,
+      customPrDescription: prDescription,
+    });
+
+    setIsSubmitting(false);
+
+    if (res.success && res.prUrl) {
+      setSubmittedPrUrl(res.prUrl);
+      onSubmitSuccess(theme, res.prUrl);
+    } else {
+      setErrorMsg(res.error || 'Failed to submit PR');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-white text-sm">
+            <GitPullRequest className="w-4 h-4 text-purple-400" />
+            <span>Submit Theme to Home Assistant Ultimate Themes Pack</span>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="p-5 overflow-y-auto space-y-4 text-xs">
+          {submittedPrUrl ? (
+            <div className="p-6 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">Pull Request Proposed!</h3>
+                <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                  Your theme has been packaged and submitted to the community hub. Once accepted, it will be added to the official Ultimate Themes pack.
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href={submittedPrUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-md transition-all"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>View Pull Request on GitHub</span>
+                  <ExternalLink className="w-3.5 h-3.5 ml-1" />
+                </a>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                <span className="font-semibold text-slate-300 text-xs flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Pre-flight Theme Verification</span>
+                </span>
+
+                <div className="space-y-1.5">
+                  {validationIssues.length === 0 ? (
+                    <p className="text-emerald-400 text-[11px] flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Theme parameters pass all checks! Ready to submit.</span>
+                    </p>
+                  ) : (
+                    validationIssues.map((issue, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-start gap-2 text-[11px] ${
+                          issue.type === 'error' ? 'text-red-400' : 'text-amber-400'
+                        }`}
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                        <span>{issue.message}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-slate-300 font-semibold">PR Title</label>
+                <input
+                  type="text"
+                  value={prTitle}
+                  onChange={(e) => setPrTitle(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-slate-200"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-slate-300 font-semibold">PR Description / Proposal Rationale</label>
+                <textarea
+                  value={prDescription}
+                  onChange={(e) => setPrDescription(e.target.value)}
+                  rows={4}
+                  className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-slate-200 resize-none font-mono text-[11px]"
+                />
+              </div>
+
+              <div className="space-y-1 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+                <label className="text-slate-300 font-semibold flex items-center justify-between">
+                  <span>GitHub Personal Access Token (Optional)</span>
+                  <span className="text-[10px] text-slate-500">repo scope</span>
+                </label>
+                <input
+                  type="password"
+                  value={githubToken}
+                  onChange={(e) => setGithubToken(e.target.value)}
+                  placeholder="ghp_xxxxxxxxxxxx (Leave blank for simulated PR)"
+                  className="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-slate-200 font-mono"
+                />
+                <p className="text-[10px] text-slate-500">
+                  If left blank, a community proposal will be created and open the GitHub PR page in your browser.
+                </p>
+              </div>
+
+              {errorMsg && (
+                <div className="p-2.5 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 text-[11px]">
+                  {errorMsg}
+                </div>
+              )}
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting || hasErrors}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold disabled:opacity-50 transition-all shadow-md shadow-purple-500/20"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{isSubmitting ? 'Packaging PR...' : 'Create Pull Request'}</span>
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
