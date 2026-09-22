@@ -204,7 +204,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 mt-2.5">
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
                   {requiresCardMod && (
                     <span 
                       onClick={(e) => {
@@ -214,16 +214,66 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         }
                       }}
                       title="Requires lovelace-card-mod for blur and styling"
-                      className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80"
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80 cursor-pointer transition-colors"
                     >
                       <Puzzle className="w-2.5 h-2.5" />
                       card-mod
                     </span>
                   )}
-                  {theme.category === 'Kids' && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-pink-950/70 border border-pink-800/60 text-pink-300 font-medium">
-                      Mushroom Recommended
-                    </span>
+
+                  {theme.requirements?.recommendedCards && theme.requirements.recommendedCards.length > 0 ? (
+                    theme.requirements.recommendedCards.map((card, idx) => (
+                      <span
+                        key={idx}
+                        onClick={(e) => {
+                          if (onOpenDoctor) {
+                            e.stopPropagation();
+                            onOpenDoctor();
+                          }
+                        }}
+                        title={`${card.name}: ${card.description}`}
+                        className={`text-[9px] px-1.5 py-0.5 rounded border font-medium flex items-center gap-1 cursor-pointer transition-colors ${
+                          card.slug === 'mushroom'
+                            ? 'bg-amber-950/70 border-amber-800/60 text-amber-300 hover:bg-amber-900/80'
+                            : card.slug === 'bubble-card'
+                            ? 'bg-blue-950/70 border-blue-800/60 text-blue-300 hover:bg-blue-900/80'
+                            : card.slug === 'layout-card'
+                            ? 'bg-emerald-950/70 border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/80'
+                            : 'bg-slate-800/80 border-slate-700/60 text-slate-300 hover:bg-slate-700/80'
+                        }`}
+                      >
+                        {card.name}
+                      </span>
+                    ))
+                  ) : (
+                    <>
+                      {theme.category === 'Kids' && (
+                        <span 
+                          onClick={(e) => {
+                            if (onOpenDoctor) {
+                              e.stopPropagation();
+                              onOpenDoctor();
+                            }
+                          }}
+                          className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/70 border border-amber-800/60 text-amber-300 font-medium cursor-pointer"
+                        >
+                          Mushroom
+                        </span>
+                      )}
+                      {(theme.category === 'Glass' || theme.category === 'Neon') && (
+                        <span 
+                          onClick={(e) => {
+                            if (onOpenDoctor) {
+                              e.stopPropagation();
+                              onOpenDoctor();
+                            }
+                          }}
+                          className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/70 border border-blue-800/60 text-blue-300 font-medium cursor-pointer"
+                        >
+                          Bubble Card
+                        </span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

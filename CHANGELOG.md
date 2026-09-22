@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.8] - 2026-09-22
+- **Companion Card Badges in Theme Gallery**: Added interactive requirement and recommendation badges for **Mushroom**, **Bubble Card**, and **Layout Card** across all themes.
+- **Citrine-Grade System Tokens**: Integrated Web-Awesome dropdown variables, full dialog and top app bar card-mod directives, and scrollbars.
+- **Corrupt Theme Safeguard**: Eliminated YAML scalar parse errors in custom backgrounds.
+
 ## [1.1.7] - 2026-09-22
 - **Base64 SVG Pattern Data URIs**: Encoded custom vector overlays and pattern presets (like Kids Stars & Clouds) using Base64 to prevent CSS parsing breakages.
 - **Fixed Viewport & Lovelace Backdrop**: Added `:host::before` & `:host::after` viewport backdrops to `card-mod-root` and `hui-view::before` in `card-mod-view`.

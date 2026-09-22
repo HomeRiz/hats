@@ -73,7 +73,16 @@ export const defaultGlassTheme: ThemeConfig = {
     cardBackground: 'rgba(190, 195, 205, 0.26)',
     textPrimary: 'rgb(241, 241, 241)',
     textSecondary: 'rgba(228, 228, 232, 0.78)',
-  }
+  },
+  requirements: {
+    requiresCardMod: true,
+    requiresThemesDirective: true,
+    recommendedCards: [
+      { name: 'Mushroom Cards', slug: 'mushroom', description: 'Clean minimalist cards with glowing icons' },
+      { name: 'Bubble Card', slug: 'bubble-card', description: 'Pop-up subviews and header chips' },
+      { name: 'Layout Card', slug: 'layout-card', description: 'Advanced masonry & grid layouts' },
+    ],
+  },
 };
 
 export const defaultKidsTheme: ThemeConfig = {
@@ -149,6 +158,14 @@ export const defaultKidsTheme: ThemeConfig = {
     cardBackground: 'rgba(255, 255, 255, 0.75)',
     textPrimary: '#2D1B4E',
     textSecondary: '#6B5887',
+  },
+  requirements: {
+    requiresCardMod: true,
+    requiresThemesDirective: true,
+    recommendedCards: [
+      { name: 'Mushroom Cards', slug: 'mushroom', description: 'Rounded bubble controls' },
+      { name: 'Bubble Card', slug: 'bubble-card', description: 'Fun popup cards & quick actions' },
+    ],
   },
   customSvgOverlay: `<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -236,7 +253,15 @@ export const defaultVelvetTheme: ThemeConfig = {
     cardBackground: 'rgba(88, 91, 112, 0.42)',
     textPrimary: '#cdd6f4',
     textSecondary: '#a6adc8',
-  }
+  },
+  requirements: {
+    requiresCardMod: true,
+    requiresThemesDirective: true,
+    recommendedCards: [
+      { name: 'Mushroom Cards', slug: 'mushroom', description: 'Minimal soft cards' },
+      { name: 'Layout Card', slug: 'layout-card', description: 'Masonry dashboards' },
+    ],
+  },
 };
 
 export const defaultNeonTheme: ThemeConfig = {
@@ -312,7 +337,15 @@ export const defaultNeonTheme: ThemeConfig = {
     cardBackground: 'rgba(24, 27, 38, 0.55)',
     textPrimary: '#E6F1FF',
     textSecondary: 'rgba(160, 176, 200, 0.85)',
-  }
+  },
+  requirements: {
+    requiresCardMod: true,
+    requiresThemesDirective: true,
+    recommendedCards: [
+      { name: 'Bubble Card', slug: 'bubble-card', description: 'Futuristic HUD popups' },
+      { name: 'Layout Card', slug: 'layout-card', description: 'Dense cyberpunk grid control' },
+    ],
+  },
 };
 
 export const defaultThemes: ThemeConfig[] = [
