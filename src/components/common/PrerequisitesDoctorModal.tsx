@@ -54,17 +54,20 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 
   if (!isOpen) return null;
 
+  const exactCardModUrl = diagnostics?.cardModExactUrl || `/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=${diagnostics?.cardModHacstag || '190927524421'}`;
+  const cardModTag = diagnostics?.cardModHacstag || (exactCardModUrl.includes('hacstag=') ? exactCardModUrl.split('hacstag=')[1] : '');
+
   const handleAutoFix = async () => {
     setFixing(true);
     setFixMessage(null);
     const res = await fixHaConfiguration({ 
       addThemes: true, 
       addCardMod: true,
-      hacstag: diagnostics?.cardModHacstag
+      exactUrl: exactCardModUrl
     });
     setFixing(false);
     if (res.success) {
-      setFixMessage('✅ configuration.yaml successfully updated with themes directive & card-mod module URL!');
+      setFixMessage(`✅ configuration.yaml successfully updated with live HA module: ${exactCardModUrl}`);
       fetchDiagnostics();
       if (onConfigFixed) onConfigFixed();
     } else {
@@ -72,8 +75,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     }
   };
 
-  const cardModTag = diagnostics?.cardModHacstag || '190927524421';
-  const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=${cardModTag}`;
+  const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${exactCardModUrl}`;
 
   const handleCopyYaml = () => {
     navigator.clipboard.writeText(yamlSnippet);

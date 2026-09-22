@@ -24,6 +24,7 @@ export interface DiagnosticsResult {
   hasCardMod: boolean;
   cardModOnDisk: boolean;
   cardModHacstag: string;
+  cardModExactUrl?: string;
   hasCardModInConfig: boolean;
   hasCardModInResources: boolean;
   cardModNeedsConfig: boolean;
@@ -92,7 +93,7 @@ export async function getHaDiagnostics(): Promise<DiagnosticsResult | null> {
   return null;
 }
 
-export async function fixHaConfiguration(options: { addThemes?: boolean; addCardMod?: boolean; hacstag?: string } = {}): Promise<FixConfigResult> {
+export async function fixHaConfiguration(options: { addThemes?: boolean; addCardMod?: boolean; hacstag?: string; exactUrl?: string } = {}): Promise<FixConfigResult> {
   try {
     const res = await fetch(getApiUrl('api/ha/fix-config'), {
       method: 'POST',
