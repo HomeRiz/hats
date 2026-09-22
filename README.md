@@ -97,6 +97,20 @@ auto_reload_themes: true
 
 ---
 
+## 🏗️ Add-on Container Architecture & `run.sh`
+
+HATS is packaged as an official Home Assistant Ingress Add-on built from a multi-stage Docker image:
+
+- **`Dockerfile`**: Builds the React + TypeScript single-page application and bundles it with a lightweight Express backend running on Node 20.
+- **`run.sh`**: The mandatory container startup entrypoint. When Home Assistant Supervisor starts the container:
+  1. Ensures `/config/themes` exists on the host filesystem.
+  2. Ensures `/config/www/ultimate-theme/backgrounds` exists on the host filesystem.
+  3. Launches the Ingress server (`exec node server/index.js`) on port `4287`.
+- **`config.yaml`**: Home Assistant add-on manifest specifying Ingress routes, permissions (`manager` role to reload themes and manage storage), options, and architecture compatibility.
+- **`repository.yaml`**: Home Assistant add-on repository descriptor.
+
+---
+
 ## 🖥️ Standalone Developer Mode
 
 For local UI development without a full Home Assistant supervisor:
@@ -120,3 +134,4 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 ## 📄 License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
