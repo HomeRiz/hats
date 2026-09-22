@@ -1,6 +1,6 @@
 name: "HATS - Home Assistant Theme Store"
 slug: "hats"
-version: "1.2.5"
+version: "1.2.6"
 description: "Visual Theme Designer, Live Lovelace Sandbox, Direct Theme Installer, and Community Store inside Home Assistant."
 url: "https://github.com/HomeRiz/hats"
 arch:
@@ -13,7 +13,7 @@ startup: services
 boot: auto
 ingress: true
 ingress_port: 4287
-panel_icon: "mdi:palette-swatch"
+panel_icon: "mdi:hat-fedora"
 panel_title: "HATS"
 ports:
   4287/tcp: 4287

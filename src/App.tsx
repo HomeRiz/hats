@@ -94,6 +94,8 @@ export const App: React.FC = () => {
       <div className="relative z-10 flex flex-col h-full w-full overflow-hidden">
         <Navbar
           activeTheme={activeTheme}
+          allThemes={themes}
+          onSelectTheme={setActiveThemeId}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           previewMode={previewMode}

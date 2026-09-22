@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.6] - 2026-09-23
+- **Active Theme Dropdown Selector**: Searchable, scrollable dropdown in top navbar with real-time green status dots for themes installed in Home Assistant.
+- **Theme Overview Modal & Carousel Navigation**: Left-clicking any theme card opens a live modal overview with interactive preview cards, palette breakdown, on-screen left/right arrow buttons, and keyboard ArrowLeft/ArrowRight navigation.
+- **Context Menu & Batch Multi-Select Installer**: Right-clicking theme cards provides quick access to Select, Edit in Designer, Duplicate, Uninstall, and Delete. Multi-select mode allows batch-installing multiple selected themes to Home Assistant at once.
+- **Theme Duplication Safety Flow**: Duplicate info modal explaining how duplication preserves original themes, with a "Don't show this message again" persistence setting.
+- **Import from Any GitHub Repository**: Automatic scanning and parsing of themes from public GitHub repositories or raw YAML URLs.
+- **Fedora Hat Sidebar Icon**: Updated add-on panel icon to `mdi:hat-fedora`.
+- **Sidebar Hit-Testing Fix**: Replaced breaking `:host::before` fixed pseudo-elements with `background-attachment: fixed` on `<ha-sidebar>` to ensure menu items and dashboard buttons never freeze.
+
 ## [1.2.5] - 2026-09-23
 - **Full Studio Theme Background & Acrylic Immersion**: Dynamically renders the active theme's wallpaper artwork, gradients, and custom SVG pattern overlays across the entire HATS application shell with a frosted dark glass scrim.
 

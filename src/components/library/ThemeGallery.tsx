@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Plus, 
   Copy, 
@@ -10,12 +10,28 @@ import {
   Check, 
   Layers, 
   Puzzle,
-  ShieldCheck,
-  RefreshCw,
-  HardDrive
+  ShieldCheck, 
+  RefreshCw, 
+  HardDrive,
+  Github,
+  CheckSquare,
+  Square,
+  X,
+  Zap,
+  CheckCircle2,
+  HardDriveDownload,
+  Eye
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
+import { ThemeOverviewModal } from './ThemeOverviewModal';
+import { DuplicateInfoModal } from '../common/DuplicateInfoModal';
+import { GitHubImportModal } from '../github/GitHubImportModal';
+import { 
+  applyThemeDirectlyToHa, 
+  deleteHaTheme, 
+  reloadHomeAssistantThemes 
+} from '../../services/haService';
 
 interface ThemeGalleryProps {
   themes: ThemeConfig[];
@@ -49,6 +65,23 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   const [isSyncing, setIsSyncing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [overviewThemeId, setOverviewThemeId] = useState<string | null>(null);
+
+  const [isGitHubImportOpen, setIsGitHubImportOpen] = useState(false);
+
+  const [duplicateTargetTheme, setDuplicateTargetTheme] = useState<ThemeConfig | null>(null);
+
+  const [isSelectMode, setIsSelectMode] = useState(false);
+  const [selectedThemeIds, setSelectedThemeIds] = useState<Set<string>>(new Set());
+  const [isBatchInstalling, setIsBatchInstalling] = useState(false);
+  const [batchInstallStatus, setBatchInstallStatus] = useState<string | null>(null);
+
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    theme: ThemeConfig;
+  } | null>(null);
+
   const categories = ['All', 'Installed', 'Kids', 'Glass', 'Velvet', 'Neon', 'Retro', 'Nature', 'Community'];
 
   const filteredThemes = themes.filter((t) => {
@@ -60,6 +93,17 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       : (selectedCategory === 'Installed' ? Boolean(t.isInstalled) : t.category === selectedCategory);
     return matchesSearch && matchesCategory;
   });
+
+  useEffect(() => {
+    const handleCloseMenu = () => setContextMenu(null);
+    window.addEventListener('click', handleCloseMenu);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') handleCloseMenu();
+    });
+    return () => {
+      window.removeEventListener('click', handleCloseMenu);
+    };
+  }, []);
 
   const handleSyncFromHa = async () => {
     if (!onSyncHaThemes) return;
@@ -85,8 +129,104 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     reader.readAsText(file);
   };
 
+  const triggerDuplicate = (theme: ThemeConfig) => {
+    const isSuppressed = localStorage.getItem('hats_suppress_duplicate_modal') === 'true';
+    if (isSuppressed) {
+      onDuplicateTheme(theme.id);
+      onSwitchToEditor();
+    } else {
+      setDuplicateTargetTheme(theme);
+    }
+  };
+
+  const handleConfirmDuplicate = () => {
+    if (duplicateTargetTheme) {
+      onDuplicateTheme(duplicateTargetTheme.id);
+      setDuplicateTargetTheme(null);
+      onSwitchToEditor();
+    }
+  };
+
+  const handleUninstallFromHa = async (theme: ThemeConfig) => {
+    try {
+      await deleteHaTheme(theme.id);
+      await reloadHomeAssistantThemes();
+      if (onSyncHaThemes) {
+        await onSyncHaThemes();
+      }
+    } catch (e) {
+      console.warn('Failed to uninstall theme from HA:', e);
+    }
+  };
+
+  const handleApplySingleTheme = async (theme: ThemeConfig) => {
+    try {
+      await applyThemeDirectlyToHa(theme);
+      if (onSyncHaThemes) {
+        await onSyncHaThemes();
+      }
+    } catch (e) {
+      console.warn('Failed to apply theme to HA:', e);
+    }
+  };
+
+  const toggleSelectTheme = (id: string) => {
+    setSelectedThemeIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedThemeIds(new Set(filteredThemes.map((t) => t.id)));
+  };
+
+  const clearSelection = () => {
+    setSelectedThemeIds(new Set());
+  };
+
+  const handleBatchInstall = async () => {
+    const toInstall = themes.filter((t) => selectedThemeIds.has(t.id));
+    if (toInstall.length === 0) return;
+
+    setIsBatchInstalling(true);
+    setBatchInstallStatus(`Installing ${toInstall.length} themes to Home Assistant...`);
+
+    let successCount = 0;
+    for (let i = 0; i < toInstall.length; i++) {
+      const theme = toInstall[i];
+      setBatchInstallStatus(`Installing (${i + 1}/${toInstall.length}): ${theme.name}...`);
+      try {
+        await applyThemeDirectlyToHa(theme);
+        successCount++;
+      } catch (err) {
+        console.warn(`Failed installing ${theme.name}:`, err);
+      }
+    }
+
+    await reloadHomeAssistantThemes();
+    if (onSyncHaThemes) {
+      await onSyncHaThemes();
+    }
+
+    setIsBatchInstalling(false);
+    setBatchInstallStatus(`Successfully installed ${successCount} theme(s) to Home Assistant!`);
+    setTimeout(() => {
+      setBatchInstallStatus(null);
+      setIsSelectMode(false);
+      clearSelection();
+    }, 2500);
+  };
+
+  const overviewTargetTheme = themes.find((t) => t.id === overviewThemeId) || null;
+
   return (
-    <div className="h-full flex flex-col p-6 overflow-y-auto max-w-7xl mx-auto space-y-6">
+    <div className="h-full flex flex-col p-6 overflow-y-auto max-w-7xl mx-auto space-y-6 relative select-none">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-5">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
@@ -96,11 +236,26 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             </span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Browse, customize, duplicate, or import Home Assistant themes.
+            Left-click any theme for live dashboard overview. Right-click for options or batch install.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => {
+              setIsSelectMode(!isSelectMode);
+              if (isSelectMode) clearSelection();
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+              isSelectMode
+                ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/20'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+            }`}
+          >
+            <CheckSquare className="w-3.5 h-3.5" />
+            <span>{isSelectMode ? 'Exit Select Mode' : 'Select'}</span>
+          </button>
+
           {onSyncHaThemes && (
             <button
               onClick={handleSyncFromHa}
@@ -109,9 +264,18 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
             >
               <RefreshCw className={`w-3.5 h-3.5 text-blue-400 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'Syncing...' : 'Sync from HA'}</span>
+              <span>{isSyncing ? 'Syncing...' : 'Sync HA'}</span>
             </button>
           )}
+
+          <button
+            onClick={() => setIsGitHubImportOpen(true)}
+            title="Import themes from any public GitHub repo"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+          >
+            <Github className="w-3.5 h-3.5 text-blue-400" />
+            <span>Import GitHub</span>
+          </button>
 
           {onOpenDoctor && (
             <button
@@ -123,7 +287,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               }`}
             >
               <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
-              <span>{isDoctorReady ? 'HA Setup Doctor' : 'HA Setup Needed (1-Click Fix)'}</span>
+              <span>{isDoctorReady ? 'HA Doctor' : 'HA Setup Needed'}</span>
             </button>
           )}
 
@@ -151,7 +315,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Create Theme</span>
+            <span>Create</span>
           </button>
         </div>
       </div>
@@ -161,7 +325,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search themes, categories, authors..."
+            placeholder="Search 150+ themes, categories, authors..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
@@ -183,7 +347,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               <span>{cat}</span>
               {cat === 'Installed' && (
                 <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-950/80 text-emerald-300 font-mono">
-                  {themes.filter(t => t.isInstalled).length}
+                  {themes.filter((t) => t.isInstalled).length}
                 </span>
               )}
             </button>
@@ -191,18 +355,35 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
         {filteredThemes.map((theme) => {
           const isActive = theme.id === activeThemeId;
+          const isSelected = selectedThemeIds.has(theme.id);
           const requiresCardMod = theme.requirements?.requiresCardMod ?? (theme.category === 'Glass' || theme.category === 'Kids' || theme.category === 'Neon');
 
           return (
             <div
               key={theme.id}
-              onClick={() => onSelectTheme(theme.id)}
+              onClick={() => {
+                if (isSelectMode) {
+                  toggleSelectTheme(theme.id);
+                } else {
+                  setOverviewThemeId(theme.id);
+                }
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenu({
+                  x: Math.min(e.clientX, window.innerWidth - 220),
+                  y: Math.min(e.clientY, window.innerHeight - 240),
+                  theme,
+                });
+              }}
               className={`group relative rounded-2xl border p-4 cursor-pointer transition-all flex flex-col justify-between overflow-hidden ${
-                isActive
-                  ? 'bg-slate-900/90 border-blue-500 ring-2 ring-blue-500/20 shadow-lg'
+                isSelected
+                  ? 'bg-blue-950/40 border-blue-500 ring-2 ring-blue-500/30 shadow-xl'
+                  : isActive
+                  ? 'bg-slate-900/90 border-blue-500/80 ring-1 ring-blue-500/20 shadow-lg'
                   : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/70'
               }`}
             >
@@ -216,6 +397,30 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   }}
                 >
                   <div className="absolute inset-0 bg-black/20" />
+                  
+                  {isSelectMode && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelectTheme(theme.id);
+                      }}
+                      className="absolute top-2 left-2 z-20 p-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-white/20 text-white"
+                    >
+                      {isSelected ? (
+                        <CheckSquare className="w-4 h-4 text-blue-400" />
+                      ) : (
+                        <Square className="w-4 h-4 text-slate-400" />
+                      )}
+                    </div>
+                  )}
+
+                  {theme.isInstalled && (
+                    <div className="absolute top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 text-[9px] font-mono border border-emerald-600/50 backdrop-blur-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span>Installed</span>
+                    </div>
+                  )}
+
                   <div 
                     className="relative z-10 px-3 py-1.5 rounded-xl border border-white/20 text-[10px] font-semibold text-white shadow-lg backdrop-blur-md flex items-center gap-1.5"
                     style={{
@@ -267,15 +472,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                           }
                         }}
                         title={`${card.name}: ${card.description}`}
-                        className={`text-[9px] px-1.5 py-0.5 rounded border font-medium flex items-center gap-1 cursor-pointer transition-colors ${
-                          card.slug === 'mushroom'
-                            ? 'bg-amber-950/70 border-amber-800/60 text-amber-300 hover:bg-amber-900/80'
-                            : card.slug === 'bubble-card'
-                            ? 'bg-blue-950/70 border-blue-800/60 text-blue-300 hover:bg-blue-900/80'
-                            : card.slug === 'layout-card'
-                            ? 'bg-emerald-950/70 border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/80'
-                            : 'bg-slate-800/80 border-slate-700/60 text-slate-300 hover:bg-slate-700/80'
-                        }`}
+                        className="text-[9px] px-1.5 py-0.5 rounded border border-slate-700/60 bg-slate-800/80 text-slate-300 font-medium flex items-center gap-1 cursor-pointer hover:bg-slate-700/80 transition-colors"
                       >
                         {card.name}
                       </span>
@@ -283,28 +480,12 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   ) : (
                     <>
                       {theme.category === 'Kids' && (
-                        <span 
-                          onClick={(e) => {
-                            if (onOpenDoctor) {
-                              e.stopPropagation();
-                              onOpenDoctor();
-                            }
-                          }}
-                          className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/70 border border-amber-800/60 text-amber-300 font-medium cursor-pointer"
-                        >
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/70 border border-amber-800/60 text-amber-300 font-medium">
                           Mushroom
                         </span>
                       )}
                       {(theme.category === 'Glass' || theme.category === 'Neon') && (
-                        <span 
-                          onClick={(e) => {
-                            if (onOpenDoctor) {
-                              e.stopPropagation();
-                              onOpenDoctor();
-                            }
-                          }}
-                          className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/70 border border-blue-800/60 text-blue-300 font-medium cursor-pointer"
-                        >
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/70 border border-blue-800/60 text-blue-300 font-medium">
                           Bubble Card
                         </span>
                       )}
@@ -325,7 +506,18 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onDuplicateTheme(theme.id);
+                      setOverviewThemeId(theme.id);
+                    }}
+                    title="Live Overview Modal (Left-Click)"
+                    className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      triggerDuplicate(theme);
                     }}
                     title="Duplicate Theme"
                     className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
@@ -337,7 +529,9 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        onDeleteTheme(theme.id);
+                        if (window.confirm(`Delete theme "${theme.name}"?`)) {
+                          onDeleteTheme(theme.id);
+                        }
                       }}
                       title="Delete Theme"
                       className="p-1.5 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
@@ -346,23 +540,215 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     </button>
                   )}
 
-                  {isActive ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSwitchToEditor();
-                      }}
-                      className="px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm"
-                    >
-                      <span>Edit</span>
-                    </button>
-                  ) : null}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectTheme(theme.id);
+                      onSwitchToEditor();
+                    }}
+                    title="Edit in Designer"
+                    className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm transition-colors"
+                  >
+                    <span>Edit</span>
+                  </button>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      {isSelectMode && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl px-5 py-3 flex items-center gap-4 animate-fade-in text-xs">
+          <div className="flex items-center gap-2 font-semibold text-white">
+            <CheckSquare className="w-4 h-4 text-blue-400" />
+            <span>{selectedThemeIds.size} selected</span>
+          </div>
+
+          <div className="h-4 w-px bg-slate-700" />
+
+          <button
+            onClick={selectAllFiltered}
+            className="text-slate-300 hover:text-white font-medium hover:underline"
+          >
+            Select All ({filteredThemes.length})
+          </button>
+
+          <button
+            onClick={clearSelection}
+            className="text-slate-400 hover:text-slate-200 font-medium"
+          >
+            Clear
+          </button>
+
+          <div className="h-4 w-px bg-slate-700" />
+
+          <button
+            onClick={handleBatchInstall}
+            disabled={selectedThemeIds.size === 0 || isBatchInstalling}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold shadow-lg shadow-emerald-600/30 transition-all"
+          >
+            {isBatchInstalling ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                <span>Installing...</span>
+              </>
+            ) : (
+              <>
+                <Zap className="w-3.5 h-3.5" />
+                <span>Install Selected to HA</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={() => {
+              setIsSelectMode(false);
+              clearSelection();
+            }}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            title="Close Multi-Select"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {batchInstallStatus && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-xl bg-emerald-900/95 border border-emerald-500/60 text-emerald-100 text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+          <span>{batchInstallStatus}</span>
+        </div>
+      )}
+
+      {contextMenu && (
+        <div
+          className="fixed z-50 w-52 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl p-1.5 text-xs space-y-1 animate-fade-in"
+          style={{ top: contextMenu.y, left: contextMenu.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="px-3 py-1.5 border-b border-slate-800 text-[11px] font-bold text-slate-300 truncate">
+            {contextMenu.theme.name}
+          </div>
+
+          <button
+            onClick={() => {
+              setIsSelectMode(true);
+              toggleSelectTheme(contextMenu.theme.id);
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-slate-800 text-left transition-colors font-medium"
+          >
+            <CheckSquare className="w-3.5 h-3.5 text-blue-400" />
+            <span>Select (Multi-select)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              onSelectTheme(contextMenu.theme.id);
+              onSwitchToEditor();
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-slate-800 text-left transition-colors font-medium"
+          >
+            <Sliders className="w-3.5 h-3.5 text-blue-400" />
+            <span>Edit in Designer</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const target = contextMenu.theme;
+              setContextMenu(null);
+              triggerDuplicate(target);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-slate-800 text-left transition-colors font-medium"
+          >
+            <Copy className="w-3.5 h-3.5 text-slate-400" />
+            <span>Duplicate Theme</span>
+          </button>
+
+          <button
+            onClick={async () => {
+              const target = contextMenu.theme;
+              setContextMenu(null);
+              await handleApplySingleTheme(target);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-slate-800 text-left transition-colors font-medium"
+          >
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <span>{contextMenu.theme.isInstalled ? 'Apply / Save to HA' : 'Install Directly to HA'}</span>
+          </button>
+
+          {contextMenu.theme.isInstalled && (
+            <button
+              onClick={async () => {
+                const target = contextMenu.theme;
+                setContextMenu(null);
+                if (window.confirm(`Uninstall "${target.name}" from Home Assistant /config/themes?`)) {
+                  await handleUninstallFromHa(target);
+                }
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-300 hover:bg-amber-950/50 text-left transition-colors font-medium"
+            >
+              <HardDriveDownload className="w-3.5 h-3.5 text-amber-400" />
+              <span>Uninstall from HA</span>
+            </button>
+          )}
+
+          {contextMenu.theme.isCustom && (
+            <button
+              onClick={() => {
+                const target = contextMenu.theme;
+                setContextMenu(null);
+                if (window.confirm(`Delete theme "${target.name}"?`)) {
+                  onDeleteTheme(target.id);
+                }
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-red-400 hover:bg-red-950/50 text-left transition-colors font-medium"
+            >
+              <Trash2 className="w-3.5 h-3.5 text-red-400" />
+              <span>Delete Theme</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {overviewTargetTheme && (
+        <ThemeOverviewModal
+          isOpen={Boolean(overviewTargetTheme)}
+          onClose={() => setOverviewThemeId(null)}
+          theme={overviewTargetTheme}
+          allThemes={filteredThemes.length > 0 ? filteredThemes : themes}
+          onSelectTheme={(newId) => setOverviewThemeId(newId)}
+          onEditTheme={(id) => {
+            onSelectTheme(id);
+            onSwitchToEditor();
+          }}
+          onApplyTheme={handleApplySingleTheme}
+          onDuplicateTheme={(id) => {
+            const t = themes.find((item) => item.id === id);
+            if (t) triggerDuplicate(t);
+          }}
+        />
+      )}
+
+      {duplicateTargetTheme && (
+        <DuplicateInfoModal
+          isOpen={Boolean(duplicateTargetTheme)}
+          onClose={() => setDuplicateTargetTheme(null)}
+          onConfirm={handleConfirmDuplicate}
+          themeName={duplicateTargetTheme.name}
+        />
+      )}
+
+      <GitHubImportModal
+        isOpen={isGitHubImportOpen}
+        onClose={() => setIsGitHubImportOpen(false)}
+        onThemesImported={(imported) => {
+          onImportThemes(imported);
+          if (onSyncHaThemes) onSyncHaThemes();
+        }}
+      />
     </div>
   );
 };

@@ -15,9 +15,12 @@ import {
 } from 'lucide-react';
 import { HatsLogo } from '../common/HatsLogo';
 import { ThemeConfig } from '../../types/theme';
+import { ActiveThemeDropdown } from './ActiveThemeDropdown';
 
 interface NavbarProps {
   activeTheme: ThemeConfig;
+  allThemes?: ThemeConfig[];
+  onSelectTheme?: (themeId: string) => void;
   activeTab: 'editor' | 'library' | 'community' | 'code';
   setActiveTab: (tab: 'editor' | 'library' | 'community' | 'code') => void;
   previewMode: 'dark' | 'light';
@@ -32,6 +35,8 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTheme,
+  allThemes,
+  onSelectTheme,
   activeTab,
   setActiveTab,
   previewMode,
@@ -65,19 +70,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         <div className="h-4 w-px bg-slate-800 hidden sm:block mx-1" />
 
-        <button 
-          onClick={() => setActiveTab('library')}
-          className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-800/80 hover:bg-slate-800 text-xs font-medium text-slate-200 border border-slate-700/60 transition-colors"
-        >
-          <div 
-            className="w-2.5 h-2.5 rounded-full shadow-sm" 
-            style={{ backgroundColor: activeTheme.palette.primary }}
+        {allThemes && onSelectTheme ? (
+          <ActiveThemeDropdown
+            activeTheme={activeTheme}
+            allThemes={allThemes}
+            onSelectTheme={onSelectTheme}
           />
-          <span className="truncate max-w-[140px]">{activeTheme.name}</span>
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-900">
-            {activeTheme.category}
-          </span>
-        </button>
+        ) : (
+          <button 
+            onClick={() => setActiveTab('library')}
+            className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-800/80 hover:bg-slate-800 text-xs font-medium text-slate-200 border border-slate-700/60 transition-colors"
+          >
+            <div 
+              className="w-2.5 h-2.5 rounded-full shadow-sm" 
+              style={{ backgroundColor: activeTheme.palette.primary }}
+            />
+            <span className="truncate max-w-[140px]">{activeTheme.name}</span>
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-900">
+              {activeTheme.category}
+            </span>
+          </button>
+        )}
       </div>
 
       <nav className="flex items-center gap-1 bg-slate-950/60 p-1 rounded-lg border border-slate-800/80 text-xs font-medium">
