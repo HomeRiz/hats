@@ -1,6 +1,6 @@
 name: "HATS - Home Assistant Theme Store"
 slug: "hats"
-version: "1.1.0"
+version: "1.1.1"
 description: "Visual Theme Designer, Live Lovelace Sandbox, Direct Theme Installer, and Community Store inside Home Assistant."
 url: "https://github.com/HomeRiz/hats"
 arch:
@@ -15,6 +15,11 @@ ingress: true
 ingress_port: 4287
 panel_icon: "mdi:palette-swatch"
 panel_title: "HATS"
+ports:
+  4287/tcp: 4287
+ports_description:
+  4287/tcp: "Direct Web UI (Fullscreen in New Tab)"
+webui: "http://[HOST]:[PORT:4287]"
 homeassistant_api: true
 hassio_api: true
 hassio_role: manager

@@ -10,7 +10,8 @@ import {
   Moon, 
   Plus, 
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  ExternalLink
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 
@@ -39,6 +40,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenDoctor,
   isDoctorReady = true,
 }) => {
+  const handleOpenNewTab = () => {
+    const targetUrl = window.location.href;
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 flex items-center justify-between z-30 select-none">
       <div className="flex items-center gap-3">
@@ -136,6 +142,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50 transition-colors"
         >
           {previewMode === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
+        </button>
+
+        <button
+          onClick={handleOpenNewTab}
+          title="Open HATS in a Full New Browser Tab"
+          className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50 transition-colors"
+        >
+          <ExternalLink className="w-4 h-4 text-sky-400" />
         </button>
 
         <button
