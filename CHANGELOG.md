@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2026-09-22
+- **Universal Sidebar Legibility & Contrast Protection**: Fixed sidebar text and icon illegibility on light backgrounds and custom SVG wallpapers by giving `ha-sidebar` its own dedicated frosted acrylic background container with `backdrop-filter` blur and subtle elevation shadow across all Home Assistant views.
+- **Cross-Panel Theme Continuity**: Added `card-mod-profile`, `card-mod-panel-iframe`, `card-mod-panel-developer-tools`, and updated `card-mod-panel-custom` so non-Lovelace tabs (Profile, HATS, OpenCode/VSCode, Developer Tools) render seamlessly without sidebar contrast drops.
+- **Mode-Aware Sidebar Variables**: Configured dedicated high-contrast sidebar tokens for both `modes: dark` (crisp white text on dark acrylic) and `modes: light` (deep slate text on light acrylic), with proper automatic mode support.
+
 ## [1.2.0] - 2026-09-22
 - **New Theme Apply Flow & User Profile Direct Link**: When installing a new theme to Home Assistant, HATS immediately provides a 1-click link to open the Home Assistant User Profile (`/profile`) with instructions and 1-click theme name copy for effortless theme activation.
 - **Modified Theme Reload & HA Restart Suite**: When saving changes to an already installed/active theme, HATS displays dedicated quick actions: **Reload Themes** (`frontend.reload_themes`), **Refresh Lovelace**, and **Restart Home Assistant Core** (`/api/ha/restart` with safety confirmation).
