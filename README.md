@@ -1,47 +1,120 @@
 <div align="center">
 
-# HATS
-### Home Assistant Theme Store
-*(a play on words, like HACS)* 🎩
+# 🎩 HATS — Home Assistant Theme Store
 
-**The Interactive Visual Designer, Community Store, and Generator for Home Assistant Themes**
+**The Interactive Visual Designer, Community Store, Live Lovelace Sandbox, and Generator for Home Assistant Themes**
 
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=flat-square)](https://hacs.xyz)
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.11%2B-41BDF5.svg?style=flat-square)](https://www.home-assistant.io)
-[![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Home Assistant Add-on](https://img.shields.io/badge/Home%20Assistant-Add--on-41BDF5.svg?style=flat-square&logo=home-assistant)](https://www.home-assistant.io)
+[![Ingress Support](https://img.shields.io/badge/Ingress-Ready-success.svg?style=flat-square)](https://www.home-assistant.io/addons/)
+[![HACS Companion](https://img.shields.io/badge/HACS-Companion-orange.svg?style=flat-square)](https://hacs.xyz)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+
+[Installation](#-installation) • [Features](#-features) • [Environment Doctor](#-environment--prerequisites-doctor) • [Configuration](#-configuration) • [Development](#-standalone-developer-mode)
 
 </div>
 
 ---
 
-## Overview
+## 📖 Overview
 
-**HATS** (**H**ome **A**ssistant **T**heme **S**tore) is a visual design application and community platform built to work in parallel with the **Home Assistant Ultimate Themes** pack.
+**HATS** (**H**ome **A**ssistant **T**heme **S**tore) is an all-in-one Home Assistant Add-on and visual theme studio designed to simplify theme discovery, visual customization, and environment configuration.
 
-It allows creators to visually build themes, upload backgrounds, design custom SVG overlays, write live-injected CSS, preview realistic Lovelace dashboards with true glassmorphism, and **submit themes directly as GitHub Pull Requests to the official theme repository**.
-
----
-
-## Features
-
-- **Live Lovelace Sandbox**: Real-time simulated Home Assistant dashboard featuring Mushroom-style cards, climate sliders, weather widgets, media controls, and status chips.
-- **Physical Glass Engine**: Real `backdrop-filter`, specular rim sheens, ambient lighting, customizable corner radii (`8px`–`48px`), and border glows.
-- **Background & Artwork Studio**: Upload any image (PNG, JPG, WebP), automatic 16:9 center-crop, darkening controls for card readability, and automatic dominant/average color extraction.
-- **Custom SVG & Vector Patterns**: In-app generative SVG overlays (kids storybook stars, clouds, synthwave grids, tech circuits) or paste your own raw SVG code.
-- **Custom CSS Injections**: Write custom `card-mod` rules, keyframe animations, and custom web fonts (e.g. Google Fonts) with instant live preview.
-- **Theme Registry & Management**: Browse presets (Liquid Glass, Kids Playful, Velvet Matte, Neon Cyberpunk), duplicate, customize, or import existing YAML themes.
-- **In-App GitHub Pull Request Engine**: Package and submit new themes directly to `HomeRiz/hats` via GitHub API.
-- **Community Governance**: Upvote/downvote proposed themes and participate in theme lifecycle management (additions and community pruning).
-- **1-Click Home Assistant Export**: Generate clean, fully compliant `theme.yaml` and per-view `card_mod` YAML snippets.
+Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-window Web UI, HATS connects directly to your Home Assistant instance to inspect prerequisites, auto-configure theme directories, download companion card dependencies via HACS, and apply custom glassmorphism themes with zero manual YAML editing required.
 
 ---
 
-## Quick Start
+## ✨ Features
+
+- 🎨 **Visual Theme Designer**: Real-time CSS and YAML generator with color pickers, specular highlights, border glows, ambient lighting, and corner radius sliders (`8px`–`48px`).
+- 🔬 **Live Lovelace Sandbox**: Interactive dashboard preview featuring simulated Mushroom cards, climate sliders, weather widgets, media controls, and status chips.
+- 🩺 **HA Environment & Prerequisites Doctor**:
+  - Live inspection of `configuration.yaml` for theme directives (`themes: !include_dir_merge_named themes`).
+  - Automatic detection of `lovelace-card-mod` on disk (`/config/www/community/lovelace-card-mod`).
+  - Dynamic extraction of live `hacstag` version identifiers directly from HA storage.
+  - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
+- 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.
+- 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/ultimate-theme/backgrounds/`.
+- 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) or access directly via container port `4287` for maximum workspace real estate.
+- 🚀 **In-App GitHub Pull Request Engine**: Package and propose new themes directly to the official theme repository with a single click.
+
+---
+
+## 🚀 Installation
+
+### As a Home Assistant Add-on (Recommended)
+
+1. In Home Assistant, navigate to **Settings** → **Add-ons** → **Add-on Store**.
+2. Click the top-right menu (**⋮**) and select **Repositories**.
+3. Add the repository URL:
+   ```text
+   https://github.com/HomeRiz/hats
+   ```
+4. Locate **HATS - Home Assistant Theme Store** in the store list and click **Install**.
+5. Enable **Show in sidebar** and click **Start**.
+6. Open **HATS** from your Home Assistant sidebar! 🎩
+
+---
+
+## 🩺 Environment & Prerequisites Doctor
+
+Modern Home Assistant themes (such as those in the Ultimate Theme Pack) require two core elements to render properly:
+1. **Themes Directive in `configuration.yaml`**:
+   ```yaml
+   frontend:
+     themes: !include_dir_merge_named themes
+   ```
+2. **`lovelace-card-mod` Registration**:
+   ```yaml
+   frontend:
+     extra_module_url:
+       - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
+   ```
+
+### How the Doctor Streamlines Setup:
+- **Missing Plugin**: HATS displays a direct **"Install via HACS"** button opening `http://<ha-host>:8123/hacs/repository/190927524`.
+- **Plugin Detected on Disk**: The **HA Setup** badge in the navbar pulses amber with an alert.
+- **1-Click Auto-Fix**: Clicking **Auto-Fix YAML Bridge** reads the exact `hacstag` from your HA storage, creates a safety backup (`configuration.yaml.hats_bak_<timestamp>`), and injects the required configuration automatically.
+
+---
+
+## ⚙️ Configuration
+
+The add-on works out-of-the-box with default options, but can be customized in the **Configuration** tab:
+
+```yaml
+themes_directory: "/config/themes"
+backgrounds_directory: "/config/www/ultimate-theme/backgrounds"
+auto_reload_themes: true
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `themes_directory` | string | `/config/themes` | Target path where generated theme YAML files are stored. |
+| `backgrounds_directory` | string | `/config/www/ultimate-theme/backgrounds` | Target path where uploaded wallpaper artwork is saved. |
+| `auto_reload_themes` | boolean | `true` | Automatically calls `frontend.reload_themes` upon applying a theme. |
+
+---
+
+## 🖥️ Standalone Developer Mode
+
+For local UI development without a full Home Assistant supervisor:
 
 ```bash
+# Clone the repository
+git clone https://github.com/HomeRiz/hats.git
 cd hats
+
+# Install dependencies
 npm install
+
+# Start Vite development server
 npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
