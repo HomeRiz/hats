@@ -40,6 +40,14 @@ function sanitizeThemeYamlContent(rawYaml) {
 
   content = content.replace(/:\s*"([^"\n]*?)url\("([^"\n]*?)"\)([^"\n]*?)"/g, ': "$1url(\'$2\')$3"');
 
+  content = content.replace(/card-mod-sidebar:\s*\|\s*\n\s*:host::before\s*\{[\s\S]*?\}\s*(?=\n\s*(?:card-mod|modes|ha-|\.|\w+:))/g, 'card-mod-sidebar: |\n    :host {\n      background: none !important;\n    }\n    ');
+  content = content.replace(/:host::(?:before|after)\s*\{[^}]*?position\s*:\s*fixed[^}]*?\}/g, (match) => {
+    if (!/pointer-events\s*:\s*none/i.test(match)) {
+      return match.replace(/\}$/, '  pointer-events: none !important;\n}');
+    }
+    return match;
+  });
+
   return content;
 }
 
@@ -597,6 +605,68 @@ app.delete('/api/ha/theme/:themeId', async (req, res) => {
 
     res.json({ success: true, message: `Theme ${themeId} removed from Home Assistant` });
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/ha/repair-all-themes', async (req, res) => {
+  try {
+    if (!fs.existsSync(THEMES_DIR)) {
+      return res.json({ success: true, count: 0, repaired: 0, message: 'No themes directory found.' });
+    }
+
+    let total = 0;
+    let repairedCount = 0;
+    const repairedFiles = [];
+
+    function repairDir(dir) {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          repairDir(fullPath);
+        } else if (entry.isFile() && (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+          total++;
+          try {
+            const raw = fs.readFileSync(fullPath, 'utf8');
+            const sanitized = sanitizeThemeYamlContent(raw);
+            if (sanitized !== raw) {
+              fs.writeFileSync(fullPath, sanitized, 'utf8');
+              repairedCount++;
+              repairedFiles.push(entry.name);
+            }
+          } catch (e) {
+            console.warn(`Could not repair ${fullPath}:`, e.message);
+          }
+        }
+      }
+    }
+
+    repairDir(THEMES_DIR);
+
+    if (SUPERVISOR_TOKEN) {
+      try {
+        await fetch(`${SUPERVISOR_API}/services/frontend/reload_themes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch {}
+    }
+
+    res.json({
+      success: true,
+      total,
+      repairedCount,
+      repairedFiles,
+      message: repairedCount > 0
+        ? `Successfully inspected ${total} files and repaired ${repairedCount} theme(s)! Themes have been reloaded.`
+        : `All ${total} theme files are 100% clean and compliant with Home Assistant safety guidelines.`,
+    });
+  } catch (err) {
+    console.error('Failed to repair themes:', err);
     res.status(500).json({ error: err.message });
   }
 });

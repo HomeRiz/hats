@@ -16,7 +16,7 @@ import {
   DownloadCloud,
   ArrowRight
 } from 'lucide-react';
-import { getHaDiagnostics, fixHaConfiguration, DiagnosticsResult } from '../../services/haService';
+import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, DiagnosticsResult } from '../../services/haService';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -31,6 +31,8 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 }) => {
   const [loading, setLoading] = useState(false);
   const [fixing, setFixing] = useState(false);
+  const [repairing, setRepairing] = useState(false);
+  const [repairStatus, setRepairStatus] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<DiagnosticsResult | null>(null);
   const [fixMessage, setFixMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -72,6 +74,19 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
       if (onConfigFixed) onConfigFixed();
     } else {
       setFixMessage(`❌ ${res.message}`);
+    }
+  };
+
+  const handleRepairThemes = async () => {
+    setRepairing(true);
+    setRepairStatus('Scanning and sanitizing all installed themes on disk...');
+    const res = await repairAllHaThemes();
+    setRepairing(false);
+    if (res.success) {
+      setRepairStatus(`✅ ${res.message}`);
+      fetchDiagnostics();
+    } else {
+      setRepairStatus(`❌ ${res.message}`);
     }
   };
 
@@ -276,6 +291,40 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               }`}>
                 {diagnostics?.hasHacs ? 'Installed' : 'Optional'}
               </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col gap-2.5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-semibold text-slate-200 text-sm flex items-center gap-1.5">
+                      <span>Theme Safety & Pointer Isolation Guard</span>
+                      <span className="text-[9px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded font-mono border border-cyan-500/30">
+                        Active Protection
+                      </span>
+                    </div>
+                    <p className="text-slate-400 mt-0.5 leading-relaxed">
+                      Automatically scans all installed YAML themes in <code className="text-xs text-blue-300">/config/themes</code> for pointer-intercepting fixed overlays, unescaped quotes, or syntax bugs, repairing them with zero downtime.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleRepairThemes}
+                  disabled={repairing}
+                  className="px-3 py-1.5 rounded-lg bg-cyan-600/90 hover:bg-cyan-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all shrink-0 disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${repairing ? 'animate-spin' : ''}`} />
+                  <span>{repairing ? 'Scanning...' : 'Scan & Repair Themes'}</span>
+                </button>
+              </div>
+
+              {repairStatus && (
+                <div className="text-[11px] p-2 rounded-lg bg-cyan-950/60 border border-cyan-700/50 text-cyan-200 font-medium">
+                  {repairStatus}
+                </div>
+              )}
             </div>
           </div>
 

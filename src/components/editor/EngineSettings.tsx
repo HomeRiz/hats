@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sliders, Sparkles, Shield, Eye, Box } from 'lucide-react';
+import { Sliders, Sparkles, Shield, Eye, Box, Menu } from 'lucide-react';
 import { ThemeConfig, EngineType } from '../../types/theme';
 
 interface EngineSettingsProps {
@@ -27,6 +27,9 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           insetShadow: '3px 3px 0.5px -3.5px rgba(255,255,255,0.35) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.30) inset, 0 0 10px 1px rgba(255,255,255,0.10) inset, 0 8px 24px -12px rgba(0,0,0,0.55)',
           hoverGlow: true,
           scanlines: false,
+          sidebarStyle: 'translucent',
+          sidebarOpacity: 0.45,
+          sidebarBlur: 20,
         }
       });
     } else if (type === 'kids') {
@@ -46,6 +49,9 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           insetShadow: '0 8px 24px -6px rgba(255, 107, 139, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset, 0 12px 32px -10px rgba(0,0,0,0.4)',
           hoverGlow: true,
           scanlines: false,
+          sidebarStyle: 'translucent',
+          sidebarOpacity: 0.55,
+          sidebarBlur: 24,
         }
       });
     } else if (type === 'velvet') {
@@ -65,6 +71,9 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           insetShadow: '0 1px 0 0 rgba(205,214,244,0.10) inset, 0 0 0 1px rgba(17,17,27,0.35), 0 10px 26px -14px rgba(0,0,0,0.70)',
           hoverGlow: true,
           scanlines: false,
+          sidebarStyle: 'opaque',
+          sidebarOpacity: 0.95,
+          sidebarBlur: 0,
         }
       });
     } else if (type === 'neon') {
@@ -85,6 +94,9 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           hoverGlow: true,
           scanlines: true,
           scanlineIntensity: 0.04,
+          sidebarStyle: 'translucent',
+          sidebarOpacity: 0.65,
+          sidebarBlur: 16,
         }
       });
     }
@@ -184,6 +196,74 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
       </div>
 
       <div className="space-y-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
+        <div className="font-semibold text-slate-300 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5">
+            <Menu className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Sidebar Menu Glass & Opacity</span>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300 font-mono capitalize border border-slate-700">
+            {engine.sidebarStyle || 'translucent'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-1.5">
+          {[
+            { id: 'translucent', label: 'Translucent' },
+            { id: 'opaque', label: 'Opaque' },
+            { id: 'transparent', label: 'Ultra Clear' },
+          ].map((mode) => (
+            <button
+              key={mode.id}
+              type="button"
+              onClick={() => updateEngine({ sidebarStyle: mode.id as any })}
+              className={`py-1.5 px-2 rounded-lg text-center text-xs font-semibold transition-all border ${
+                (engine.sidebarStyle || 'translucent') === mode.id
+                  ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                  : 'bg-slate-800/60 text-slate-400 border-slate-700/60 hover:text-slate-200'
+              }`}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+
+        {engine.sidebarStyle !== 'opaque' && (
+          <>
+            <div className="space-y-1 pt-1">
+              <div className="flex justify-between text-slate-400 text-[11px]">
+                <span>Sidebar Glass Opacity</span>
+                <span className="font-mono text-slate-200">{Math.round((engine.sidebarOpacity ?? 0.45) * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.05"
+                max="0.95"
+                step="0.05"
+                value={engine.sidebarOpacity ?? 0.45}
+                onChange={(e) => updateEngine({ sidebarOpacity: parseFloat(e.target.value) })}
+                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex justify-between text-slate-400 text-[11px]">
+                <span>Sidebar Backdrop Blur</span>
+                <span className="font-mono text-slate-200">{engine.sidebarBlur ?? 20}px</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="32"
+                value={engine.sidebarBlur ?? 20}
+                onChange={(e) => updateEngine({ sidebarBlur: parseInt(e.target.value) })}
+                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="space-y-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
         <div className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs">
           <Eye className="w-3.5 h-3.5 text-pink-400" />
           <span>Glass Character & Blurs</span>
@@ -243,3 +323,4 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
     </div>
   );
 };
+

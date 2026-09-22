@@ -40,6 +40,9 @@ export interface EngineSettings {
   fallbackCardBg: string;
   scanlines: boolean;
   scanlineIntensity: number;
+  sidebarStyle?: 'translucent' | 'opaque' | 'transparent';
+  sidebarOpacity?: number;
+  sidebarBlur?: number;
 }
 
 export interface BackgroundSettings {

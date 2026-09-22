@@ -25,6 +25,22 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
   activeItem = 'Smart Home',
   onSelectItem 
 }) => {
+  const { engine, palette } = theme;
+  const sidebarStyle = engine.sidebarStyle || 'translucent';
+  const sidebarOpacity = engine.sidebarOpacity ?? 0.45;
+  const sidebarBlur = engine.sidebarBlur ?? 20;
+
+  let sidebarBg = `rgba(18, 20, 30, ${sidebarOpacity})`;
+  let sidebarFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+
+  if (sidebarStyle === 'opaque') {
+    sidebarBg = 'rgba(18, 20, 30, 0.96)';
+    sidebarFilter = 'none';
+  } else if (sidebarStyle === 'transparent') {
+    sidebarBg = 'transparent';
+    sidebarFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  }
+
   const topItems = [
     { icon: <Home className="w-4 h-4" />, label: 'Smart Home' },
     { icon: <FileCode className="w-4 h-4" />, label: 'File editor' },
@@ -43,11 +59,11 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
 
   return (
     <aside 
-      className="w-14 sm:w-48 md:w-56 h-full border-r border-white/10 flex flex-col justify-between py-2 select-none shrink-0 overflow-y-auto"
+      className="w-14 sm:w-48 md:w-56 h-full border-r border-white/10 flex flex-col justify-between py-2 select-none shrink-0 overflow-y-auto transition-all duration-300"
       style={{
-        backgroundColor: 'rgba(18, 20, 30, 0.70)',
-        backdropFilter: 'blur(20px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
+        backgroundColor: sidebarBg,
+        backdropFilter: sidebarFilter,
+        WebkitBackdropFilter: sidebarFilter,
         boxShadow: '4px 0 24px -8px rgba(0, 0, 0, 0.4)',
       }}
     >

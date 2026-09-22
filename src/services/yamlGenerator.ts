@@ -1,5 +1,6 @@
 import { ThemeConfig } from '../types/theme';
 import { hexToRgbString, generatePrimaryRamp, darkenColor } from './colorEngine';
+import { validateAndSanitizeTheme } from './themeSecurityValidator';
 
 function svgToBase64DataUri(svg: string): string {
   let cleaned = svg.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
@@ -16,19 +17,39 @@ function svgToBase64DataUri(svg: string): string {
 }
 
 export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSource: 'cdn' | 'local' | 'embedded' = 'local'): string {
-  const { name, palette, engine, background, dark, light, customSvgOverlay } = theme;
+  const sanitizedReport = validateAndSanitizeTheme(theme);
+  const safeTheme = sanitizedReport.sanitizedTheme;
+  const { name, palette, engine, background, dark, light, customSvgOverlay } = safeTheme;
   const accent = palette.accent || palette.primary;
   const ramp = generatePrimaryRamp(accent);
+
+  const sidebarStyle = engine.sidebarStyle || 'translucent';
+  const sidebarOpacity = engine.sidebarOpacity ?? 0.45;
+  const sidebarBlur = engine.sidebarBlur ?? 20;
+
+  let sidebarBgColor = `rgba(18, 18, 24, ${sidebarOpacity})`;
+  let sidebarHostBg = `rgba(18, 18, 24, ${sidebarOpacity})`;
+  let sidebarBackdropFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+
+  if (sidebarStyle === 'opaque') {
+    sidebarBgColor = 'rgba(18, 20, 30, 0.96)';
+    sidebarHostBg = 'rgba(18, 20, 30, 0.96)';
+    sidebarBackdropFilter = 'none';
+  } else if (sidebarStyle === 'transparent') {
+    sidebarBgColor = 'transparent';
+    sidebarHostBg = 'transparent';
+    sidebarBackdropFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  }
 
   let baseBg = 'none';
   if (background.type === 'image') {
     if (backgroundSource === 'local') {
-      const fileName = background.imageFileName || `${theme.id}.webp`;
-      baseBg = `url('/local/ultimate-theme/backgrounds/${theme.id}/${fileName}')`;
+      const fileName = background.imageFileName || `${safeTheme.id}.webp`;
+      baseBg = `url('/local/ultimate-theme/backgrounds/${safeTheme.id}/${fileName}')`;
     } else if (backgroundSource === 'embedded' && background.imageUrl) {
       baseBg = `url('${background.imageUrl}')`;
     } else {
-      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/${theme.id}/default.webp')`;
+      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/${safeTheme.id}/default.webp')`;
     }
   } else if (background.type === 'gradient' && background.gradientString) {
     baseBg = background.gradientString;
@@ -100,7 +121,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   app-header-selection-bar-color: "${accent}"
 
   # Sidebar (Left Menu Navigation)
-  sidebar-background-color: "rgba(18, 18, 24, 0.55)"
+  sidebar-background-color: "${sidebarBgColor}"
   sidebar-text-color: "rgba(255, 255, 255, 0.94)"
   sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
   sidebar-selected-background-color: "rgba(255, 255, 255, 0.12)"
@@ -210,12 +231,12 @@ ${tokenBlock}
 
   card-mod-sidebar: |
     :host {
-      background: none !important;
+      background-color: ${sidebarHostBg} !important;
     }
     .menu,
     .panels-list {
-      backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
-      -webkit-backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
+      backdrop-filter: ${sidebarBackdropFilter} !important;
+      -webkit-backdrop-filter: ${sidebarBackdropFilter} !important;
     }
     paper-listbox,
     ha-md-list {
