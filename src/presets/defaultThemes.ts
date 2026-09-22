@@ -149,7 +149,18 @@ export const defaultKidsTheme: ThemeConfig = {
     cardBackground: 'rgba(255, 255, 255, 0.75)',
     textPrimary: '#2D1B4E',
     textSecondary: '#6B5887',
-  }
+  },
+  customSvgOverlay: `<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="kids-stars" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M20 15 L22 21 L28 22 L23 26 L25 32 L20 28 L15 32 L17 26 L12 22 L18 21 Z" fill="#FFD54F" opacity="0.35"/>
+      <circle cx="80" cy="40" r="3" fill="#FF80AB" opacity="0.4"/>
+      <circle cx="95" cy="85" r="4" fill="#80D8FF" opacity="0.4"/>
+      <path d="M70 70 Q75 60, 85 65 T100 70" stroke="#B388FF" stroke-width="2" fill="none" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#kids-stars)" />
+</svg>`
 };
 
 export const defaultVelvetTheme: ThemeConfig = {

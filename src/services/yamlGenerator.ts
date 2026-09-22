@@ -1,9 +1,18 @@
 import { ThemeConfig } from '../types/theme';
 import { hexToRgbString, generatePrimaryRamp, darkenColor } from './colorEngine';
 
-function svgToDataUri(svg: string): string {
-  const cleaned = svg.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-  return `url("data:image/svg+xml;utf8,${encodeURIComponent(cleaned)}")`;
+function svgToBase64DataUri(svg: string): string {
+  let cleaned = svg.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!cleaned.includes('xmlns=')) {
+    cleaned = cleaned.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  let b64: string;
+  if (typeof window !== 'undefined' && typeof window.btoa === 'function') {
+    b64 = window.btoa(unescape(encodeURIComponent(cleaned)));
+  } else {
+    b64 = Buffer.from(cleaned, 'utf-8').toString('base64');
+  }
+  return `url('data:image/svg+xml;base64,${b64}')`;
 }
 
 export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSource: 'cdn' | 'local' | 'embedded' = 'local'): string {
@@ -29,7 +38,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
 
   let bgValue = baseBg;
   if (customSvgOverlay && customSvgOverlay.trim().startsWith('<svg')) {
-    const svgDataUrl = svgToDataUri(customSvgOverlay);
+    const svgDataUrl = svgToBase64DataUri(customSvgOverlay);
     bgValue = baseBg !== 'none' ? `${svgDataUrl}, ${baseBg}` : svgDataUrl;
   }
 
@@ -81,7 +90,9 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   divider-color: "rgba(152, 152, 157, 0.28)"
 
   # Native Home Assistant Lovelace Background
-  lovelace-background: "center / cover repeat fixed ${bgValue}"
+  ultimate-background: "${bgValue}"
+  background-image: "center / cover repeat fixed ${bgValue}"
+  lovelace-background: var(--background-image)
 
   # Top App Header
   app-header-background-color: "${headerTint}"
@@ -89,7 +100,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   app-header-selection-bar-color: "${accent}"
 
   # Sidebar (Left Menu Navigation)
-  sidebar-background-color: "${dark.secondaryBackground || 'rgb(18, 20, 32)'}"
+  sidebar-background-color: "${dark.secondaryBackground ? (dark.secondaryBackground.startsWith('rgb(') ? dark.secondaryBackground.replace('rgb(', 'rgba(').replace(')', ', 0.65)') : dark.secondaryBackground) : 'rgba(18, 20, 32, 0.65)'}"
   sidebar-text-color: "${dark.textSecondary || 'rgba(228, 228, 232, 0.85)'}"
   sidebar-icon-color: "${dark.textSecondary || 'rgba(228, 228, 232, 0.75)'}"
   sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
@@ -112,7 +123,6 @@ ${tokenBlock}
   ha-dialog-surface-backdrop-filter: "none"
 
   # Ultimate Theme System Variables
-  ultimate-background: "${bgValue}"
   ultimate-glow-color: "${engine.glowColor}"
   ultimate-sheen: "${sheenGrad}"
   ultimate-header-tint: "${headerTint}"
@@ -125,7 +135,7 @@ ${tokenBlock}
       ha-card-background: "${dark.cardBackground}"
       primary-text-color: "${dark.textPrimary}"
       secondary-text-color: "${dark.textSecondary}"
-      sidebar-background-color: "${dark.secondaryBackground}"
+      sidebar-background-color: "${dark.secondaryBackground ? (dark.secondaryBackground.startsWith('rgb(') ? dark.secondaryBackground.replace('rgb(', 'rgba(').replace(')', ', 0.65)') : dark.secondaryBackground) : 'rgba(18, 20, 32, 0.65)'}"
       sidebar-text-color: "${dark.textSecondary}"
       sidebar-icon-color: "${dark.textSecondary}"
       sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
@@ -137,7 +147,7 @@ ${tokenBlock}
       ha-card-background: "${light.cardBackground}"
       primary-text-color: "${light.textPrimary}"
       secondary-text-color: "${light.textSecondary}"
-      sidebar-background-color: "${light.secondaryBackground}"
+      sidebar-background-color: "${light.secondaryBackground ? (light.secondaryBackground.startsWith('rgb(') ? light.secondaryBackground.replace('rgb(', 'rgba(').replace(')', ', 0.65)') : light.secondaryBackground) : 'rgba(238, 230, 252, 0.65)'}"
       sidebar-text-color: "${light.textSecondary}"
       sidebar-icon-color: "${light.textSecondary}"
       sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
@@ -145,9 +155,29 @@ ${tokenBlock}
       sidebar-selected-icon-color: "${accent}"
 
   # --------------------------------------------------------------------------
-  # card-mod Injections: Root, View, Card, Sidebar, Header
+  # card-mod Injections: Root, View, Card, Sidebar, Header, Config
   # --------------------------------------------------------------------------
   card-mod-root: |
+    /* Fixed viewport backdrop for iOS, Android & Desktop */
+    :host::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      z-index: -2;
+      pointer-events: none;
+    }
+    :host::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: ${engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)'};
+      z-index: -1;
+      pointer-events: none;
+    }
     app-header {
       background: var(--ultimate-header-tint, ${headerTint}) !important;
       backdrop-filter: blur(20px) saturate(1.4) !important;
@@ -156,22 +186,34 @@ ${tokenBlock}
     }
 
   card-mod-sidebar: |
-    ha-sidebar {
-      background: ${engine.glassTint || 'rgba(18, 20, 32, 0.85)'} !important;
+    :host {
+      background: transparent !important;
+      --app-drawer-content-container-background-color: transparent !important;
+    }
+    .menu,
+    .panels-list {
+      background: ${engine.glassTint || 'rgba(18, 20, 32, 0.65)'} !important;
       backdrop-filter: blur(20px) saturate(1.4) !important;
       -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
-    paper-icon-item[selected] {
+    ha-sidebar {
+      background: transparent !important;
+    }
+    paper-icon-item[selected],
+    ha-md-list-item.selected,
+    ha-list-item-button.selected {
       background: rgba(${hexToRgbString(accent)}, 0.20) !important;
       border-radius: 12px !important;
       margin: 2px 8px !important;
       color: #FFFFFF !important;
     }
-    paper-icon-item[selected] ha-icon {
+    paper-icon-item[selected] ha-icon,
+    ha-md-list-item.selected ha-icon {
       color: ${accent} !important;
     }
-    paper-icon-item {
+    paper-icon-item,
+    ha-md-list-item,
+    ha-list-item-button {
       margin: 2px 8px !important;
       border-radius: 12px !important;
       transition: background 0.2s ease;
@@ -181,24 +223,50 @@ ${tokenBlock}
     hui-view {
       background: none !important;
     }
-    :host {
-      --ultimate-effective-bg: var(--ultimate-view-background, var(--ultimate-background, ${bgValue}));
-    }
-    :host::before {
-      content: "";
+    hui-view::before {
+      content: '';
       position: fixed;
       inset: 0;
+      background-image: var(--ultimate-view-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
       z-index: -2;
-      background: var(--ultimate-effective-bg) center / cover repeat fixed !important;
       pointer-events: none;
+      opacity: var(--ultimate-view-background-opacity, 1);
     }
-    :host::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: ${engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 100%)'};
-      pointer-events: none;
+
+  card-mod-config: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-config,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+    ha-card {
+      background: ${engine.glassTint} !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      border-radius: var(--ha-card-border-radius, ${engine.cardRadius}px) !important;
+      box-shadow: ${engine.insetShadow} !important;
+    }
+
+  card-mod-panel-custom: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-custom,
+    partial-panel-resolver {
+      background: transparent !important;
     }
 
   card-mod-card: |
@@ -234,6 +302,38 @@ ${tokenBlock}
       box-shadow: 0 0 ${engine.hoverGlowIntensity}px -4px var(--ultimate-glow-color), ${engine.insetShadow} !important;
       transform: translateY(-2px);
     }` : ''}
+    :host(hui-heading-card) ha-card,
+    :host(hui-glance-card) ha-card,
+    :host(mushroom-title-card) ha-card,
+    :host(mushroom-chips-card) ha-card,
+    :host(.type-custom-bubble-card) ha-card,
+    ha-card.text-only {
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    :host(hui-heading-card) ha-card::before,
+    :host(hui-heading-card) ha-card::after,
+    :host(hui-glance-card) ha-card::before,
+    :host(hui-glance-card) ha-card::after,
+    :host(mushroom-title-card) ha-card::before,
+    :host(mushroom-title-card) ha-card::after,
+    :host(mushroom-chips-card) ha-card::before,
+    :host(mushroom-chips-card) ha-card::after,
+    :host(.type-custom-bubble-card) ha-card::before,
+    :host(.type-custom-bubble-card) ha-card::after,
+    ha-card.text-only::before,
+    ha-card.text-only::after {
+      content: none !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    :host(.type-custom-bubble-card) ha-card {
+      border-radius: 0px !important;
+    }
 ${theme.customCss ? `\n    /* Custom User Injected CSS */\n    ${theme.customCss.split('\n').join('\n    ')}` : ''}
 `;
 

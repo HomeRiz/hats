@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.0.6] - 2026-09-22
+## [1.1.7] - 2026-09-22
+- **Base64 SVG Pattern Data URIs**: Encoded custom vector overlays and pattern presets (like Kids Stars & Clouds) using Base64 to prevent CSS parsing breakages.
+- **Fixed Viewport & Lovelace Backdrop**: Added `:host::before` & `:host::after` viewport backdrops to `card-mod-root` and `hui-view::before` in `card-mod-view`.
+- **Frosted Glass Sidebar Theming**: Sidebar now inherits translucent backgrounds (`sidebar-background-color`) and `card-mod-sidebar` backdrop blur.
+- **Panel & Config Theming**: Added `card-mod-config` and `card-mod-panel-custom` to preserve seamless backdrops across settings, HACS, and drawer panels.
+
+## [1.1.6] - 2026-09-22
 - **Port Update**: Configured internal Ingress service port to `4287`.
 
 ## [1.0.5] - 2026-09-22
