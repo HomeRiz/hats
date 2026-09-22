@@ -328,93 +328,66 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               Recommended Lovelace Add-ons & Cards
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
-                <div>
-                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <span>lovelace-card-mod</span>
-                    {isCardModOnDisk && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+              {[
+                {
+                  id: 'card-mod',
+                  name: 'lovelace-card-mod',
+                  desc: 'Glass blur & CSS theme shaders',
+                  hacsId: 190927524,
+                  installed: Boolean(isCardModOnDisk || isCardModInConfig),
+                },
+                {
+                  id: 'mushroom',
+                  name: 'Mushroom Cards',
+                  desc: 'Modern sleek UI sliders & chips',
+                  hacsId: 444350375,
+                  installed: Boolean(diagnostics?.detectedCards.includes('mushroom')),
+                },
+                {
+                  id: 'bubble-card',
+                  name: 'Bubble Card',
+                  desc: 'Pop-up glassmorphism subviews',
+                  hacsId: 680112919,
+                  installed: Boolean(diagnostics?.detectedCards.includes('bubble-card')),
+                },
+                {
+                  id: 'layout-card',
+                  name: 'Layout Card',
+                  desc: 'Advanced CSS grid & masonry',
+                  hacsId: 156434866,
+                  installed: Boolean(diagnostics?.detectedCards.includes('layout-card')),
+                },
+              ].map((card) => (
+                <div key={card.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
+                  <div>
+                    <div className="font-semibold text-slate-200 flex items-center gap-1.5">
+                      <span>{card.name}</span>
+                      {card.installed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                    </div>
+                    <div className="text-[10px] text-slate-400">{card.desc}</div>
                   </div>
-                  <div className="text-[10px] text-slate-400">Glass blur & CSS theme shaders</div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={getHacsUrl(190927524)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Open in HACS"
-                    className="px-2 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors"
-                  >
-                    <span>HACS</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
-                <div>
-                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <span>Mushroom Cards</span>
-                    {diagnostics?.detectedCards.includes('mushroom') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {card.installed ? (
+                      <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold flex items-center gap-1">
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span>Installed</span>
+                      </span>
+                    ) : (
+                      <a
+                        href={getHacsUrl(card.hacsId)}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Install via HACS"
+                        className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors shadow-sm"
+                      >
+                        <DownloadCloud className="w-3 h-3" />
+                        <span>Install in HACS</span>
+                        <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                      </a>
+                    )}
                   </div>
-                  <div className="text-[10px] text-slate-400">Modern sleek UI sliders & chips</div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={getHacsUrl(444350375)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Open in HACS"
-                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
-                  >
-                    <span>HACS</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
-                <div>
-                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <span>Bubble Card</span>
-                    {diagnostics?.detectedCards.includes('bubble-card') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                  </div>
-                  <div className="text-[10px] text-slate-400">Pop-up glassmorphism subviews</div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={getHacsUrl(680112919)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Open in HACS"
-                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
-                  >
-                    <span>HACS</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
-                <div>
-                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <span>Layout Card</span>
-                    {diagnostics?.detectedCards.includes('layout-card') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                  </div>
-                  <div className="text-[10px] text-slate-400">Advanced CSS grid & masonry</div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={getHacsUrl(156434866)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Open in HACS"
-                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
-                  >
-                    <span>HACS</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

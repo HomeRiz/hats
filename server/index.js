@@ -117,6 +117,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
         if (/mushroom\.js/i.test(rawRes)) detectedCards.push('mushroom');
         if (/bubble-card\.js/i.test(rawRes)) detectedCards.push('bubble-card');
         if (/layout-card\.js/i.test(rawRes)) detectedCards.push('layout-card');
+        if (/button-card\.js/i.test(rawRes)) detectedCards.push('button-card');
       } catch (err) {
         console.debug('Could not parse lovelace_resources:', err);
       }
@@ -124,11 +125,12 @@ app.get('/api/ha/diagnostics', (req, res) => {
 
     if (fs.existsSync(HACS_COMMUNITY_DIR)) {
       try {
-        const communityFolders = fs.readdirSync(HACS_COMMUNITY_DIR);
-        if (communityFolders.includes('lovelace-card-mod')) hasCardModInResources = true;
-        if (communityFolders.includes('mushroom') && !detectedCards.includes('mushroom')) detectedCards.push('mushroom');
-        if (communityFolders.includes('bubble-card') && !detectedCards.includes('bubble-card')) detectedCards.push('bubble-card');
-        if (communityFolders.includes('lovelace-layout-card') && !detectedCards.includes('layout-card')) detectedCards.push('layout-card');
+        const communityFolders = fs.readdirSync(HACS_COMMUNITY_DIR).map(f => f.toLowerCase());
+        if (communityFolders.some(f => f.includes('card-mod'))) hasCardModInResources = true;
+        if (communityFolders.some(f => f.includes('mushroom')) && !detectedCards.includes('mushroom')) detectedCards.push('mushroom');
+        if (communityFolders.some(f => f.includes('bubble')) && !detectedCards.includes('bubble-card')) detectedCards.push('bubble-card');
+        if (communityFolders.some(f => f.includes('layout')) && !detectedCards.includes('layout-card')) detectedCards.push('layout-card');
+        if (communityFolders.some(f => f.includes('button')) && !detectedCards.includes('button-card')) detectedCards.push('button-card');
       } catch (err) {
         console.debug('Could not read community directory:', err);
       }
