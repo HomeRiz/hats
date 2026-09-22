@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.5] - 2026-09-23
+- **Full Studio Theme Background & Acrylic Immersion**: Dynamically renders the active theme's wallpaper artwork, gradients, and custom SVG pattern overlays across the entire HATS application shell with a frosted dark glass scrim.
+
 ## [1.2.4] - 2026-09-23
 - **Seamless Fixed Sidebar Wallpaper Engine**: Injected `:host::before` & `:host::after` fixed backdrop layers directly into `card-mod-sidebar` linked to `var(--ultimate-background)`, guaranteeing the sidebar matches the dashboard background artwork, gradients, and ambient lighting pixel-for-pixel across all views.
 

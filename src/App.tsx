@@ -52,88 +52,126 @@ export const App: React.FC = () => {
     checkDiagnostics();
   }, []);
 
+  const { background, customSvgOverlay } = activeTheme;
+  let appBgStyle: React.CSSProperties = {};
+  if (background.type === 'image' && background.imageUrl) {
+    appBgStyle = {
+      backgroundImage: `url(${background.imageUrl})`,
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+    };
+  } else if (background.type === 'gradient' && background.gradientString) {
+    appBgStyle = {
+      backgroundImage: background.gradientString,
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+    };
+  } else if (background.type === 'solid' && background.solidColor) {
+    appBgStyle = {
+      backgroundColor: background.solidColor,
+    };
+  }
+
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
-      <Navbar
-        activeTheme={activeTheme}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        previewMode={previewMode}
-        setPreviewMode={setPreviewMode}
-        onOpenExport={() => setIsExportOpen(true)}
-        onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
-        onNewTheme={() => createNewTheme()}
-        onOpenDoctor={() => setIsDoctorOpen(true)}
-        isDoctorReady={isDoctorReady}
-        hasPendingDoctorAction={hasPendingDoctorAction}
+    <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+      <div 
+        className="absolute inset-0 z-0 transition-all duration-700 pointer-events-none"
+        style={appBgStyle}
       />
+      {customSvgOverlay && customSvgOverlay.trim().startsWith('<svg') && (
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none opacity-30 transition-all duration-700"
+          style={{
+            backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(customSvgOverlay)}")`,
+            backgroundRepeat: 'repeat',
+            backgroundPosition: 'center',
+          }}
+        />
+      )}
+      <div className="absolute inset-0 z-0 bg-slate-950/75 backdrop-blur-xl pointer-events-none" />
 
-      <div className="flex-1 flex overflow-hidden relative">
-        {activeTab === 'editor' && (
-          <>
-            <div className="w-full md:w-[420px] lg:w-[460px] h-full shrink-0 z-20 shadow-xl">
-              <ThemeEditor
-                theme={activeTheme}
-                onChange={updateActiveTheme}
-                onOpenExport={() => setIsExportOpen(true)}
+      <div className="relative z-10 flex flex-col h-full w-full overflow-hidden">
+        <Navbar
+          activeTheme={activeTheme}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          previewMode={previewMode}
+          setPreviewMode={setPreviewMode}
+          onOpenExport={() => setIsExportOpen(true)}
+          onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
+          onNewTheme={() => createNewTheme()}
+          onOpenDoctor={() => setIsDoctorOpen(true)}
+          isDoctorReady={isDoctorReady}
+          hasPendingDoctorAction={hasPendingDoctorAction}
+        />
+
+        <div className="flex-1 flex overflow-hidden relative">
+          {activeTab === 'editor' && (
+            <>
+              <div className="w-full md:w-[420px] lg:w-[460px] h-full shrink-0 z-20 shadow-2xl">
+                <ThemeEditor
+                  theme={activeTheme}
+                  onChange={updateActiveTheme}
+                  onOpenExport={() => setIsExportOpen(true)}
+                />
+              </div>
+
+              <div className="flex-1 h-full relative overflow-hidden bg-slate-950/60">
+                <DashboardPreview
+                  theme={activeTheme}
+                  previewMode={previewMode}
+                  activeView={activeView}
+                  setActiveView={setActiveView}
+                />
+              </div>
+            </>
+          )}
+
+          {activeTab === 'library' && (
+            <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
+              <ThemeGallery
+                themes={themes}
+                activeThemeId={activeThemeId}
+                onSelectTheme={(id) => {
+                  setActiveThemeId(id);
+                  setActiveTab('editor');
+                }}
+                onNewTheme={() => createNewTheme()}
+                onDuplicateTheme={duplicateTheme}
+                onDeleteTheme={deleteTheme}
+                onSyncHaThemes={syncInstalledThemesFromHa}
+                onImportThemes={(imported) => {
+                  setThemes((prev) => [...imported, ...prev]);
+                  if (imported[0]) setActiveThemeId(imported[0].id);
+                }}
+                onSwitchToEditor={() => setActiveTab('editor')}
+                onOpenDoctor={() => setIsDoctorOpen(true)}
+                isDoctorReady={isDoctorReady}
               />
             </div>
+          )}
 
-            <div className="flex-1 h-full relative overflow-hidden bg-slate-950">
-              <DashboardPreview
-                theme={activeTheme}
-                previewMode={previewMode}
-                activeView={activeView}
-                setActiveView={setActiveView}
+          {activeTab === 'community' && (
+            <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
+              <CommunityHub
+                submissions={communitySubmissions}
+                onVote={voteOnCommunityTheme}
+                onApplyTheme={(theme) => {
+                  const existing = themes.find((t) => t.id === theme.id);
+                  if (!existing) {
+                    setThemes((prev) => [theme, ...prev]);
+                  }
+                  setActiveThemeId(theme.id);
+                  setActiveTab('editor');
+                }}
+                onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
               />
             </div>
-          </>
-        )}
+          )}
 
-        {activeTab === 'library' && (
-          <div className="flex-1 h-full overflow-y-auto bg-slate-950">
-            <ThemeGallery
-              themes={themes}
-              activeThemeId={activeThemeId}
-              onSelectTheme={(id) => {
-                setActiveThemeId(id);
-                setActiveTab('editor');
-              }}
-              onNewTheme={() => createNewTheme()}
-              onDuplicateTheme={duplicateTheme}
-              onDeleteTheme={deleteTheme}
-              onSyncHaThemes={syncInstalledThemesFromHa}
-              onImportThemes={(imported) => {
-                setThemes((prev) => [...imported, ...prev]);
-                if (imported[0]) setActiveThemeId(imported[0].id);
-              }}
-              onSwitchToEditor={() => setActiveTab('editor')}
-              onOpenDoctor={() => setIsDoctorOpen(true)}
-              isDoctorReady={isDoctorReady}
-            />
-          </div>
-        )}
-
-        {activeTab === 'community' && (
-          <div className="flex-1 h-full overflow-y-auto bg-slate-950">
-            <CommunityHub
-              submissions={communitySubmissions}
-              onVote={voteOnCommunityTheme}
-              onApplyTheme={(theme) => {
-                const existing = themes.find((t) => t.id === theme.id);
-                if (!existing) {
-                  setThemes((prev) => [theme, ...prev]);
-                }
-                setActiveThemeId(theme.id);
-                setActiveTab('editor');
-              }}
-              onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
-            />
-          </div>
-        )}
-
-        {activeTab === 'code' && (
-          <div className="flex-1 h-full p-6 overflow-y-auto bg-slate-950 max-w-5xl mx-auto space-y-4">
+          {activeTab === 'code' && (
+            <div className="flex-1 h-full p-6 overflow-y-auto bg-slate-950/40 backdrop-blur-md max-w-5xl mx-auto space-y-4">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <div>
                 <h2 className="text-lg font-bold text-white">Generated Home Assistant Theme YAML</h2>
@@ -178,6 +216,7 @@ export const App: React.FC = () => {
           checkDiagnostics();
         }}
       />
+      </div>
     </div>
   );
 };

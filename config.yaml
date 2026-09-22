@@ -1,6 +1,6 @@
 name: "HATS - Home Assistant Theme Store"
 slug: "hats"
-version: "1.2.4"
+version: "1.2.5"
 description: "Visual Theme Designer, Live Lovelace Sandbox, Direct Theme Installer, and Community Store inside Home Assistant."
 url: "https://github.com/HomeRiz/hats"
 arch:
