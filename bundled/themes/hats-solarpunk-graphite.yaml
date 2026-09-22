@@ -1,0 +1,374 @@
+HATS Solarpunk - Graphite:
+  modes:
+    light:
+      primary-background-color: "#585b70"
+      secondary-background-color: "#585b70"
+      ha-card-background: rgba(88, 91, 112, 0.42)
+    dark:
+      primary-background-color: "#1e1e2e"
+      secondary-background-color: "#181825"
+      ha-card-background: rgba(30, 30, 46, 0.42)
+  ultimate-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/solarpunk/graphite.webp')
+  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/solarpunk/graphite.webp')
+  lovelace-background: var(--background-image)
+  app-theme-color: "#121b15"
+  ha-card-backdrop-filter: blur(12px) saturate(1.15)
+  ha-card-border-radius: 18px
+  ha-card-features-border-radius: var(--ha-card-border-radius)
+  ha-card-border-width: 1px
+  ha-card-border-color: rgba(205, 214, 244, 0.10)
+  ha-card-glass-tint: rgba(49, 50, 68, 0.42)
+  ha-card-glass-sheen: linear-gradient(160deg, rgba(205,214,244,0.12) 0%, rgba(205,214,244,0.03) 26%, rgba(205,214,244,0) 50%)
+  ha-card-glass-inset-shadow: |
+    0 1px 0 0 rgba(205,214,244,0.10) inset, 0 0 0 1px rgba(17,17,27,0.35), 0 10px 26px -14px rgba(0,0,0,0.70)
+  ha-card-box-shadow: |
+    0 1px 0 0 rgba(205,214,244,0.10) inset, 0 0 0 1px rgba(17,17,27,0.35), 0 10px 26px -14px rgba(0,0,0,0.70)
+  ultimate-glow-color: "#B4BEFE"
+  ultimate-transition: box-shadow 200ms ease, transform 200ms ease
+  primary-color: "#B4BEFE"
+  accent-color: var(--primary-color)
+  light-primary-color: "#cdd6f4"
+  divider-color: rgba(147, 153, 178, 0.24)
+  ha-color-primary-05: "#161820"
+  ha-color-primary-10: "#2d3040"
+  ha-color-primary-20: "#5a5f7f"
+  ha-color-primary-30: "#878ebe"
+  ha-color-primary-40: "#B4BEFE"
+  ha-color-primary-50: "#c0c9fe"
+  ha-color-primary-60: "#cdd4fe"
+  ha-color-primary-70: "#dadefe"
+  ha-color-primary-80: "#e6e9ff"
+  ha-color-primary-90: "#f2f4ff"
+  ha-color-primary-95: "#f9faff"
+  red-color: "#f38ba8"
+  pink-color: "#f5c2e7"
+  purple-color: "#cba6f7"
+  indigo-color: "#b4befe"
+  blue-color: "#89b4fa"
+  light-blue-color: "#89dceb"
+  cyan-color: "#94e2d5"
+  teal-color: "#94e2d5"
+  green-color: "#a6e3a1"
+  yellow-color: "#f9e2af"
+  orange-color: "#fab387"
+  brown-color: "#dc8a78"
+  grey-color: "#9399b2"
+  primary-text-color: "#cdd6f4"
+  secondary-text-color: "#a6adc8"
+  disabled-text-color: rgba(127, 132, 156, 0.65)
+  text-primary-color: var(--primary-text-color)
+  text-dark-color: var(--primary-text-color)
+  ha-color-text-secondary: var(--secondary-text-color)
+  lumo-body-text-color: var(--primary-text-color)
+  sidebar-background-color: rgba(24, 24, 37, 0.62)
+  sidebar-icon-color: var(--light-primary-color)
+  sidebar-text-color: var(--light-primary-color)
+  sidebar-selected-background-color: rgba(49, 50, 68, 0.85)
+  sidebar-selected-icon-color: var(--primary-color)
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  app-header-background-color: rgba(24, 24, 37, 0.38)
+  app-header-backdrop-filter: var(--ha-card-backdrop-filter)
+  app-header-text-color: var(--primary-text-color)
+  app-header-edit-background-color: rgba(17, 17, 27, 0.70)
+  card-background-color: rgba(49, 50, 68, 0.92)
+  paper-card-background-color: var(--ha-card-background)
+  paper-listbox-background-color: rgba(49, 50, 68, 0.92)
+  rgb-card-background-color: rgb(30, 30, 46)
+  clear-background-color: var(--ha-card-background)
+  mdc-theme-surface: rgba(49, 50, 68, 0.92)
+  material-background-color: rgba(49, 50, 68, 0.92)
+  table-row-background-color: rgba(49, 50, 68, 0.92)
+  table-row-alternative-background-color: rgba(69, 71, 90, 0.92)
+  md-list-container-color: none
+  ha-dialog-surface-background: rgba(30, 30, 46, 0.80)
+  ha-dialog-surface-backdrop-filter: none
+  ha-dialog-scrim-backdrop-filter: blur(2px)
+  dialog-box-shadow: var(--ha-card-box-shadow)
+  paper-dialog-background-color: rgba(30, 30, 46, 0.80)
+  more-info-header-background: rgba(24, 24, 37, 0.38)
+  mdc-dialog-scrim-color: rgba(17, 17, 27, 0.62)
+  state-icon-color: var(--primary-text-color)
+  state-icon-active-color: var(--primary-color)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  state-inactive-color: var(--disabled-text-color)
+  paper-item-icon-color: var(--primary-text-color)
+  paper-item-icon-active-color: var(--state-icon-active-color)
+  paper-slider-knob-color: "#FFFFFF"
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--paper-slider-knob-color)
+  paper-slider-active-color: var(--primary-color)
+  paper-slider-secondary-color: var(--paper-slider-knob-color)
+  paper-slider-container-color: rgba(205, 214, 244, 0.20)
+  ha-slider-background: none !important
+  switch-checked-track-color: var(--primary-color)
+  switch-checked-button-color: "#FFFFFF"
+  switch-unchecked-track-color: var(--disabled-text-color)
+  switch-unchecked-button-color: "#FFFFFF"
+  paper-toggle-button-checked-bar-color: var(--primary-color)
+  paper-toggle-button-checked-button-color: "#FFFFFF"
+  paper-toggle-button-unchecked-bar-color: var(--disabled-text-color)
+  paper-toggle-button-unchecked-button-color: "#FFFFFF"
+  ha-badge-border-radius: 14px
+  label-badge-background-color: rgba(49, 50, 68, 0.92)
+  label-badge-text-color: var(--primary-text-color)
+  label-badge-red: var(--red-color)
+  input-ink-color: var(--primary-text-color)
+  input-fill-color: transparent
+  input-disabled-fill-color: transparent
+  input-label-ink-color: var(--primary-text-color)
+  input-disabled-ink-color: var(--disabled-text-color)
+  input-dropdown-icon-color: var(--primary-text-color)
+  input-idle-line-color: var(--secondary-text-color)
+  input-hover-line-color: var(--primary-color)
+  ha-color-form-background: var(--ha-card-background)
+  ha-color-form-background-hover: var(--ha-card-background)
+  ha-color-form-background-disabled: var(--ha-card-background)
+  mdc-checkbox-unchecked-color: var(--secondary-text-color)
+  mdc-radio-unchecked-color: var(--secondary-text-color)
+  codemirror-property: var(--accent-color)
+  markdown-code-background-color: rgba(17, 17, 27, 0.70)
+  code-editor-background-color: rgba(17, 17, 27, 0.70)
+  wa-shadow-m: var(--ha-card-box-shadow)
+  wa-border-radius-s: var(--ha-card-border-radius)
+  wa-border-radius-m: 18px
+  wa-border-width-s: 0px
+  wa-color-neutral-fill-normal: rgba(205, 214, 244, 0.10)
+  ha-color-on-neutral-normal: var(--primary-text-color)
+  ha-color-fill-primary-quiet-resting: rgba(205, 214, 244, 0.10)
+  ha-color-fill-primary-quiet-hover: rgba(205, 214, 244, 0.18)
+  mush-spacing: 10px
+  mush-icon-border-radius: 14px
+  mush-control-border-radius: 14px
+  mush-chip-border-radius: 14px
+  mush-chip-background: var(--ha-card-background)
+  mush-rgb-white: 255, 255, 255
+  mush-title-font-weight: 600
+  mush-title-letter-spacing: 0.02em
+  ha-tile-icon-border-radius: 14px
+  mcg-title-letter-spacing: 0.15em
+  mini-media-player-base-color: var(--primary-text-color)
+  mini-media-player-icon-color: var(--primary-text-color)
+  card-mod-theme: Ultimate Solarpunk - Graphite
+  card-mod-root: |
+    :host::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      pointer-events: none;
+    }
+    :host::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(17,17,27,0.28) 0%, rgba(17,17,27,0.48) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    :host {
+      --token-rgb-primary: 137, 180, 250;
+      --token-rgb-black: 0, 0, 0;
+      --token-rgb-white: 255, 255, 255;
+      --token-rgb-purple: 203, 166, 247;
+      --token-rgb-pink: 245, 194, 231;
+      --token-rgb-red: 243, 139, 168;
+      --token-rgb-deep-purple: 203, 166, 247;
+      --token-rgb-indigo: 180, 190, 254;
+      --token-rgb-blue: 137, 180, 250;
+      --token-rgb-light-blue: 137, 220, 235;
+      --token-rgb-cyan: 148, 226, 213;
+      --token-rgb-teal: 148, 226, 213;
+      --token-rgb-green: 166, 227, 161;
+      --token-rgb-light-green: 166, 227, 161;
+      --token-rgb-lime: 166, 227, 161;
+      --token-rgb-yellow: 249, 226, 175;
+      --token-rgb-amber: 249, 226, 175;
+      --token-rgb-orange: 250, 179, 135;
+      --token-rgb-deep-orange: 250, 179, 135;
+      --token-rgb-brown: 220, 138, 120;
+      --token-rgb-grey: 142, 142, 147;
+      --token-rgb-blue-grey: 120, 130, 145;
+      --token-rgb-state-icon: 255, 255, 255;
+      --token-size-radius-card: var(--ha-card-border-radius);
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(147, 153, 178, 0.35);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+  card-mod-card: |
+    ha-card {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: 1px solid var(--ha-card-border-color);
+      transition: var(--ultimate-transition);
+    }
+
+    ha-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--ha-card-glass-tint);
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      z-index: -1;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: var(--ha-card-glass-inset-shadow);
+    }
+
+    ha-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: var(--ha-card-glass-sheen);
+      z-index: 0;
+      mix-blend-mode: normal;
+    }
+    ha-card > * { position: relative; z-index: 1; }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      ha-card:hover {
+        transform: translateY(-1px);
+      }
+      ha-card:hover::before {
+        box-shadow: var(--ha-card-glass-inset-shadow),
+                    0 0 20px -8px var(--ultimate-glow-color);
+      }
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      ha-card::before {
+        background: rgba(49, 50, 68, 0.92);
+      }
+    }
+
+    :host(hui-heading-card) ha-card,
+    :host(hui-glance-card) ha-card,
+    :host(mushroom-title-card) ha-card,
+    :host(mushroom-chips-card) ha-card,
+    :host(.type-custom-bubble-card) ha-card,
+    ha-card.text-only {
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    :host(hui-heading-card) ha-card::before,
+    :host(hui-heading-card) ha-card::after,
+    :host(hui-glance-card) ha-card::before,
+    :host(hui-glance-card) ha-card::after,
+    :host(mushroom-title-card) ha-card::before,
+    :host(mushroom-title-card) ha-card::after,
+    :host(mushroom-chips-card) ha-card::before,
+    :host(mushroom-chips-card) ha-card::after,
+    :host(.type-custom-bubble-card) ha-card::before,
+    :host(.type-custom-bubble-card) ha-card::after,
+    ha-card.text-only::before,
+    ha-card.text-only::after {
+      content: none !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    :host(.type-custom-bubble-card) ha-card {
+      border-radius: 0px !important;
+    }
+
+    .mdc-data-table,
+    .mdc-data-table__row,
+    ha-sankey-chart {
+      background: none !important;
+    }
+    .mdc-data-table__header-cell {
+      background: var(--ha-card-glass-tint) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter) !important;
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter) !important;
+    }
+  card-mod-sidebar: |
+    :host {
+      background: none !important;
+    }
+    .menu,
+    .panels-list {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+    ha-list-item-button,
+    ha-list-item-button.selected::before,
+    ha-md-list-item,
+    ha-md-list-item.selected::before,
+    paper-icon-item {
+      border-radius: var(--ha-card-border-radius) !important;
+      --ha-list-item-focus-radius: var(--ha-card-border-radius) !important;
+    }
+    ha-md-list-item.selected,
+    paper-icon-item.iron-selected {
+      background: var(--ha-color-fill-primary-quiet-resting) !important;
+    }
+  card-mod-top-app-bar-fixed: |
+    :host {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+  card-mod-dialog: |
+    :host {
+      --dialog-backdrop-filter: none;
+    }
+  card-mod-config: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(17,17,27,0.28) 0%, rgba(17,17,27,0.48) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-config,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+    ha-card {
+      background: var(--ha-card-glass-tint) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      border-radius: var(--ha-card-border-radius) !important;
+      box-shadow: var(--ha-card-glass-inset-shadow) !important;
+    }
+  card-mod-panel-custom: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(17,17,27,0.28) 0%, rgba(17,17,27,0.48) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-custom,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+  card-mod-view: |
+    hui-view::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-view-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      pointer-events: none;
+      opacity: var(--ultimate-view-background-opacity, 1);
+    }
+  hats-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/solarpunk/graphite.webp')

@@ -18,6 +18,7 @@ COPY --from=builder /build/dist ./dist
 
 COPY server ./server
 COPY translations ./translations
+COPY bundled ./bundled
 COPY config.yaml ./config.yaml
 
 COPY run.sh /run.sh

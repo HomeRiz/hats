@@ -1,0 +1,374 @@
+HATS Glass - Verdant:
+  modes:
+    light:
+      primary-background-color: rgb(70, 74, 80)
+      secondary-background-color: rgb(70, 74, 80)
+      ha-card-background: rgba(190, 195, 205, 0.26)
+    dark:
+      primary-background-color: rgb(14, 14, 20)
+      secondary-background-color: rgb(14, 14, 20)
+      ha-card-background: rgba(0, 0, 0, 0.26)
+  ultimate-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/glass/verdant.webp')
+  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/glass/verdant.webp')
+  lovelace-background: var(--background-image)
+  app-theme-color: "#1f2f12"
+  ha-card-backdrop-filter: blur(16px) saturate(1.45)
+  ha-card-border-radius: 30px
+  ha-card-features-border-radius: var(--ha-card-border-radius)
+  ha-card-border-width: 0px
+  ha-card-border-color: rgba(255, 255, 255, 0.18)
+  ha-card-glass-tint: rgba(255, 255, 255, 0.06)
+  ha-card-glass-sheen: linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 22%, rgba(255,255,255,0) 45%)
+  ha-card-glass-inset-shadow: |
+    3px 3px 0.5px -3.5px rgba(255,255,255,0.35) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.30) inset, 0 0 10px 1px rgba(255,255,255,0.10) inset, 0 8px 24px -12px rgba(0,0,0,0.55)
+  ha-card-box-shadow: |
+    3px 3px 0.5px -3.5px rgba(255,255,255,0.35) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.30) inset, 0 0 10px 1px rgba(255,255,255,0.10) inset, 0 8px 24px -12px rgba(0,0,0,0.55)
+  ultimate-glow-color: "#32D74B"
+  ultimate-transition: box-shadow 220ms ease, transform 220ms ease
+  primary-color: "#32D74B"
+  accent-color: var(--primary-color)
+  light-primary-color: rgb(241, 241, 241)
+  divider-color: rgba(152, 152, 157, 0.28)
+  ha-color-primary-05: "#061b09"
+  ha-color-primary-10: "#0c3613"
+  ha-color-primary-20: "#196c26"
+  ha-color-primary-30: "#26a138"
+  ha-color-primary-40: "#32D74B"
+  ha-color-primary-50: "#54de69"
+  ha-color-primary-60: "#76e487"
+  ha-color-primary-70: "#98eba5"
+  ha-color-primary-80: "#bbf2c3"
+  ha-color-primary-90: "#ddf8e1"
+  ha-color-primary-95: "#eefcf0"
+  red-color: "#FF453A"
+  pink-color: "#FF375F"
+  purple-color: "#BF5AF2"
+  indigo-color: "#5E5CE6"
+  blue-color: "#0A84FF"
+  light-blue-color: "#66D4CF"
+  cyan-color: "#5AC8F5"
+  teal-color: "#6AC4DC"
+  green-color: "#32D74B"
+  yellow-color: "#FFD60A"
+  orange-color: "#FF9F0A"
+  brown-color: "#AC8E68"
+  grey-color: "#8E8E93"
+  primary-text-color: rgba(255, 255, 255, 0.96)
+  secondary-text-color: rgba(228, 228, 232, 0.78)
+  disabled-text-color: rgba(208, 208, 208, 0.45)
+  text-primary-color: var(--primary-text-color)
+  text-dark-color: var(--primary-text-color)
+  ha-color-text-secondary: var(--secondary-text-color)
+  lumo-body-text-color: var(--primary-text-color)
+  sidebar-background-color: rgba(18, 18, 24, 0.55)
+  sidebar-icon-color: var(--light-primary-color)
+  sidebar-text-color: var(--light-primary-color)
+  sidebar-selected-background-color: rgba(255, 255, 255, 0.10)
+  sidebar-selected-icon-color: var(--primary-color)
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  app-header-background-color: rgba(18, 18, 24, 0.30)
+  app-header-backdrop-filter: var(--ha-card-backdrop-filter)
+  app-header-text-color: var(--primary-text-color)
+  app-header-edit-background-color: rgba(0, 0, 0, 0.35)
+  card-background-color: rgba(32, 32, 40, 0.88)
+  paper-card-background-color: var(--ha-card-background)
+  paper-listbox-background-color: rgba(32, 32, 40, 0.88)
+  rgb-card-background-color: rgb(20, 20, 26)
+  clear-background-color: var(--ha-card-background)
+  mdc-theme-surface: rgba(32, 32, 40, 0.88)
+  material-background-color: rgba(32, 32, 40, 0.88)
+  table-row-background-color: rgba(32, 32, 40, 0.88)
+  table-row-alternative-background-color: rgba(44, 44, 54, 0.88)
+  md-list-container-color: none
+  ha-dialog-surface-background: rgba(30, 30, 38, 0.72)
+  ha-dialog-surface-backdrop-filter: none
+  ha-dialog-scrim-backdrop-filter: blur(2px)
+  dialog-box-shadow: var(--ha-card-box-shadow)
+  paper-dialog-background-color: rgba(30, 30, 38, 0.72)
+  more-info-header-background: rgba(18, 18, 24, 0.30)
+  mdc-dialog-scrim-color: rgba(0, 0, 0, 0.55)
+  state-icon-color: var(--primary-text-color)
+  state-icon-active-color: var(--primary-color)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  state-inactive-color: var(--disabled-text-color)
+  paper-item-icon-color: var(--primary-text-color)
+  paper-item-icon-active-color: var(--state-icon-active-color)
+  paper-slider-knob-color: "#FFFFFF"
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--paper-slider-knob-color)
+  paper-slider-active-color: var(--primary-color)
+  paper-slider-secondary-color: var(--paper-slider-knob-color)
+  paper-slider-container-color: rgba(255, 255, 255, 0.22)
+  ha-slider-background: none !important
+  switch-checked-track-color: var(--primary-color)
+  switch-checked-button-color: "#FFFFFF"
+  switch-unchecked-track-color: var(--disabled-text-color)
+  switch-unchecked-button-color: "#FFFFFF"
+  paper-toggle-button-checked-bar-color: var(--primary-color)
+  paper-toggle-button-checked-button-color: "#FFFFFF"
+  paper-toggle-button-unchecked-bar-color: var(--disabled-text-color)
+  paper-toggle-button-unchecked-button-color: "#FFFFFF"
+  ha-badge-border-radius: 24px
+  label-badge-background-color: rgba(32, 32, 40, 0.88)
+  label-badge-text-color: var(--primary-text-color)
+  label-badge-red: var(--red-color)
+  input-ink-color: var(--primary-text-color)
+  input-fill-color: transparent
+  input-disabled-fill-color: transparent
+  input-label-ink-color: var(--primary-text-color)
+  input-disabled-ink-color: var(--disabled-text-color)
+  input-dropdown-icon-color: var(--primary-text-color)
+  input-idle-line-color: var(--secondary-text-color)
+  input-hover-line-color: var(--primary-color)
+  ha-color-form-background: var(--ha-card-background)
+  ha-color-form-background-hover: var(--ha-card-background)
+  ha-color-form-background-disabled: var(--ha-card-background)
+  mdc-checkbox-unchecked-color: var(--secondary-text-color)
+  mdc-radio-unchecked-color: var(--secondary-text-color)
+  codemirror-property: var(--accent-color)
+  markdown-code-background-color: rgba(0, 0, 0, 0.45)
+  code-editor-background-color: rgba(0, 0, 0, 0.45)
+  wa-shadow-m: var(--ha-card-box-shadow)
+  wa-border-radius-s: var(--ha-card-border-radius)
+  wa-border-radius-m: 30px
+  wa-border-width-s: 0px
+  wa-color-neutral-fill-normal: rgba(255, 255, 255, 0.12)
+  ha-color-on-neutral-normal: var(--primary-text-color)
+  ha-color-fill-primary-quiet-resting: rgba(255, 255, 255, 0.12)
+  ha-color-fill-primary-quiet-hover: rgba(255, 255, 255, 0.20)
+  mush-spacing: 12px
+  mush-icon-border-radius: 24px
+  mush-control-border-radius: 24px
+  mush-chip-border-radius: 24px
+  mush-chip-background: var(--ha-card-background)
+  mush-rgb-white: 255, 255, 255
+  mush-title-font-weight: 600
+  mush-title-letter-spacing: 0.02em
+  ha-tile-icon-border-radius: 24px
+  mcg-title-letter-spacing: 0.15em
+  mini-media-player-base-color: var(--primary-text-color)
+  mini-media-player-icon-color: var(--primary-text-color)
+  card-mod-theme: Ultimate Glass - Verdant
+  card-mod-root: |
+    :host::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      pointer-events: none;
+    }
+    :host::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    :host {
+      --token-rgb-primary: 10, 132, 255;
+      --token-rgb-black: 0, 0, 0;
+      --token-rgb-white: 255, 255, 255;
+      --token-rgb-purple: 191, 90, 242;
+      --token-rgb-pink: 255, 55, 95;
+      --token-rgb-red: 255, 69, 58;
+      --token-rgb-deep-purple: 191, 90, 242;
+      --token-rgb-indigo: 94, 92, 230;
+      --token-rgb-blue: 10, 132, 255;
+      --token-rgb-light-blue: 102, 212, 207;
+      --token-rgb-cyan: 90, 200, 245;
+      --token-rgb-teal: 106, 196, 220;
+      --token-rgb-green: 50, 215, 75;
+      --token-rgb-light-green: 50, 215, 75;
+      --token-rgb-lime: 50, 215, 75;
+      --token-rgb-yellow: 255, 214, 10;
+      --token-rgb-amber: 255, 214, 10;
+      --token-rgb-orange: 255, 159, 10;
+      --token-rgb-deep-orange: 255, 159, 10;
+      --token-rgb-brown: 172, 142, 104;
+      --token-rgb-grey: 142, 142, 147;
+      --token-rgb-blue-grey: 120, 130, 145;
+      --token-rgb-state-icon: 255, 255, 255;
+      --token-size-radius-card: var(--ha-card-border-radius);
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+  card-mod-card: |
+    ha-card {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: 0px solid var(--ha-card-border-color);
+      transition: var(--ultimate-transition);
+    }
+
+    ha-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--ha-card-glass-tint);
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      z-index: -1;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: var(--ha-card-glass-inset-shadow);
+    }
+
+    ha-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: var(--ha-card-glass-sheen);
+      z-index: 0;
+      mix-blend-mode: normal;
+    }
+    ha-card > * { position: relative; z-index: 1; }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      ha-card:hover {
+        transform: translateY(-1px);
+      }
+      ha-card:hover::before {
+        box-shadow: var(--ha-card-glass-inset-shadow),
+                    0 0 24px -6px var(--ultimate-glow-color);
+      }
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      ha-card::before {
+        background: rgba(40, 42, 52, 0.86);
+      }
+    }
+
+    :host(hui-heading-card) ha-card,
+    :host(hui-glance-card) ha-card,
+    :host(mushroom-title-card) ha-card,
+    :host(mushroom-chips-card) ha-card,
+    :host(.type-custom-bubble-card) ha-card,
+    ha-card.text-only {
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    :host(hui-heading-card) ha-card::before,
+    :host(hui-heading-card) ha-card::after,
+    :host(hui-glance-card) ha-card::before,
+    :host(hui-glance-card) ha-card::after,
+    :host(mushroom-title-card) ha-card::before,
+    :host(mushroom-title-card) ha-card::after,
+    :host(mushroom-chips-card) ha-card::before,
+    :host(mushroom-chips-card) ha-card::after,
+    :host(.type-custom-bubble-card) ha-card::before,
+    :host(.type-custom-bubble-card) ha-card::after,
+    ha-card.text-only::before,
+    ha-card.text-only::after {
+      content: none !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    :host(.type-custom-bubble-card) ha-card {
+      border-radius: 0px !important;
+    }
+
+    .mdc-data-table,
+    .mdc-data-table__row,
+    ha-sankey-chart {
+      background: none !important;
+    }
+    .mdc-data-table__header-cell {
+      background: var(--ha-card-glass-tint) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter) !important;
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter) !important;
+    }
+  card-mod-sidebar: |
+    :host {
+      background: none !important;
+    }
+    .menu,
+    .panels-list {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+    ha-list-item-button,
+    ha-list-item-button.selected::before,
+    ha-md-list-item,
+    ha-md-list-item.selected::before,
+    paper-icon-item {
+      border-radius: var(--ha-card-border-radius) !important;
+      --ha-list-item-focus-radius: var(--ha-card-border-radius) !important;
+    }
+    ha-md-list-item.selected,
+    paper-icon-item.iron-selected {
+      background: var(--ha-color-fill-primary-quiet-resting) !important;
+    }
+  card-mod-top-app-bar-fixed: |
+    :host {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+  card-mod-dialog: |
+    :host {
+      --dialog-backdrop-filter: none;
+    }
+  card-mod-config: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-config,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+    ha-card {
+      background: var(--ha-card-glass-tint) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      border-radius: var(--ha-card-border-radius) !important;
+      box-shadow: var(--ha-card-glass-inset-shadow) !important;
+    }
+  card-mod-panel-custom: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-custom,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+  card-mod-view: |
+    hui-view::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-view-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      pointer-events: none;
+      opacity: var(--ultimate-view-background-opacity, 1);
+    }
+  hats-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/glass/verdant.webp')
