@@ -182,3 +182,19 @@ export async function deleteHaTheme(themeId: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function restartHomeAssistant(): Promise<{ success: boolean; message: string }> {
+  try {
+    const res = await fetch(getApiUrl('api/ha/restart'), { method: 'POST' });
+    const data = await res.json();
+    return {
+      success: res.ok,
+      message: data.message || (res.ok ? 'Home Assistant is restarting...' : 'Failed to restart Home Assistant'),
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err.message || 'Could not send restart request to Home Assistant',
+    };
+  }
+}

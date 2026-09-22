@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info } from 'lucide-react';
+import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { EngineSettings } from './EngineSettings';
 import { PaletteEditor } from './PaletteEditor';
@@ -10,9 +10,10 @@ import { CustomCssEditor } from './CustomCssEditor';
 interface ThemeEditorProps {
   theme: ThemeConfig;
   onChange: (updates: Partial<ThemeConfig>) => void;
+  onOpenExport?: () => void;
 }
 
-export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange }) => {
+export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpenExport }) => {
   const [activeSubTab, setActiveSubTab] = useState<'engine' | 'palette' | 'background' | 'svg' | 'css' | 'info'>('engine');
 
   const tabs = [
@@ -27,7 +28,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange }) => 
   return (
     <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
       <div className="p-4 border-b border-slate-800/80 space-y-2 shrink-0">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <input
             type="text"
             value={theme.name}
@@ -35,6 +36,20 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange }) => 
             placeholder="Theme Name..."
             className="bg-transparent font-bold text-base text-white focus:outline-none focus:ring-1 focus:ring-blue-500 rounded px-1.5 py-0.5 w-full"
           />
+          {onOpenExport && (
+            <button
+              onClick={onOpenExport}
+              title={theme.isInstalled ? "Save Changes to Home Assistant" : "Install Theme to Home Assistant"}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 shrink-0 ${
+                theme.isInstalled 
+                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20' 
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>{theme.isInstalled ? 'Save to HA' : 'Install to HA'}</span>
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

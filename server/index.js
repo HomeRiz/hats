@@ -625,6 +625,41 @@ app.post('/api/ha/reload-themes', async (req, res) => {
   }
 });
 
+app.post('/api/ha/restart', async (req, res) => {
+  if (!SUPERVISOR_TOKEN) {
+    return res.status(400).json({ error: 'Supervisor token not available (not running as HA Add-on)' });
+  }
+
+  try {
+    let haRes = await fetch(`${SUPERVISOR_API}/services/homeassistant/restart`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!haRes.ok) {
+      haRes = await fetch('http://supervisor/core/restart', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    if (haRes.ok) {
+      res.json({ success: true, message: 'Home Assistant Core is restarting...' });
+    } else {
+      res.status(500).json({ error: `Home Assistant API returned status ${haRes.status}` });
+    }
+  } catch (err) {
+    console.error('Failed to restart Home Assistant:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/ha/entities', async (req, res) => {
   if (!SUPERVISOR_TOKEN) {
     return res.json({ entities: [] });

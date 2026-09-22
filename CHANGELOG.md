@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0] - 2026-09-22
+- **New Theme Apply Flow & User Profile Direct Link**: When installing a new theme to Home Assistant, HATS immediately provides a 1-click link to open the Home Assistant User Profile (`/profile`) with instructions and 1-click theme name copy for effortless theme activation.
+- **Modified Theme Reload & HA Restart Suite**: When saving changes to an already installed/active theme, HATS displays dedicated quick actions: **Reload Themes** (`frontend.reload_themes`), **Refresh Lovelace**, and **Restart Home Assistant Core** (`/api/ha/restart` with safety confirmation).
+- **Editor Quick-Save Action**: Added a direct "Save to HA" / "Install to HA" button in the Designer header for faster iteration without leaving the editor.
+
 ## [1.1.9] - 2026-09-22
 - **HA Theme Discovery & Live Sync**: Automatically scans and parses all installed themes in `/config/themes/` (including nested folders like `ultimate-theme/`), making all existing HA themes editable, duplicable, and manageable directly within HATS.
 - **Corrupt Theme Prevention & Auto-Repair**: Integrated server-side YAML syntax validation (`js-yaml`) and sanitization to prevent Home Assistant recovery mode errors caused by unescaped background URLs or invalid scalar quotes.
