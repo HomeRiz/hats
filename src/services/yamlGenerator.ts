@@ -1,25 +1,36 @@
 import { ThemeConfig } from '../types/theme';
 import { hexToRgbString, generatePrimaryRamp, darkenColor } from './colorEngine';
 
+function svgToDataUri(svg: string): string {
+  const cleaned = svg.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+  return `url("data:image/svg+xml;utf8,${encodeURIComponent(cleaned)}")`;
+}
+
 export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSource: 'cdn' | 'local' | 'embedded' = 'local'): string {
-  const { name, palette, engine, background, dark, light } = theme;
+  const { name, palette, engine, background, dark, light, customSvgOverlay } = theme;
   const accent = palette.accent || palette.primary;
   const ramp = generatePrimaryRamp(accent);
 
-  let bgValue = 'none';
+  let baseBg = 'none';
   if (background.type === 'image') {
     if (backgroundSource === 'local') {
       const fileName = background.imageFileName || `${theme.id}.webp`;
-      bgValue = `url('/local/ultimate-theme/backgrounds/${theme.id}/${fileName}')`;
+      baseBg = `url('/local/ultimate-theme/backgrounds/${theme.id}/${fileName}')`;
     } else if (backgroundSource === 'embedded' && background.imageUrl) {
-      bgValue = `url('${background.imageUrl}')`;
+      baseBg = `url('${background.imageUrl}')`;
     } else {
-      bgValue = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/${theme.id}/default.webp')`;
+      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/${theme.id}/default.webp')`;
     }
   } else if (background.type === 'gradient' && background.gradientString) {
-    bgValue = background.gradientString;
+    baseBg = background.gradientString;
   } else if (background.type === 'solid' && background.solidColor) {
-    bgValue = `linear-gradient(0deg, ${background.solidColor}, ${background.solidColor})`;
+    baseBg = `linear-gradient(0deg, ${background.solidColor}, ${background.solidColor})`;
+  }
+
+  let bgValue = baseBg;
+  if (customSvgOverlay && customSvgOverlay.trim().startsWith('<svg')) {
+    const svgDataUrl = svgToDataUri(customSvgOverlay);
+    bgValue = baseBg !== 'none' ? `${svgDataUrl}, ${baseBg}` : svgDataUrl;
   }
 
   const headerTint = background.headerTintColor || (background.avgColor ? darkenColor(background.avgColor, 0.25) : darkenColor(accent, 0.65));
@@ -69,6 +80,23 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   disabled-text-color: "rgba(208, 208, 208, 0.45)"
   divider-color: "rgba(152, 152, 157, 0.28)"
 
+  # Native Home Assistant Lovelace Background
+  lovelace-background: "center / cover repeat fixed ${bgValue}"
+
+  # Top App Header
+  app-header-background-color: "${headerTint}"
+  app-header-text-color: "#FFFFFF"
+  app-header-selection-bar-color: "${accent}"
+
+  # Sidebar (Left Menu Navigation)
+  sidebar-background-color: "${dark.secondaryBackground || 'rgb(18, 20, 32)'}"
+  sidebar-text-color: "${dark.textSecondary || 'rgba(228, 228, 232, 0.85)'}"
+  sidebar-icon-color: "${dark.textSecondary || 'rgba(228, 228, 232, 0.75)'}"
+  sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
+  sidebar-selected-text-color: "#FFFFFF"
+  sidebar-selected-icon-color: "${accent}"
+  sidebar-border-color: "rgba(255, 255, 255, 0.08)"
+
   # HA Color Primary Ladder
 ${rampBlock}
 
@@ -97,22 +125,56 @@ ${tokenBlock}
       ha-card-background: "${dark.cardBackground}"
       primary-text-color: "${dark.textPrimary}"
       secondary-text-color: "${dark.textSecondary}"
+      sidebar-background-color: "${dark.secondaryBackground}"
+      sidebar-text-color: "${dark.textSecondary}"
+      sidebar-icon-color: "${dark.textSecondary}"
+      sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
+      sidebar-selected-text-color: "#FFFFFF"
+      sidebar-selected-icon-color: "${accent}"
     light:
       primary-background-color: "${light.primaryBackground}"
       secondary-background-color: "${light.secondaryBackground}"
       ha-card-background: "${light.cardBackground}"
       primary-text-color: "${light.textPrimary}"
       secondary-text-color: "${light.textSecondary}"
+      sidebar-background-color: "${light.secondaryBackground}"
+      sidebar-text-color: "${light.textSecondary}"
+      sidebar-icon-color: "${light.textSecondary}"
+      sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.20)"
+      sidebar-selected-text-color: "#FFFFFF"
+      sidebar-selected-icon-color: "${accent}"
 
   # --------------------------------------------------------------------------
   # card-mod Injections: Root, View, Card, Sidebar, Header
   # --------------------------------------------------------------------------
   card-mod-root: |
     app-header {
-      background: var(--ultimate-header-tint) !important;
+      background: var(--ultimate-header-tint, ${headerTint}) !important;
       backdrop-filter: blur(20px) saturate(1.4) !important;
       -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+  card-mod-sidebar: |
+    ha-sidebar {
+      background: ${engine.glassTint || 'rgba(18, 20, 32, 0.85)'} !important;
+      backdrop-filter: blur(20px) saturate(1.4) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    paper-icon-item[selected] {
+      background: rgba(${hexToRgbString(accent)}, 0.20) !important;
+      border-radius: 12px !important;
+      margin: 2px 8px !important;
+      color: #FFFFFF !important;
+    }
+    paper-icon-item[selected] ha-icon {
+      color: ${accent} !important;
+    }
+    paper-icon-item {
+      margin: 2px 8px !important;
+      border-radius: 12px !important;
+      transition: background 0.2s ease;
     }
 
   card-mod-view: |
@@ -120,17 +182,14 @@ ${tokenBlock}
       background: none !important;
     }
     :host {
-      --ultimate-effective-bg: var(--ultimate-view-background, var(--ultimate-background));
+      --ultimate-effective-bg: var(--ultimate-view-background, var(--ultimate-background, ${bgValue}));
     }
     :host::before {
       content: "";
       position: fixed;
       inset: 0;
       z-index: -2;
-      background-image: var(--ultimate-effective-bg);
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
+      background: var(--ultimate-effective-bg) center / cover repeat fixed !important;
       pointer-events: none;
     }
     :host::after {
