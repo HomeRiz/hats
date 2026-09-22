@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.2] - 2026-09-22
+- **New Hat / Palette Brand Identity**: Integrated the official stylized top-hat logo mark (`icon.svg` & `logo.svg`) across the navigation bar, app header, favicon, and project documentation (`README.md`).
+- **Enhanced Visual Branding**: Custom vector `HatsLogo` component with smooth hover scaling, rainbow gradient palette accents, and gold ribbon highlights.
+
 ## [1.2.1] - 2026-09-22
 - **Universal Sidebar Legibility & Contrast Protection**: Fixed sidebar text and icon illegibility on light backgrounds and custom SVG wallpapers by giving `ha-sidebar` its own dedicated frosted acrylic background container with `backdrop-filter` blur and subtle elevation shadow across all Home Assistant views.
 - **Cross-Panel Theme Continuity**: Added `card-mod-profile`, `card-mod-panel-iframe`, `card-mod-panel-developer-tools`, and updated `card-mod-panel-custom` so non-Lovelace tabs (Profile, HATS, OpenCode/VSCode, Developer Tools) render seamlessly without sidebar contrast drops.

@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   ExternalLink
 } from 'lucide-react';
+import { HatsLogo } from '../common/HatsLogo';
 import { ThemeConfig } from '../../types/theme';
 
 interface NavbarProps {
@@ -50,12 +51,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 flex items-center justify-between z-30 select-none">
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 font-bold text-base tracking-tight text-white">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
+        <div 
+          className="flex items-center gap-2.5 font-bold text-base tracking-tight text-white cursor-pointer group"
+          onClick={() => setActiveTab('library')}
+          title="HATS - Home Assistant Theme Store"
+        >
+          <HatsLogo size={32} />
           <div className="flex flex-col">
-            <span className="leading-none text-base">HATS</span>
+            <span className="leading-none text-base font-extrabold tracking-tight group-hover:text-blue-400 transition-colors">HATS</span>
             <span className="text-[9px] text-slate-400 font-normal leading-none mt-0.5 hidden sm:inline">Home Assistant Theme Store</span>
           </div>
         </div>

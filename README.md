@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🎩 HATS — Home Assistant Theme Store
+<img src="logo.svg" width="340" alt="HATS — Home Assistant Theme Store Logo" />
+
+<br/>
 
 **The Interactive Visual Designer, Community Store, Live Lovelace Sandbox, and Generator for Home Assistant Themes**
 

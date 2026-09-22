@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 128" width="380" height="128">
+  <defs>
+    <linearGradient id="logo-hats-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A84FF" />
+      <stop offset="50%" stop-color="#BF5AF2" />
+      <stop offset="100%" stop-color="#FF375F" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(10, 0)">
+    <rect x="8" y="14" width="100" height="100" rx="24" fill="#0B0D14" stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+    <rect x="34" y="32" width="48" height="40" rx="8" fill="url(#logo-hats-grad)" />
+    <rect x="34" y="60" width="48" height="10" rx="2" fill="#FFD60A" />
+    <ellipse cx="58" cy="72" rx="36" ry="8" fill="url(#logo-hats-grad)" />
+    <circle cx="44" cy="44" r="3.5" fill="#66D4CF" />
+    <circle cx="58" cy="40" r="3.5" fill="#FF9F0A" />
+    <circle cx="72" cy="44" r="3.5" fill="#32D74B" />
+  </g>
+
+  <text x="135" y="62" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="40" fill="#FFFFFF" letter-spacing="1">HATS</text>
+  <text x="136" y="86" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="14" fill="#94A3B8" letter-spacing="0.5">Home Assistant Theme Store</text>
+</svg>
