@@ -26,6 +26,7 @@ interface NavbarProps {
   onNewTheme: () => void;
   onOpenDoctor: () => void;
   isDoctorReady?: boolean;
+  hasPendingDoctorAction?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -39,6 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNewTheme,
   onOpenDoctor,
   isDoctorReady = true,
+  hasPendingDoctorAction = false,
 }) => {
   const handleOpenNewTab = () => {
     const targetUrl = window.location.href;
@@ -128,12 +130,20 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={onOpenDoctor}
-          title="HA Environment & Prerequisites Doctor"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50 transition-colors text-xs"
+          title={hasPendingDoctorAction ? "Action Required: card-mod or Theme YAML setup needed" : "HA Environment & Prerequisites Doctor"}
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all text-xs ${
+            hasPendingDoctorAction
+              ? 'bg-amber-950/60 hover:bg-amber-900/70 border-amber-500/60 text-amber-200 shadow-md shadow-amber-500/20 animate-pulse'
+              : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/50'
+          }`}
         >
           <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
-          <span className="hidden xl:inline">HA Setup</span>
-          <span className={`w-1.5 h-1.5 rounded-full ${isDoctorReady ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
+          <span className="hidden xl:inline">{hasPendingDoctorAction ? 'Setup Needed' : 'HA Setup'}</span>
+          <span className={`w-2 h-2 rounded-full ${
+            isDoctorReady && !hasPendingDoctorAction 
+              ? 'bg-emerald-400' 
+              : 'bg-amber-400 animate-ping'
+          }`} />
         </button>
 
         <button

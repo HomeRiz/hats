@@ -37,11 +37,13 @@ export const App: React.FC = () => {
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
   const [isDoctorOpen, setIsDoctorOpen] = useState(false);
   const [isDoctorReady, setIsDoctorReady] = useState(true);
+  const [hasPendingDoctorAction, setHasPendingDoctorAction] = useState(false);
 
   const checkDiagnostics = async () => {
     const diag = await getHaDiagnostics();
     if (diag) {
       setIsDoctorReady(diag.readyForGlassmorphism);
+      setHasPendingDoctorAction(Boolean(diag.cardModNeedsConfig || !diag.readyForThemes));
     }
   };
 
@@ -62,6 +64,7 @@ export const App: React.FC = () => {
         onNewTheme={() => createNewTheme()}
         onOpenDoctor={() => setIsDoctorOpen(true)}
         isDoctorReady={isDoctorReady}
+        hasPendingDoctorAction={hasPendingDoctorAction}
       />
 
       <div className="flex-1 flex overflow-hidden relative">

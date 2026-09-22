@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle2, 
   AlertTriangle, 
-  XCircle, 
   Wrench, 
   ExternalLink, 
   Copy, 
@@ -13,7 +12,9 @@ import {
   FileCode,
   Sparkles,
   Layers,
-  Puzzle
+  Puzzle,
+  DownloadCloud,
+  ArrowRight
 } from 'lucide-react';
 import { getHaDiagnostics, fixHaConfiguration, DiagnosticsResult } from '../../services/haService';
 
@@ -34,6 +35,9 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const [fixMessage, setFixMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const haHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const getHacsUrl = (repoId: string | number) => `http://${haHost}:8123/hacs/repository/${repoId}`;
+
   const fetchDiagnostics = async () => {
     setLoading(true);
     const data = await getHaDiagnostics();
@@ -53,10 +57,14 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const handleAutoFix = async () => {
     setFixing(true);
     setFixMessage(null);
-    const res = await fixHaConfiguration({ addThemes: true, addCardMod: true });
+    const res = await fixHaConfiguration({ 
+      addThemes: true, 
+      addCardMod: true,
+      hacstag: diagnostics?.cardModHacstag
+    });
     setFixing(false);
     if (res.success) {
-      setFixMessage('✅ configuration.yaml successfully updated and themes reloaded in Home Assistant!');
+      setFixMessage('✅ configuration.yaml successfully updated with themes directive & card-mod module URL!');
       fetchDiagnostics();
       if (onConfigFixed) onConfigFixed();
     } else {
@@ -64,7 +72,8 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     }
   };
 
-  const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - /hacsfiles/lovelace-card-mod/card-mod.js`;
+  const cardModTag = diagnostics?.cardModHacstag || '190927524421';
+  const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=${cardModTag}`;
 
   const handleCopyYaml = () => {
     navigator.clipboard.writeText(yamlSnippet);
@@ -72,8 +81,12 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const isCardModOnDisk = Boolean(diagnostics?.cardModOnDisk);
+  const isCardModInConfig = Boolean(diagnostics?.hasCardModInConfig);
+  const isCardModNeedsConfig = Boolean(diagnostics?.cardModNeedsConfig);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in select-none">
       <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
           <div className="flex items-center gap-3">
@@ -87,6 +100,10 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold">
                     Ready
                   </span>
+                ) : isCardModNeedsConfig ? (
+                  <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold animate-pulse">
+                    Plugin Detected • YAML Fix Needed
+                  </span>
                 ) : (
                   <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold">
                     Action Recommended
@@ -94,7 +111,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 )}
               </h2>
               <p className="text-xs text-slate-400">
-                Inspect and 1-click configure required dependencies for themes & card-mod
+                Inspect, install missing plugins via HACS, and 1-click configure required YAML directives
               </p>
             </div>
           </div>
@@ -124,6 +141,23 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 : 'bg-rose-950/50 border-rose-700/60 text-rose-200'
             }`}>
               {fixMessage}
+            </div>
+          )}
+
+          {isCardModNeedsConfig && (
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 space-y-2 shadow-lg shadow-amber-950/30">
+              <div className="flex items-start gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping mt-1 shrink-0" />
+                <div className="flex-1">
+                  <h4 className="font-bold text-amber-200 text-sm flex items-center gap-1.5">
+                    card-mod Detected on Disk!
+                  </h4>
+                  <p className="text-amber-300/80 text-xs mt-0.5 leading-relaxed">
+                    The plugin was found in <code className="text-amber-200 bg-amber-950/60 px-1 py-0.5 rounded">/config/www/community/lovelace-card-mod</code>. 
+                    Click <strong>Auto-Fix YAML Bridge</strong> below to register it in <code className="text-amber-200">configuration.yaml</code> with tag <code className="text-amber-200">?hacstag={cardModTag}</code>.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -160,46 +194,76 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               </span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start justify-between gap-4">
-              <div className="flex items-start gap-3">
-                {diagnostics?.hasCardMod ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                )}
-                <div>
-                  <div className="font-semibold text-slate-200 text-sm">
-                    lovelace-card-mod (<code className="text-xs text-blue-300">extra_module_url</code>)
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col gap-3">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  {isCardModInConfig ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                  ) : isCardModOnDisk ? (
+                    <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5 animate-pulse" />
+                  ) : (
+                    <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  )}
+                  <div>
+                    <div className="font-semibold text-slate-200 text-sm flex items-center gap-2">
+                      lovelace-card-mod (<code className="text-xs text-blue-300">extra_module_url</code>)
+                      {isCardModOnDisk && !isCardModInConfig && (
+                        <span className="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-mono border border-amber-500/30">
+                          Detected on disk
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-slate-400 mt-0.5 leading-relaxed">
+                      {isCardModInConfig
+                        ? `Registered in configuration.yaml (?hacstag=${cardModTag}). Glassmorphism, backdrop-blur, and shaders will render.`
+                        : isCardModOnDisk
+                        ? `Downloaded in /config/www/community/! Click Auto-Fix to link it into configuration.yaml.`
+                        : `Required for liquid glassmorphism, blur effects, and card animations. Install from HACS repository.`}
+                    </p>
                   </div>
-                  <p className="text-slate-400 mt-0.5 leading-relaxed">
-                    {diagnostics?.hasCardMod
-                      ? "Registered! Glassmorphism, backdrop-blur, custom specular sheens, and card shaders will render."
-                      : "Required for glassmorphism and theme animations. Can be auto-injected into extra_module_url."}
-                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase ${
+                    isCardModInConfig 
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : isCardModOnDisk
+                      ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse'
+                      : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                  }`}>
+                    {isCardModInConfig ? 'Active' : isCardModOnDisk ? 'On Disk' : 'Not Installed'}
+                  </span>
                 </div>
               </div>
-              <span className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase shrink-0 ${
-                diagnostics?.hasCardMod 
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-              }`}>
-                {diagnostics?.hasCardMod ? 'Active' : 'Missing'}
-              </span>
+
+              {!isCardModOnDisk && (
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                  <span className="text-[11px] text-slate-400">
+                    Step 1: Install plugin in HACS, then return here to Auto-Fix.
+                  </span>
+                  <a
+                    href={getHacsUrl(190927524)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all"
+                  >
+                    <DownloadCloud className="w-3.5 h-3.5" />
+                    <span>Install via HACS</span>
+                    <ExternalLink className="w-3 h-3 opacity-70" />
+                  </a>
+                </div>
+              )}
             </div>
 
             <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start justify-between gap-4">
               <div className="flex items-start gap-3">
-                {diagnostics?.hasHacs ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                ) : (
-                  <CheckCircle2 className="w-5 h-5 text-slate-500 shrink-0 mt-0.5" />
-                )}
+                <CheckCircle2 className={`w-5 h-5 ${diagnostics?.hasHacs ? 'text-emerald-400' : 'text-slate-500'} shrink-0 mt-0.5`} />
                 <div>
                   <div className="font-semibold text-slate-200 text-sm">HACS (Home Assistant Community Store)</div>
                   <p className="text-slate-400 mt-0.5 leading-relaxed">
                     {diagnostics?.hasHacs
-                      ? "Detected. You can install custom Lovelace cards and frontend resources seamlessly."
-                      : "Optional companion for 1-click community card installs."}
+                      ? "Detected. You can install custom Lovelace cards and frontend resources with 1 click."
+                      : "Optional companion for installing community Lovelace cards."}
                   </p>
                 </div>
               </div>
@@ -213,25 +277,25 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
             </div>
           </div>
 
-          {(!diagnostics?.hasThemesDirective || !diagnostics?.hasCardMod) && (
-            <div className="p-4 rounded-xl bg-gradient-to-r from-blue-900/30 via-indigo-900/30 to-purple-900/30 border border-indigo-500/40 space-y-3">
-              <div className="flex items-center justify-between">
+          {(!diagnostics?.hasThemesDirective || isCardModNeedsConfig || !isCardModInConfig) && (
+            <div className="p-4 rounded-xl bg-gradient-to-r from-blue-900/40 via-indigo-900/40 to-purple-900/40 border border-indigo-500/50 space-y-3 shadow-lg shadow-indigo-950/40">
+              <div className="flex items-center justify-between gap-4">
                 <div>
                   <h4 className="font-bold text-white text-sm flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-amber-400" />
-                    1-Click Auto-Configuration
+                    1-Click Auto-Configuration Bridge
                   </h4>
-                  <p className="text-slate-300 text-xs mt-0.5">
-                    Automatically inject missing theme directives and card-mod URLs into your <code className="text-blue-300">configuration.yaml</code> with automatic backup.
+                  <p className="text-slate-300 text-xs mt-0.5 leading-relaxed">
+                    Automatically inject missing theme directives and <code className="text-blue-300">extra_module_url</code> into <code className="text-blue-300">configuration.yaml</code> with automatic backup.
                   </p>
                 </div>
                 <button
                   onClick={handleAutoFix}
                   disabled={fixing}
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 flex items-center gap-2 shrink-0 transition-all disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-2 shrink-0 transition-all disabled:opacity-50"
                 >
                   <Wrench className={`w-3.5 h-3.5 ${fixing ? 'animate-spin' : ''}`} />
-                  <span>{fixing ? 'Patching...' : 'Auto-Fix Now'}</span>
+                  <span>{fixing ? 'Patching...' : 'Auto-Fix YAML Bridge'}</span>
                 </button>
               </div>
             </div>
@@ -262,64 +326,92 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               Recommended Lovelace Add-ons & Cards
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
                 <div>
-                  <div className="font-semibold text-slate-200">lovelace-card-mod</div>
-                  <div className="text-[10px] text-slate-400">Glass blur & CSS theme animations</div>
+                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span>lovelace-card-mod</span>
+                    {isCardModOnDisk && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                  </div>
+                  <div className="text-[10px] text-slate-400">Glass blur & CSS theme shaders</div>
                 </div>
-                <a
-                  href="https://github.com/thomasloven/lovelace-card-mod"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={getHacsUrl(190927524)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Open in HACS"
+                    className="px-2 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors"
+                  >
+                    <span>HACS</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
                 <div>
-                  <div className="font-semibold text-slate-200">Mushroom Cards</div>
+                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span>Mushroom Cards</span>
+                    {diagnostics?.detectedCards.includes('mushroom') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                  </div>
                   <div className="text-[10px] text-slate-400">Modern sleek UI sliders & chips</div>
                 </div>
-                <a
-                  href="https://github.com/piitaya/lovelace-mushroom"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={getHacsUrl(444378248)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Open in HACS"
+                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
+                  >
+                    <span>HACS</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
                 <div>
-                  <div className="font-semibold text-slate-200">Bubble Card</div>
+                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span>Bubble Card</span>
+                    {diagnostics?.detectedCards.includes('bubble-card') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                  </div>
                   <div className="text-[10px] text-slate-400">Pop-up glassmorphism subviews</div>
                 </div>
-                <a
-                  href="https://github.com/Clooos/Bubble-Card"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={getHacsUrl(664161989)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Open in HACS"
+                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
+                  >
+                    <span>HACS</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
                 <div>
-                  <div className="font-semibold text-slate-200">Layout Card</div>
+                  <div className="font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span>Layout Card</span>
+                    {diagnostics?.detectedCards.includes('layout-card') && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                  </div>
                   <div className="text-[10px] text-slate-400">Advanced CSS grid & masonry</div>
                 </div>
-                <a
-                  href="https://github.com/thomasloven/lovelace-layout-card"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={getHacsUrl(145009280)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Open in HACS"
+                    className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-[10px] flex items-center gap-1 transition-colors"
+                  >
+                    <span>HACS</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
