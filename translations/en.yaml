@@ -4,7 +4,7 @@ configuration:
     description: "Path where generated theme YAML files will be written (default: /config/themes)."
   backgrounds_directory:
     name: "Backgrounds Directory"
-    description: "Path where uploaded wallpaper artwork will be saved (default: /config/www/ultimate-theme/backgrounds)."
+    description: "Path where uploaded wallpaper artwork will be saved (default: /config/www/hats/backgrounds)."
   auto_reload_themes:
     name: "Auto Reload Themes"
     description: "Automatically reload Home Assistant themes when saving a new theme."

@@ -14,6 +14,6 @@
 ## What HATS Does Inside Home Assistant
 
 - **1-Click Theme Installation**: Saves your custom themes directly to `/config/themes/<theme_id>.yaml` and automatically reloads Home Assistant themes in real-time.
-- **Background Asset Syncing**: Automatically places uploaded wallpapers and artwork in `/config/www/ultimate-theme/backgrounds/<theme_id>/default.webp`.
+- **Background Asset Syncing**: Automatically places uploaded wallpapers and artwork in `/config/www/hats/backgrounds/<theme_id>/default.webp`.
 - **Live Lovelace Sandbox**: Test Mushroom cards, Tile cards, weather cards, climate sliders, and media players with real `backdrop-filter` and glassmorphism.
 - **In-App PR Engine**: Submit your custom-designed themes directly to the official community pack with one click!

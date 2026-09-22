@@ -45,11 +45,11 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   if (background.type === 'image') {
     if (backgroundSource === 'local') {
       const fileName = background.imageFileName || `${safeTheme.id}.webp`;
-      baseBg = `url('/local/ultimate-theme/backgrounds/${safeTheme.id}/${fileName}')`;
+      baseBg = `url('/local/hats/backgrounds/${safeTheme.id}/${fileName}')`;
     } else if (backgroundSource === 'embedded' && background.imageUrl) {
       baseBg = `url('${background.imageUrl}')`;
     } else {
-      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/${safeTheme.id}/default.webp')`;
+      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/${safeTheme.id}/default.webp')`;
     }
   } else if (background.type === 'gradient' && background.gradientString) {
     baseBg = background.gradientString;
@@ -111,6 +111,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   divider-color: "rgba(152, 152, 157, 0.28)"
 
   # Native Home Assistant Lovelace Background
+  hats-background: "${bgValue}"
   ultimate-background: "${bgValue}"
   background-image: "center / cover repeat fixed ${bgValue}"
   lovelace-background: var(--background-image)
@@ -155,11 +156,15 @@ ${tokenBlock}
   ha-card-glass-inset-shadow: "${engine.insetShadow}"
   ha-card-box-shadow: "${engine.insetShadow}"
   ha-dialog-surface-backdrop-filter: "none"
+  hats-transition: "box-shadow 220ms ease, transform 220ms ease"
   ultimate-transition: "box-shadow 220ms ease, transform 220ms ease"
 
-  # Ultimate Theme System Variables
+  # HATS Theme System Variables
+  hats-glow-color: "${engine.glowColor}"
   ultimate-glow-color: "${engine.glowColor}"
+  hats-sheen: "${sheenGrad}"
   ultimate-sheen: "${sheenGrad}"
+  hats-header-tint: "${headerTint}"
   ultimate-header-tint: "${headerTint}"
 
   # Light & Dark Mode definitions
@@ -200,7 +205,7 @@ ${tokenBlock}
       content: '';
       position: fixed;
       inset: 0;
-      background-image: var(--ultimate-background);
+      background-image: var(--hats-background, var(--ultimate-background));
       background-size: cover;
       background-position: center;
       background-repeat: repeat;
@@ -216,7 +221,7 @@ ${tokenBlock}
       pointer-events: none;
     }
     app-header {
-      background: var(--ultimate-header-tint, ${headerTint}) !important;
+      background: var(--hats-header-tint, var(--ultimate-header-tint, ${headerTint})) !important;
       backdrop-filter: blur(20px) saturate(1.4) !important;
       -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -300,7 +305,7 @@ ${tokenBlock}
 
   card-mod-config: |
     ha-drawer {
-      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--hats-background, var(--ultimate-background));
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -320,7 +325,7 @@ ${tokenBlock}
 
   card-mod-panel-custom: |
     ha-drawer {
-      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--ultimate-background);
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--hats-background, var(--ultimate-background));
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -356,12 +361,12 @@ ${tokenBlock}
       position: absolute;
       inset: 0;
       z-index: 0;
-      background: var(--ultimate-sheen);
+      background: var(--hats-sheen, var(--ultimate-sheen));
       border-radius: inherit;
       pointer-events: none;
     }
     ${engine.hoverGlow ? `ha-card:hover {
-      box-shadow: 0 0 ${engine.hoverGlowIntensity}px -4px var(--ultimate-glow-color), ${engine.insetShadow} !important;
+      box-shadow: 0 0 ${engine.hoverGlowIntensity}px -4px var(--hats-glow-color, var(--ultimate-glow-color, ${engine.glowColor})), ${engine.insetShadow} !important;
       transform: translateY(-2px);
     }` : ''}
     :host(hui-heading-card) ha-card,
@@ -403,13 +408,14 @@ ${theme.customCss ? `\n    /* Custom User Injected CSS */\n    ${theme.customCss
 }
 
 export function generatePerViewSnippet(theme: ThemeConfig, viewPath = 'home', viewTitle = 'Main'): string {
-  const bgUrl = theme.background.imageUrl || `/local/ultimate-theme/backgrounds/${theme.id}/default.webp`;
+  const bgUrl = theme.background.imageUrl || `/local/hats/backgrounds/${theme.id}/default.webp`;
   return `- title: "${viewTitle}"
   path: "${viewPath}"
   icon: "mdi:view-dashboard"
   card_mod:
     style: |
       :host {
+        --hats-view-background: url('${bgUrl}');
         --ultimate-view-background: url('${bgUrl}');
       }
 `;

@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const CONFIG_DIR = process.env.HA_CONFIG_DIR || '/config';
 const CONFIGURATION_YAML = path.join(CONFIG_DIR, 'configuration.yaml');
 const THEMES_DIR = path.join(CONFIG_DIR, 'themes');
-const WWW_DIR = path.join(CONFIG_DIR, 'www', 'ultimate-theme', 'backgrounds');
+const WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
 const HACS_COMMUNITY_DIR = path.join(CONFIG_DIR, 'www', 'community');
 const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs');
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
@@ -100,7 +100,7 @@ function scanInstalledThemes() {
 
               const primary = themeData['primary-color'] || themeData['accent-color'] || '#0A84FF';
               const accent = themeData['accent-color'] || primary;
-              const bg = themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
+              const bg = themeData['hats-background'] || themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
               
               let customSvgOverlay = undefined;
               const b64SvgMatch = bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/);
@@ -174,8 +174,8 @@ function scanInstalledThemes() {
                   sheenAngle: 160,
                   sheenBlend: 'normal',
                   insetShadow: themeData['ha-card-glass-inset-shadow'] || themeData['ha-card-box-shadow'] || 'none',
-                  hoverGlow: Boolean(themeData['ultimate-glow-color']),
-                  glowColor: themeData['ultimate-glow-color'] || primary,
+                  hoverGlow: Boolean(themeData['hats-glow-color'] || themeData['ultimate-glow-color']),
+                  glowColor: themeData['hats-glow-color'] || themeData['ultimate-glow-color'] || primary,
                   hoverGlowIntensity: 24,
                   backgroundScrim: 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)',
                   fallbackCardBg: 'rgba(40, 42, 52, 0.86)',

@@ -1,8 +1,8 @@
 import { ThemeConfig } from '../types/theme';
 
 export const defaultGlassTheme: ThemeConfig = {
-  id: 'ultimate-glass-violet',
-  name: 'Ultimate Glass - Violet',
+  id: 'hats-glass-violet',
+  name: 'HATS Signature Glass - Violet',
   category: 'Glass',
   author: 'HomeRiz',
   authorGithub: 'HomeRiz',
@@ -86,8 +86,8 @@ export const defaultGlassTheme: ThemeConfig = {
 };
 
 export const defaultKidsTheme: ThemeConfig = {
-  id: 'ultimate-kids-playful',
-  name: 'Ultimate Kids - Playful Wonder',
+  id: 'hats-playful-wonder',
+  name: 'HATS Signature - Playful Wonder',
   category: 'Kids',
   author: 'Community Designer',
   authorGithub: 'HomeRiz',
@@ -181,8 +181,8 @@ export const defaultKidsTheme: ThemeConfig = {
 };
 
 export const defaultVelvetTheme: ThemeConfig = {
-  id: 'ultimate-velvet-amber',
-  name: 'Ultimate Velvet - Amber',
+  id: 'hats-velvet-amber',
+  name: 'HATS Signature Velvet - Amber',
   category: 'Velvet',
   author: 'HomeRiz',
   authorGithub: 'HomeRiz',
@@ -265,8 +265,8 @@ export const defaultVelvetTheme: ThemeConfig = {
 };
 
 export const defaultNeonTheme: ThemeConfig = {
-  id: 'ultimate-neon-cyan',
-  name: 'Ultimate Neon - Cyan',
+  id: 'hats-neon-cyan',
+  name: 'HATS Signature Neon - Cyan',
   category: 'Neon',
   author: 'HomeRiz',
   authorGithub: 'HomeRiz',

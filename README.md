@@ -35,7 +35,7 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
   - Dynamic extraction of live `hacstag` version identifiers directly from HA storage.
   - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
 - 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.
-- 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/ultimate-theme/backgrounds/`.
+- 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/hats/backgrounds/`.
 - 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) or access directly via container port `4287` for maximum workspace real estate.
 - 🚀 **In-App GitHub Pull Request Engine**: Package and propose new themes directly to the official theme repository with a single click.
 
@@ -59,7 +59,7 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
 
 ## 🩺 Environment & Prerequisites Doctor
 
-Modern Home Assistant themes (such as those in the Ultimate Theme Pack) require two core configuration elements: the themes merge directory directive and the `lovelace-card-mod` custom module registration.
+Modern Home Assistant themes (such as those in the HATS Signature Collection) require two core configuration elements: the themes merge directory directive and the `lovelace-card-mod` custom module registration.
 
 In Home Assistant's `configuration.yaml`, the root `frontend:` key must only appear once. Both elements must be merged together under this single `frontend:` block:
 
@@ -83,14 +83,14 @@ The add-on works out-of-the-box with default options, but can be customized in t
 
 ```yaml
 themes_directory: "/config/themes"
-backgrounds_directory: "/config/www/ultimate-theme/backgrounds"
+backgrounds_directory: "/config/www/hats/backgrounds"
 auto_reload_themes: true
 ```
 
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `themes_directory` | string | `/config/themes` | Target path where generated theme YAML files are stored. |
-| `backgrounds_directory` | string | `/config/www/ultimate-theme/backgrounds` | Target path where uploaded wallpaper artwork is saved. |
+| `backgrounds_directory` | string | `/config/www/hats/backgrounds` | Target path where uploaded wallpaper artwork is saved. |
 | `auto_reload_themes` | boolean | `true` | Automatically calls `frontend.reload_themes` upon applying a theme. |
 
 ---
@@ -102,7 +102,7 @@ HATS is packaged as an official Home Assistant Ingress Add-on built from a multi
 - **`Dockerfile`**: Builds the React + TypeScript single-page application and bundles it with a lightweight Express backend running on Node 20.
 - **`run.sh`**: The mandatory container startup entrypoint. When Home Assistant Supervisor starts the container:
   - **I.** Ensures `/config/themes` exists on the host filesystem.
-  - **II.** Ensures `/config/www/ultimate-theme/backgrounds` exists on the host filesystem.
+  - **II.** Ensures `/config/www/hats/backgrounds` exists on the host filesystem.
   - **III.** Launches the Ingress server (`exec node server/index.js`) on port `4287`.
 - **`config.yaml`**: Home Assistant add-on manifest specifying Ingress routes, permissions (`manager` role to reload themes and manage storage), options, and architecture compatibility.
 - **`repository.yaml`**: Home Assistant add-on repository descriptor.

@@ -21,8 +21,8 @@ const initialCommunitySubmissions: CommunityThemeSubmission[] = [
     id: 'comm-2',
     theme: {
       ...defaultGlassTheme,
-      id: 'ultimate-aurora-borealis',
-      name: 'Ultimate Aurora Borealis',
+      id: 'hats-aurora-borealis',
+      name: 'HATS Signature Aurora - Borealis Glow',
       category: 'Nature',
       author: 'NordicSmartHome',
       description: 'Dynamic emerald and cyan auroral ribbons on deep polar night.',

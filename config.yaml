@@ -28,7 +28,7 @@ map:
   - share:rw
 options:
   themes_directory: "/config/themes"
-  backgrounds_directory: "/config/www/ultimate-theme/backgrounds"
+  backgrounds_directory: "/config/www/hats/backgrounds"
   auto_reload_themes: true
 schema:
   themes_directory: str

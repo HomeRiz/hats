@@ -12,9 +12,9 @@ export const CustomCssEditor: React.FC<CustomCssEditorProps> = ({ theme, onChang
     {
       name: 'Pulsing Card Neon Glow',
       css: `@keyframes neonPulse {
-  0% { box-shadow: 0 0 15px var(--ultimate-glow-color); }
-  50% { box-shadow: 0 0 35px var(--ultimate-glow-color); }
-  100% { box-shadow: 0 0 15px var(--ultimate-glow-color); }
+  0% { box-shadow: 0 0 15px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
+  50% { box-shadow: 0 0 35px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
+  100% { box-shadow: 0 0 15px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
 }
 ha-card {
   animation: neonPulse 3s infinite ease-in-out;
