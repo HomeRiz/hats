@@ -9,6 +9,37 @@ export interface HaStatusResult {
   hasSupervisorToken: boolean;
 }
 
+export interface DiagnosticIssue {
+  id: string;
+  severity: 'error' | 'warning' | 'info';
+  title: string;
+  description: string;
+  canAutoFix: boolean;
+}
+
+export interface DiagnosticsResult {
+  configExists: boolean;
+  hasFrontend: boolean;
+  hasThemesDirective: boolean;
+  hasCardMod: boolean;
+  hasCardModInConfig: boolean;
+  hasCardModInResources: boolean;
+  hasHacs: boolean;
+  themesExists: boolean;
+  themesCount: number;
+  themesDir: string;
+  detectedCards: string[];
+  issues: DiagnosticIssue[];
+  readyForThemes: boolean;
+  readyForGlassmorphism: boolean;
+}
+
+export interface FixConfigResult {
+  success: boolean;
+  message: string;
+  reloaded?: boolean;
+}
+
 export interface ApplyThemeResult {
   success: boolean;
   message: string;
@@ -44,6 +75,36 @@ export async function checkHaAddonStatus(): Promise<HaStatusResult> {
     themesExists: false,
     hasSupervisorToken: false,
   };
+}
+
+export async function getHaDiagnostics(): Promise<DiagnosticsResult | null> {
+  try {
+    const res = await fetch(getApiUrl('api/ha/diagnostics'));
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.debug('Failed to get diagnostics:', err);
+  }
+  return null;
+}
+
+export async function fixHaConfiguration(options: { addThemes?: boolean; addCardMod?: boolean } = {}): Promise<FixConfigResult> {
+  try {
+    const res = await fetch(getApiUrl('api/ha/fix-config'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(options),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err.message || 'Failed to auto-fix configuration.yaml',
+    };
+  }
 }
 
 export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyThemeResult> {

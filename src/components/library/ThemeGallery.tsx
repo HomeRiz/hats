@@ -8,7 +8,9 @@ import {
   Upload, 
   Sparkles, 
   Sliders, 
-  ExternalLink 
+  ShieldCheck,
+  AlertTriangle,
+  Puzzle
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
@@ -22,6 +24,8 @@ interface ThemeGalleryProps {
   onDeleteTheme: (id: string) => void;
   onImportThemes: (imported: ThemeConfig[]) => void;
   onSwitchToEditor: () => void;
+  onOpenDoctor?: () => void;
+  isDoctorReady?: boolean;
 }
 
 export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
@@ -33,6 +37,8 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   onDeleteTheme,
   onImportThemes,
   onSwitchToEditor,
+  onOpenDoctor,
+  isDoctorReady = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -78,6 +84,20 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {onOpenDoctor && (
+            <button
+              onClick={onOpenDoctor}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                isDoctorReady 
+                  ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700' 
+                  : 'bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 border-amber-600/60 animate-pulse'
+              }`}
+            >
+              <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <span>{isDoctorReady ? 'HA Setup Doctor' : 'HA Setup Needed (1-Click Fix)'}</span>
+            </button>
+          )}
+
           <button
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
@@ -99,27 +119,27 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <button
             onClick={onNewTheme}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Create New Theme</span>
+            <span>Create Theme</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
-        <div className="relative w-full md:w-72">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="relative w-full md:w-80">
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
+            placeholder="Search themes, categories, authors..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search themes, authors..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -139,6 +159,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredThemes.map((theme) => {
           const isActive = theme.id === activeThemeId;
+          const requiresCardMod = theme.requirements?.requiresCardMod ?? (theme.category === 'Glass' || theme.category === 'Kids' || theme.category === 'Neon');
 
           return (
             <div
@@ -181,6 +202,29 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                       {theme.description}
                     </p>
                   </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1 mt-2.5">
+                  {requiresCardMod && (
+                    <span 
+                      onClick={(e) => {
+                        if (onOpenDoctor) {
+                          e.stopPropagation();
+                          onOpenDoctor();
+                        }
+                      }}
+                      title="Requires lovelace-card-mod for blur and styling"
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80"
+                    >
+                      <Puzzle className="w-2.5 h-2.5" />
+                      card-mod
+                    </span>
+                  )}
+                  {theme.category === 'Kids' && (
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-pink-950/70 border border-pink-800/60 text-pink-300 font-medium">
+                      Mushroom Recommended
+                    </span>
+                  )}
                 </div>
               </div>
 

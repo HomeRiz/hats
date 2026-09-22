@@ -10,7 +10,7 @@ import {
   Moon, 
   Plus, 
   Sparkles,
-  Home
+  ShieldCheck
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 
@@ -23,6 +23,8 @@ interface NavbarProps {
   onOpenExport: () => void;
   onOpenSubmitPr: () => void;
   onNewTheme: () => void;
+  onOpenDoctor: () => void;
+  isDoctorReady?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -34,6 +36,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenExport,
   onOpenSubmitPr,
   onNewTheme,
+  onOpenDoctor,
+  isDoctorReady = true,
 }) => {
   return (
     <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 flex items-center justify-between z-30 select-none">
@@ -116,6 +120,16 @@ export const Navbar: React.FC<NavbarProps> = ({
       </nav>
 
       <div className="flex items-center gap-2">
+        <button
+          onClick={onOpenDoctor}
+          title="HA Environment & Prerequisites Doctor"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50 transition-colors text-xs"
+        >
+          <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
+          <span className="hidden xl:inline">HA Setup</span>
+          <span className={`w-1.5 h-1.5 rounded-full ${isDoctorReady ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
+        </button>
+
         <button
           onClick={() => setPreviewMode(previewMode === 'dark' ? 'light' : 'dark')}
           title={`Switch to ${previewMode === 'dark' ? 'Light' : 'Dark'} Mode Preview`}

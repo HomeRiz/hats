@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useThemeStore } from './state/useThemeStore';
 import { Navbar } from './components/navbar/Navbar';
 import { ThemeEditor } from './components/editor/ThemeEditor';
@@ -7,7 +7,9 @@ import { ThemeGallery } from './components/library/ThemeGallery';
 import { CommunityHub } from './components/github/CommunityHub';
 import { SubmitPrModal } from './components/github/SubmitPrModal';
 import { ExportModal } from './components/export/ExportModal';
+import { PrerequisitesDoctorModal } from './components/common/PrerequisitesDoctorModal';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
+import { getHaDiagnostics } from './services/haService';
 
 export const App: React.FC = () => {
   const {
@@ -33,6 +35,19 @@ export const App: React.FC = () => {
 
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
+  const [isDoctorOpen, setIsDoctorOpen] = useState(false);
+  const [isDoctorReady, setIsDoctorReady] = useState(true);
+
+  const checkDiagnostics = async () => {
+    const diag = await getHaDiagnostics();
+    if (diag) {
+      setIsDoctorReady(diag.readyForGlassmorphism);
+    }
+  };
+
+  useEffect(() => {
+    checkDiagnostics();
+  }, []);
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
@@ -45,6 +60,8 @@ export const App: React.FC = () => {
         onOpenExport={() => setIsExportOpen(true)}
         onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
         onNewTheme={() => createNewTheme()}
+        onOpenDoctor={() => setIsDoctorOpen(true)}
+        isDoctorReady={isDoctorReady}
       />
 
       <div className="flex-1 flex overflow-hidden relative">
@@ -85,6 +102,8 @@ export const App: React.FC = () => {
                 if (imported[0]) setActiveThemeId(imported[0].id);
               }}
               onSwitchToEditor={() => setActiveTab('editor')}
+              onOpenDoctor={() => setIsDoctorOpen(true)}
+              isDoctorReady={isDoctorReady}
             />
           </div>
         )}
@@ -140,6 +159,14 @@ export const App: React.FC = () => {
         theme={activeTheme}
         onSubmitSuccess={(theme, prUrl) => {
           addCommunitySubmission(theme, prUrl);
+        }}
+      />
+
+      <PrerequisitesDoctorModal
+        isOpen={isDoctorOpen}
+        onClose={() => setIsDoctorOpen(false)}
+        onConfigFixed={() => {
+          checkDiagnostics();
         }}
       />
     </div>

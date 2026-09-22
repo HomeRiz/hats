@@ -58,6 +58,22 @@ export interface BackgroundSettings {
   avgColor?: string;
 }
 
+export interface RecommendedCard {
+  name: string;
+  slug: string;
+  hacsRepositoryId?: string;
+  hacsUrl?: string;
+  description: string;
+  installUrl?: string;
+}
+
+export interface ThemeRequirements {
+  requiresCardMod: boolean;
+  requiresThemesDirective?: boolean;
+  recommendedCards?: RecommendedCard[];
+  note?: string;
+}
+
 export interface ThemeConfig {
   id: string;
   name: string;
@@ -69,6 +85,7 @@ export interface ThemeConfig {
   createdAt: string;
   updatedAt: string;
   isCustom?: boolean;
+  requirements?: ThemeRequirements;
   palette: PaletteColors;
   engine: EngineSettings;
   background: BackgroundSettings;
