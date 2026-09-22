@@ -8,7 +8,6 @@ arch:
   - amd64
   - armhf
   - armv7
-  - i386
 startup: services
 boot: auto
 ingress: true
