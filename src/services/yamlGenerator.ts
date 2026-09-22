@@ -99,12 +99,12 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   app-header-text-color: "#FFFFFF"
   app-header-selection-bar-color: "${accent}"
 
-  # Sidebar (Left Menu Navigation) - Frosted glass container with high contrast
-  sidebar-background-color: "rgba(18, 20, 32, 0.88)"
+  # Sidebar (Left Menu Navigation)
+  sidebar-background-color: "rgba(18, 18, 24, 0.55)"
   sidebar-text-color: "rgba(255, 255, 255, 0.94)"
   sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
-  sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.22)"
-  sidebar-selected-text-color: "#FFFFFF"
+  sidebar-selected-background-color: "rgba(255, 255, 255, 0.12)"
+  sidebar-selected-text-color: "${accent}"
   sidebar-selected-icon-color: "${accent}"
   sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
@@ -149,11 +149,11 @@ ${tokenBlock}
       ha-card-background: "${dark.cardBackground}"
       primary-text-color: "${dark.textPrimary}"
       secondary-text-color: "${dark.textSecondary}"
-      sidebar-background-color: "rgba(18, 20, 32, 0.88)"
+      sidebar-background-color: "rgba(18, 18, 24, 0.55)"
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
-      sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.22)"
-      sidebar-selected-text-color: "#FFFFFF"
+      sidebar-selected-background-color: "rgba(255, 255, 255, 0.12)"
+      sidebar-selected-text-color: "${accent}"
       sidebar-selected-icon-color: "${accent}"
       sidebar-border-color: "rgba(255, 255, 255, 0.08)"
     light:
@@ -162,13 +162,13 @@ ${tokenBlock}
       ha-card-background: "${light.cardBackground}"
       primary-text-color: "${light.textPrimary}"
       secondary-text-color: "${light.textSecondary}"
-      sidebar-background-color: "rgba(255, 255, 255, 0.92)"
-      sidebar-text-color: "#1E293B"
-      sidebar-icon-color: "#475569"
-      sidebar-selected-background-color: "rgba(${hexToRgbString(accent)}, 0.16)"
+      sidebar-background-color: "rgba(255, 255, 255, 0.40)"
+      sidebar-text-color: "rgba(255, 255, 255, 0.94)"
+      sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
+      sidebar-selected-background-color: "rgba(255, 255, 255, 0.16)"
       sidebar-selected-text-color: "${accent}"
       sidebar-selected-icon-color: "${accent}"
-      sidebar-border-color: "rgba(0, 0, 0, 0.08)"
+      sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
   # --------------------------------------------------------------------------
   # card-mod Injections: Root, View, Card, Sidebar, Header, Config, Dialog, Profile
@@ -210,14 +210,13 @@ ${tokenBlock}
 
   card-mod-sidebar: |
     :host {
-      background-color: var(--sidebar-background-color, rgba(18, 20, 32, 0.88)) !important;
-      backdrop-filter: var(--ha-card-backdrop-filter, blur(20px) saturate(1.4)) !important;
-      -webkit-backdrop-filter: var(--ha-card-backdrop-filter, blur(20px) saturate(1.4)) !important;
-      border-right: 1px solid var(--sidebar-border-color, rgba(255, 255, 255, 0.08)) !important;
-      box-shadow: 4px 0 24px -8px rgba(0, 0, 0, 0.35) !important;
+      background: none !important;
     }
     .menu,
-    .panels-list,
+    .panels-list {
+      backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
+    }
     paper-listbox,
     ha-md-list {
       background: transparent !important;
@@ -245,9 +244,9 @@ ${tokenBlock}
     paper-icon-item.iron-selected,
     paper-icon-item[selected],
     ha-list-item-button.selected {
-      background: var(--sidebar-selected-background-color, rgba(${hexToRgbString(accent)}, 0.22)) !important;
-      color: var(--sidebar-selected-text-color, #FFFFFF) !important;
-      --md-list-item-label-text-color: var(--sidebar-selected-text-color, #FFFFFF) !important;
+      background: var(--sidebar-selected-background-color, rgba(255, 255, 255, 0.12)) !important;
+      color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
+      --md-list-item-label-text-color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
       --md-list-item-leading-icon-color: var(--sidebar-selected-icon-color, var(--primary-color)) !important;
     }
     .profile {

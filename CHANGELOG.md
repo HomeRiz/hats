@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.3] - 2026-09-23
+- **Seamless Glass Sidebar & Wallpaper Flow**: Restored `:host { background: none !important; }` on the sidebar with backdrop blur on `.menu` and `.panels-list`, allowing dashboard wallpaper and theme colors to flow continuously behind the navigation menu.
+
 ## [1.2.2] - 2026-09-22
 - **New Hat / Palette Brand Identity**: Integrated the official stylized top-hat logo mark (`icon.svg` & `logo.svg`) across the navigation bar, app header, favicon, and project documentation (`README.md`).
 - **Enhanced Visual Branding**: Custom vector `HatsLogo` component with smooth hover scaling, rainbow gradient palette accents, and gold ribbon highlights.
