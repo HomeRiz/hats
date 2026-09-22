@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.svg" width="340" alt="HATS — Home Assistant Theme Store Logo" />
+<img src="logo.svg" width="340" alt="HATS - Home Assistant Theme Store Logo" />
 
 <br/>
 
@@ -101,9 +101,9 @@ HATS is packaged as an official Home Assistant Ingress Add-on built from a multi
 
 - **`Dockerfile`**: Builds the React + TypeScript single-page application and bundles it with a lightweight Express backend running on Node 20.
 - **`run.sh`**: The mandatory container startup entrypoint. When Home Assistant Supervisor starts the container:
-  1. Ensures `/config/themes` exists on the host filesystem.
-  2. Ensures `/config/www/ultimate-theme/backgrounds` exists on the host filesystem.
-  3. Launches the Ingress server (`exec node server/index.js`) on port `4287`.
+  - **I.** Ensures `/config/themes` exists on the host filesystem.
+  - **II.** Ensures `/config/www/ultimate-theme/backgrounds` exists on the host filesystem.
+  - **III.** Launches the Ingress server (`exec node server/index.js`) on port `4287`.
 - **`config.yaml`**: Home Assistant add-on manifest specifying Ingress routes, permissions (`manager` role to reload themes and manage storage), options, and architecture compatibility.
 - **`repository.yaml`**: Home Assistant add-on repository descriptor.
 
