@@ -7,23 +7,15 @@ import {
   Zap, 
   Copy, 
   Sparkles, 
-  Layers, 
   ShieldCheck, 
   CheckCircle2,
-  Info,
-  Check,
-  Sun,
-  Moon,
   Sliders,
-  Maximize2,
-  Tv,
-  Fan
+  Check
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { MockHeader } from '../preview/MockHeader';
 import { MockSidebar } from '../preview/MockSidebar';
-import { MockCard } from '../preview/MockCard';
-import { MockMushroomCard } from '../preview/MockMushroomCard';
+import { SmartHomeDashboard } from '../preview/SmartHomeDashboard';
 
 interface ThemeOverviewModalProps {
   isOpen: boolean;
@@ -46,12 +38,9 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onApplyTheme,
   onDuplicateTheme,
 }) => {
-  const [activeView, setActiveView] = useState<'home' | 'climate' | 'media' | 'security'>('home');
-  const [sidebarItem, setSidebarItem] = useState('Overview');
+  const [activeHeaderView, setActiveHeaderView] = useState('home');
+  const [sidebarItem, setSidebarItem] = useState('Smart Home');
   const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [temperature, setTemperature] = useState(21.5);
-  const [lightBrightness, setLightBrightness] = useState(85);
 
   const currentIndex = allThemes.findIndex((t) => t.id === theme.id);
   const hasMultiple = allThemes.length > 1;
@@ -212,10 +201,14 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               style={{ background: engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)' }}
             />
 
+            {engine.scanlines && (
+              <div className="absolute inset-0 z-[1] scanlines-overlay opacity-80 pointer-events-none" />
+            )}
+
             <MockHeader 
               theme={theme} 
-              activeView={activeView} 
-              setActiveView={setActiveView} 
+              activeView={activeHeaderView} 
+              setActiveView={setActiveHeaderView} 
             />
 
             <div className="flex-1 flex overflow-hidden relative z-10">
@@ -225,187 +218,14 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
                 onSelectItem={(label) => setSidebarItem(label)}
               />
 
-              <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <div 
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
-                    style={{
-                      borderRadius: `${engine.badgeRadius || 20}px`,
-                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                    }}
-                  >
-                    <Zap className="w-3.5 h-3.5 text-amber-300" />
-                    <span>Solar: 3.8 kW</span>
-                  </div>
-
-                  <div 
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
-                    style={{
-                      borderRadius: `${engine.badgeRadius || 20}px`,
-                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                    }}
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Armed Home</span>
-                  </div>
-
-                  <div 
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white/90 shadow-sm border border-white/10 backdrop-blur-md"
-                    style={{
-                      borderRadius: `${engine.badgeRadius || 20}px`,
-                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                    }}
-                  >
-                    <Sparkles className="w-3.5 h-3.5" style={{ color: palette.primary }} />
-                    <span>Theme: {theme.name}</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2.5">
-                        <div 
-                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
-                          style={{ backgroundColor: palette.primary }}
-                        >
-                          <Sparkles className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-white leading-none">Living Room Lights</h4>
-                          <span className="text-[10px] text-slate-300">{lightBrightness}% Brightness</span>
-                        </div>
-                      </div>
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: palette.primary }} />
-                    </div>
-
-                    <div className="space-y-1 mt-2">
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="100" 
-                        value={lightBrightness} 
-                        onChange={(e) => setLightBrightness(Number(e.target.value))}
-                        className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                        style={{ accentColor: palette.primary }}
-                      />
-                    </div>
-                  </MockCard>
-
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div 
-                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
-                          style={{ backgroundColor: palette.accent || palette.primary }}
-                        >
-                          <Sliders className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-white leading-none">Climate Control</h4>
-                          <span className="text-[10px] text-slate-300">Heating • Target {temperature}°C</span>
-                        </div>
-                      </div>
-                      <span className="text-sm font-extrabold text-white">{temperature}°C</span>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-2 border-t border-white/10 mt-2">
-                      <button 
-                        onClick={() => setTemperature((prev) => +(prev - 0.5).toFixed(1))}
-                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs"
-                      >
-                        -0.5°
-                      </button>
-                      <span className="text-xs font-semibold text-slate-200">Set Temp</span>
-                      <button 
-                        onClick={() => setTemperature((prev) => +(prev + 0.5).toFixed(1))}
-                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs"
-                      >
-                        +0.5°
-                      </button>
-                    </div>
-                  </MockCard>
-
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-white/70">Mushroom Quick Actions</span>
-                      <span className="text-[10px] text-emerald-400 font-semibold">Active</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <MockMushroomCard
-                        theme={theme}
-                        title="Smart TV"
-                        subtitle="Netflix 4K"
-                        icon={<Tv className="w-4 h-4" />}
-                        defaultActive={true}
-                        activeColor={palette.primary}
-                      />
-                      <MockMushroomCard
-                        theme={theme}
-                        title="Living Fan"
-                        subtitle="Speed 2"
-                        icon={<Fan className="w-4 h-4" />}
-                        defaultActive={true}
-                        activeColor={palette.green}
-                      />
-                    </div>
-                  </MockCard>
-
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div 
-                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
-                          style={{ backgroundColor: palette.purple }}
-                        >
-                          <Zap className="w-4 h-4" />
-                        </div>
-                        <div className="truncate max-w-[140px]">
-                          <h4 className="text-xs font-bold text-white leading-none truncate">Spotify Soundbar</h4>
-                          <span className="text-[10px] text-slate-300 truncate">Midnight City - M83</span>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="p-1.5 rounded-full bg-white/20 text-white hover:scale-105 transition-transform"
-                      >
-                        {isPlaying ? '⏸' : '▶'}
-                      </button>
-                    </div>
-                  </MockCard>
-
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-xs font-bold text-white">Weather Forecast</h4>
-                      <span className="text-xs font-extrabold text-white">24°C</span>
-                    </div>
-                    <p className="text-[10px] text-slate-300">Partly Cloudy • Humidity: 48% • Wind: 12 km/h</p>
-                  </MockCard>
-
-                  <MockCard theme={theme}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div 
-                          className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow"
-                          style={{ backgroundColor: palette.green }}
-                        >
-                          <ShieldCheck className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-white leading-none">Home Security</h4>
-                          <span className="text-[10px] text-emerald-300">All Sensors Normal</span>
-                        </div>
-                      </div>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    </div>
-                  </MockCard>
-                </div>
+              <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+                <SmartHomeDashboard theme={theme} />
               </main>
             </div>
           </div>
 
           {showSpecsDrawer && (
-            <div className="w-80 h-full border-l border-slate-800 bg-slate-950/95 backdrop-blur-xl p-5 overflow-y-auto space-y-5 animate-fade-in z-20">
+            <div className="w-80 h-full border-l border-slate-800 bg-slate-950/95 backdrop-blur-xl p-5 overflow-y-auto space-y-5 animate-fade-in z-20 shrink-0">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                   <Palette className="w-3.5 h-3.5 text-blue-400" />
@@ -454,6 +274,10 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
                   <div className="flex justify-between">
                     <span>Saturation:</span>
                     <span className="font-mono text-white">{engine.saturateAmount}x</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Brightness:</span>
+                    <span className="font-mono text-white">{engine.brightnessAmount}x</span>
                   </div>
                 </div>
               </div>

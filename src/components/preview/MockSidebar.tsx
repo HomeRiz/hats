@@ -1,17 +1,16 @@
 import React from 'react';
 import { 
   Home, 
-  LayoutDashboard, 
-  Compass, 
-  Zap, 
-  BookOpen, 
-  History, 
-  Music, 
+  FileCode, 
   Package, 
-  Wrench, 
+  Cpu, 
+  Terminal, 
+  Code, 
+  MapPin, 
+  Sparkles, 
   Settings, 
-  User, 
-  Sparkles 
+  Bell, 
+  Menu 
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 
@@ -23,57 +22,54 @@ interface MockSidebarProps {
 
 export const MockSidebar: React.FC<MockSidebarProps> = ({ 
   theme, 
-  activeItem = 'Overview',
+  activeItem = 'Smart Home',
   onSelectItem 
 }) => {
-  const items = [
-    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Overview' },
-    { icon: <Zap className="w-4 h-4" />, label: 'Energy' },
-    { icon: <Compass className="w-4 h-4" />, label: 'Map' },
-    { icon: <BookOpen className="w-4 h-4" />, label: 'Logbook' },
-    { icon: <History className="w-4 h-4" />, label: 'History' },
-    { icon: <Music className="w-4 h-4" />, label: 'Media' },
-    { icon: <Sparkles className="w-4 h-4 text-purple-400" />, label: 'HATS' },
+  const topItems = [
+    { icon: <Home className="w-4 h-4" />, label: 'Smart Home' },
+    { icon: <FileCode className="w-4 h-4" />, label: 'File editor' },
     { icon: <Package className="w-4 h-4" />, label: 'HACS' },
-    { icon: <Wrench className="w-4 h-4" />, label: 'Developer Tools' },
+    { icon: <Cpu className="w-4 h-4" />, label: 'Home Assistant MCP Server' },
+    { icon: <Terminal className="w-4 h-4" />, label: 'Terminal' },
+    { icon: <Code className="w-4 h-4" />, label: 'OpenCode' },
+    { icon: <MapPin className="w-4 h-4" />, label: 'Map' },
+    { icon: <Sparkles className="w-4 h-4 text-purple-300" />, label: 'HATS' },
+  ];
+
+  const bottomItems = [
     { icon: <Settings className="w-4 h-4" />, label: 'Settings' },
+    { icon: <Bell className="w-4 h-4" />, label: 'Notifications' },
   ];
 
   return (
     <aside 
-      className="w-14 sm:w-48 md:w-52 h-full border-r border-white/10 flex flex-col justify-between py-3 select-none shrink-0 overflow-y-auto"
+      className="w-14 sm:w-48 md:w-56 h-full border-r border-white/10 flex flex-col justify-between py-2 select-none shrink-0 overflow-y-auto"
       style={{
-        backgroundColor: 'rgba(18, 20, 30, 0.75)',
+        backgroundColor: 'rgba(18, 20, 30, 0.70)',
         backdropFilter: 'blur(20px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
         boxShadow: '4px 0 24px -8px rgba(0, 0, 0, 0.4)',
       }}
     >
-      <div className="space-y-3">
-        <div className="px-3.5 py-1 flex items-center gap-2.5 text-white/95 font-bold text-xs">
-          <div 
-            className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 shadow-md text-white font-bold"
-            style={{ backgroundColor: theme.palette.primary }}
-          >
-            <Home className="w-4 h-4" />
-          </div>
-          <div className="hidden sm:flex flex-col truncate">
-            <span className="font-extrabold text-white text-xs leading-none">Home Assistant</span>
-            <span className="text-[9px] text-slate-400 leading-none mt-0.5">Smart Home</span>
-          </div>
+      <div className="space-y-2">
+        <div className="px-3 py-1 flex items-center gap-3 text-white/95 font-bold text-xs">
+          <button className="p-1 rounded-lg text-white/80 hover:bg-white/10 transition-colors">
+            <Menu className="w-4 h-4" />
+          </button>
+          <span className="hidden sm:inline font-bold text-white text-xs tracking-wide truncate">Home Assistant</span>
         </div>
 
         <div className="h-px bg-white/10 mx-2" />
 
         <nav className="space-y-0.5 px-1.5">
-          {items.map((item, idx) => {
+          {topItems.map((item, idx) => {
             const isActive = activeItem === item.label;
             return (
               <button
                 key={idx}
                 onClick={() => onSelectItem && onSelectItem(item.label)}
                 title={item.label}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all text-left group ${
+                className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all text-left group ${
                   isActive
                     ? 'text-white font-bold shadow-sm'
                     : 'text-slate-300 hover:text-white hover:bg-white/10'
@@ -81,9 +77,9 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
                 style={
                   isActive
                     ? {
-                        backgroundColor: `${theme.palette.primary}30`,
+                        backgroundColor: `${theme.palette.primary}35`,
                         borderLeft: `3px solid ${theme.palette.primary}`,
-                        color: theme.palette.primary,
+                        color: '#FFFFFF',
                       }
                     : {}
                 }
@@ -101,21 +97,27 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
         </nav>
       </div>
 
-      <div className="px-2 pt-2 border-t border-white/10 flex items-center justify-between">
-        <div className="flex items-center gap-2 px-1 py-1 rounded-xl w-full hover:bg-white/10 cursor-pointer transition-colors">
-          <div className="relative">
-            <div 
-              className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow"
-              style={{ backgroundColor: theme.palette.accent || theme.palette.primary }}
-            >
-              F
-            </div>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 border border-slate-900 absolute -bottom-0.5 -right-0.5" />
+      <div className="space-y-1 px-1.5 pt-2 border-t border-white/10">
+        {bottomItems.map((item, idx) => (
+          <button
+            key={idx}
+            onClick={() => onSelectItem && onSelectItem(item.label)}
+            title={item.label}
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="shrink-0">{item.icon}</div>
+            <span className="hidden sm:inline truncate">{item.label}</span>
+          </button>
+        ))}
+
+        <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors mt-1">
+          <div 
+            className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow"
+            style={{ backgroundColor: theme.palette.accent || theme.palette.primary }}
+          >
+            t
           </div>
-          <div className="hidden sm:flex flex-col truncate text-left">
-            <span className="text-[11px] font-semibold text-slate-200 leading-none truncate">Florin</span>
-            <span className="text-[9px] text-slate-400 leading-none mt-0.5">Admin</span>
-          </div>
+          <span className="hidden sm:inline text-xs font-semibold text-slate-200 truncate">testha</span>
         </div>
       </div>
     </aside>
