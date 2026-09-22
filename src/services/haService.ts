@@ -16,9 +16,20 @@ export interface ApplyThemeResult {
   reloaded?: boolean;
 }
 
+function getApiUrl(apiPath: string): string {
+  const clean = apiPath.startsWith('/') ? apiPath.slice(1) : apiPath;
+  if (typeof window !== 'undefined' && window.location) {
+    const base = window.location.pathname.endsWith('/') 
+      ? window.location.pathname 
+      : `${window.location.pathname}/`;
+    return `${base}${clean}`;
+  }
+  return `/${clean}`;
+}
+
 export async function checkHaAddonStatus(): Promise<HaStatusResult> {
   try {
-    const res = await fetch('/api/ha/status');
+    const res = await fetch(getApiUrl('api/ha/status'));
     if (res.ok) {
       return await res.json();
     }
@@ -39,7 +50,7 @@ export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyT
   const yamlContent = generateHomeAssistantThemeYaml(theme, 'local');
   
   try {
-    const res = await fetch('/api/ha/apply-theme', {
+    const res = await fetch(getApiUrl('api/ha/apply-theme'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +88,7 @@ export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyT
 
 export async function reloadHomeAssistantThemes(): Promise<boolean> {
   try {
-    const res = await fetch('/api/ha/reload-themes', { method: 'POST' });
+    const res = await fetch(getApiUrl('api/ha/reload-themes'), { method: 'POST' });
     return res.ok;
   } catch {
     return false;
