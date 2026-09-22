@@ -360,7 +360,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 </div>
                 <div className="flex items-center gap-1.5">
                   <a
-                    href={getHacsUrl(444378248)}
+                    href={getHacsUrl(444350375)}
                     target="_blank"
                     rel="noreferrer"
                     title="Open in HACS"
@@ -382,7 +382,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 </div>
                 <div className="flex items-center gap-1.5">
                   <a
-                    href={getHacsUrl(664161989)}
+                    href={getHacsUrl(680112919)}
                     target="_blank"
                     rel="noreferrer"
                     title="Open in HACS"
@@ -404,7 +404,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 </div>
                 <div className="flex items-center gap-1.5">
                   <a
-                    href={getHacsUrl(145009280)}
+                    href={getHacsUrl(156434866)}
                     target="_blank"
                     rel="noreferrer"
                     title="Open in HACS"
