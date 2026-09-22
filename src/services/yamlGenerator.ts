@@ -114,13 +114,27 @@ ${rampBlock}
   # Mode Tokens
 ${tokenBlock}
 
+  # Dropdowns & Web-Awesome UI Tokens (HA 2024.x - 2026.x)
+  wa-shadow-m: var(--ha-card-box-shadow)
+  wa-border-radius-s: var(--ha-card-border-radius)
+  wa-border-radius-m: "${engine.cardRadius}px"
+  wa-border-width-s: 0px
+  wa-color-neutral-fill-normal: "rgba(255, 255, 255, 0.12)"
+  ha-color-on-neutral-normal: var(--primary-text-color)
+  ha-color-fill-primary-quiet-resting: "rgba(255, 255, 255, 0.12)"
+  ha-color-fill-primary-quiet-hover: "rgba(255, 255, 255, 0.20)"
+
   # Card Geometry & Glass Engine
   ha-card-border-radius: "${engine.cardRadius}px"
   ha-card-border-width: "${engine.borderWidth}px"
   ha-card-border-color: "${engine.borderColor}"
+  ha-card-glass-tint: "${engine.glassTint}"
+  ha-card-glass-sheen: "${sheenGrad}"
   ha-card-backdrop-filter: "blur(${engine.blurAmount}px) saturate(${engine.saturateAmount})"
+  ha-card-glass-inset-shadow: "${engine.insetShadow}"
   ha-card-box-shadow: "${engine.insetShadow}"
   ha-dialog-surface-backdrop-filter: "none"
+  ultimate-transition: "box-shadow 220ms ease, transform 220ms ease"
 
   # Ultimate Theme System Variables
   ultimate-glow-color: "${engine.glowColor}"
@@ -155,7 +169,7 @@ ${tokenBlock}
       sidebar-selected-icon-color: "${accent}"
 
   # --------------------------------------------------------------------------
-  # card-mod Injections: Root, View, Card, Sidebar, Header, Config
+  # card-mod Injections: Root, View, Card, Sidebar, Header, Config, Dialog
   # --------------------------------------------------------------------------
   card-mod-root: |
     /* Fixed viewport backdrop for iOS, Android & Desktop */
@@ -184,39 +198,47 @@ ${tokenBlock}
       -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
 
   card-mod-sidebar: |
     :host {
-      background: transparent !important;
-      --app-drawer-content-container-background-color: transparent !important;
+      background: none !important;
     }
     .menu,
     .panels-list {
-      background: ${engine.glassTint || 'rgba(18, 20, 32, 0.65)'} !important;
-      backdrop-filter: blur(20px) saturate(1.4) !important;
-      -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
     }
-    ha-sidebar {
-      background: transparent !important;
-    }
-    paper-icon-item[selected],
-    ha-md-list-item.selected,
-    ha-list-item-button.selected {
-      background: rgba(${hexToRgbString(accent)}, 0.20) !important;
-      border-radius: 12px !important;
-      margin: 2px 8px !important;
-      color: #FFFFFF !important;
-    }
-    paper-icon-item[selected] ha-icon,
-    ha-md-list-item.selected ha-icon {
-      color: ${accent} !important;
-    }
-    paper-icon-item,
+    ha-list-item-button,
+    ha-list-item-button.selected::before,
     ha-md-list-item,
-    ha-list-item-button {
-      margin: 2px 8px !important;
-      border-radius: 12px !important;
-      transition: background 0.2s ease;
+    ha-md-list-item.selected::before,
+    paper-icon-item {
+      border-radius: var(--ha-card-border-radius) !important;
+      --ha-list-item-focus-radius: var(--ha-card-border-radius) !important;
+    }
+    ha-md-list-item.selected,
+    paper-icon-item.iron-selected,
+    paper-icon-item[selected],
+    ha-list-item-button.selected {
+      background: var(--ha-color-fill-primary-quiet-resting, rgba(${hexToRgbString(accent)}, 0.20)) !important;
+    }
+
+  card-mod-top-app-bar-fixed: |
+    :host {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+
+  card-mod-dialog: |
+    :host {
+      --dialog-backdrop-filter: none;
     }
 
   card-mod-view: |
@@ -249,11 +271,11 @@ ${tokenBlock}
       background: transparent !important;
     }
     ha-card {
-      background: ${engine.glassTint} !important;
+      background: var(--ha-card-glass-tint, ${engine.glassTint}) !important;
       backdrop-filter: var(--ha-card-backdrop-filter);
       -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
       border-radius: var(--ha-card-border-radius, ${engine.cardRadius}px) !important;
-      box-shadow: ${engine.insetShadow} !important;
+      box-shadow: var(--ha-card-glass-inset-shadow, ${engine.insetShadow}) !important;
     }
 
   card-mod-panel-custom: |
