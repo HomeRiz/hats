@@ -23,9 +23,9 @@ COPY config.yaml ./config.yaml
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
 
-EXPOSE 8099
+EXPOSE 4287
 
-ENV INGRESS_PORT=8099
+ENV INGRESS_PORT=4287
 ENV HA_CONFIG_DIR=/config
 
 ENTRYPOINT ["/sbin/tini", "-s", "--"]

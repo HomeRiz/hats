@@ -15,5 +15,5 @@ fi
 
 cd /app
 
-echo "[INFO] Launching HATS Ingress Server on port 8099..."
+echo "[INFO] Launching HATS Ingress Server on port 4287..."
 exec node server/index.js
