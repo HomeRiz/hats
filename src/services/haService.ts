@@ -159,3 +159,26 @@ export async function reloadHomeAssistantThemes(): Promise<boolean> {
     return false;
   }
 }
+
+export async function fetchInstalledHaThemes(): Promise<ThemeConfig[]> {
+  try {
+    const res = await fetch(getApiUrl('api/ha/installed-themes'));
+    if (res.ok) {
+      const data = await res.json();
+      return data.themes || [];
+    }
+    return [];
+  } catch (err) {
+    console.warn('Could not fetch installed themes from Home Assistant:', err);
+    return [];
+  }
+}
+
+export async function deleteHaTheme(themeId: string): Promise<boolean> {
+  try {
+    const res = await fetch(getApiUrl(`api/ha/theme/${themeId}`), { method: 'DELETE' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

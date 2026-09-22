@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ThemeConfig, CommunityThemeSubmission } from '../types/theme';
 import { defaultThemes, defaultGlassTheme, defaultKidsTheme } from '../presets/defaultThemes';
+import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
 
 const STORAGE_KEY_THEMES = 'ha_theme_studio_themes_v1';
 const STORAGE_KEY_ACTIVE = 'ha_theme_studio_active_v1';
@@ -93,6 +94,32 @@ export function useThemeStore() {
 
   const activeTheme = themes.find(t => t.id === activeThemeId) || themes[0] || defaultGlassTheme;
 
+  const syncInstalledThemesFromHa = useCallback(async () => {
+    try {
+      const installed = await fetchInstalledHaThemes();
+      if (installed && installed.length > 0) {
+        setThemes(prev => {
+          const merged = [...prev];
+          for (const inst of installed) {
+            const idx = merged.findIndex(t => t.id === inst.id || t.name.toLowerCase() === inst.name.toLowerCase());
+            if (idx >= 0) {
+              merged[idx] = { ...merged[idx], ...inst, isInstalled: true };
+            } else {
+              merged.unshift({ ...inst, isInstalled: true });
+            }
+          }
+          return merged;
+        });
+      }
+    } catch (e) {
+      console.warn('Could not auto-sync themes from Home Assistant:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    syncInstalledThemesFromHa();
+  }, [syncInstalledThemesFromHa]);
+
   const updateActiveTheme = (updates: Partial<ThemeConfig>) => {
     setThemes(prev => prev.map(t => {
       if (t.id === activeThemeId) {
@@ -118,6 +145,7 @@ export function useThemeStore() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isCustom: true,
+      isInstalled: false,
       ...template,
     };
 
@@ -139,13 +167,15 @@ export function useThemeStore() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isCustom: true,
+      isInstalled: false,
     };
 
     setThemes(prev => [copy, ...prev]);
     setActiveThemeId(newId);
   };
 
-  const deleteTheme = (themeId: string) => {
+  const deleteTheme = async (themeId: string) => {
+    await deleteHaTheme(themeId);
     setThemes(prev => {
       const filtered = prev.filter(t => t.id !== themeId);
       if (filtered.length === 0) return [defaultGlassTheme];
@@ -218,5 +248,6 @@ export function useThemeStore() {
     communitySubmissions,
     voteOnCommunityTheme,
     addCommunitySubmission,
+    syncInstalledThemesFromHa,
   };
 }

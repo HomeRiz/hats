@@ -31,6 +31,7 @@ export const App: React.FC = () => {
     communitySubmissions,
     voteOnCommunityTheme,
     addCommunitySubmission,
+    syncInstalledThemesFromHa,
   } = useThemeStore();
 
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -100,6 +101,7 @@ export const App: React.FC = () => {
               onNewTheme={() => createNewTheme()}
               onDuplicateTheme={duplicateTheme}
               onDeleteTheme={deleteTheme}
+              onSyncHaThemes={syncInstalledThemesFromHa}
               onImportThemes={(imported) => {
                 setThemes((prev) => [...imported, ...prev]);
                 if (imported[0]) setActiveThemeId(imported[0].id);

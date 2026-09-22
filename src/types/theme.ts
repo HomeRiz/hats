@@ -85,6 +85,8 @@ export interface ThemeConfig {
   createdAt: string;
   updatedAt: string;
   isCustom?: boolean;
+  isInstalled?: boolean;
+  installedFilePath?: string;
   requirements?: ThemeRequirements;
   palette: PaletteColors;
   engine: EngineSettings;

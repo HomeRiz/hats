@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.9] - 2026-09-22
+- **HA Theme Discovery & Live Sync**: Automatically scans and parses all installed themes in `/config/themes/` (including nested folders like `ultimate-theme/`), making all existing HA themes editable, duplicable, and manageable directly within HATS.
+- **Corrupt Theme Prevention & Auto-Repair**: Integrated server-side YAML syntax validation (`js-yaml`) and sanitization to prevent Home Assistant recovery mode errors caused by unescaped background URLs or invalid scalar quotes.
+- **Base64 SVG Pattern Overlays**: Guaranteed reliable SVG pattern rendering for themes like Kids Playful Stars & Clouds across all dashboards.
+- **Sync from HA Action**: Added a direct "Sync from HA" action and an "Installed" category filter with dynamic theme counts in the Theme Registry.
+
 ## [1.1.8] - 2026-09-22
 - **Companion Card Badges in Theme Gallery**: Added interactive requirement and recommendation badges for **Mushroom**, **Bubble Card**, and **Layout Card** across all themes.
 - **Citrine-Grade System Tokens**: Integrated Web-Awesome dropdown variables, full dialog and top app bar card-mod directives, and scrollbars.

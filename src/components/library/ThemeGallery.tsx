@@ -1,16 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { 
   Plus, 
-  Search, 
   Copy, 
   Trash2, 
-  Check, 
   Upload, 
+  Search, 
   Sparkles, 
   Sliders, 
+  Check, 
+  Layers, 
+  Puzzle,
   ShieldCheck,
-  AlertTriangle,
-  Puzzle
+  RefreshCw,
+  HardDrive
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
@@ -25,6 +27,7 @@ interface ThemeGalleryProps {
   onImportThemes: (imported: ThemeConfig[]) => void;
   onSwitchToEditor: () => void;
   onOpenDoctor?: () => void;
+  onSyncHaThemes?: () => Promise<void> | void;
   isDoctorReady?: boolean;
 }
 
@@ -38,21 +41,35 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   onImportThemes,
   onSwitchToEditor,
   onOpenDoctor,
+  onSyncHaThemes,
   isDoctorReady = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [isSyncing, setIsSyncing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const categories = ['All', 'Kids', 'Glass', 'Velvet', 'Neon', 'Retro', 'Nature', 'Community'];
+  const categories = ['All', 'Installed', 'Kids', 'Glass', 'Velvet', 'Neon', 'Retro', 'Nature', 'Community'];
 
   const filteredThemes = themes.filter((t) => {
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           t.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           t.category.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'All' 
+      ? true 
+      : (selectedCategory === 'Installed' ? Boolean(t.isInstalled) : t.category === selectedCategory);
     return matchesSearch && matchesCategory;
   });
+
+  const handleSyncFromHa = async () => {
+    if (!onSyncHaThemes) return;
+    setIsSyncing(true);
+    try {
+      await onSyncHaThemes();
+    } finally {
+      setTimeout(() => setIsSyncing(false), 600);
+    }
+  };
 
   const handleImportYaml = (file: File) => {
     const reader = new FileReader();
@@ -84,6 +101,18 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {onSyncHaThemes && (
+            <button
+              onClick={handleSyncFromHa}
+              disabled={isSyncing}
+              title="Sync and read all theme files directly from /config/themes"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-blue-400 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync from HA'}</span>
+            </button>
+          )}
+
           {onOpenDoctor && (
             <button
               onClick={onOpenDoctor}
@@ -144,13 +173,19 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                 selectedCategory === cat
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200'
               }`}
             >
-              {cat}
+              {cat === 'Installed' && <HardDrive className="w-3 h-3 text-emerald-400" />}
+              <span>{cat}</span>
+              {cat === 'Installed' && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-950/80 text-emerald-300 font-mono">
+                  {themes.filter(t => t.isInstalled).length}
+                </span>
+              )}
             </button>
           ))}
         </div>
