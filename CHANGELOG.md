@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.4] - 2026-09-23
+- **Seamless Fixed Sidebar Wallpaper Engine**: Injected `:host::before` & `:host::after` fixed backdrop layers directly into `card-mod-sidebar` linked to `var(--ultimate-background)`, guaranteeing the sidebar matches the dashboard background artwork, gradients, and ambient lighting pixel-for-pixel across all views.
+
 ## [1.2.3] - 2026-09-23
 - **Seamless Glass Sidebar & Wallpaper Flow**: Restored `:host { background: none !important; }` on the sidebar with backdrop blur on `.menu` and `.panels-list`, allowing dashboard wallpaper and theme colors to flow continuously behind the navigation menu.
 

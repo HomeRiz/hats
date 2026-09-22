@@ -212,6 +212,25 @@ ${tokenBlock}
     :host {
       background: none !important;
     }
+    :host::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--ultimate-background);
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      z-index: -2;
+      pointer-events: none;
+    }
+    :host::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: ${engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)'};
+      z-index: -1;
+      pointer-events: none;
+    }
     .menu,
     .panels-list {
       backdrop-filter: var(--ha-card-backdrop-filter, blur(16px) saturate(1.4)) !important;
