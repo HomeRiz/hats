@@ -28,5 +28,5 @@ EXPOSE 8099
 ENV INGRESS_PORT=8099
 ENV HA_CONFIG_DIR=/config
 
-ENTRYPOINT ["/sbin/tini", "--"]
+ENTRYPOINT ["/sbin/tini", "-s", "--"]
 CMD [ "/run.sh" ]
