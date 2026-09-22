@@ -16,6 +16,9 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const CONFIG_DIR = process.env.HA_CONFIG_DIR || '/config';
 const CONFIGURATION_YAML = path.join(CONFIG_DIR, 'configuration.yaml');
 const THEMES_DIR = path.join(CONFIG_DIR, 'themes');
+const BUNDLED_THEMES_DIR = fs.existsSync(path.join(__dirname, '..', 'bundled', 'themes'))
+  ? path.join(__dirname, '..', 'bundled', 'themes')
+  : path.join(__dirname, 'bundled', 'themes');
 const WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
 const HACS_COMMUNITY_DIR = path.join(CONFIG_DIR, 'www', 'community');
 const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs');
@@ -51,182 +54,216 @@ function sanitizeThemeYamlContent(rawYaml) {
   return content;
 }
 
-function scanInstalledThemes() {
-  if (!fs.existsSync(THEMES_DIR)) {
-    return [];
-  }
+function parseThemeFile(fullPath, isInstalled) {
+  try {
+    const raw = fs.readFileSync(fullPath, 'utf8');
+    const sanitized = sanitizeThemeYamlContent(raw);
 
-  const results = [];
-  const seenIds = new Set();
-
-  function scanDir(dir) {
-    let entries = [];
-    try {
-      entries = fs.readdirSync(dir, { withFileTypes: true });
-    } catch (e) {
-      console.warn(`Cannot read directory ${dir}:`, e.message);
-      return;
+    if (isInstalled && sanitized !== raw) {
+      try {
+        fs.writeFileSync(fullPath, sanitized, 'utf8');
+        console.log(`Auto-repaired YAML syntax in ${fullPath}`);
+      } catch (wErr) {
+        console.warn(`Could not save repaired YAML ${fullPath}:`, wErr.message);
+      }
     }
 
-    for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        scanDir(fullPath);
-      } else if (entry.isFile() && (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+    const parsed = yaml.load(sanitized);
+    if (!parsed || typeof parsed !== 'object') return [];
+
+    const themes = [];
+    const fileName = path.basename(fullPath);
+
+    for (const [themeName, themeData] of Object.entries(parsed)) {
+      if (!themeData || typeof themeData !== 'object') continue;
+
+      const cleanId = (fileName.replace(/\.ya?ml$/, '') + (Object.keys(parsed).length > 1 ? `-${themeName}` : ''))
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]/g, '-');
+
+      const primary = themeData['primary-color'] || themeData['accent-color'] || '#0A84FF';
+      const accent = themeData['accent-color'] || primary;
+      const bg = themeData['hats-background'] || themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
+      
+      let customSvgOverlay = undefined;
+      const b64SvgMatch = bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/);
+      if (b64SvgMatch) {
         try {
-          const raw = fs.readFileSync(fullPath, 'utf8');
-          const sanitized = sanitizeThemeYamlContent(raw);
+          customSvgOverlay = Buffer.from(b64SvgMatch[1], 'base64').toString('utf-8');
+        } catch {}
+      }
 
-          if (sanitized !== raw) {
-            try {
-              fs.writeFileSync(fullPath, sanitized, 'utf8');
-              console.log(`Auto-repaired YAML syntax in ${fullPath}`);
-            } catch (wErr) {
-              console.warn(`Could not save repaired YAML ${fullPath}:`, wErr.message);
+      let bgUrl = undefined;
+      let gradientString = undefined;
+      if (bg.includes('http') || bg.includes('/local/')) {
+        const urlM = bg.match(/url\(['"]?(http[^'"]+|\/local\/[^'"]+)['"]?\)/);
+        if (urlM) bgUrl = urlM[1];
+      } else if (bg.includes('gradient')) {
+        const gradM = bg.match(/linear-gradient\([^)]+\)/);
+        if (gradM) gradientString = gradM[0];
+      }
+
+      const category = /kids/i.test(themeName) ? 'Kids'
+        : /neon/i.test(themeName) ? 'Neon'
+        : /velvet/i.test(themeName) ? 'Velvet'
+        : /cyber/i.test(themeName) ? 'SciFi'
+        : /aurora|nature|forest/i.test(themeName) ? 'Nature'
+        : /glass/i.test(themeName) ? 'Glass'
+        : 'Community';
+
+      const mtime = fs.statSync(fullPath).mtime.toISOString();
+
+      themes.push({
+        id: cleanId,
+        name: themeName,
+        category,
+        author: isInstalled ? 'Installed Theme' : 'HATS Collection',
+        description: isInstalled
+          ? `Installed in Home Assistant (/config/themes/${path.relative(THEMES_DIR, fullPath)})`
+          : `Official HATS Theme (${themeName})`,
+        isCustom: isInstalled,
+        isInstalled,
+        installedFilePath: isInstalled ? fullPath : undefined,
+        fileName,
+        updatedAt: mtime,
+        createdAt: mtime,
+        palette: {
+          primary,
+          accent,
+          purple: themeData['purple-color'] || '#BF5AF2',
+          pink: themeData['pink-color'] || '#FF375F',
+          red: themeData['red-color'] || '#FF453A',
+          indigo: themeData['indigo-color'] || '#5E5CE6',
+          blue: themeData['blue-color'] || '#0A84FF',
+          lightBlue: themeData['light-blue-color'] || '#66D4CF',
+          cyan: themeData['cyan-color'] || '#5AC8F5',
+          teal: themeData['teal-color'] || '#6AC4DC',
+          green: themeData['green-color'] || '#32D74B',
+          yellow: themeData['yellow-color'] || '#FFD60A',
+          orange: themeData['orange-color'] || '#FF9F0A',
+          brown: themeData['brown-color'] || '#AC8E68',
+          grey: themeData['grey-color'] || '#8E8E93',
+        },
+        engine: {
+          engineType: category === 'Kids' ? 'kids' : category === 'Neon' ? 'neon' : category === 'Velvet' ? 'velvet' : 'glass',
+          blurAmount: parseInt(themeData['ha-card-backdrop-filter']?.match(/blur\((\d+)px\)/)?.[1] || '16', 10),
+          saturateAmount: parseFloat(themeData['ha-card-backdrop-filter']?.match(/saturate\(([\d.]+)\)/)?.[1] || '1.45'),
+          brightnessAmount: 1.0,
+          cardRadius: parseInt(themeData['ha-card-border-radius'] || '30', 10),
+          badgeRadius: parseInt(themeData['ha-badge-border-radius'] || '24', 10),
+          mushRadius: parseInt(themeData['mush-icon-border-radius'] || '24', 10),
+          borderWidth: parseInt(themeData['ha-card-border-width'] || '0', 10),
+          borderColor: themeData['ha-card-border-color'] || 'rgba(255, 255, 255, 0.18)',
+          glassTint: themeData['ha-card-glass-tint'] || 'rgba(255, 255, 255, 0.06)',
+          sheenOpacity: 0.22,
+          sheenAngle: 160,
+          sheenBlend: 'normal',
+          insetShadow: themeData['ha-card-glass-inset-shadow'] || themeData['ha-card-box-shadow'] || 'none',
+          hoverGlow: Boolean(themeData['hats-glow-color'] || themeData['ultimate-glow-color']),
+          glowColor: themeData['hats-glow-color'] || themeData['ultimate-glow-color'] || primary,
+          hoverGlowIntensity: 24,
+          backgroundScrim: 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)',
+          fallbackCardBg: 'rgba(40, 42, 52, 0.86)',
+          scanlines: false,
+          scanlineIntensity: 0,
+        },
+        background: {
+          type: bgUrl ? 'image' : 'gradient',
+          imageUrl: bgUrl,
+          gradientString: gradientString || (bgUrl ? undefined : 'linear-gradient(140deg, #1b1030 0%, #0b0d14 55%, #12202e 100%)'),
+          darken: 0.2,
+          blur: 0,
+          saturation: 1.2,
+          vignette: 0.35,
+          headerTintAuto: true,
+          avgColor: '#1a1428',
+        },
+        customSvgOverlay,
+        dark: {
+          primaryBackground: themeData.modes?.dark?.['primary-background-color'] || 'rgb(14, 14, 20)',
+          secondaryBackground: themeData.modes?.dark?.['secondary-background-color'] || 'rgb(14, 14, 20)',
+          cardBackground: themeData.modes?.dark?.['ha-card-background'] || 'rgba(0, 0, 0, 0.26)',
+          textPrimary: themeData.modes?.dark?.['primary-text-color'] || 'rgba(255, 255, 255, 0.96)',
+          textSecondary: themeData.modes?.dark?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
+        },
+        light: {
+          primaryBackground: themeData.modes?.light?.['primary-background-color'] || 'rgb(70, 74, 80)',
+          secondaryBackground: themeData.modes?.light?.['secondary-background-color'] || 'rgb(70, 74, 80)',
+          cardBackground: themeData.modes?.light?.['ha-card-background'] || 'rgba(190, 195, 205, 0.26)',
+          textPrimary: themeData.modes?.light?.['primary-text-color'] || 'rgb(241, 241, 241)',
+          textSecondary: themeData.modes?.light?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
+        },
+        requirements: {
+          requiresCardMod: Boolean(themeData['card-mod-theme'] || themeData['card-mod-root'] || themeData['card-mod-card']),
+          requiresThemesDirective: true,
+          recommendedCards: [
+            { name: 'Mushroom Cards', slug: 'mushroom', description: 'Clean minimalist cards' },
+            { name: 'Bubble Card', slug: 'bubble-card', description: 'Pop-up subviews' },
+          ],
+        },
+      });
+    }
+    return themes;
+  } catch (err) {
+    console.warn(`Error parsing theme file ${fullPath}:`, err.message);
+    return [];
+  }
+}
+
+function scanInstalledThemes() {
+  const results = [];
+  const seenIds = new Set();
+  const seenNames = new Set();
+
+  if (fs.existsSync(THEMES_DIR)) {
+    function scanDir(dir) {
+      let entries = [];
+      try {
+        entries = fs.readdirSync(dir, { withFileTypes: true });
+      } catch (e) {
+        console.warn(`Cannot read directory ${dir}:`, e.message);
+        return;
+      }
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          scanDir(fullPath);
+        } else if (entry.isFile() && (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+          const parsedThemes = parseThemeFile(fullPath, true);
+          for (const t of parsedThemes) {
+            if (!seenIds.has(t.id)) {
+              seenIds.add(t.id);
+              seenNames.add(t.name.toLowerCase());
+              results.push(t);
             }
           }
-
-          const parsed = yaml.load(sanitized);
-          if (parsed && typeof parsed === 'object') {
-            for (const [themeName, themeData] of Object.entries(parsed)) {
-              if (!themeData || typeof themeData !== 'object') continue;
-
-              const cleanId = (entry.name.replace(/\.ya?ml$/, '') + (Object.keys(parsed).length > 1 ? `-${themeName}` : ''))
-                .toLowerCase()
-                .replace(/[^a-z0-9_-]/g, '-');
-
-              if (seenIds.has(cleanId)) continue;
-              seenIds.add(cleanId);
-
-              const primary = themeData['primary-color'] || themeData['accent-color'] || '#0A84FF';
-              const accent = themeData['accent-color'] || primary;
-              const bg = themeData['hats-background'] || themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
-              
-              let customSvgOverlay = undefined;
-              const b64SvgMatch = bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/);
-              if (b64SvgMatch) {
-                try {
-                  customSvgOverlay = Buffer.from(b64SvgMatch[1], 'base64').toString('utf-8');
-                } catch {}
-              }
-
-              let bgUrl = undefined;
-              let gradientString = undefined;
-              if (bg.includes('http') || bg.includes('/local/')) {
-                const urlM = bg.match(/url\(['"]?(http[^'"]+|\/local\/[^'"]+)['"]?\)/);
-                if (urlM) bgUrl = urlM[1];
-              } else if (bg.includes('gradient')) {
-                const gradM = bg.match(/linear-gradient\([^)]+\)/);
-                if (gradM) gradientString = gradM[0];
-              }
-
-              const category = /kids/i.test(themeName) ? 'Kids'
-                : /neon/i.test(themeName) ? 'Neon'
-                : /velvet/i.test(themeName) ? 'Velvet'
-                : /cyber/i.test(themeName) ? 'SciFi'
-                : /aurora|nature|forest/i.test(themeName) ? 'Nature'
-                : /glass/i.test(themeName) ? 'Glass'
-                : 'Community';
-
-              const mtime = fs.statSync(fullPath).mtime.toISOString();
-
-              results.push({
-                id: cleanId,
-                name: themeName,
-                category,
-                author: 'Installed Theme',
-                description: `Installed in Home Assistant (/config/themes/${path.relative(THEMES_DIR, fullPath)})`,
-                isCustom: true,
-                isInstalled: true,
-                installedFilePath: fullPath,
-                fileName: entry.name,
-                updatedAt: mtime,
-                createdAt: mtime,
-                palette: {
-                  primary,
-                  accent,
-                  purple: themeData['purple-color'] || '#BF5AF2',
-                  pink: themeData['pink-color'] || '#FF375F',
-                  red: themeData['red-color'] || '#FF453A',
-                  indigo: themeData['indigo-color'] || '#5E5CE6',
-                  blue: themeData['blue-color'] || '#0A84FF',
-                  lightBlue: themeData['light-blue-color'] || '#66D4CF',
-                  cyan: themeData['cyan-color'] || '#5AC8F5',
-                  teal: themeData['teal-color'] || '#6AC4DC',
-                  green: themeData['green-color'] || '#32D74B',
-                  yellow: themeData['yellow-color'] || '#FFD60A',
-                  orange: themeData['orange-color'] || '#FF9F0A',
-                  brown: themeData['brown-color'] || '#AC8E68',
-                  grey: themeData['grey-color'] || '#8E8E93',
-                },
-                engine: {
-                  engineType: category === 'Kids' ? 'kids' : category === 'Neon' ? 'neon' : category === 'Velvet' ? 'velvet' : 'glass',
-                  blurAmount: parseInt(themeData['ha-card-backdrop-filter']?.match(/blur\((\d+)px\)/)?.[1] || '16', 10),
-                  saturateAmount: parseFloat(themeData['ha-card-backdrop-filter']?.match(/saturate\(([\d.]+)\)/)?.[1] || '1.45'),
-                  brightnessAmount: 1.0,
-                  cardRadius: parseInt(themeData['ha-card-border-radius'] || '30', 10),
-                  badgeRadius: parseInt(themeData['ha-badge-border-radius'] || '24', 10),
-                  mushRadius: parseInt(themeData['mush-icon-border-radius'] || '24', 10),
-                  borderWidth: parseInt(themeData['ha-card-border-width'] || '0', 10),
-                  borderColor: themeData['ha-card-border-color'] || 'rgba(255, 255, 255, 0.18)',
-                  glassTint: themeData['ha-card-glass-tint'] || 'rgba(255, 255, 255, 0.06)',
-                  sheenOpacity: 0.22,
-                  sheenAngle: 160,
-                  sheenBlend: 'normal',
-                  insetShadow: themeData['ha-card-glass-inset-shadow'] || themeData['ha-card-box-shadow'] || 'none',
-                  hoverGlow: Boolean(themeData['hats-glow-color'] || themeData['ultimate-glow-color']),
-                  glowColor: themeData['hats-glow-color'] || themeData['ultimate-glow-color'] || primary,
-                  hoverGlowIntensity: 24,
-                  backgroundScrim: 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)',
-                  fallbackCardBg: 'rgba(40, 42, 52, 0.86)',
-                  scanlines: false,
-                  scanlineIntensity: 0,
-                },
-                background: {
-                  type: bgUrl ? 'image' : 'gradient',
-                  imageUrl: bgUrl,
-                  gradientString: gradientString || (bgUrl ? undefined : 'linear-gradient(140deg, #1b1030 0%, #0b0d14 55%, #12202e 100%)'),
-                  darken: 0.2,
-                  blur: 0,
-                  saturation: 1.2,
-                  vignette: 0.35,
-                  headerTintAuto: true,
-                  avgColor: '#1a1428',
-                },
-                customSvgOverlay,
-                dark: {
-                  primaryBackground: themeData.modes?.dark?.['primary-background-color'] || 'rgb(14, 14, 20)',
-                  secondaryBackground: themeData.modes?.dark?.['secondary-background-color'] || 'rgb(14, 14, 20)',
-                  cardBackground: themeData.modes?.dark?.['ha-card-background'] || 'rgba(0, 0, 0, 0.26)',
-                  textPrimary: themeData.modes?.dark?.['primary-text-color'] || 'rgba(255, 255, 255, 0.96)',
-                  textSecondary: themeData.modes?.dark?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
-                },
-                light: {
-                  primaryBackground: themeData.modes?.light?.['primary-background-color'] || 'rgb(70, 74, 80)',
-                  secondaryBackground: themeData.modes?.light?.['secondary-background-color'] || 'rgb(70, 74, 80)',
-                  cardBackground: themeData.modes?.light?.['ha-card-background'] || 'rgba(190, 195, 205, 0.26)',
-                  textPrimary: themeData.modes?.light?.['primary-text-color'] || 'rgb(241, 241, 241)',
-                  textSecondary: themeData.modes?.light?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
-                },
-                requirements: {
-                  requiresCardMod: Boolean(themeData['card-mod-theme'] || themeData['card-mod-root'] || themeData['card-mod-card']),
-                  requiresThemesDirective: true,
-                  recommendedCards: [
-                    { name: 'Mushroom Cards', slug: 'mushroom', description: 'Clean minimalist cards' },
-                    { name: 'Bubble Card', slug: 'bubble-card', description: 'Pop-up subviews' },
-                  ],
-                },
-              });
-            }
-          }
-        } catch (err) {
-          console.warn(`Error parsing theme file ${fullPath}:`, err.message);
         }
       }
     }
+    scanDir(THEMES_DIR);
   }
 
-  scanDir(THEMES_DIR);
+  if (fs.existsSync(BUNDLED_THEMES_DIR)) {
+    try {
+      const bundledEntries = fs.readdirSync(BUNDLED_THEMES_DIR, { withFileTypes: true });
+      for (const entry of bundledEntries) {
+        if (entry.isFile() && (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+          const fullPath = path.join(BUNDLED_THEMES_DIR, entry.name);
+          const parsedThemes = parseThemeFile(fullPath, false);
+          for (const t of parsedThemes) {
+            if (!seenIds.has(t.id) && !seenNames.has(t.name.toLowerCase())) {
+              seenIds.add(t.id);
+              results.push(t);
+            }
+          }
+        }
+      }
+    } catch (bErr) {
+      console.warn('Error reading bundled themes directory:', bErr.message);
+    }
+  }
+
   return results;
 }
 

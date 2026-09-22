@@ -103,9 +103,9 @@ export function useThemeStore() {
           for (const inst of installed) {
             const idx = merged.findIndex(t => t.id === inst.id || t.name.toLowerCase() === inst.name.toLowerCase());
             if (idx >= 0) {
-              merged[idx] = { ...merged[idx], ...inst, isInstalled: true };
+              merged[idx] = { ...merged[idx], ...inst, isInstalled: Boolean(inst.isInstalled) };
             } else {
-              merged.unshift({ ...inst, isInstalled: true });
+              merged.push({ ...inst, isInstalled: Boolean(inst.isInstalled) });
             }
           }
           return merged;
