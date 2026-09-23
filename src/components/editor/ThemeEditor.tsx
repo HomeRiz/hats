@@ -57,8 +57,8 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
 
   return (
     <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
-      <div className="p-4 border-b border-slate-800/80 space-y-2.5 shrink-0">
-        <div className="flex items-center justify-between gap-2">
+      <div className="p-3.5 border-b border-slate-800/80 space-y-2.5 shrink-0">
+        <div className="flex items-center justify-between gap-2.5">
           <div className="relative flex-1 group">
             <input
               type="text"
@@ -66,7 +66,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
               onChange={(e) => onChange({ name: e.target.value })}
               placeholder="Theme Name..."
               title="Click to edit theme name. This name will appear in Home Assistant theme picker."
-              className="w-full bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-blue-500/60 focus:border-blue-500 font-bold text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded-xl pl-3 pr-8 py-1.5 transition-all shadow-inner"
+              className="w-full bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-blue-500/60 focus:border-blue-500 font-bold text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded-xl pl-3 pr-7 py-1.5 transition-all shadow-inner"
             />
             <div 
               className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-400 transition-colors"
@@ -76,11 +76,20 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
             </div>
           </div>
 
-          {onOpenExport && (
+          <span 
+            className="text-[11px] text-slate-400 font-medium shrink-0 truncate max-w-[120px]"
+            title={`Created by ${theme.author}`}
+          >
+            by {theme.author}
+          </span>
+        </div>
+
+        {onOpenExport && (
+          <div className="flex justify-center">
             <button
               onClick={onOpenExport}
               title={theme.isInstalled ? "Save Changes to Home Assistant /config/themes" : "Install and Activate Theme in Home Assistant"}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center justify-center gap-1.5 ${
                 theme.isInstalled 
                   ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20' 
                   : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20'
@@ -89,33 +98,8 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
               <Zap className="w-3.5 h-3.5" />
               <span>{theme.isInstalled ? 'Save to HA' : 'Install to HA'}</span>
             </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <select
-            value={theme.category}
-            onChange={(e) => onChange({ category: e.target.value as any })}
-            title="Theme Category - Group and filter themes by visual style"
-            className="bg-slate-900 border border-slate-800 text-[11px] font-medium text-slate-300 rounded-md px-2 py-1 focus:outline-none cursor-pointer hover:border-slate-700"
-          >
-            <option value="Glass">Liquid Glass</option>
-            <option value="Kids">Kids & Playful</option>
-            <option value="Velvet">Velvet Matte</option>
-            <option value="Neon">Cyber Neon</option>
-            <option value="Retro">Retro / Synthwave</option>
-            <option value="Nature">Nature / Solarpunk</option>
-            <option value="Minimal">Minimal</option>
-            <option value="Community">Community</option>
-          </select>
-
-          <span 
-            className="text-[11px] text-slate-500 truncate"
-            title={`Created by ${theme.author}`}
-          >
-            by {theme.author}
-          </span>
-        </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-1.5 p-2.5 border-b border-slate-800/80 shrink-0 select-none">
