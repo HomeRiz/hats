@@ -564,7 +564,22 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     <Copy className="w-3.5 h-3.5" />
                   </button>
 
-                  {theme.isCustom && (
+                  {theme.isInstalled && (
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Uninstall "${theme.name}" from Home Assistant /config/themes?`)) {
+                          await handleUninstallFromHa(theme);
+                        }
+                      }}
+                      title="Uninstall theme from Home Assistant"
+                      className="p-1.5 rounded-lg hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-colors"
+                    >
+                      <HardDriveDownload className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+
+                  {theme.isCustom && !theme.isInstalled && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -764,6 +779,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             onSwitchToEditor();
           }}
           onApplyTheme={handleApplySingleTheme}
+          onUninstallTheme={handleUninstallFromHa}
           onDuplicateTheme={(id) => {
             const t = themes.find((item) => item.id === id);
             if (t) triggerDuplicate(t);

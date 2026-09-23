@@ -148,7 +148,7 @@ HATS Glass - Amber:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Glass - Amber
+  card-mod-theme: HATS Glass - Amber
   card-mod-root: |
     :host::before {
       content: '';

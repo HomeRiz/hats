@@ -148,7 +148,7 @@ HATS Art Deco - Verdant:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Art Deco - Verdant
+  card-mod-theme: HATS Art Deco - Verdant
   card-mod-root: |
     :host::before {
       content: '';

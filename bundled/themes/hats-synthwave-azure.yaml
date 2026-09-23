@@ -148,7 +148,7 @@ HATS Synthwave - Azure:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Synthwave - Azure
+  card-mod-theme: HATS Synthwave - Azure
   card-mod-root: |
     :host::before {
       content: '';

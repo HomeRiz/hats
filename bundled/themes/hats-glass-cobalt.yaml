@@ -148,7 +148,7 @@ HATS Glass - Cobalt:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Glass - Cobalt
+  card-mod-theme: HATS Glass - Cobalt
   card-mod-root: |
     :host::before {
       content: '';

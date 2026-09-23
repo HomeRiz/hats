@@ -1,22 +1,40 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ThemeConfig, CommunityThemeSubmission } from '../types/theme';
-import { defaultThemes, defaultGlassTheme, defaultKidsTheme } from '../presets/defaultThemes';
+import { defaultThemes, defaultGlassTheme } from '../presets/defaultThemes';
 import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
 
-const STORAGE_KEY_THEMES = 'ha_theme_studio_themes_v1';
-const STORAGE_KEY_ACTIVE = 'ha_theme_studio_active_v1';
-const STORAGE_KEY_COMMUNITY = 'ha_theme_studio_community_v1';
+const STORAGE_KEY_CUSTOM = 'hats_custom_themes_v2';
+const STORAGE_KEY_ACTIVE = 'hats_active_theme_id_v2';
+const STORAGE_KEY_COMMUNITY = 'hats_community_submissions_v2';
+
+try {
+  localStorage.removeItem('ha_theme_studio_themes_v1');
+  localStorage.removeItem('ha_theme_studio_themes');
+  localStorage.removeItem('ha_theme_studio_active_v1');
+} catch (e) {
+  console.warn('Could not purge legacy localStorage keys:', e);
+}
+
+function loadSavedCustomThemes(): ThemeConfig[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_CUSTOM);
+    if (!saved) return [];
+    const parsed: ThemeConfig[] = JSON.parse(saved);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(t => t && t.id && !t.name.startsWith('Ultimate '));
+    }
+    return [];
+  } catch {
+    return [];
+  }
+}
 
 const initialCommunitySubmissions: CommunityThemeSubmission[] = [];
 
 export function useThemeStore() {
   const [themes, setThemes] = useState<ThemeConfig[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_THEMES);
-      return saved ? JSON.parse(saved) : defaultThemes;
-    } catch {
-      return defaultThemes;
-    }
+    const custom = loadSavedCustomThemes();
+    return [...defaultThemes, ...custom];
   });
 
   const [activeThemeId, setActiveThemeId] = useState<string>(() => {
@@ -42,7 +60,8 @@ export function useThemeStore() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY_THEMES, JSON.stringify(themes));
+      const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.startsWith('Ultimate '));
+      localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(customOnly));
     } catch (e) {
       console.warn('Storage quota exceeded:', e);
     }
@@ -63,16 +82,10 @@ export function useThemeStore() {
       const installed = await fetchInstalledHaThemes();
       if (installed && installed.length > 0) {
         setThemes(prev => {
-          const merged = [...prev];
-          for (const inst of installed) {
-            const idx = merged.findIndex(t => t.id === inst.id || t.name.toLowerCase() === inst.name.toLowerCase());
-            if (idx >= 0) {
-              merged[idx] = { ...merged[idx], ...inst, isInstalled: Boolean(inst.isInstalled) };
-            } else {
-              merged.push({ ...inst, isInstalled: Boolean(inst.isInstalled) });
-            }
-          }
-          return merged;
+          const customDrafts = prev.filter(t => t.isCustom && !t.installedFilePath && !t.name.startsWith('Ultimate '));
+          const serverThemeIds = new Set(installed.map(t => t.id));
+          const nonCollidingCustom = customDrafts.filter(c => !serverThemeIds.has(c.id));
+          return [...installed, ...nonCollidingCustom];
         });
       }
     } catch (e) {
@@ -102,7 +115,7 @@ export function useThemeStore() {
     const newTheme: ThemeConfig = {
       ...defaultGlassTheme,
       id: newId,
-      name: template.name || 'New Liquid Glass Theme',
+      name: template.name || 'New HATS Theme',
       category: template.category || 'Glass',
       author: 'You',
       description: 'A custom designed Home Assistant liquid glass theme.',
@@ -132,6 +145,7 @@ export function useThemeStore() {
       updatedAt: new Date().toISOString(),
       isCustom: true,
       isInstalled: false,
+      installedFilePath: undefined,
     };
 
     setThemes(prev => [copy, ...prev]);
@@ -139,9 +153,20 @@ export function useThemeStore() {
   };
 
   const deleteTheme = async (themeId: string) => {
-    await deleteHaTheme(themeId);
+    try {
+      await deleteHaTheme(themeId);
+    } catch (e) {
+      console.warn('Error deleting theme from HA:', e);
+    }
+
     setThemes(prev => {
-      const filtered = prev.filter(t => t.id !== themeId);
+      const target = prev.find(t => t.id === themeId);
+      let filtered: ThemeConfig[];
+      if (target && !target.isCustom && target.isInstalled) {
+        filtered = prev.map(t => t.id === themeId ? { ...t, isInstalled: false, installedFilePath: undefined } : t);
+      } else {
+        filtered = prev.filter(t => t.id !== themeId);
+      }
       if (filtered.length === 0) return [defaultGlassTheme];
       return filtered;
     });
@@ -150,6 +175,15 @@ export function useThemeStore() {
       const fallback = themes.find(t => t.id !== themeId) || defaultGlassTheme;
       setActiveThemeId(fallback.id);
     }
+  };
+
+  const uninstallTheme = async (themeId: string) => {
+    try {
+      await deleteHaTheme(themeId);
+    } catch (e) {
+      console.warn('Error uninstalling theme from HA:', e);
+    }
+    setThemes(prev => prev.map(t => t.id === themeId ? { ...t, isInstalled: false, installedFilePath: undefined } : t));
   };
 
   const voteOnCommunityTheme = (submissionId: string, type: 'up' | 'down') => {
@@ -203,6 +237,7 @@ export function useThemeStore() {
     createNewTheme,
     duplicateTheme,
     deleteTheme,
+    uninstallTheme,
     previewMode,
     setPreviewMode,
     activeView,

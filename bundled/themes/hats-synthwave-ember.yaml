@@ -148,7 +148,7 @@ HATS Synthwave - Ember:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Synthwave - Ember
+  card-mod-theme: HATS Synthwave - Ember
   card-mod-root: |
     :host::before {
       content: '';

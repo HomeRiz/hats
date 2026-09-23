@@ -10,7 +10,8 @@ import {
   ShieldCheck, 
   CheckCircle2,
   Sliders,
-  Check
+  Check,
+  HardDriveDownload
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { MockHeader } from '../preview/MockHeader';
@@ -25,6 +26,7 @@ interface ThemeOverviewModalProps {
   onSelectTheme: (themeId: string) => void;
   onEditTheme: (themeId: string) => void;
   onApplyTheme: (theme: ThemeConfig) => void;
+  onUninstallTheme?: (theme: ThemeConfig) => void;
   onDuplicateTheme: (themeId: string) => void;
 }
 
@@ -36,6 +38,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onSelectTheme,
   onEditTheme,
   onApplyTheme,
+  onUninstallTheme,
   onDuplicateTheme,
 }) => {
   const [activeHeaderView, setActiveHeaderView] = useState('home');
@@ -339,6 +342,20 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            {theme.isInstalled && onUninstallTheme && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onUninstallTheme(theme);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 text-xs font-semibold border border-amber-800/60 transition-colors flex items-center gap-1.5"
+                title="Uninstall this theme from /config/themes in Home Assistant"
+              >
+                <HardDriveDownload className="w-3.5 h-3.5 text-amber-400" />
+                <span>Uninstall from HA</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 onClose();

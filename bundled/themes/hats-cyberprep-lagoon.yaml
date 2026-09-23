@@ -148,7 +148,7 @@ HATS Cyberprep - Lagoon:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: Ultimate Cyberprep - Lagoon
+  card-mod-theme: HATS Cyberprep - Lagoon
   card-mod-root: |
     :host::before {
       content: '';
