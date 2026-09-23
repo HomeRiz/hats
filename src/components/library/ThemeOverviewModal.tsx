@@ -105,12 +105,18 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/85 backdrop-blur-md animate-fade-in select-none">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/85 backdrop-blur-md animate-fade-in select-none cursor-pointer"
+      onClick={onClose}
+    >
       {hasMultiple && (
         <button
-          onClick={handlePrev}
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePrev();
+          }}
           title={`Previous Theme: ${prevTheme?.name} (Left Arrow Key)`}
-          className="absolute left-2 sm:left-4 md:left-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group"
+          className="absolute left-2 sm:left-4 md:left-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group cursor-pointer"
         >
           <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
         </button>
@@ -118,16 +124,19 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
       {hasMultiple && (
         <button
-          onClick={handleNext}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNext();
+          }}
           title={`Next Theme: ${nextTheme?.name} (Right Arrow Key)`}
-          className="absolute right-2 sm:right-4 md:right-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group"
+          className="absolute right-2 sm:right-4 md:right-8 z-50 p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-white/10 shadow-2xl backdrop-blur-lg transition-all hover:scale-110 active:scale-95 group cursor-pointer"
         >
           <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
         </button>
       )}
 
       <div 
-        className="relative w-full max-w-6xl h-[92vh] bg-slate-900/95 border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-6xl h-[92vh] bg-slate-900/95 border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 backdrop-blur-md shrink-0">

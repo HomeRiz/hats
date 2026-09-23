@@ -61,7 +61,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   isDoctorReady = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedFilter, setSelectedFilter] = useState<'available' | 'installed' | 'kids'>('available');
   const [isSyncing, setIsSyncing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -82,15 +82,21 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     theme: ThemeConfig;
   } | null>(null);
 
-  const categories = ['All', 'Installed', 'Kids', 'Glass', 'Velvet', 'Neon', 'Retro', 'Nature', 'Community'];
+  const totalAvailableCount = themes.length;
+  const totalInstalledCount = themes.filter((t) => t.isInstalled).length;
+  const kidsAvailableCount = themes.filter((t) => t.category === 'Kids').length;
+  const kidsInstalledCount = themes.filter((t) => t.category === 'Kids' && t.isInstalled).length;
 
   const filteredThemes = themes.filter((t) => {
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           t.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           t.category.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' 
-      ? true 
-      : (selectedCategory === 'Installed' ? Boolean(t.isInstalled) : t.category === selectedCategory);
+    let matchesCategory = true;
+    if (selectedFilter === 'installed') {
+      matchesCategory = Boolean(t.isInstalled);
+    } else if (selectedFilter === 'kids') {
+      matchesCategory = t.category === 'Kids';
+    }
     return matchesSearch && matchesCategory;
   });
 
@@ -325,33 +331,66 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search 150+ themes, categories, authors..."
+            placeholder="Search themes, authors..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
-                selectedCategory === cat
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {cat === 'Installed' && <HardDrive className="w-3 h-3 text-emerald-400" />}
-              <span>{cat}</span>
-              {cat === 'Installed' && (
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-950/80 text-emerald-300 font-mono">
-                  {themes.filter((t) => t.isInstalled).length}
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          <button
+            onClick={() => setSelectedFilter('available')}
+            title={`All available themes in the registry (${totalAvailableCount} total)`}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+              selectedFilter === 'available'
+                ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+            }`}
+          >
+            <span>Available</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+              selectedFilter === 'available' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+            }`}>
+              {totalAvailableCount}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setSelectedFilter('installed')}
+            title={`Themes currently installed in Home Assistant (${totalInstalledCount} installed)`}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+              selectedFilter === 'installed'
+                ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
+                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+            }`}
+          >
+            <HardDrive className={`w-3 h-3 ${selectedFilter === 'installed' ? 'text-white' : 'text-emerald-400'}`} />
+            <span>Installed</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+              selectedFilter === 'installed' ? 'bg-emerald-950 text-emerald-200' : 'bg-emerald-950/80 text-emerald-300'
+            }`}>
+              {totalInstalledCount}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setSelectedFilter('kids')}
+            title="Kids have their own themes (NO ADULTS ALLOWED!)"
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+              selectedFilter === 'kids'
+                ? 'bg-gradient-to-r from-pink-500 to-amber-500 text-white border-pink-400 shadow-sm font-bold'
+                : 'bg-slate-900 border-pink-900/40 text-pink-300/90 hover:text-pink-200 hover:border-pink-500/50'
+            }`}
+          >
+            <Sparkles className="w-3 h-3 text-amber-300" />
+            <span>Kids</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+              selectedFilter === 'kids' ? 'bg-black/30 text-amber-200' : 'bg-pink-950/80 text-pink-300'
+            }`}>
+              {kidsInstalledCount}/{kidsAvailableCount}
+            </span>
+          </button>
         </div>
       </div>
 
