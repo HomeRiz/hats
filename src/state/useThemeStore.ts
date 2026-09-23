@@ -8,9 +8,14 @@ const STORAGE_KEY_ACTIVE = 'hats_active_theme_id_v2';
 const STORAGE_KEY_COMMUNITY = 'hats_community_submissions_v2';
 
 try {
-  localStorage.removeItem('ha_theme_studio_themes_v1');
-  localStorage.removeItem('ha_theme_studio_themes');
-  localStorage.removeItem('ha_theme_studio_active_v1');
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.includes('ha_theme_studio') || k.includes('ultimate') || k === 'hats_themes_v1')) {
+      keysToRemove.push(k);
+    }
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
 } catch (e) {
   console.warn('Could not purge legacy localStorage keys:', e);
 }
@@ -21,7 +26,7 @@ function loadSavedCustomThemes(): ThemeConfig[] {
     if (!saved) return [];
     const parsed: ThemeConfig[] = JSON.parse(saved);
     if (Array.isArray(parsed)) {
-      return parsed.filter(t => t && t.id && !t.name.startsWith('Ultimate '));
+      return parsed.filter(t => t && t.id && !t.name.toLowerCase().startsWith('ultimate') && !t.id.toLowerCase().startsWith('ultimate'));
     }
     return [];
   } catch {
@@ -60,7 +65,7 @@ export function useThemeStore() {
 
   useEffect(() => {
     try {
-      const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.startsWith('Ultimate '));
+      const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
       localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(customOnly));
     } catch (e) {
       console.warn('Storage quota exceeded:', e);
@@ -81,11 +86,12 @@ export function useThemeStore() {
     try {
       const installed = await fetchInstalledHaThemes();
       if (installed && installed.length > 0) {
+        const cleanInstalled = installed.filter(t => !t.name.toLowerCase().startsWith('ultimate'));
         setThemes(prev => {
-          const customDrafts = prev.filter(t => t.isCustom && !t.installedFilePath && !t.name.startsWith('Ultimate '));
-          const serverThemeIds = new Set(installed.map(t => t.id));
+          const customDrafts = prev.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
+          const serverThemeIds = new Set(cleanInstalled.map(t => t.id));
           const nonCollidingCustom = customDrafts.filter(c => !serverThemeIds.has(c.id));
-          return [...installed, ...nonCollidingCustom];
+          return [...cleanInstalled, ...nonCollidingCustom];
         });
       }
     } catch (e) {

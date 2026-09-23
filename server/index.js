@@ -318,7 +318,15 @@ function resolveCardModResourceInfo() {
 }
 
 const DIST_DIR = path.join(__dirname, '..', 'dist');
-app.use(express.static(DIST_DIR));
+app.use(express.static(DIST_DIR, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 app.get('/api/ha/status', (req, res) => {
   const isAddon = fs.existsSync(CONFIG_DIR) || Boolean(SUPERVISOR_TOKEN);
@@ -790,6 +798,9 @@ app.get('/api/ha/entities', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
