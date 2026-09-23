@@ -18,7 +18,7 @@ panel_title: "HATS"
 ports:
   4287/tcp: 4287
 ports_description:
-  4287/tcp: "Direct Web UI (Fullscreen in New Tab)"
+  4287/tcp: "Direct Web UI (Unauthenticated LAN access; prefer Ingress for authenticated access)"
 webui: "http://[HOST]:[PORT:4287]"
 homeassistant_api: true
 hassio_api: true

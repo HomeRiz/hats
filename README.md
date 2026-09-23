@@ -9,7 +9,7 @@
 [![Home Assistant Add-on](https://img.shields.io/badge/Home%20Assistant-Add--on-41BDF5.svg?style=flat-square&logo=home-assistant)](https://www.home-assistant.io)
 [![Ingress Support](https://img.shields.io/badge/Ingress-Ready-success.svg?style=flat-square)](https://www.home-assistant.io/addons/)
 [![HACS Companion](https://img.shields.io/badge/HACS-Companion-orange.svg?style=flat-square)](https://hacs.xyz)
-[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 
 [Installation](#-installation) • [Features](#-features) • [Environment Doctor](#-environment--prerequisites-doctor) • [Configuration](#-configuration) • [Development](#-standalone-developer-mode)
 
@@ -36,8 +36,8 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
   - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
 - 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.
 - 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/hats/backgrounds/`.
-- 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) or access directly via container port `4287` for maximum workspace real estate.
-- 🚀 **In-App GitHub Pull Request Engine**: Package and propose new themes directly to the official theme repository with a single click.
+- 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) via Ingress, or optionally access via host port `4287` (note: Ingress provides full Home Assistant session authentication; direct host port exposure is unauthenticated on the LAN).
+- 🚀 **In-App GitHub Theme Submission**: Validate, package, and generate YAML for custom themes with one-click links to propose additions to the official repository.
 
 ---
 
@@ -131,5 +131,5 @@ Open [http://localhost:4287](http://localhost:4287) in your browser.
 
 ## 📄 License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Distributed under the GNU General Public License v3.0 (GPL-3.0). HATS is and will always remain 100% free, community-driven, and open source. It may never be closed source or used as a commercial selling product. See [LICENSE](LICENSE) for more information.
 

@@ -92,7 +92,7 @@ export async function submitThemePullRequest(params: PrSubmissionParams): Promis
 - **Primary Accent:** \`${theme.palette.primary}\`
 - **Background Type:** ${theme.background.type}
 
-*Generated automatically via [HATS](https://github.com/HomeRiz/Home-Assistant-Ultimate-Themes)*`;
+*Generated automatically via [HATS](https://github.com/HomeRiz/hats)*`;
 
     return {
       success: true,

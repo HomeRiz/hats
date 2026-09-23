@@ -10,16 +10,27 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.INGRESS_PORT || 4287;
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+
+let addOnOptions = {};
+const OPTIONS_FILE = '/data/options.json';
+if (fs.existsSync(OPTIONS_FILE)) {
+  try {
+    addOnOptions = JSON.parse(fs.readFileSync(OPTIONS_FILE, 'utf8'));
+  } catch (err) {
+    console.warn('Could not parse /data/options.json:', err.message);
+  }
+}
 
 const CONFIG_DIR = process.env.HA_CONFIG_DIR || '/config';
 const CONFIGURATION_YAML = path.join(CONFIG_DIR, 'configuration.yaml');
-const THEMES_DIR = path.join(CONFIG_DIR, 'themes');
+const THEMES_DIR = addOnOptions.themes_directory || path.join(CONFIG_DIR, 'themes');
 const BUNDLED_THEMES_DIR = fs.existsSync(path.join(__dirname, '..', 'bundled', 'themes'))
   ? path.join(__dirname, '..', 'bundled', 'themes')
   : path.join(__dirname, 'bundled', 'themes');
-const WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
+const WWW_DIR = addOnOptions.backgrounds_directory || path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
+const AUTO_RELOAD_THEMES = addOnOptions.auto_reload_themes !== undefined ? Boolean(addOnOptions.auto_reload_themes) : true;
 const HACS_COMMUNITY_DIR = path.join(CONFIG_DIR, 'www', 'community');
 const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs');
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
@@ -111,7 +122,12 @@ function parseThemeFile(fullPath, isInstalled) {
         : /glass/i.test(themeName) ? 'Glass'
         : 'Community';
 
-      const mtime = fs.statSync(fullPath).mtime.toISOString();
+      let mtime = new Date().toISOString();
+      try {
+        mtime = fs.statSync(fullPath).mtime.toISOString();
+      } catch (statErr) {
+        console.warn(`Could not stat theme file ${fullPath}:`, statErr.message);
+      }
 
       themes.push({
         id: cleanId,
@@ -338,6 +354,7 @@ app.get('/api/ha/status', (req, res) => {
     themesDir: THEMES_DIR,
     themesExists,
     hasSupervisorToken: Boolean(SUPERVISOR_TOKEN),
+    autoReloadThemes: AUTO_RELOAD_THEMES,
   });
 });
 
@@ -473,6 +490,10 @@ app.post('/api/ha/fix-config', async (req, res) => {
       const resolved = resolveCardModResourceInfo();
       cardModUrl = resolved.exactUrl;
     }
+    const sanitizedUrl = String(cardModUrl || '').replace(/[\r\n"'#]/g, '').trim();
+    if (addCardMod && (!sanitizedUrl || !sanitizedUrl.startsWith('/'))) {
+      return res.status(400).json({ error: 'Invalid card-mod URL provided. Must be a valid relative path.' });
+    }
 
     let modified = content;
     const hasFrontend = /^frontend\s*:/m.test(modified);
@@ -495,10 +516,10 @@ app.post('/api/ha/fix-config', async (req, res) => {
           if (/extra_module_url\s*:/m.test(newFrontendContent)) {
             newFrontendContent = newFrontendContent.replace(
               /(extra_module_url\s*:\s*\n)/m,
-              `$1    - ${cardModUrl}\n`
+              `$1    - ${sanitizedUrl}\n`
             );
           } else {
-            newFrontendContent = `${newFrontendContent}\n  extra_module_url:\n    - ${cardModUrl}`;
+            newFrontendContent = `${newFrontendContent}\n  extra_module_url:\n    - ${sanitizedUrl}`;
           }
         }
 
@@ -507,7 +528,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
         modified = `${before}frontend:${newFrontendContent}${after}`;
       }
     } else {
-      const newBlock = `\n\n# Loaded by HATS (Home Assistant Theme Store)\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${cardModUrl}\n`;
+      const newBlock = `\n\n# Loaded by HATS (Home Assistant Theme Store)\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${sanitizedUrl}\n`;
       modified = `${modified.trimEnd()}${newBlock}`;
     }
 
@@ -518,7 +539,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
     fs.writeFileSync(CONFIGURATION_YAML, modified, 'utf8');
 
     let reloaded = false;
-    if (SUPERVISOR_TOKEN) {
+    if (AUTO_RELOAD_THEMES && SUPERVISOR_TOKEN) {
       try {
         const haRes = await fetch(`${SUPERVISOR_API}/services/frontend/reload_themes`, {
           method: 'POST',
@@ -526,6 +547,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
             'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
             'Content-Type': 'application/json',
           },
+          signal: AbortSignal.timeout(10000),
         });
         reloaded = haRes.ok;
       } catch (haErr) {
@@ -586,12 +608,13 @@ app.post('/api/ha/apply-theme', async (req, res) => {
       fs.mkdirSync(THEMES_DIR, { recursive: true });
     }
 
-    const cleanFileName = `${themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}.yaml`;
+    const cleanThemeId = (themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme');
+    const cleanFileName = `${cleanThemeId}.yaml`;
     const filePath = path.join(THEMES_DIR, cleanFileName);
     fs.writeFileSync(filePath, sanitizedYaml, 'utf8');
 
     if (backgroundDataUrl && backgroundDataUrl.startsWith('data:image')) {
-      const themeBgDir = path.join(WWW_DIR, themeId);
+      const themeBgDir = path.join(WWW_DIR, cleanThemeId);
       fs.mkdirSync(themeBgDir, { recursive: true });
       const base64Data = backgroundDataUrl.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
@@ -599,7 +622,7 @@ app.post('/api/ha/apply-theme', async (req, res) => {
     }
 
     let reloaded = false;
-    if (SUPERVISOR_TOKEN) {
+    if (AUTO_RELOAD_THEMES && SUPERVISOR_TOKEN) {
       try {
         const haRes = await fetch(`${SUPERVISOR_API}/services/frontend/reload_themes`, {
           method: 'POST',
@@ -607,6 +630,7 @@ app.post('/api/ha/apply-theme', async (req, res) => {
             'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
             'Content-Type': 'application/json',
           },
+          signal: AbortSignal.timeout(10000),
         });
         reloaded = haRes.ok;
       } catch (haErr) {
@@ -629,14 +653,24 @@ app.post('/api/ha/apply-theme', async (req, res) => {
 app.delete('/api/ha/theme/:themeId', async (req, res) => {
   try {
     const { themeId } = req.params;
-    const cleanFileName = `${themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}.yaml`;
+    const cleanThemeId = (themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme');
+    const cleanFileName = `${cleanThemeId}.yaml`;
     const filePath = path.join(THEMES_DIR, cleanFileName);
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
 
-    if (SUPERVISOR_TOKEN) {
+    const themeBgDir = path.join(WWW_DIR, cleanThemeId);
+    if (fs.existsSync(themeBgDir)) {
+      try {
+        fs.rmSync(themeBgDir, { recursive: true, force: true });
+      } catch (bgErr) {
+        console.debug(`Could not remove background folder ${themeBgDir}:`, bgErr.message);
+      }
+    }
+
+    if (AUTO_RELOAD_THEMES && SUPERVISOR_TOKEN) {
       try {
         await fetch(`${SUPERVISOR_API}/services/frontend/reload_themes`, {
           method: 'POST',
@@ -644,11 +678,12 @@ app.delete('/api/ha/theme/:themeId', async (req, res) => {
             'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
             'Content-Type': 'application/json',
           },
+          signal: AbortSignal.timeout(10000),
         });
       } catch {}
     }
 
-    res.json({ success: true, message: `Theme ${themeId} removed from Home Assistant` });
+    res.json({ success: true, message: `Theme ${cleanThemeId} removed from Home Assistant` });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -697,6 +732,7 @@ app.post('/api/ha/repair-all-themes', async (req, res) => {
             'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
             'Content-Type': 'application/json',
           },
+          signal: AbortSignal.timeout(10000),
         });
       } catch {}
     }
@@ -728,6 +764,7 @@ app.post('/api/ha/reload-themes', async (req, res) => {
         'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
         'Content-Type': 'application/json',
       },
+      signal: AbortSignal.timeout(10000),
     });
 
     if (haRes.ok) {
@@ -752,6 +789,7 @@ app.post('/api/ha/restart', async (req, res) => {
         'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
         'Content-Type': 'application/json',
       },
+      signal: AbortSignal.timeout(10000),
     });
 
     if (!haRes.ok) {
@@ -761,6 +799,7 @@ app.post('/api/ha/restart', async (req, res) => {
           'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
           'Content-Type': 'application/json',
         },
+        signal: AbortSignal.timeout(10000),
       });
     }
 
@@ -785,6 +824,7 @@ app.get('/api/ha/entities', async (req, res) => {
       headers: {
         'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
       },
+      signal: AbortSignal.timeout(10000),
     });
     if (haRes.ok) {
       const data = await haRes.json();

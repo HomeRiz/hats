@@ -27,7 +27,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
   const [githubToken, setGithubToken] = useState('');
   const [prTitle, setPrTitle] = useState(`Add new theme: ${theme.name} (${theme.category})`);
   const [prDescription, setPrDescription] = useState(
-    `Proposed new theme for the official Ultimate Themes repository.\n\n` +
+    `Proposed new theme for the official HATS (Home Assistant Theme Store) Collection.\n\n` +
     `**Aesthetic / Category:** ${theme.category}\n` +
     `**Engine:** ${theme.engine.engineType}\n` +
     `**Description:** ${theme.description}`
@@ -77,7 +77,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
         <div className="p-4 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-white text-sm">
             <GitPullRequest className="w-4 h-4 text-purple-400" />
-            <span>Submit Theme to Home Assistant Ultimate Themes Pack</span>
+            <span>Submit Theme to HATS (Home Assistant Theme Store) Collection</span>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
             <X className="w-4 h-4" />
@@ -93,7 +93,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-white">Pull Request Proposed!</h3>
                 <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-                  Your theme has been packaged and submitted to the community hub. Once accepted, it will be added to the official Ultimate Themes pack.
+                  Your theme has been packaged and submitted to the community hub. Once accepted, it will be added to the official HATS Community Collection.
                 </p>
               </div>
 

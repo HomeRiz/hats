@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ThemeConfig } from '../../types/theme';
+import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
 import { MockHeader } from './MockHeader';
 import { MockSidebar } from './MockSidebar';
 import { SmartHomeDashboard } from './SmartHomeDashboard';
@@ -41,10 +42,12 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
     };
   }
 
+  const safeSvg = theme.customSvgOverlay ? sanitizeSvgCode(theme.customSvgOverlay) : null;
+
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden select-none">
       {theme.customCss && (
-        <style dangerouslySetInnerHTML={{ __html: theme.customCss }} />
+        <style dangerouslySetInnerHTML={{ __html: sanitizeThemeCss(theme.customCss) }} />
       )}
 
       <div 
@@ -52,10 +55,10 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
         style={bgStyle}
       />
 
-      {theme.customSvgOverlay && (
+      {safeSvg && safeSvg.valid && safeSvg.sanitized && (
         <div 
           className="absolute inset-0 z-[1] pointer-events-none opacity-40 mix-blend-screen overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: theme.customSvgOverlay }}
+          dangerouslySetInnerHTML={{ __html: safeSvg.sanitized }}
         />
       )}
 

@@ -148,9 +148,9 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
             className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow"
             style={{ backgroundColor: theme.palette.accent || theme.palette.primary }}
           >
-            t
+            H
           </div>
-          <span className={`hidden sm:inline text-xs font-semibold truncate ${isLight ? 'text-slate-800' : 'text-slate-200'}`}>testha</span>
+          <span className={`hidden sm:inline text-xs font-semibold truncate ${isLight ? 'text-slate-800' : 'text-slate-200'}`}>Home Assistant</span>
         </div>
       </div>
     </aside>

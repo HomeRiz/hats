@@ -156,7 +156,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
                 type="text"
                 value={theme.authorGithub || ''}
                 onChange={(e) => onChange({ authorGithub: e.target.value })}
-                placeholder="e.g. your-github-username"
+                placeholder="e.g. your_github_username"
                 title="GitHub handle for attribution in Community & PR sharing"
                 className="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-slate-200 focus:outline-none focus:border-blue-500"
               />

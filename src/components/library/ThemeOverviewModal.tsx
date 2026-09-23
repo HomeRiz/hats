@@ -14,6 +14,7 @@ import {
   HardDriveDownload
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
 import { MockHeader } from '../preview/MockHeader';
 import { MockSidebar } from '../preview/MockSidebar';
 import { SmartHomeDashboard } from '../preview/SmartHomeDashboard';
@@ -194,7 +195,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
         <div className="flex-1 flex overflow-hidden relative">
           {theme.customCss && (
-            <style dangerouslySetInnerHTML={{ __html: theme.customCss }} />
+            <style dangerouslySetInnerHTML={{ __html: sanitizeThemeCss(theme.customCss) }} />
           )}
 
           <div className="flex-1 flex flex-col h-full overflow-hidden relative">
@@ -202,11 +203,11 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               className="absolute inset-0 z-0 pointer-events-none transition-all duration-300"
               style={bgStyle}
             />
-            {customSvgOverlay && customSvgOverlay.trim().startsWith('<svg') && (
+            {customSvgOverlay && sanitizeSvgCode(customSvgOverlay).valid && (
               <div 
                 className="absolute inset-0 z-0 pointer-events-none opacity-35"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(customSvgOverlay)}")`,
+                  backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(sanitizeSvgCode(customSvgOverlay).sanitized)}")`,
                   backgroundRepeat: 'repeat',
                   backgroundPosition: 'center',
                 }}

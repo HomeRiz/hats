@@ -1,4 +1,4 @@
-HATS Ionut - Facet:
+HATS Circuit:
   modes:
     light:
       primary-background-color: rgb(70, 74, 80)
@@ -8,10 +8,10 @@ HATS Ionut - Facet:
       primary-background-color: rgb(14, 14, 20)
       secondary-background-color: rgb(14, 14, 20)
       ha-card-background: rgba(0, 0, 0, 0.26)
-  ultimate-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/ionut/facet.webp')
-  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/ionut/facet.webp')
+  ultimate-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/circuit/circuit.webp')
+  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/circuit/circuit.webp')
   lovelace-background: var(--background-image)
-  app-theme-color: "#0a224a"
+  app-theme-color: "#031333"
   ha-card-backdrop-filter: blur(16px) saturate(1.45)
   ha-card-border-radius: 30px
   ha-card-features-border-radius: var(--ha-card-border-radius)
@@ -23,23 +23,23 @@ HATS Ionut - Facet:
     3px 3px 0.5px -3.5px rgba(255,255,255,0.35) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.30) inset, 0 0 10px 1px rgba(255,255,255,0.10) inset, 0 8px 24px -12px rgba(0,0,0,0.55)
   ha-card-box-shadow: |
     3px 3px 0.5px -3.5px rgba(255,255,255,0.35) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.30) inset, 0 0 10px 1px rgba(255,255,255,0.10) inset, 0 8px 24px -12px rgba(0,0,0,0.55)
-  ultimate-glow-color: "#1772ED"
+  ultimate-glow-color: "#0063FD"
   ultimate-transition: box-shadow 220ms ease, transform 220ms ease
-  primary-color: "#1772ED"
+  primary-color: "#0063FD"
   accent-color: var(--primary-color)
   light-primary-color: rgb(241, 241, 241)
   divider-color: rgba(152, 152, 157, 0.28)
-  ha-color-primary-05: "#030e1e"
-  ha-color-primary-10: "#061c3b"
-  ha-color-primary-20: "#0c3976"
-  ha-color-primary-30: "#1156b2"
-  ha-color-primary-40: "#1772ED"
-  ha-color-primary-50: "#3e8af0"
-  ha-color-primary-60: "#64a1f3"
-  ha-color-primary-70: "#8bb8f6"
-  ha-color-primary-80: "#b2d0f9"
-  ha-color-primary-90: "#d8e8fc"
-  ha-color-primary-95: "#ecf3fe"
+  ha-color-primary-05: "#000c20"
+  ha-color-primary-10: "#00193f"
+  ha-color-primary-20: "#00327e"
+  ha-color-primary-30: "#004abe"
+  ha-color-primary-40: "#0063FD"
+  ha-color-primary-50: "#2a7dfd"
+  ha-color-primary-60: "#5597fe"
+  ha-color-primary-70: "#80b1fe"
+  ha-color-primary-80: "#aacbfe"
+  ha-color-primary-90: "#d4e5ff"
+  ha-color-primary-95: "#eaf2ff"
   red-color: "#FF453A"
   pink-color: "#FF375F"
   purple-color: "#BF5AF2"
@@ -148,7 +148,7 @@ HATS Ionut - Facet:
   mcg-title-letter-spacing: 0.15em
   mini-media-player-base-color: var(--primary-text-color)
   mini-media-player-icon-color: var(--primary-text-color)
-  card-mod-theme: HATS Ionut - Facet
+  card-mod-theme: HATS Circuit
   card-mod-root: |
     :host::before {
       content: '';
@@ -371,4 +371,4 @@ HATS Ionut - Facet:
       pointer-events: none;
       opacity: var(--ultimate-view-background-opacity, 1);
     }
-  hats-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/Home-Assistant-Ultimate-Themes@0.1.2/www/ultimate-theme/backgrounds/ionut/facet.webp')
+  hats-background: url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/ultimate-theme/backgrounds/circuit/circuit.webp')

@@ -35,7 +35,7 @@ export const CommunityHub: React.FC<CommunityHubProps> = ({
             <span>Community Theme Hub & Governance</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Propose, vote on, and review themes. Themes accepted by the community become part of the official <strong>Home Assistant Ultimate Themes</strong> release.
+            Propose, vote on, and review themes. Themes accepted by the community become part of the official <strong>HATS Community Collection</strong>.
           </p>
         </div>
 

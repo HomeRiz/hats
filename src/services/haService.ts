@@ -7,6 +7,7 @@ export interface HaStatusResult {
   themesDir: string;
   themesExists: boolean;
   hasSupervisorToken: boolean;
+  autoReloadThemes?: boolean;
 }
 
 export interface DiagnosticIssue {
@@ -54,9 +55,8 @@ export interface ApplyThemeResult {
 function getApiUrl(apiPath: string): string {
   const clean = apiPath.startsWith('/') ? apiPath.slice(1) : apiPath;
   if (typeof window !== 'undefined' && window.location) {
-    const base = window.location.pathname.endsWith('/') 
-      ? window.location.pathname 
-      : `${window.location.pathname}/`;
+    let base = window.location.pathname.replace(/\/index\.html$/, '');
+    base = base.endsWith('/') ? base : `${base}/`;
     return `${base}${clean}`;
   }
   return `/${clean}`;

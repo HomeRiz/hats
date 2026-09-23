@@ -10,10 +10,10 @@ export function sanitizeThemeCss(rawCss: string): string {
   if (!rawCss || typeof rawCss !== 'string') return '';
   let css = rawCss;
 
+  css = css.replace(/<\s*\/?\s*(?:script|style|iframe|object|embed)[^>]*>/gi, '');
   css = css.replace(/javascript\s*:/gi, '');
   css = css.replace(/expression\s*\([^)]*\)/gi, '');
   css = css.replace(/behavior\s*:[^;}]*/gi, '');
-  css = css.replace(/<\s*script[^>]*>[\s\S]*?<\s*\/\s*script\s*>/gi, '');
   css = css.replace(/-moz-binding\s*:[^;}]*/gi, '');
 
   css = css.replace(/(:(?:host|ha-sidebar|ha-app-layout|hui-view|ha-card)[^{}]*::(?:before|after)\s*\{[^}]*?position\s*:\s*fixed[^}]*?\})/gi, (block) => {
@@ -41,8 +41,9 @@ export function sanitizeSvgCode(rawSvg: string): { valid: boolean; sanitized: st
   let cleaned = rawSvg.trim();
 
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '');
-  cleaned = cleaned.replace(/\s+on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-  cleaned = cleaned.replace(/href\s*=\s*["']?javascript:[^"'>]+/gi, '');
+  cleaned = cleaned.replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+  cleaned = cleaned.replace(/\s+on[a-z0-9_-]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  cleaned = cleaned.replace(/(?:href|xlink:href)\s*=\s*["']?\s*(?:javascript:|data:text\/html)[^"'>]+/gi, '');
 
   if (!cleaned.includes('xmlns=')) {
     cleaned = cleaned.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
