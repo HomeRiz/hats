@@ -961,7 +961,7 @@ app.post('/api/github/submit-pr', async (req, res) => {
   }
 });
 
-app.get('*', (req, res) => {
+app.get('/*splat', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
