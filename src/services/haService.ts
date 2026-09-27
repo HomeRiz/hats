@@ -238,6 +238,7 @@ export async function restartHomeAssistant(): Promise<{ success: boolean; messag
 export interface GithubStatus {
   tokenConfigured: boolean;
   targetRepo: string;
+  canSaveToken: boolean;
 }
 
 export async function getGithubStatus(): Promise<GithubStatus> {
@@ -246,7 +247,33 @@ export async function getGithubStatus(): Promise<GithubStatus> {
     if (res.ok) return await res.json();
   } catch {
   }
-  return { tokenConfigured: false, targetRepo: 'HomeRiz/hats' };
+  return { tokenConfigured: false, targetRepo: 'HomeRiz/hats', canSaveToken: false };
+}
+
+export async function saveGithubToken(token: string): Promise<{ success: boolean; restarting?: boolean; error?: string }> {
+  try {
+    const res = await fetch(getApiUrl('api/github/token'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...MUTATING_HEADERS },
+      body: JSON.stringify({ token }),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Could not reach the HATS add-on' };
+  }
+}
+
+export async function waitForAddonBackUp(timeoutMs = 30000): Promise<boolean> {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    await new Promise((r) => setTimeout(r, 1500));
+    try {
+      const res = await fetch(getApiUrl('api/ha/status'));
+      if (res.ok) return true;
+    } catch {
+    }
+  }
+  return false;
 }
 
 export interface SubmitPrResult {

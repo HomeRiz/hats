@@ -201,11 +201,11 @@ export function validateAndSanitizeTheme(theme: ThemeConfig): ValidationReport {
   }
 
   if (sanitized.engine) {
-    sanitized.engine.cardRadius = Math.max(0, Math.min(64, sanitized.engine.cardRadius || 24));
-    sanitized.engine.blurAmount = Math.max(0, Math.min(48, sanitized.engine.blurAmount || 16));
-    sanitized.engine.borderWidth = Math.max(0, Math.min(10, sanitized.engine.borderWidth || 0));
-    sanitized.engine.sheenOpacity = Math.max(0, Math.min(1, sanitized.engine.sheenOpacity || 0.2));
-    sanitized.engine.sidebarOpacity = Math.max(0.05, Math.min(1.0, sanitized.engine.sidebarOpacity ?? 0.45));
+    sanitized.engine.cardRadius = Math.max(0, Math.min(64, sanitized.engine.cardRadius ?? 24));
+    sanitized.engine.blurAmount = Math.max(0, Math.min(48, sanitized.engine.blurAmount ?? 16));
+    sanitized.engine.borderWidth = Math.max(0, Math.min(10, sanitized.engine.borderWidth ?? 0));
+    sanitized.engine.sheenOpacity = Math.max(0, Math.min(1, sanitized.engine.sheenOpacity ?? 0.2));
+    sanitized.engine.sidebarOpacity = Math.max(0, Math.min(1.0, sanitized.engine.sidebarOpacity ?? 0.45));
     sanitized.engine.sidebarBlur = Math.max(0, Math.min(32, sanitized.engine.sidebarBlur ?? 20));
     if (!sanitized.engine.sidebarStyle) {
       sanitized.engine.sidebarStyle = 'translucent';

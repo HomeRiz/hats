@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import crypto from 'crypto';
-import { submitThemePullRequest, TARGET_REPO } from './github.js';
+import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,7 +14,7 @@ const PORT = process.env.INGRESS_PORT || 4287;
 
 app.disable('x-powered-by');
 
-const INGRESS_GATEWAY = '172.30.32.2';
+const INGRESS_GATEWAY = process.env.HATS_TRUSTED_INGRESS_IP || '172.30.32.2';
 app.use((req, res, next) => {
   if (!process.env.SUPERVISOR_TOKEN) return next();
   const ip = (req.socket.remoteAddress || '').replace(/^::ffff:/, '');
@@ -53,7 +53,19 @@ const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs'
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
 const HACS_REPOSITORIES_FILE = path.join(CONFIG_DIR, '.storage', 'hacs.repositories');
 const SUPERVISOR_TOKEN = process.env.SUPERVISOR_TOKEN;
-const GITHUB_TOKEN = typeof addOnOptions.github_token === 'string' ? addOnOptions.github_token.trim() : '';
+const SUPERVISOR_ROOT = process.env.HATS_SUPERVISOR_URL || 'http://supervisor';
+
+function getGithubToken() {
+  if (fs.existsSync(OPTIONS_FILE)) {
+    try {
+      const opts = JSON.parse(fs.readFileSync(OPTIONS_FILE, 'utf8'));
+      if (typeof opts.github_token === 'string') return opts.github_token.trim();
+    } catch (err) {
+      console.warn('Could not re-read /data/options.json:', err.message);
+    }
+  }
+  return typeof addOnOptions.github_token === 'string' ? addOnOptions.github_token.trim() : '';
+}
 const DATA_DIR = process.env.HATS_DATA_DIR || (fs.existsSync('/data') ? '/data' : path.join(__dirname, '..', '.hats-data'));
 const META_DIR = path.join(DATA_DIR, 'theme-meta');
 const DEFAULT_WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
@@ -68,7 +80,7 @@ function readThemeMeta(id, rawYaml) {
   }
   return null;
 }
-const SUPERVISOR_API = 'http://supervisor/core/api';
+const SUPERVISOR_API = `${SUPERVISOR_ROOT}/core/api`;
 const CARD_MOD_URL_RE = /^\/(?:hacsfiles|local\/community)\/lovelace-card-mod\/card-mod\.js(?:\?hacstag=[A-Za-z0-9_-]{1,40})?$/;
 const IMAGE_MAGIC = [
   b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
@@ -871,7 +883,52 @@ app.post('/api/ha/restart', async (req, res) => {
 
 let submissionInFlight = false;
 app.get('/api/github/status', (req, res) => {
-  res.json({ tokenConfigured: Boolean(GITHUB_TOKEN), targetRepo: TARGET_REPO });
+  res.json({ tokenConfigured: Boolean(getGithubToken()), targetRepo: TARGET_REPO, canSaveToken: Boolean(SUPERVISOR_TOKEN) });
+});
+
+app.post('/api/github/token', async (req, res) => {
+  if (!SUPERVISOR_TOKEN) {
+    return res.status(400).json({ success: false, error: 'Not running as a Home Assistant Add-on: save the token in Configuration instead.' });
+  }
+  const raw = typeof req.body?.token === 'string' ? req.body.token.trim() : '';
+  if (raw && !isPlausibleToken(raw)) {
+    return res.status(400).json({ success: false, error: 'That does not look like a GitHub token (unexpected characters or length).' });
+  }
+  try {
+    const infoRes = await fetch(`${SUPERVISOR_ROOT}/addons/self/info`, {
+      headers: { Authorization: `Bearer ${SUPERVISOR_TOKEN}` },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!infoRes.ok) throw new Error(`Supervisor returned HTTP ${infoRes.status} reading current options`);
+    const info = await infoRes.json();
+    const currentOptions = info?.data?.options && typeof info.data.options === 'object' ? info.data.options : {};
+
+    const optRes = await fetch(`${SUPERVISOR_ROOT}/addons/self/options`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${SUPERVISOR_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ options: { ...currentOptions, github_token: raw } }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!optRes.ok) {
+      const errBody = await optRes.json().catch(() => ({}));
+      throw new Error(errBody?.message || `Supervisor returned HTTP ${optRes.status} saving the token`);
+    }
+
+    res.json({ success: true, tokenConfigured: Boolean(raw), restarting: true });
+
+    try {
+      await fetch(`${SUPERVISOR_ROOT}/addons/self/restart`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${SUPERVISOR_TOKEN}` },
+        signal: AbortSignal.timeout(10000),
+      });
+    } catch (restartErr) {
+      console.warn('Saved the token but could not auto-restart HATS; restart it manually to apply it:', restartErr.message);
+    }
+  } catch (err) {
+    console.error('Failed to save GitHub token:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 app.post('/api/github/submit-pr', async (req, res) => {
@@ -890,7 +947,7 @@ app.post('/api/github/submit-pr', async (req, res) => {
   submissionInFlight = true;
   try {
     const result = await submitThemePullRequest({
-      token: GITHUB_TOKEN || (typeof token === 'string' ? token : ''),
+      token: getGithubToken() || (typeof token === 'string' ? token : ''),
       themeId,
       themeName,
       yamlContent: sanitizeThemeYamlContent(yamlContent),

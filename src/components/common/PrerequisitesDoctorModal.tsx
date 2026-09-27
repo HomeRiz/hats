@@ -15,7 +15,8 @@ import {
   Puzzle,
   DownloadCloud,
 } from 'lucide-react';
-import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, DiagnosticsResult } from '../../services/haService';
+import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, getGithubStatus, saveGithubToken, waitForAddonBackUp, GithubStatus, DiagnosticsResult } from '../../services/haService';
+import { Github, KeyRound } from 'lucide-react';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -36,6 +37,11 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const [fixMessage, setFixMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const [githubStatus, setGithubStatus] = useState<GithubStatus>({ tokenConfigured: false, targetRepo: 'HomeRiz/hats', canSaveToken: false });
+  const [tokenInput, setTokenInput] = useState('');
+  const [savingToken, setSavingToken] = useState(false);
+  const [tokenMessage, setTokenMessage] = useState<string | null>(null);
+
   const haHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
   const getHacsUrl = (repoId: string | number) => `http://${haHost}:8123/hacs/repository/${repoId}`;
 
@@ -50,8 +56,39 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     if (isOpen) {
       fetchDiagnostics();
       setFixMessage(null);
+      setTokenMessage(null);
+      setTokenInput('');
+      getGithubStatus().then(setGithubStatus);
     }
   }, [isOpen]);
+
+  const applyTokenChange = async (token: string, savedMessage: string) => {
+    setSavingToken(true);
+    setTokenMessage(null);
+    const res = await saveGithubToken(token);
+    if (!res.success) {
+      setSavingToken(false);
+      setTokenMessage(`❌ ${res.error}`);
+      return;
+    }
+    setTokenInput('');
+    if (res.restarting) {
+      setTokenMessage('Saved. Restarting HATS to apply it (a few seconds)...');
+      const backUp = await waitForAddonBackUp();
+      setSavingToken(false);
+      setTokenMessage(backUp ? savedMessage : '⚠️ Saved, but HATS did not come back up in time. Reopen this dialog to check, or restart it from Settings, Add-ons, HATS.');
+      getGithubStatus().then(setGithubStatus);
+    } else {
+      setSavingToken(false);
+      setTokenMessage(savedMessage);
+      getGithubStatus().then(setGithubStatus);
+    }
+  };
+
+  const handleSaveToken = () =>
+    applyTokenChange(tokenInput.trim(), '✅ GitHub token saved and applied. It stays on the add-on server and is used for theme pull requests.');
+
+  const handleClearToken = () => applyTokenChange('', 'Token removed.');
 
   if (!isOpen) return null;
 
@@ -492,6 +529,97 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="space-y-2.5">
+            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Github className="w-3.5 h-3.5 text-purple-400" />
+              GitHub Token for Theme Submissions
+            </h3>
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+              <p className="text-[11px] text-slate-400">
+                Used only by <span className="font-semibold text-slate-300">Submit PR</span> to fork {githubStatus.targetRepo}, commit your
+                theme and open a pull request. It stays on the add-on server, is only sent to api.github.com, and is never shown back in
+                this UI.
+              </p>
+
+              <div className="flex items-center gap-2 text-[11px]">
+                {githubStatus.tokenConfigured ? (
+                  <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>A token is saved</span>
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 border border-slate-700 font-semibold">
+                    No token saved
+                  </span>
+                )}
+              </div>
+
+              {githubStatus.canSaveToken ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 flex items-center gap-2 bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                      <KeyRound className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                      <input
+                        type="password"
+                        value={tokenInput}
+                        onChange={(e) => setTokenInput(e.target.value)}
+                        placeholder={githubStatus.tokenConfigured ? 'Enter a new token to replace it' : 'ghp_xxxxxxxxxxxx'}
+                        autoComplete="off"
+                        title="Classic token: tick only public_repo. Fine-grained token: Contents + Pull requests, Read and write."
+                        className="w-full bg-transparent text-slate-200 text-xs font-mono outline-none"
+                      />
+                    </div>
+                    <button
+                      onClick={handleSaveToken}
+                      disabled={savingToken || !tokenInput.trim()}
+                      title="Save this token to the add-on's own Configuration and restart HATS to apply it (a few seconds)."
+                      className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold shrink-0"
+                    >
+                      {savingToken ? 'Saving...' : 'Save'}
+                    </button>
+                    {githubStatus.tokenConfigured && (
+                      <button
+                        onClick={handleClearToken}
+                        disabled={savingToken}
+                        title="Remove the saved token"
+                        className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 text-xs font-semibold shrink-0"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  {tokenMessage && <p className="text-[11px] text-slate-300">{tokenMessage}</p>}
+                </>
+              ) : (
+                <p className="text-[11px] text-amber-400">
+                  Saving from here needs HATS running as a Home Assistant Add-on. In standalone/dev mode, paste the token directly in the
+                  Submit PR dialog instead (used once, never saved).
+                </p>
+              )}
+
+              <details className="text-[11px] text-slate-400">
+                <summary className="cursor-pointer text-slate-300 font-semibold">Prefer secrets.yaml instead?</summary>
+                <div className="pt-1.5 space-y-1">
+                  <p>
+                    Add a line to <code className="text-amber-200">/config/secrets.yaml</code>, e.g. <code className="text-amber-200">hats_github_token: ghp_xxxxxxxxxxxx</code>,
+                    then in <span className="text-slate-300">Settings → Add-ons → HATS → Configuration</span>, switch to YAML mode and set{' '}
+                    <code className="text-amber-200">github_token: !secret hats_github_token</code>.
+                  </p>
+                  <p>
+                    Known Home Assistant caveat: re-saving that Configuration page from the UI afterwards can expand the <code className="text-amber-200">!secret</code> reference back into the plain token on screen. The Save button above avoids this entirely by writing the token directly, without ever displaying it.
+                  </p>
+                </div>
+              </details>
+
+              <p className="text-[11px] text-slate-500">
+                Token scope: classic token &rarr; tick only <span className="font-semibold">public_repo</span>. Private repository &rarr;
+                use a fine-grained token limited to that repository with <span className="font-semibold">Contents</span> and{' '}
+                <span className="font-semibold">Pull requests</span> set to Read and write. Avoid <code>repo</code>, <code>admin:*</code>,{' '}
+                <code>delete_repo</code> and <code>user</code>.
+              </p>
             </div>
           </div>
         </div>

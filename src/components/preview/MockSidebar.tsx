@@ -41,17 +41,15 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
   const sidebarBlur = engine.sidebarBlur ?? 20;
   const isLight = previewMode === 'light';
 
-  let sidebarBg = isLight 
-    ? `rgba(240, 243, 250, ${sidebarOpacity})` 
-    : `rgba(18, 20, 30, ${sidebarOpacity})`;
-  let sidebarFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  let sidebarBg: string;
+  let sidebarFilter: string;
 
   if (sidebarStyle === 'opaque') {
     sidebarBg = isLight ? 'rgba(240, 243, 250, 0.96)' : 'rgba(18, 20, 30, 0.96)';
     sidebarFilter = 'none';
-  } else if (sidebarStyle === 'transparent') {
-    sidebarBg = 'transparent';
-    sidebarFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  } else {
+    sidebarBg = isLight ? `rgba(240, 243, 250, ${sidebarOpacity})` : `rgba(18, 20, 30, ${sidebarOpacity})`;
+    sidebarFilter = sidebarBlur > 0 ? `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})` : 'none';
   }
 
   const topItems = [

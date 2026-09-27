@@ -263,26 +263,33 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
 
         <div className="grid grid-cols-3 gap-1.5">
           {[
-            { 
-              id: 'translucent', 
+            {
+              id: 'translucent',
               label: 'Translucent',
-              tooltip: 'Translucent: Frosted glass sidebar with custom opacity and background blur allowing wallpaper bleed-through'
+              tooltip: 'Translucent: a properly frosted glass sidebar - clicking applies a frosted default (55% opacity, 24px blur), then the sliders below fine-tune it',
+              autoOpacity: 0.55,
+              autoBlur: 24,
             },
-            { 
-              id: 'opaque', 
+            {
+              id: 'opaque',
               label: 'Opaque',
-              tooltip: 'Opaque: Solid high-contrast background sidebar, ideal for maximum legibility and reduced GPU load'
+              tooltip: 'Opaque: solid high-contrast background sidebar, ideal for maximum legibility and reduced GPU load',
             },
-            { 
-              id: 'transparent', 
+            {
+              id: 'transparent',
               label: 'Ultra Clear',
-              tooltip: 'Ultra Clear: Fully transparent glass sidebar showing the full background with soft blur'
+              tooltip: 'Ultra Clear: true see-through - clicking sets 2% opacity and 0px blur, then the sliders below fine-tune it',
+              autoOpacity: 0.02,
+              autoBlur: 0,
             },
           ].map((mode) => (
             <button
               key={mode.id}
               type="button"
-              onClick={() => updateEngine({ sidebarStyle: mode.id as any })}
+              onClick={() => updateEngine({
+                sidebarStyle: mode.id as any,
+                ...(mode.autoOpacity !== undefined ? { sidebarOpacity: mode.autoOpacity, sidebarBlur: mode.autoBlur } : {}),
+              })}
               title={mode.tooltip}
               className={`py-1.5 px-2 rounded-lg text-center text-xs font-semibold transition-all border ${
                 (engine.sidebarStyle || 'translucent') === mode.id
@@ -306,12 +313,12 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
               </div>
               <input
                 type="range"
-                min="0.05"
+                min="0"
                 max="0.95"
-                step="0.05"
+                step="0.01"
                 value={engine.sidebarOpacity ?? 0.45}
                 onChange={(e) => updateEngine({ sidebarOpacity: parseFloat(e.target.value) })}
-                title={`Sidebar opacity: ${Math.round((engine.sidebarOpacity ?? 0.45) * 100)}%. Lower values create more transparent glass.`}
+                title={`Sidebar opacity: ${Math.round((engine.sidebarOpacity ?? 0.45) * 100)}%. This is the real alpha used in the theme - lower values are more transparent.`}
                 className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
             </div>

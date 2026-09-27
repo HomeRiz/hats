@@ -1,4 +1,8 @@
 export const TARGET_REPO = 'HomeRiz/hats';
+
+export function isPlausibleToken(token) {
+  return typeof token === 'string' && /^[\w-]{20,255}$/.test(token.trim());
+}
 const THEMES_DIR = 'bundled/themes';
 const BACKGROUNDS_DIR = 'www/hats/backgrounds';
 const MAX_BACKGROUND_BYTES = 3 * 1024 * 1024;

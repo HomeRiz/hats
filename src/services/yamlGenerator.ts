@@ -30,18 +30,18 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   const sidebarOpacity = engine.sidebarOpacity ?? 0.45;
   const sidebarBlur = engine.sidebarBlur ?? 20;
 
-  let sidebarBgColor = `rgba(18, 18, 24, ${sidebarOpacity})`;
-  let sidebarHostBg = `rgba(18, 18, 24, ${sidebarOpacity})`;
-  let sidebarBackdropFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  let sidebarBgColor: string;
+  let sidebarHostBg: string;
+  let sidebarBackdropFilter: string;
 
   if (sidebarStyle === 'opaque') {
     sidebarBgColor = 'rgba(18, 20, 30, 0.96)';
     sidebarHostBg = 'rgba(18, 20, 30, 0.96)';
     sidebarBackdropFilter = 'none';
-  } else if (sidebarStyle === 'transparent') {
-    sidebarBgColor = 'transparent';
-    sidebarHostBg = 'transparent';
-    sidebarBackdropFilter = `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})`;
+  } else {
+    sidebarBgColor = `rgba(18, 18, 24, ${sidebarOpacity})`;
+    sidebarHostBg = `rgba(18, 18, 24, ${sidebarOpacity})`;
+    sidebarBackdropFilter = sidebarBlur > 0 ? `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})` : 'none';
   }
 
   let baseBg = 'none';
@@ -178,7 +178,7 @@ ${tokenBlock}
       ha-card-background: "${dark.cardBackground}"
       primary-text-color: "${dark.textPrimary}"
       secondary-text-color: "${dark.textSecondary}"
-      sidebar-background-color: "rgba(18, 18, 24, 0.55)"
+      sidebar-background-color: "${sidebarBgColor}"
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
       sidebar-selected-background-color: "${selectedBg}"
@@ -191,7 +191,7 @@ ${tokenBlock}
       ha-card-background: "${light.cardBackground}"
       primary-text-color: "${light.textPrimary}"
       secondary-text-color: "${light.textSecondary}"
-      sidebar-background-color: "rgba(255, 255, 255, 0.40)"
+      sidebar-background-color: "${sidebarBgColor}"
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
       sidebar-selected-background-color: "${selectedBg}"

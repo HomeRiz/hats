@@ -36,7 +36,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedPrUrl, setSubmittedPrUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [githubStatus, setGithubStatus] = useState<GithubStatus>({ tokenConfigured: false, targetRepo: 'HomeRiz/hats' });
+  const [githubStatus, setGithubStatus] = useState<GithubStatus>({ tokenConfigured: false, targetRepo: 'HomeRiz/hats', canSaveToken: false });
 
   useEffect(() => {
     if (isOpen) getGithubStatus().then(setGithubStatus);

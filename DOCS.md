@@ -22,12 +22,37 @@
 
 ## Submitting themes to GitHub
 
-HATS can open a pull request with your theme. It needs a GitHub token:
+HATS can open a pull request with your theme. It needs a GitHub token. The token always stays on
+the add-on server: it is only ever sent to `api.github.com`, never to your browser.
 
-1. GitHub, Settings, Developer settings, Personal access tokens, **Tokens (classic)**, Generate new token.
-2. Tick **only `public_repo`**. Leave every other box unticked (no `repo`, `workflow`, `admin:*`, `delete_repo`, `user`, ...). Set a short expiry (30 to 90 days).
-3. Paste it into **Settings, Add-ons, HATS, Configuration, GitHub token** and save. The token stays on the server, is never sent to your browser and is only sent to `api.github.com`.
+### 1. Create the token
 
-If you skip step 3 you can paste the token in the submission dialog instead; it is used once and discarded.
+Go to GitHub, **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate
+new token**.
 
-If the HATS repository is private, a `public_repo` token cannot see it. Use a fine-grained token limited to that single repository with **Contents: Read and write** and **Pull requests: Read and write**.
+- **Which scope to tick** matters, because it decides what that token can do if it ever leaks:
+  - **HATS repository is public:** tick **only `public_repo`**. Leave everything else unticked
+    (`repo`, `workflow`, `admin:*`, `delete_repo`, `user`, ...).
+  - **HATS repository is private, or you're testing before it's public:** `public_repo` cannot see
+    a private repository. Instead create a **fine-grained token**, limit it to that one repository,
+    and grant only **Contents: Read and write** and **Pull requests: Read and write**.
+- Set a short expiry (30–90 days) and re-create it when it lapses.
+
+### 2. Save it, so you don't paste it every time
+
+Two ways to save it; either is fine, and both stay on the server:
+
+- **In the app (recommended):** open **HATS Setup** in HATS, scroll to **GitHub Token for Theme
+  Submissions**, paste the token, and click **Save**. This writes it into the add-on's own
+  Configuration and restarts HATS to apply it (a few seconds of downtime while it does).
+- **Settings → Add-ons → HATS → Configuration:** paste it into the **GitHub token** field there
+  instead and click **Save**, then restart the add-on yourself for it to take effect.
+- **Via `secrets.yaml`:** put the real token in `/config/secrets.yaml`, e.g.
+  `hats_github_token: ghp_xxxxxxxxxxxx`, then in that same Configuration page switch to YAML mode
+  and set `github_token: !secret hats_github_token`. Home Assistant has a known bug where re-saving
+  that Configuration page from the UI afterwards can expand the `!secret` reference back into the
+  plain token on screen — the in-app Save button above avoids that entirely, since it never displays
+  the token back to you.
+
+Either way, a token you type directly into the **Submit PR** dialog without saving it anywhere is
+used once for that submission and then discarded; you'll need to paste it again next time.
