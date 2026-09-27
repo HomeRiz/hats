@@ -113,6 +113,27 @@ function sanitizeThemeYamlContent(rawYaml) {
     return match;
   });
 
+  const cssMarker = '/* Custom User Injected CSS */';
+  const markerIdx = content.indexOf(cssMarker);
+  if (markerIdx !== -1) {
+    const head = content.slice(0, markerIdx + cssMarker.length);
+    let tail = content.slice(markerIdx + cssMarker.length);
+    for (let pass = 0; pass < 8; pass++) {
+      const before = tail;
+      tail = tail.replace(/<\s*\/?\s*(?:script|style|iframe|object|embed)[^>]*>/gi, '');
+      tail = tail.replace(/javascript\s*:/gi, '');
+      tail = tail.replace(/expression\s*\([^)]*\)/gi, '');
+      tail = tail.replace(/behavior\s*:[^;}]*/gi, '');
+      tail = tail.replace(/-moz-binding\s*:[^;}]*/gi, '');
+      tail = tail.replace(/\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g, '');
+      tail = tail.replace(/@import[^;]*;?/gi, '');
+      tail = tail.replace(/url\(\s*['"]?\s*(?:https?:)?\/\/[^)]*\)/gi, 'none');
+      if (tail === before) break;
+    }
+    tail = tail.replace(/\{\{|\{%|\{#/g, '');
+    content = head + tail;
+  }
+
   return content;
 }
 
