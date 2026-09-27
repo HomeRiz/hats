@@ -11,6 +11,7 @@ import {
   HardDriveDownload,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import type { LiveDashboardData } from '../../services/useLiveDashboardData';
 import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
 import { MockHeader } from '../preview/MockHeader';
 import { MockSidebar } from '../preview/MockSidebar';
@@ -20,6 +21,7 @@ interface ThemeOverviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   theme: ThemeConfig;
+  liveDashboardData: LiveDashboardData;
   allThemes: ThemeConfig[];
   onSelectTheme: (themeId: string) => void;
   onEditTheme: (themeId: string) => void;
@@ -32,6 +34,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   isOpen,
   onClose,
   theme,
+  liveDashboardData,
   allThemes,
   onSelectTheme,
   onEditTheme,
@@ -219,10 +222,11 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               <div className="absolute inset-0 z-[1] scanlines-overlay opacity-80 pointer-events-none" />
             )}
 
-            <MockHeader 
-              theme={theme} 
-              activeView={activeHeaderView} 
-              setActiveView={setActiveHeaderView} 
+            <MockHeader
+              theme={theme}
+              activeView={liveDashboardData.activeViewId ?? 'home'}
+              setActiveView={liveDashboardData.setActiveViewId}
+              liveViewTabs={liveDashboardData.available ? liveDashboardData.viewNavItems : undefined}
             />
 
             <div className="flex-1 flex overflow-hidden relative z-10">
@@ -233,7 +237,10 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               />
 
               <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-                <SmartHomeDashboard theme={theme} />
+                <SmartHomeDashboard
+                  theme={theme}
+                  liveTiles={liveDashboardData.available ? liveDashboardData.tiles : undefined}
+                />
               </main>
             </div>
           </div>

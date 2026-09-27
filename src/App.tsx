@@ -5,6 +5,7 @@ import { ThemeEditor } from './components/editor/ThemeEditor';
 import { DashboardPreview } from './components/preview/DashboardPreview';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
 import { getHaDiagnostics } from './services/haService';
+import { useLiveDashboardData } from './services/useLiveDashboardData';
 
 const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
 const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
@@ -40,6 +41,8 @@ export const App: React.FC = () => {
     addCommunitySubmission,
     syncInstalledThemesFromHa,
   } = useThemeStore();
+
+  const liveDashboardData = useLiveDashboardData();
 
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
@@ -143,6 +146,7 @@ export const App: React.FC = () => {
               <ThemeGallery
                 themes={themes}
                 activeThemeId={activeThemeId}
+                liveDashboardData={liveDashboardData}
                 onSelectTheme={(id) => {
                   setActiveThemeId(id);
                   setActiveTab('editor');

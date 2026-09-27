@@ -20,6 +20,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import type { LiveDashboardData } from '../../services/useLiveDashboardData';
 import { GithubIcon } from '../common/icons/GithubIcon';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
 import { ThemeOverviewModal } from './ThemeOverviewModal';
@@ -34,6 +35,7 @@ import {
 interface ThemeGalleryProps {
   themes: ThemeConfig[];
   activeThemeId: string;
+  liveDashboardData: LiveDashboardData;
   onSelectTheme: (id: string) => void;
   onNewTheme: () => void;
   onDuplicateTheme: (id: string) => void;
@@ -48,6 +50,7 @@ interface ThemeGalleryProps {
 export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   themes,
   activeThemeId,
+  liveDashboardData,
   onSelectTheme,
   onNewTheme,
   onDuplicateTheme,
@@ -770,6 +773,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           isOpen={Boolean(overviewTargetTheme)}
           onClose={() => setOverviewThemeId(null)}
           theme={overviewTargetTheme}
+          liveDashboardData={liveDashboardData}
           allThemes={filteredThemes.length > 0 ? filteredThemes : themes}
           onSelectTheme={(newId) => setOverviewThemeId(newId)}
           onEditTheme={(id) => {
