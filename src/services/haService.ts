@@ -55,7 +55,7 @@ export interface ApplyThemeResult {
 
 const MUTATING_HEADERS = { 'X-HATS-Request': '1' };
 
-function getApiUrl(apiPath: string): string {
+export function getApiUrl(apiPath: string): string {
   const clean = apiPath.startsWith('/') ? apiPath.slice(1) : apiPath;
   if (typeof window !== 'undefined' && window.location) {
     let base = window.location.pathname.replace(/\/index\.html$/, '');
