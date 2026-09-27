@@ -9,7 +9,8 @@
     "prebuild": "node scripts/clean-dist.mjs",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "dompurify": "^3.4.16",
@@ -30,6 +31,7 @@
     "postcss": "^8.5.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "vitest": "^5.0.2"
   }
 }
