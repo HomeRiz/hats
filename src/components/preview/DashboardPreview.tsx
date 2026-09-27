@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeConfig } from '../../types/theme';
 import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
+import { useLiveDashboardData } from '../../services/useLiveDashboardData';
 import { MockHeader } from './MockHeader';
 import { MockSidebar } from './MockSidebar';
 import { SmartHomeDashboard } from './SmartHomeDashboard';
@@ -16,7 +17,7 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
   theme,
   previewMode = 'dark',
 }) => {
-  const [activeHeaderView, setActiveHeaderView] = useState('home');
+  const live = useLiveDashboardData();
   const [sidebarItem, setSidebarItem] = useState('Smart Home');
 
   const { background, engine } = theme;
@@ -75,12 +76,19 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
         <div className="absolute inset-0 z-[3] scanlines-overlay opacity-80 pointer-events-none" />
       )}
 
-      <MockHeader 
-        theme={theme} 
-        activeView={activeHeaderView} 
-        setActiveView={setActiveHeaderView} 
+      <MockHeader
+        theme={theme}
+        activeView={live.activeViewId ?? 'home'}
+        setActiveView={live.setActiveViewId}
         previewMode={previewMode}
+        liveViewTabs={live.available ? live.viewNavItems : undefined}
       />
+
+      {!live.loading && !live.available && (
+        <div className="px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20 shrink-0">
+          Showing example preview — couldn't reach your live Home Assistant data.
+        </div>
+      )}
 
       <div className="flex-1 flex overflow-hidden relative z-10">
         <MockSidebar 
@@ -91,7 +99,11 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
         />
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <SmartHomeDashboard theme={theme} previewMode={previewMode} />
+          <SmartHomeDashboard
+            theme={theme}
+            previewMode={previewMode}
+            liveTiles={live.available ? live.tiles : undefined}
+          />
         </main>
       </div>
     </div>
