@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "dompurify": "^3.4.16",
-    "express": "^4.21.2",
+    "express": "^5.2.1",
     "js-yaml": "^5.4.2",
     "lucide-react": "^0.475.0",
     "react": "^19.3.0",
