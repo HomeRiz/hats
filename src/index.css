@@ -6,6 +6,21 @@
     @apply bg-slate-950 text-slate-100;
     font-family: 'Inter', system-ui, sans-serif;
   }
+
+  :focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 ::-webkit-scrollbar {
