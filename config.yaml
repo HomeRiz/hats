@@ -6,8 +6,6 @@ url: "https://github.com/HomeRiz/hats"
 arch:
   - aarch64
   - amd64
-  - armhf
-  - armv7
 init: true
 startup: services
 boot: auto
@@ -15,17 +13,12 @@ ingress: true
 ingress_port: 4287
 panel_icon: "mdi:hat-fedora"
 panel_title: "HATS"
-ports:
-  4287/tcp: 4287
-ports_description:
-  4287/tcp: "Direct Web UI (Unauthenticated LAN access; prefer Ingress for authenticated access)"
-webui: "http://[HOST]:[PORT:4287]"
+panel_admin: true
 homeassistant_api: true
-hassio_api: true
-hassio_role: manager
 map:
-  - config:rw
-  - share:rw
+  - type: homeassistant_config
+    path: /config
+    read_only: false
 options:
   themes_directory: "/config/themes"
   backgrounds_directory: "/config/www/hats/backgrounds"
@@ -34,3 +27,4 @@ schema:
   themes_directory: str
   backgrounds_directory: str
   auto_reload_themes: bool
+  github_token: password?

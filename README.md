@@ -36,7 +36,7 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
   - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
 - 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.
 - 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/hats/backgrounds/`.
-- 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) via Ingress, or optionally access via host port `4287` (note: Ingress provides full Home Assistant session authentication; direct host port exposure is unauthenticated on the LAN).
+- 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) through Ingress. HATS is reachable only through Home Assistant Ingress (admin users); it publishes no host port and refuses direct network access.
 - 🚀 **In-App GitHub Theme Submission**: Validate, package, and generate YAML for custom themes with one-click links to propose additions to the official repository.
 
 ---
@@ -131,5 +131,5 @@ Open [http://localhost:4287](http://localhost:4287) in your browser.
 
 ## 📄 License
 
-Distributed under the GNU General Public License v3.0 (GPL-3.0). HATS is and will always remain 100% free, community-driven, and open source. It may never be closed source or used as a commercial selling product. See [LICENSE](LICENSE) for more information.
+Distributed under the GNU General Public License v3.0 (GPL-3.0). The license text is the unmodified GPLv3. See [LICENSE](LICENSE). Copyright (C) 2026 HomeRiz and HATS Contributors. The project's intent is to stay free and community-driven; the GPL itself guarantees that derivative works stay open.
 

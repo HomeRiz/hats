@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  Lightbulb, 
-  Bed, 
-  Flower2, 
-  Thermometer, 
-  Tv, 
-  Bot, 
-  ShieldCheck, 
-  Palette, 
-  CloudSun, 
+import {
+  Lightbulb,
+  Bed,
+  Flower2,
+  Thermometer,
+  Tv,
+  Bot,
+  ShieldCheck,
+  Palette,
+  CloudSun,
   Droplets,
-  Zap,
-  Sparkles
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { MockTileCard } from './MockTileCard';

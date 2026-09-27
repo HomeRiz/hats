@@ -8,3 +8,6 @@ configuration:
   auto_reload_themes:
     name: "Auto Reload Themes"
     description: "Automatically reload Home Assistant themes when saving a new theme."
+  github_token:
+    name: "GitHub token (optional)"
+    description: "Used only to open theme pull requests. Create a classic token with ONLY the public_repo scope (or a fine-grained token limited to the HATS repository with Contents and Pull requests write). It stays on the server and is never shown in the HATS UI."

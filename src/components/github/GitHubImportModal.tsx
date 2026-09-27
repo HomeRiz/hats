@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Github, Download, CheckCircle2, AlertCircle, RefreshCw, Layers, ExternalLink } from 'lucide-react';
+import { X, Github, Download, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { importThemesFromGitHubRepo } from '../../services/githubImporter';
 

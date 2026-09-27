@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
+import crypto from 'crypto';
+import { submitThemePullRequest, TARGET_REPO } from './github.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,8 +12,23 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.INGRESS_PORT || 4287;
 
-app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+app.disable('x-powered-by');
+
+const INGRESS_GATEWAY = '172.30.32.2';
+app.use((req, res, next) => {
+  if (!process.env.SUPERVISOR_TOKEN) return next();
+  const ip = (req.socket.remoteAddress || '').replace(/^::ffff:/, '');
+  if (ip !== INGRESS_GATEWAY) return res.status(403).json({ error: 'Forbidden: use Home Assistant Ingress' });
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.method === 'GET' || req.method === 'HEAD') return next();
+  if (req.get('x-hats-request') !== '1') return res.status(403).json({ error: 'Missing X-HATS-Request header' });
+  next();
+});
+
+app.use(express.json({ limit: '8mb' }));
 
 let addOnOptions = {};
 const OPTIONS_FILE = '/data/options.json';
@@ -36,7 +53,29 @@ const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs'
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
 const HACS_REPOSITORIES_FILE = path.join(CONFIG_DIR, '.storage', 'hacs.repositories');
 const SUPERVISOR_TOKEN = process.env.SUPERVISOR_TOKEN;
+const GITHUB_TOKEN = typeof addOnOptions.github_token === 'string' ? addOnOptions.github_token.trim() : '';
+const DATA_DIR = process.env.HATS_DATA_DIR || (fs.existsSync('/data') ? '/data' : path.join(__dirname, '..', '.hats-data'));
+const META_DIR = path.join(DATA_DIR, 'theme-meta');
+const DEFAULT_WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
+const sha256 = text => crypto.createHash('sha256').update(text).digest('hex');
+const metaPath = id => path.join(META_DIR, `${String(id).replace(/[^a-z0-9_-]/g, '-')}.json`);
+
+function readThemeMeta(id, rawYaml) {
+  try {
+    const meta = JSON.parse(fs.readFileSync(metaPath(id), 'utf8'));
+    if (meta && meta.yamlSha256 === sha256(rawYaml) && meta.theme && typeof meta.theme === 'object') return meta.theme;
+  } catch {
+  }
+  return null;
+}
 const SUPERVISOR_API = 'http://supervisor/core/api';
+const CARD_MOD_URL_RE = /^\/(?:hacsfiles|local\/community)\/lovelace-card-mod\/card-mod\.js(?:\?hacstag=[A-Za-z0-9_-]{1,40})?$/;
+const IMAGE_MAGIC = [
+  b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
+  b => b.length > 7 && b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
+  b => b.length > 11 && b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP',
+  b => b.length > 5 && /^GIF8[79]a/.test(b.subarray(0, 6).toString('latin1')),
+];
 
 function sanitizeThemeYamlContent(rawYaml) {
   if (!rawYaml || typeof rawYaml !== 'string') return rawYaml;
@@ -69,15 +108,6 @@ function parseThemeFile(fullPath, isInstalled) {
   try {
     const raw = fs.readFileSync(fullPath, 'utf8');
     const sanitized = sanitizeThemeYamlContent(raw);
-
-    if (isInstalled && sanitized !== raw) {
-      try {
-        fs.writeFileSync(fullPath, sanitized, 'utf8');
-        console.log(`Auto-repaired YAML syntax in ${fullPath}`);
-      } catch (wErr) {
-        console.warn(`Could not save repaired YAML ${fullPath}:`, wErr.message);
-      }
-    }
 
     const parsed = yaml.load(sanitized);
     if (!parsed || typeof parsed !== 'object') return [];
@@ -219,6 +249,20 @@ function parseThemeFile(fullPath, isInstalled) {
         },
       });
     }
+    if (isInstalled && themes.length === 1) {
+      const saved = readThemeMeta(themes[0].id, raw);
+      if (saved) {
+        themes[0] = {
+          ...saved,
+          id: themes[0].id,
+          isCustom: true,
+          isInstalled: true,
+          installedFilePath: themes[0].installedFilePath,
+          fileName: themes[0].fileName,
+          updatedAt: themes[0].updatedAt,
+        };
+      }
+    }
     return themes;
   } catch (err) {
     console.warn(`Error parsing theme file ${fullPath}:`, err.message);
@@ -334,6 +378,7 @@ function resolveCardModResourceInfo() {
 }
 
 const DIST_DIR = path.join(__dirname, '..', 'dist');
+app.use('/_private', (req, res) => res.status(404).end());
 app.use(express.static(DIST_DIR, {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.html')) {
@@ -490,9 +535,9 @@ app.post('/api/ha/fix-config', async (req, res) => {
       const resolved = resolveCardModResourceInfo();
       cardModUrl = resolved.exactUrl;
     }
-    const sanitizedUrl = String(cardModUrl || '').replace(/[\r\n"'#]/g, '').trim();
-    if (addCardMod && (!sanitizedUrl || !sanitizedUrl.startsWith('/'))) {
-      return res.status(400).json({ error: 'Invalid card-mod URL provided. Must be a valid relative path.' });
+    const sanitizedUrl = String(cardModUrl || '').trim();
+    if (addCardMod && !CARD_MOD_URL_RE.test(sanitizedUrl)) {
+      return res.status(400).json({ error: 'Invalid card-mod URL. Only /hacsfiles/lovelace-card-mod/card-mod.js is accepted.' });
     }
 
     let modified = content;
@@ -566,18 +611,6 @@ app.post('/api/ha/fix-config', async (req, res) => {
   }
 });
 
-app.get('/api/ha/themes', (req, res) => {
-  try {
-    const installed = scanInstalledThemes();
-    const files = fs.existsSync(THEMES_DIR)
-      ? fs.readdirSync(THEMES_DIR).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'))
-      : [];
-    res.json({ files, themes: installed });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.get('/api/ha/installed-themes', (req, res) => {
   try {
     const installed = scanInstalledThemes();
@@ -589,7 +622,7 @@ app.get('/api/ha/installed-themes', (req, res) => {
 
 app.post('/api/ha/apply-theme', async (req, res) => {
   try {
-    const { themeId, themeName, yamlContent, backgroundDataUrl } = req.body;
+    const { themeId, themeName, yamlContent, backgroundDataUrl, themeMeta } = req.body;
 
     if (!themeId || !yamlContent) {
       return res.status(400).json({ error: 'themeId and yamlContent are required' });
@@ -604,6 +637,18 @@ app.post('/api/ha/apply-theme', async (req, res) => {
       return res.status(400).json({ error: `Invalid YAML format: ${parseErr.message}` });
     }
 
+    let bgBuffer = null;
+    if (backgroundDataUrl && String(backgroundDataUrl).startsWith('data:image')) {
+      bgBuffer = Buffer.from(String(backgroundDataUrl).replace(/^data:image\/[\w+.-]+;base64,/, ''), 'base64');
+      if (!IMAGE_MAGIC.some(check => check(bgBuffer))) {
+        return res.status(400).json({ error: 'Background is not a valid JPEG, PNG, WebP or GIF image' });
+      }
+    }
+
+    if (typeof themeId !== 'string' || typeof yamlContent !== 'string') {
+      return res.status(400).json({ error: 'themeId and yamlContent must be strings' });
+    }
+
     if (!fs.existsSync(THEMES_DIR)) {
       fs.mkdirSync(THEMES_DIR, { recursive: true });
     }
@@ -613,12 +658,30 @@ app.post('/api/ha/apply-theme', async (req, res) => {
     const filePath = path.join(THEMES_DIR, cleanFileName);
     fs.writeFileSync(filePath, sanitizedYaml, 'utf8');
 
-    if (backgroundDataUrl && backgroundDataUrl.startsWith('data:image')) {
+    if (bgBuffer) {
       const themeBgDir = path.join(WWW_DIR, cleanThemeId);
       fs.mkdirSync(themeBgDir, { recursive: true });
-      const base64Data = backgroundDataUrl.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-      fs.writeFileSync(path.join(themeBgDir, 'default.webp'), buffer);
+      fs.writeFileSync(path.join(themeBgDir, 'default.webp'), bgBuffer);
+    }
+
+    try {
+      if (themeMeta && typeof themeMeta === 'object' && themeMeta.engine && themeMeta.palette) {
+        const saved = JSON.parse(JSON.stringify(themeMeta));
+        saved.id = cleanThemeId;
+        const wallpaperOnDisk = fs.existsSync(path.join(WWW_DIR, cleanThemeId, 'default.webp'));
+        const url = saved.background && saved.background.imageUrl;
+        if (saved.background && saved.background.type === 'image' && (!url || String(url).startsWith('/local/') || String(url).startsWith('data:'))) {
+          saved.background.imageUrl =
+            wallpaperOnDisk && WWW_DIR === DEFAULT_WWW_DIR ? `/local/hats/backgrounds/${cleanThemeId}/default.webp` : undefined;
+        }
+        const payload = JSON.stringify({ yamlSha256: sha256(sanitizedYaml), savedAt: new Date().toISOString(), theme: saved });
+        if (payload.length <= 400000) {
+          fs.mkdirSync(META_DIR, { recursive: true });
+          fs.writeFileSync(metaPath(cleanThemeId), payload, 'utf8');
+        }
+      }
+    } catch (metaErr) {
+      console.warn('Could not save theme editor state:', metaErr.message);
     }
 
     let reloaded = false;
@@ -660,6 +723,8 @@ app.delete('/api/ha/theme/:themeId', async (req, res) => {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
+
+    try { fs.rmSync(metaPath(cleanThemeId), { force: true }); } catch { }
 
     const themeBgDir = path.join(WWW_DIR, cleanThemeId);
     if (fs.existsSync(themeBgDir)) {
@@ -711,6 +776,7 @@ app.post('/api/ha/repair-all-themes', async (req, res) => {
             const raw = fs.readFileSync(fullPath, 'utf8');
             const sanitized = sanitizeThemeYamlContent(raw);
             if (sanitized !== raw) {
+              fs.writeFileSync(`${fullPath}.hats_bak`, raw, 'utf8');
               fs.writeFileSync(fullPath, sanitized, 'utf8');
               repairedCount++;
               repairedFiles.push(entry.name);
@@ -783,7 +849,7 @@ app.post('/api/ha/restart', async (req, res) => {
   }
 
   try {
-    let haRes = await fetch(`${SUPERVISOR_API}/services/homeassistant/restart`, {
+    const haRes = await fetch(`${SUPERVISOR_API}/services/homeassistant/restart`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
@@ -791,17 +857,6 @@ app.post('/api/ha/restart', async (req, res) => {
       },
       signal: AbortSignal.timeout(10000),
     });
-
-    if (!haRes.ok) {
-      haRes = await fetch('http://supervisor/core/restart', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(10000),
-      });
-    }
 
     if (haRes.ok) {
       res.json({ success: true, message: 'Home Assistant Core is restarting...' });
@@ -814,26 +869,38 @@ app.post('/api/ha/restart', async (req, res) => {
   }
 });
 
-app.get('/api/ha/entities', async (req, res) => {
-  if (!SUPERVISOR_TOKEN) {
-    return res.json({ entities: [] });
-  }
+let submissionInFlight = false;
+app.get('/api/github/status', (req, res) => {
+  res.json({ tokenConfigured: Boolean(GITHUB_TOKEN), targetRepo: TARGET_REPO });
+});
 
+app.post('/api/github/submit-pr', async (req, res) => {
+  if (submissionInFlight) return res.status(429).json({ success: false, error: 'A submission is already running.' });
+  const { themeId, themeName, yamlContent, backgroundDataUrl, title, body, token } = req.body || {};
+  if (typeof themeId !== 'string' || typeof yamlContent !== 'string') {
+    return res.status(400).json({ success: false, error: 'themeId and yamlContent are required' });
+  }
+  if (yamlContent.length > 300000) return res.status(413).json({ success: false, error: 'Theme YAML is too large' });
   try {
-    const haRes = await fetch(`${SUPERVISOR_API}/states`, {
-      headers: {
-        'Authorization': `Bearer ${SUPERVISOR_TOKEN}`,
-      },
-      signal: AbortSignal.timeout(10000),
+    const parsed = yaml.load(sanitizeThemeYamlContent(yamlContent));
+    if (!parsed || typeof parsed !== 'object') throw new Error('not a mapping');
+  } catch (e) {
+    return res.status(400).json({ success: false, error: `Invalid theme YAML: ${e.message}` });
+  }
+  submissionInFlight = true;
+  try {
+    const result = await submitThemePullRequest({
+      token: GITHUB_TOKEN || (typeof token === 'string' ? token : ''),
+      themeId,
+      themeName,
+      yamlContent: sanitizeThemeYamlContent(yamlContent),
+      backgroundDataUrl: typeof backgroundDataUrl === 'string' ? backgroundDataUrl : undefined,
+      title: typeof title === 'string' ? title : undefined,
+      body: typeof body === 'string' ? body : undefined,
     });
-    if (haRes.ok) {
-      const data = await haRes.json();
-      res.json({ entities: data });
-    } else {
-      res.json({ entities: [] });
-    }
-  } catch {
-    res.json({ entities: [] });
+    res.status(result.success ? 200 : 502).json(result);
+  } finally {
+    submissionInFlight = false;
   }
 });
 
@@ -844,7 +911,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🎩 HATS (Home Assistant Theme Store) running on Ingress port ${PORT}`);
   console.log(`Config Directory: ${CONFIG_DIR}`);
 });
+
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.on(signal, () => server.close(() => process.exit(0)));
+}

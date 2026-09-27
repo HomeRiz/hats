@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, X, Check } from 'lucide-react';
+import { Copy, X } from 'lucide-react';
 
 interface DuplicateInfoModalProps {
   isOpen: boolean;

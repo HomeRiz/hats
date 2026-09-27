@@ -1,17 +1,15 @@
 import React from 'react';
-import { 
-  ThumbsUp, 
-  ThumbsDown, 
-  GitPullRequest, 
-  ExternalLink, 
-  CheckCircle, 
-  Clock, 
-  AlertCircle, 
-  MessageSquare,
-  Sparkles,
-  Users
+import {
+  ThumbsUp,
+  ThumbsDown,
+  GitPullRequest,
+  ExternalLink,
+  CheckCircle,
+  Clock,
+  Users,
 } from 'lucide-react';
 import { CommunityThemeSubmission, ThemeConfig } from '../../types/theme';
+import { normalizeHex } from '../../services/colorEngine';
 
 interface CommunityHubProps {
   submissions: CommunityThemeSubmission[];
@@ -87,7 +85,7 @@ export const CommunityHub: React.FC<CommunityHubProps> = ({
                   >
                     <div
                       className="w-6 h-6 rounded-lg border border-white/30 backdrop-blur-sm"
-                      style={{ backgroundColor: `${theme.palette.accent}50` }}
+                      style={{ backgroundColor: `${normalizeHex(theme.palette.accent) ?? '#0A84FF'}50` }}
                     />
                   </div>
 

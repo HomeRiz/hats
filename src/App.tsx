@@ -197,7 +197,7 @@ export const App: React.FC = () => {
         isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}
         theme={activeTheme}
-        onThemeSaved={(savedTheme) => {
+        onThemeSaved={() => {
           updateActiveTheme({ isInstalled: true });
         }}
       />

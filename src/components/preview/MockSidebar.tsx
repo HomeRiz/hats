@@ -12,6 +12,7 @@ import {
   Menu 
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import { readableTextOn, normalizeHex } from '../../services/colorEngine';
 
 interface MockSidebarProps {
   theme: ThemeConfig;
@@ -34,7 +35,7 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
   onSelectItem,
   previewMode = 'dark',
 }) => {
-  const { engine, palette } = theme;
+  const { engine } = theme;
   const sidebarStyle = engine.sidebarStyle || 'translucent';
   const sidebarOpacity = engine.sidebarOpacity ?? 0.45;
   const sidebarBlur = engine.sidebarBlur ?? 20;
@@ -104,22 +105,22 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
                 title={item.label}
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all text-left group ${
                   isActive
-                    ? 'text-white font-bold shadow-sm'
+                    ? 'font-bold shadow-sm'
                     : defaultText
                 }`}
                 style={
                   isActive
                     ? {
-                        backgroundColor: `${theme.palette.primary}E0`,
-                        borderLeft: `3px solid ${theme.palette.primary}`,
-                        color: '#FFFFFF',
+                        backgroundColor: `${normalizeHex(theme.palette.primary) ?? '#0A84FF'}E0`,
+                        borderLeft: `3px solid ${normalizeHex(theme.palette.primary) ?? '#0A84FF'}`,
+                        color: readableTextOn(theme.palette.primary),
                       }
                     : {}
                 }
               >
                 <div 
                   className="shrink-0 transition-transform group-hover:scale-110"
-                  style={isActive ? { color: '#FFFFFF' } : {}}
+                  style={isActive ? { color: readableTextOn(theme.palette.primary) } : {}}
                 >
                   {item.icon}
                 </div>

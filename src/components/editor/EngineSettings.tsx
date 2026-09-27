@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sliders, Sparkles, Box, Menu, Eye } from 'lucide-react';
+import { Sliders, Box, Menu, Eye } from 'lucide-react';
 import { ThemeConfig, EngineType } from '../../types/theme';
 
 interface EngineSettingsProps {

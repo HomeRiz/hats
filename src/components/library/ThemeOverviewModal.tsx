@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
-  Palette, 
-  Zap, 
-  Copy, 
-  Sparkles, 
-  ShieldCheck, 
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Palette,
+  Zap,
+  Copy,
   CheckCircle2,
   Sliders,
-  Check,
-  HardDriveDownload
+  HardDriveDownload,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';

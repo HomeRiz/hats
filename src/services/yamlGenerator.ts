@@ -1,5 +1,5 @@
 import { ThemeConfig } from '../types/theme';
-import { hexToRgbString, generatePrimaryRamp, darkenColor } from './colorEngine';
+import { hexToRgbString, generatePrimaryRamp, darkenColor, readableTextOn } from './colorEngine';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
 
 function svgToBase64DataUri(svg: string): string {
@@ -20,8 +20,11 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   const sanitizedReport = validateAndSanitizeTheme(theme);
   const safeTheme = sanitizedReport.sanitizedTheme;
   const { name, palette, engine, background, dark, light, customSvgOverlay } = safeTheme;
+  const primary = palette.primary;
   const accent = palette.accent || palette.primary;
-  const ramp = generatePrimaryRamp(accent);
+  const ramp = generatePrimaryRamp(primary);
+  const onPrimary = readableTextOn(primary);
+  const selectedBg = `rgba(${hexToRgbString(primary)}, 0.88)`;
 
   const sidebarStyle = engine.sidebarStyle || 'translucent';
   const sidebarOpacity = engine.sidebarOpacity ?? 0.45;
@@ -44,8 +47,8 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   let baseBg = 'none';
   if (background.type === 'image') {
     if (backgroundSource === 'local') {
-      const fileName = background.imageFileName || `${safeTheme.id}.webp`;
-      baseBg = `url('/local/hats/backgrounds/${safeTheme.id}/${fileName}')`;
+      const external = background.imageUrl && /^https:\/\//.test(background.imageUrl) ? background.imageUrl : null;
+      baseBg = external ? `url('${external}')` : `url('/local/hats/backgrounds/${safeTheme.id}/default.webp')`;
     } else if (backgroundSource === 'embedded' && background.imageUrl) {
       baseBg = `url('${background.imageUrl}')`;
     } else {
@@ -103,7 +106,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   card-mod-theme: "${name}"
 
   # Core HA Theme variables
-  primary-color: "${accent}"
+  primary-color: "${primary}"
   accent-color: "${accent}"
   primary-text-color: "rgba(255, 255, 255, 0.96)"
   secondary-text-color: "rgba(228, 228, 232, 0.78)"
@@ -119,15 +122,15 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   # Top App Header
   app-header-background-color: "${headerTint}"
   app-header-text-color: "#FFFFFF"
-  app-header-selection-bar-color: "${accent}"
+  app-header-selection-bar-color: "${primary}"
 
   # Sidebar (Left Menu Navigation)
   sidebar-background-color: "${sidebarBgColor}"
   sidebar-text-color: "rgba(255, 255, 255, 0.94)"
   sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
-  sidebar-selected-background-color: "rgba(255, 255, 255, 0.12)"
-  sidebar-selected-text-color: "${accent}"
-  sidebar-selected-icon-color: "${accent}"
+  sidebar-selected-background-color: "${selectedBg}"
+  sidebar-selected-text-color: "${onPrimary}"
+  sidebar-selected-icon-color: "${onPrimary}"
   sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
   # HA Color Primary Ladder
@@ -178,9 +181,9 @@ ${tokenBlock}
       sidebar-background-color: "rgba(18, 18, 24, 0.55)"
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
-      sidebar-selected-background-color: "rgba(255, 255, 255, 0.12)"
-      sidebar-selected-text-color: "${accent}"
-      sidebar-selected-icon-color: "${accent}"
+      sidebar-selected-background-color: "${selectedBg}"
+      sidebar-selected-text-color: "${onPrimary}"
+      sidebar-selected-icon-color: "${onPrimary}"
       sidebar-border-color: "rgba(255, 255, 255, 0.08)"
     light:
       primary-background-color: "${light.primaryBackground}"
@@ -191,9 +194,9 @@ ${tokenBlock}
       sidebar-background-color: "rgba(255, 255, 255, 0.40)"
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
-      sidebar-selected-background-color: "rgba(255, 255, 255, 0.16)"
-      sidebar-selected-text-color: "${accent}"
-      sidebar-selected-icon-color: "${accent}"
+      sidebar-selected-background-color: "${selectedBg}"
+      sidebar-selected-text-color: "${onPrimary}"
+      sidebar-selected-icon-color: "${onPrimary}"
       sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
   # --------------------------------------------------------------------------
@@ -279,6 +282,7 @@ ${tokenBlock}
     paper-icon-item[selected],
     ha-list-item-button.selected {
       background: var(--sidebar-selected-background-color, rgba(255, 255, 255, 0.12)) !important;
+      box-shadow: inset 3px 0 0 var(--primary-color) !important;
       color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
       --md-list-item-label-text-color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
       --md-list-item-leading-icon-color: var(--sidebar-selected-icon-color, var(--primary-color)) !important;
@@ -401,7 +405,7 @@ ${tokenBlock}
     :host(.type-custom-bubble-card) ha-card {
       border-radius: 0px !important;
     }
-${theme.customCss ? `\n    /* Custom User Injected CSS */\n    ${theme.customCss.split('\n').join('\n    ')}` : ''}
+${safeTheme.customCss ? `\n    /* Custom User Injected CSS */\n    ${safeTheme.customCss.split('\n').join('\n    ')}` : ''}
 `;
 
   return yamlContent;

@@ -1,17 +1,16 @@
 import React from 'react';
-import { 
-  Palette, 
-  Layers, 
-  Users, 
-  Code, 
-  Download, 
-  GitPullRequest, 
-  Sun, 
-  Moon, 
-  Plus, 
-  Sparkles,
+import {
+  Palette,
+  Layers,
+  Users,
+  Code,
+  Download,
+  GitPullRequest,
+  Sun,
+  Moon,
+  Plus,
   ShieldCheck,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 import { HatsLogo } from '../common/HatsLogo';
 import { ThemeConfig } from '../../types/theme';

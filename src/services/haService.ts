@@ -1,5 +1,6 @@
 import { ThemeConfig } from '../types/theme';
 import { generateHomeAssistantThemeYaml } from './yamlGenerator';
+import { validateAndSanitizeTheme } from './themeSecurityValidator';
 
 export interface HaStatusResult {
   isAddon: boolean;
@@ -52,6 +53,8 @@ export interface ApplyThemeResult {
   reloaded?: boolean;
 }
 
+const MUTATING_HEADERS = { 'X-HATS-Request': '1' };
+
 function getApiUrl(apiPath: string): string {
   const clean = apiPath.startsWith('/') ? apiPath.slice(1) : apiPath;
   if (typeof window !== 'undefined' && window.location) {
@@ -99,6 +102,7 @@ export async function fixHaConfiguration(options: { addThemes?: boolean; addCard
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...MUTATING_HEADERS,
       },
       body: JSON.stringify(options),
     });
@@ -113,18 +117,26 @@ export async function fixHaConfiguration(options: { addThemes?: boolean; addCard
 
 export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyThemeResult> {
   const yamlContent = generateHomeAssistantThemeYaml(theme, 'local');
-  
+  const uploadedImage =
+    theme.background.type === 'image' && theme.background.imageUrl?.startsWith('data:image/') ? theme.background.imageUrl : undefined;
+  const themeMeta: ThemeConfig = {
+    ...theme,
+    background: { ...theme.background, imageUrl: uploadedImage ? undefined : theme.background.imageUrl },
+  };
+
   try {
     const res = await fetch(getApiUrl('api/ha/apply-theme'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...MUTATING_HEADERS,
       },
       body: JSON.stringify({
         themeId: theme.id,
         themeName: theme.name,
         yamlContent,
-        backgroundDataUrl: theme.background.type === 'image' ? theme.background.imageUrl : undefined,
+        backgroundDataUrl: uploadedImage,
+        themeMeta,
       }),
     });
 
@@ -153,7 +165,7 @@ export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyT
 
 export async function reloadHomeAssistantThemes(): Promise<boolean> {
   try {
-    const res = await fetch(getApiUrl('api/ha/reload-themes'), { method: 'POST' });
+    const res = await fetch(getApiUrl('api/ha/reload-themes'), { method: 'POST', headers: MUTATING_HEADERS });
     return res.ok;
   } catch {
     return false;
@@ -165,7 +177,7 @@ export async function fetchInstalledHaThemes(): Promise<ThemeConfig[]> {
     const res = await fetch(getApiUrl('api/ha/installed-themes'));
     if (res.ok) {
       const data = await res.json();
-      return data.themes || [];
+      return ((data.themes || []) as ThemeConfig[]).map(t => validateAndSanitizeTheme(t).sanitizedTheme);
     }
     return [];
   } catch (err) {
@@ -176,7 +188,7 @@ export async function fetchInstalledHaThemes(): Promise<ThemeConfig[]> {
 
 export async function deleteHaTheme(themeId: string): Promise<boolean> {
   try {
-    const res = await fetch(getApiUrl(`api/ha/theme/${themeId}`), { method: 'DELETE' });
+    const res = await fetch(getApiUrl(`api/ha/theme/${encodeURIComponent(themeId)}`), { method: 'DELETE', headers: MUTATING_HEADERS });
     return res.ok;
   } catch {
     return false;
@@ -185,7 +197,7 @@ export async function deleteHaTheme(themeId: string): Promise<boolean> {
 
 export async function repairAllHaThemes(): Promise<{ success: boolean; total: number; repairedCount: number; repairedFiles?: string[]; message: string }> {
   try {
-    const res = await fetch(getApiUrl('api/ha/repair-all-themes'), { method: 'POST' });
+    const res = await fetch(getApiUrl('api/ha/repair-all-themes'), { method: 'POST', headers: MUTATING_HEADERS });
     if (res.ok) {
       return await res.json();
     }
@@ -208,7 +220,7 @@ export async function repairAllHaThemes(): Promise<{ success: boolean; total: nu
 
 export async function restartHomeAssistant(): Promise<{ success: boolean; message: string }> {
   try {
-    const res = await fetch(getApiUrl('api/ha/restart'), { method: 'POST' });
+    const res = await fetch(getApiUrl('api/ha/restart'), { method: 'POST', headers: MUTATING_HEADERS });
     const data = await res.json();
     return {
       success: res.ok,
@@ -222,3 +234,50 @@ export async function restartHomeAssistant(): Promise<{ success: boolean; messag
   }
 }
 
+
+export interface GithubStatus {
+  tokenConfigured: boolean;
+  targetRepo: string;
+}
+
+export async function getGithubStatus(): Promise<GithubStatus> {
+  try {
+    const res = await fetch(getApiUrl('api/github/status'));
+    if (res.ok) return await res.json();
+  } catch {
+  }
+  return { tokenConfigured: false, targetRepo: 'HomeRiz/hats' };
+}
+
+export interface SubmitPrResult {
+  success: boolean;
+  prUrl?: string;
+  prNumber?: number;
+  error?: string;
+}
+
+export async function submitThemeViaServer(
+  theme: ThemeConfig,
+  options: { title?: string; body?: string; token?: string }
+): Promise<SubmitPrResult> {
+  const uploaded =
+    theme.background.type === 'image' && theme.background.imageUrl?.startsWith('data:image/') ? theme.background.imageUrl : undefined;
+  try {
+    const res = await fetch(getApiUrl('api/github/submit-pr'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...MUTATING_HEADERS },
+      body: JSON.stringify({
+        themeId: theme.id,
+        themeName: theme.name,
+        yamlContent: generateHomeAssistantThemeYaml(theme, 'cdn'),
+        backgroundDataUrl: uploaded,
+        title: options.title,
+        body: options.body,
+        token: options.token || undefined,
+      }),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Could not reach the HATS add-on' };
+  }
+}

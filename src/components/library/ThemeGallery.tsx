@@ -1,17 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Plus, 
-  Copy, 
-  Trash2, 
-  Upload, 
-  Search, 
-  Sparkles, 
-  Sliders, 
-  Check, 
-  Layers, 
+import {
+  Plus,
+  Copy,
+  Trash2,
+  Upload,
+  Search,
+  Sparkles,
+  Sliders,
   Puzzle,
-  ShieldCheck, 
-  RefreshCw, 
+  ShieldCheck,
+  RefreshCw,
   HardDrive,
   Github,
   CheckSquare,
@@ -20,7 +18,7 @@ import {
   Zap,
   CheckCircle2,
   HardDriveDownload,
-  Eye
+  Eye,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Palette, Sparkles, Plus, Edit2, Trash2, X, Check, Save } from 'lucide-react';
+import { Palette, Sparkles, Plus, Edit2, Trash2, X, Save } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { generatePrimaryRamp } from '../../services/colorEngine';
+import { HexColorField } from '../common/HexColorField';
 import { CustomPalettePreset } from '../../types/customPresets';
 import { loadCustomPalettes, saveCustomPalettes } from '../../utils/customPresetsStorage';
 
@@ -313,14 +314,7 @@ export const PaletteEditor: React.FC<PaletteEditorProps> = ({ theme, onChange })
               className="flex items-center gap-2 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700"
               title={`Primary color: ${palette.primary}. Controls main switches, sliders, active icons, and primary buttons.`}
             >
-              <input
-                type="color"
-                value={palette.primary}
-                onChange={(e) => updatePalette('primary', e.target.value)}
-                title="Choose Primary Color"
-                className="w-5 h-5 rounded cursor-pointer bg-transparent border-0"
-              />
-              <span className="font-mono text-slate-300 uppercase">{palette.primary}</span>
+              <HexColorField label="Primary color" value={palette.primary} onCommit={(hex) => updatePalette('primary', hex)} />
             </div>
           </div>
 
@@ -335,14 +329,7 @@ export const PaletteEditor: React.FC<PaletteEditorProps> = ({ theme, onChange })
               className="flex items-center gap-2 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700"
               title={`Accent color: ${palette.accent}. Controls secondary buttons, highlights, and badge accents.`}
             >
-              <input
-                type="color"
-                value={palette.accent}
-                onChange={(e) => updatePalette('accent', e.target.value)}
-                title="Choose Accent Color"
-                className="w-5 h-5 rounded cursor-pointer bg-transparent border-0"
-              />
-              <span className="font-mono text-slate-300 uppercase">{palette.accent}</span>
+              <HexColorField label="Accent color" value={palette.accent} onCommit={(hex) => updatePalette('accent', hex)} />
             </div>
           </div>
         </div>
@@ -392,16 +379,12 @@ export const PaletteEditor: React.FC<PaletteEditorProps> = ({ theme, onChange })
                 className="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded border border-slate-800 hover:border-slate-700"
                 title={item.tip}
               >
-                <input
-                  type="color"
+                <HexColorField
+                  size="sm"
+                  label={`${item.label} token color`}
                   value={palette[item.key as keyof typeof palette] || '#888888'}
-                  onChange={(e) => updatePalette(item.key as any, e.target.value)}
-                  title={`Select ${item.label} token color`}
-                  className="w-4 h-4 rounded cursor-pointer bg-transparent border-0"
+                  onCommit={(hex) => updatePalette(item.key as any, hex)}
                 />
-                <span className="font-mono text-[10px] text-slate-300 uppercase truncate">
-                  {palette[item.key as keyof typeof palette]}
-                </span>
               </div>
             </div>
           ))}

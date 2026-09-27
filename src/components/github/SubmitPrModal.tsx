@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   GitPullRequest, 
   X, 
@@ -9,7 +9,8 @@ import {
   Send 
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
-import { validateThemeForSubmission, submitThemePullRequest } from '../../services/githubService';
+import { validateThemeForSubmission } from '../../services/githubService';
+import { getGithubStatus, submitThemeViaServer, GithubStatus } from '../../services/haService';
 
 interface SubmitPrModalProps {
   isOpen: boolean;
@@ -35,6 +36,11 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedPrUrl, setSubmittedPrUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [githubStatus, setGithubStatus] = useState<GithubStatus>({ tokenConfigured: false, targetRepo: 'HomeRiz/hats' });
+
+  useEffect(() => {
+    if (isOpen) getGithubStatus().then(setGithubStatus);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -43,19 +49,19 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hasErrors) return;
+    if (hasErrors || (!githubStatus.tokenConfigured && !githubToken.trim())) return;
 
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    const res = await submitThemePullRequest({
-      githubToken,
-      theme,
-      customPrTitle: prTitle,
-      customPrDescription: prDescription,
+    const res = await submitThemeViaServer(theme, {
+      title: prTitle,
+      body: prDescription,
+      token: githubStatus.tokenConfigured ? undefined : githubToken.trim(),
     });
 
     setIsSubmitting(false);
+    setGithubToken('');
 
     if (res.success && res.prUrl) {
       setSubmittedPrUrl(res.prUrl);
@@ -93,7 +99,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-white">Pull Request Proposed!</h3>
                 <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-                  Your theme has been packaged and submitted to the community hub. Once accepted, it will be added to the official HATS Community Collection.
+                  Your theme was committed to a branch of your fork and a pull request was opened on {githubStatus.targetRepo}. A maintainer will review it before it joins the HATS collection.
                 </p>
               </div>
 
@@ -160,22 +166,40 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
                 />
               </div>
 
-              <div className="space-y-1 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
-                <label className="text-slate-300 font-semibold flex items-center justify-between">
-                  <span>GitHub Personal Access Token (Optional)</span>
-                  <span className="text-[10px] text-slate-500">repo scope</span>
-                </label>
-                <input
-                  type="password"
-                  value={githubToken}
-                  onChange={(e) => setGithubToken(e.target.value)}
-                  placeholder="ghp_xxxxxxxxxxxx (Leave blank for simulated PR)"
-                  className="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-slate-200 font-mono"
-                />
-                <p className="text-[10px] text-slate-500">
-                  If left blank, a community proposal will be created and open the GitHub PR page in your browser.
-                </p>
-              </div>
+              {githubStatus.tokenConfigured ? (
+                <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-[11px] text-emerald-300 flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                  <span>
+                    Using the GitHub token saved in the HATS add-on configuration. It stays on the server and is never sent to your browser.
+                  </span>
+                </div>
+              ) : (
+                <div className="space-y-1 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+                  <label className="text-slate-300 font-semibold flex items-center justify-between">
+                    <span>GitHub Personal Access Token</span>
+                    <span className="text-[10px] text-slate-500">only public_repo</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={githubToken}
+                    onChange={(e) => setGithubToken(e.target.value)}
+                    placeholder="ghp_xxxxxxxxxxxx"
+                    autoComplete="off"
+                    required
+                    className="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-slate-200 font-mono"
+                  />
+                  <p className="text-[10px] text-slate-500">
+                    Used once for this submission and then discarded. To stop pasting it every time, save it under Settings, Add-ons, HATS,
+                    Configuration, "GitHub token". Create a classic token and tick only <b>public_repo</b>.
+                  </p>
+                </div>
+              )}
+
+              {isSubmitting && (
+                <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/30 text-[11px]">
+                  Forking, committing and opening the pull request on GitHub. This can take up to 30 seconds...
+                </div>
+              )}
 
               {errorMsg && (
                 <div className="p-2.5 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 text-[11px]">
@@ -193,7 +217,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting || hasErrors}
+                  disabled={isSubmitting || hasErrors || (!githubStatus.tokenConfigured && !githubToken.trim())}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold disabled:opacity-50 transition-all shadow-md shadow-purple-500/20"
                 >
                   <Send className="w-3.5 h-3.5" />

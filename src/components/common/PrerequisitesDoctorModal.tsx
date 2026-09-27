@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  CheckCircle2, 
-  AlertTriangle, 
-  Wrench, 
-  ExternalLink, 
-  Copy, 
-  Check, 
-  RefreshCw, 
-  ShieldCheck, 
+import {
+  CheckCircle2,
+  AlertTriangle,
+  Wrench,
+  ExternalLink,
+  Copy,
+  Check,
+  RefreshCw,
+  ShieldCheck,
   X,
   FileCode,
   Sparkles,
   Layers,
   Puzzle,
   DownloadCloud,
-  ArrowRight
 } from 'lucide-react';
 import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, DiagnosticsResult } from '../../services/haService';
 

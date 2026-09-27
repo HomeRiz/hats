@@ -64,13 +64,25 @@ export function useThemeStore() {
   });
 
   useEffect(() => {
-    try {
-      const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
-      localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(customOnly));
-    } catch (e) {
-      console.warn('Storage quota exceeded:', e);
+    const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
+    const withoutPixels = (t: ThemeConfig): ThemeConfig =>
+      t.background.imageUrl?.startsWith('data:')
+        ? { ...t, background: { ...t.background, type: 'gradient', imageUrl: undefined } }
+        : t;
+    const attempts = [
+      customOnly,
+      customOnly.map(t => (t.id === activeThemeId ? t : withoutPixels(t))),
+      customOnly.map(withoutPixels),
+    ];
+    for (const attempt of attempts) {
+      try {
+        localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(attempt));
+        return;
+      } catch {
+      }
     }
-  }, [themes]);
+    console.warn('Could not save theme drafts: browser storage is full.');
+  }, [themes, activeThemeId]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_ACTIVE, activeThemeId);

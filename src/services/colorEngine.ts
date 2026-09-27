@@ -74,3 +74,28 @@ export function darkenColor(hex: string, amount: number = 0.35): string {
 export function lightenColor(hex: string, amount: number = 0.35): string {
   return mixHex(hex, '#ffffff', amount);
 }
+
+export function readableTextOn(bgHex: string): string {
+  try {
+    const dark = '#0B0D14';
+    const light = '#FFFFFF';
+    return getContrastRatio(bgHex, dark) >= getContrastRatio(bgHex, light) ? dark : light;
+  } catch {
+    return '#FFFFFF';
+  }
+}
+
+export function normalizeHex(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const v = value.trim();
+  let m = v.match(/^#?([0-9a-f]{3})$/i);
+  if (m) {
+    const h = m[1];
+    return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`.toUpperCase();
+  }
+  m = v.match(/^#?([0-9a-f]{6})(?:[0-9a-f]{2})?$/i);
+  if (m) return `#${m[1]}`.toUpperCase();
+  m = v.match(/^rgba?\(\s*(\d{1,3}(?:\.\d+)?)\s*[, ]\s*(\d{1,3}(?:\.\d+)?)\s*[, ]\s*(\d{1,3}(?:\.\d+)?)\s*(?:[,/]\s*[\d.]+%?\s*)?\)$/i);
+  if (m) return rgbToHex(Number(m[1]), Number(m[2]), Number(m[3])).toUpperCase();
+  return null;
+}

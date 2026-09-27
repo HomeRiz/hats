@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Search, Check, Sparkles, HardDrive, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 
 interface ActiveThemeDropdownProps {

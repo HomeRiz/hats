@@ -11,3 +11,5 @@ Thumbs.db
 
 dist/
 build/
+
+.hats-data/

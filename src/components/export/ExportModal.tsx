@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { 
-  Download, 
-  Copy, 
-  Check, 
-  CheckCircle2, 
-  X, 
-  FileText, 
-  Code2, 
-  Zap, 
-  RefreshCw, 
-  RotateCcw, 
-  Power, 
-  ExternalLink, 
-  User, 
-  Sparkles,
-  AlertTriangle
+import {
+  Download,
+  Copy,
+  Check,
+  CheckCircle2,
+  X,
+  FileText,
+  Code2,
+  Zap,
+  RefreshCw,
+  RotateCcw,
+  Power,
+  ExternalLink,
+  User,
+  AlertTriangle,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { generateHomeAssistantThemeYaml, generatePerViewSnippet } from '../../services/yamlGenerator';
