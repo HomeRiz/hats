@@ -42,7 +42,6 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onUninstallTheme,
   onDuplicateTheme,
 }) => {
-  const [activeHeaderView, setActiveHeaderView] = useState('home');
   const [sidebarItem, setSidebarItem] = useState('Smart Home');
   const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
 
