@@ -439,6 +439,7 @@ app.get('/api/ha/status', (req, res) => {
 
 app.get('/api/ha/live-dashboard', async (req, res) => {
   const snapshot = await fetchLiveDashboardSnapshot(SUPERVISOR_TOKEN);
+  res.set('Cache-Control', 'no-store');
   res.json(snapshot);
 });
 
