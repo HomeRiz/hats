@@ -15,25 +15,19 @@
     "dompurify": "^3.4.16",
     "express": "^5.2.1",
     "js-yaml": "^5.4.2",
-    "lucide-react": "^0.475.0",
-    "react": "^19.3.0",
     "lucide-react": "^1.47.0",
-    "react": "^18.3.1",
+    "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.2",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^19.3.0",
     "@types/react": "^19.3.0",
-    "@types/react-dom": "^18.3.5",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.2",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5.7.3",
-    "tailwindcss": "^3.4.17",
     "typescript": "^7.0.2",
     "vite": "^8.3.0"
   }
