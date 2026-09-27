@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
 

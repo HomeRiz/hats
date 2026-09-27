@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Github, Download, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { X, Download, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { GithubIcon } from '../common/icons/GithubIcon';
 import { ThemeConfig } from '../../types/theme';
 import { importThemesFromGitHubRepo } from '../../services/githubImporter';
 
@@ -69,7 +70,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
       >
         <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
           <div className="flex items-center gap-2.5 font-bold text-white text-base">
-            <Github className="w-5 h-5 text-blue-400" />
+            <GithubIcon className="w-5 h-5 text-blue-400" />
             <span>Import Theme from Any GitHub Repository</span>
           </div>
           <button

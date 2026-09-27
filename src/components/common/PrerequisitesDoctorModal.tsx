@@ -16,7 +16,8 @@ import {
   DownloadCloud,
 } from 'lucide-react';
 import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, getGithubStatus, saveGithubToken, waitForAddonBackUp, GithubStatus, DiagnosticsResult } from '../../services/haService';
-import { Github, KeyRound } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
+import { GithubIcon } from './icons/GithubIcon';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -534,7 +535,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 
           <div className="space-y-2.5">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Github className="w-3.5 h-3.5 text-purple-400" />
+              <GithubIcon className="w-3.5 h-3.5 text-purple-400" />
               GitHub Token for Theme Submissions
             </h3>
             <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">

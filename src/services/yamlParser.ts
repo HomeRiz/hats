@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import { ThemeConfig } from '../types/theme';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';

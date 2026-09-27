@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { 
-  GitPullRequest, 
-  X, 
-  CheckCircle2, 
-  AlertTriangle, 
-  ExternalLink, 
-  Github, 
-  Send 
+  GitPullRequest,
+  X,
+  CheckCircle2,
+  AlertTriangle,
+  ExternalLink,
+  Send
 } from 'lucide-react';
+import { GithubIcon } from '../common/icons/GithubIcon';
 import { ThemeConfig } from '../../types/theme';
 import { validateThemeForSubmission } from '../../services/githubService';
 import { getGithubStatus, submitThemeViaServer, GithubStatus } from '../../services/haService';
@@ -110,7 +110,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-md transition-all"
                 >
-                  <Github className="w-4 h-4" />
+                  <GithubIcon className="w-4 h-4" />
                   <span>View Pull Request on GitHub</span>
                   <ExternalLink className="w-3.5 h-3.5 ml-1" />
                 </a>

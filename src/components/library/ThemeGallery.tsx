@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   RefreshCw,
   HardDrive,
-  Github,
   CheckSquare,
   Square,
   X,
@@ -21,6 +20,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import { GithubIcon } from '../common/icons/GithubIcon';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
 import { ThemeOverviewModal } from './ThemeOverviewModal';
 import { DuplicateInfoModal } from '../common/DuplicateInfoModal';
@@ -277,7 +277,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             title="Import themes from any public GitHub repo"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
           >
-            <Github className="w-3.5 h-3.5 text-blue-400" />
+            <GithubIcon className="w-3.5 h-3.5 text-blue-400" />
             <span>Import GitHub</span>
           </button>
 
