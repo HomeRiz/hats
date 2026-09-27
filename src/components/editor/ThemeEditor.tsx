@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap, Edit3 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { EngineSettings } from './EngineSettings';
-import { PaletteEditor } from './PaletteEditor';
-import { BackgroundStudio } from './BackgroundStudio';
-import { SvgPatternEditor } from './SvgPatternEditor';
-import { CustomCssEditor } from './CustomCssEditor';
+const PaletteEditor = lazy(() => import('./PaletteEditor').then((m) => ({ default: m.PaletteEditor })));
+const BackgroundStudio = lazy(() => import('./BackgroundStudio').then((m) => ({ default: m.BackgroundStudio })));
+const SvgPatternEditor = lazy(() => import('./SvgPatternEditor').then((m) => ({ default: m.SvgPatternEditor })));
+const CustomCssEditor = lazy(() => import('./CustomCssEditor').then((m) => ({ default: m.CustomCssEditor })));
+
+const SubTabLoading: React.FC = () => (
+  <div className="flex items-center justify-center py-12">
+    <div className="w-6 h-6 rounded-full border-2 border-slate-700 border-t-blue-500 animate-spin" />
+  </div>
+);
 
 interface ThemeEditorProps {
   theme: ThemeConfig;
@@ -122,10 +128,26 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
 
       <div className="flex-1 overflow-y-auto p-4">
         {activeSubTab === 'engine' && <EngineSettings theme={theme} onChange={onChange} />}
-        {activeSubTab === 'palette' && <PaletteEditor theme={theme} onChange={onChange} />}
-        {activeSubTab === 'background' && <BackgroundStudio theme={theme} onChange={onChange} />}
-        {activeSubTab === 'svg' && <SvgPatternEditor theme={theme} onChange={onChange} />}
-        {activeSubTab === 'css' && <CustomCssEditor theme={theme} onChange={onChange} />}
+        {activeSubTab === 'palette' && (
+          <Suspense fallback={<SubTabLoading />}>
+            <PaletteEditor theme={theme} onChange={onChange} />
+          </Suspense>
+        )}
+        {activeSubTab === 'background' && (
+          <Suspense fallback={<SubTabLoading />}>
+            <BackgroundStudio theme={theme} onChange={onChange} />
+          </Suspense>
+        )}
+        {activeSubTab === 'svg' && (
+          <Suspense fallback={<SubTabLoading />}>
+            <SvgPatternEditor theme={theme} onChange={onChange} />
+          </Suspense>
+        )}
+        {activeSubTab === 'css' && (
+          <Suspense fallback={<SubTabLoading />}>
+            <CustomCssEditor theme={theme} onChange={onChange} />
+          </Suspense>
+        )}
         {activeSubTab === 'info' && (
           <div className="space-y-4 text-xs text-slate-300">
             <div className="space-y-1">
