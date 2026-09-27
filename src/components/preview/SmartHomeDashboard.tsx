@@ -10,19 +10,42 @@ import {
   Palette,
   CloudSun,
   Droplets,
+  Lock,
+  Blinds,
+  HelpCircle,
+  Activity,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { MockTileCard } from './MockTileCard';
 import { MockCard } from './MockCard';
+import type { LiveTile, DomainIconKey } from '../../services/liveDashboardMapper';
 
 interface SmartHomeDashboardProps {
   theme: ThemeConfig;
   previewMode?: 'dark' | 'light';
+  liveTiles?: LiveTile[];
 }
 
-export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({ 
+const DOMAIN_ICONS: Record<DomainIconKey, React.ReactNode> = {
+  light: <Lightbulb className="w-5 h-5" />,
+  switch: <Bot className="w-5 h-5" />,
+  climate: <Thermometer className="w-5 h-5" />,
+  media_player: <Tv className="w-5 h-5" />,
+  lock: <Lock className="w-5 h-5" />,
+  cover: <Blinds className="w-5 h-5" />,
+  alarm_control_panel: <ShieldCheck className="w-5 h-5" />,
+  vacuum: <Bot className="w-5 h-5" />,
+  sensor: <Activity className="w-5 h-5" />,
+  binary_sensor: <Activity className="w-5 h-5" />,
+  scene: <Palette className="w-5 h-5" />,
+  fan: <Droplets className="w-5 h-5" />,
+  default: <HelpCircle className="w-5 h-5" />,
+};
+
+export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({
   theme,
   previewMode = 'dark',
+  liveTiles,
 }) => {
   const { palette } = theme;
   const isLight = previewMode === 'light';
@@ -45,104 +68,127 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8 select-none">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Living Room"
-          state={livingRoomOn ? 'On' : 'Off'}
-          isActive={livingRoomOn}
-          icon={<Lightbulb className="w-5 h-5" />}
-          activeColor={activeAccentColor}
-          onClick={() => setLivingRoomOn(!livingRoomOn)}
-        />
+        {liveTiles ? (
+          liveTiles.length > 0 ? (
+            liveTiles.map((tile) => (
+              <MockTileCard
+                key={tile.id}
+                theme={theme}
+                previewMode={previewMode}
+                title={tile.title}
+                state={tile.stateText}
+                isActive={tile.isActive}
+                icon={DOMAIN_ICONS[tile.iconKey]}
+                activeColor={activeAccentColor}
+              />
+            ))
+          ) : (
+            <p className="col-span-full text-xs text-center py-6" style={{ color: subtextColor }}>
+              No entities found in your Home Assistant areas yet.
+            </p>
+          )
+        ) : (
+          <>
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Living Room"
+              state={livingRoomOn ? 'On' : 'Off'}
+              isActive={livingRoomOn}
+              icon={<Lightbulb className="w-5 h-5" />}
+              activeColor={activeAccentColor}
+              onClick={() => setLivingRoomOn(!livingRoomOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Kitchen"
-          state={kitchenOn ? 'On' : 'Off'}
-          isActive={kitchenOn}
-          icon={<Lightbulb className="w-5 h-5" />}
-          activeColor={activeAccentColor}
-          onClick={() => setKitchenOn(!kitchenOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Kitchen"
+              state={kitchenOn ? 'On' : 'Off'}
+              isActive={kitchenOn}
+              icon={<Lightbulb className="w-5 h-5" />}
+              activeColor={activeAccentColor}
+              onClick={() => setKitchenOn(!kitchenOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Bedroom"
-          state={bedroomOn ? 'On' : 'Off'}
-          isActive={bedroomOn}
-          icon={<Bed className="w-5 h-5" />}
-          activeColor={activeAccentColor}
-          onClick={() => setBedroomOn(!bedroomOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Bedroom"
+              state={bedroomOn ? 'On' : 'Off'}
+              isActive={bedroomOn}
+              icon={<Bed className="w-5 h-5" />}
+              activeColor={activeAccentColor}
+              onClick={() => setBedroomOn(!bedroomOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Garden"
-          state={gardenOn ? 'On' : 'Off'}
-          isActive={gardenOn}
-          icon={<Flower2 className="w-5 h-5" />}
-          activeColor={palette.orange || '#f59e0b'}
-          onClick={() => setGardenOn(!gardenOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Garden"
+              state={gardenOn ? 'On' : 'Off'}
+              isActive={gardenOn}
+              icon={<Flower2 className="w-5 h-5" />}
+              activeColor={palette.orange || '#f59e0b'}
+              onClick={() => setGardenOn(!gardenOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Thermostat"
-          state={thermostatOn ? 'On' : 'Off'}
-          isActive={thermostatOn}
-          icon={<Thermometer className="w-5 h-5" />}
-          activeColor={palette.orange || '#f59e0b'}
-          onClick={() => setThermostatOn(!thermostatOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Thermostat"
+              state={thermostatOn ? 'On' : 'Off'}
+              isActive={thermostatOn}
+              icon={<Thermometer className="w-5 h-5" />}
+              activeColor={palette.orange || '#f59e0b'}
+              onClick={() => setThermostatOn(!thermostatOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="TV"
-          state={tvOn ? 'On' : 'Off'}
-          isActive={tvOn}
-          icon={<Tv className="w-5 h-5" />}
-          activeColor={palette.cyan || activeAccentColor}
-          onClick={() => setTvOn(!tvOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="TV"
+              state={tvOn ? 'On' : 'Off'}
+              isActive={tvOn}
+              icon={<Tv className="w-5 h-5" />}
+              activeColor={palette.cyan || activeAccentColor}
+              onClick={() => setTvOn(!tvOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Vacuum"
-          state={vacuumOn ? 'On' : 'Off'}
-          isActive={vacuumOn}
-          icon={<Bot className="w-5 h-5" />}
-          activeColor={palette.cyan || activeAccentColor}
-          onClick={() => setVacuumOn(!vacuumOn)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Vacuum"
+              state={vacuumOn ? 'On' : 'Off'}
+              isActive={vacuumOn}
+              icon={<Bot className="w-5 h-5" />}
+              activeColor={palette.cyan || activeAccentColor}
+              onClick={() => setVacuumOn(!vacuumOn)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Alarm"
-          state={alarmArmed ? 'armed_home' : 'disarmed'}
-          isActive={alarmArmed}
-          icon={<ShieldCheck className="w-5 h-5" />}
-          activeColor={palette.green || '#10b981'}
-          onClick={() => setAlarmArmed(!alarmArmed)}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Alarm"
+              state={alarmArmed ? 'armed_home' : 'disarmed'}
+              isActive={alarmArmed}
+              icon={<ShieldCheck className="w-5 h-5" />}
+              activeColor={palette.green || '#10b981'}
+              onClick={() => setAlarmArmed(!alarmArmed)}
+            />
 
-        <MockTileCard
-          theme={theme}
-          previewMode={previewMode}
-          title="Scene"
-          state={sceneState}
-          isActive={sceneState !== 'Away'}
-          icon={<Palette className="w-5 h-5" />}
-          activeColor={palette.purple || activeAccentColor}
-          onClick={() => setSceneState(sceneState === 'Home' ? 'Night' : (sceneState === 'Night' ? 'Away' : 'Home'))}
-        />
+            <MockTileCard
+              theme={theme}
+              previewMode={previewMode}
+              title="Scene"
+              state={sceneState}
+              isActive={sceneState !== 'Away'}
+              icon={<Palette className="w-5 h-5" />}
+              activeColor={palette.purple || activeAccentColor}
+              onClick={() => setSceneState(sceneState === 'Home' ? 'Night' : (sceneState === 'Night' ? 'Away' : 'Home'))}
+            />
+          </>
+        )}
       </div>
 
       <MockCard theme={theme} previewMode={previewMode}>
