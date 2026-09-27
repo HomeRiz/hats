@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import * as yaml from 'js-yaml';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
+import { fetchLiveDashboardSnapshot } from './haWebsocket.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -434,6 +435,11 @@ app.get('/api/ha/status', (req, res) => {
     hasSupervisorToken: Boolean(SUPERVISOR_TOKEN),
     autoReloadThemes: AUTO_RELOAD_THEMES,
   });
+});
+
+app.get('/api/ha/live-dashboard', async (req, res) => {
+  const snapshot = await fetchLiveDashboardSnapshot(SUPERVISOR_TOKEN);
+  res.json(snapshot);
 });
 
 app.get('/api/ha/diagnostics', (req, res) => {
