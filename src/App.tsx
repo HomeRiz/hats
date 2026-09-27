@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useThemeStore } from './state/useThemeStore';
 import { Navbar } from './components/navbar/Navbar';
 import { ThemeEditor } from './components/editor/ThemeEditor';
 import { DashboardPreview } from './components/preview/DashboardPreview';
-import { ThemeGallery } from './components/library/ThemeGallery';
-import { CommunityHub } from './components/github/CommunityHub';
-import { SubmitPrModal } from './components/github/SubmitPrModal';
-import { ExportModal } from './components/export/ExportModal';
-import { PrerequisitesDoctorModal } from './components/common/PrerequisitesDoctorModal';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
 import { getHaDiagnostics } from './services/haService';
+
+const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
+const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
+const SubmitPrModal = lazy(() => import('./components/github/SubmitPrModal').then((m) => ({ default: m.SubmitPrModal })));
+const ExportModal = lazy(() => import('./components/export/ExportModal').then((m) => ({ default: m.ExportModal })));
+const PrerequisitesDoctorModal = lazy(() => import('./components/common/PrerequisitesDoctorModal').then((m) => ({ default: m.PrerequisitesDoctorModal })));
+
+const TabLoading: React.FC = () => (
+  <div className="flex-1 h-full flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full border-2 border-slate-700 border-t-blue-500 animate-spin" />
+  </div>
+);
 
 export const App: React.FC = () => {
   const {
@@ -132,6 +139,7 @@ export const App: React.FC = () => {
 
           {activeTab === 'library' && (
             <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
+              <Suspense fallback={<TabLoading />}>
               <ThemeGallery
                 themes={themes}
                 activeThemeId={activeThemeId}
@@ -151,11 +159,13 @@ export const App: React.FC = () => {
                 onOpenDoctor={() => setIsDoctorOpen(true)}
                 isDoctorReady={isDoctorReady}
               />
+              </Suspense>
             </div>
           )}
 
           {activeTab === 'community' && (
             <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
+              <Suspense fallback={<TabLoading />}>
               <CommunityHub
                 submissions={communitySubmissions}
                 onVote={voteOnCommunityTheme}
@@ -169,6 +179,7 @@ export const App: React.FC = () => {
                 }}
                 onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
               />
+              </Suspense>
             </div>
           )}
 
@@ -193,31 +204,43 @@ export const App: React.FC = () => {
         )}
       </div>
 
-      <ExportModal
-        isOpen={isExportOpen}
-        onClose={() => setIsExportOpen(false)}
-        theme={activeTheme}
-        onThemeSaved={() => {
-          updateActiveTheme({ isInstalled: true });
-        }}
-      />
+      {isExportOpen && (
+        <Suspense fallback={null}>
+          <ExportModal
+            isOpen={isExportOpen}
+            onClose={() => setIsExportOpen(false)}
+            theme={activeTheme}
+            onThemeSaved={() => {
+              updateActiveTheme({ isInstalled: true });
+            }}
+          />
+        </Suspense>
+      )}
 
-      <SubmitPrModal
-        isOpen={isSubmitPrOpen}
-        onClose={() => setIsSubmitPrOpen(false)}
-        theme={activeTheme}
-        onSubmitSuccess={(theme, prUrl) => {
-          addCommunitySubmission(theme, prUrl);
-        }}
-      />
+      {isSubmitPrOpen && (
+        <Suspense fallback={null}>
+          <SubmitPrModal
+            isOpen={isSubmitPrOpen}
+            onClose={() => setIsSubmitPrOpen(false)}
+            theme={activeTheme}
+            onSubmitSuccess={(theme, prUrl) => {
+              addCommunitySubmission(theme, prUrl);
+            }}
+          />
+        </Suspense>
+      )}
 
-      <PrerequisitesDoctorModal
-        isOpen={isDoctorOpen}
-        onClose={() => setIsDoctorOpen(false)}
-        onConfigFixed={() => {
-          checkDiagnostics();
-        }}
-      />
+      {isDoctorOpen && (
+        <Suspense fallback={null}>
+          <PrerequisitesDoctorModal
+            isOpen={isDoctorOpen}
+            onClose={() => setIsDoctorOpen(false)}
+            onConfigFixed={() => {
+              checkDiagnostics();
+            }}
+          />
+        </Suspense>
+      )}
       </div>
     </div>
   );
