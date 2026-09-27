@@ -32,6 +32,7 @@ function getSharedSnapshot(forceRefresh: boolean): Promise<LiveDashboardSnapshot
 }
 
 export function __resetLiveDashboardCache(): void {
+  if (import.meta.env.MODE !== 'test') return;
   sharedSnapshotPromise = null;
 }
 
