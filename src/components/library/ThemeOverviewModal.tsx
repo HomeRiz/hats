@@ -228,6 +228,17 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               liveViewTabs={liveDashboardData.available ? liveDashboardData.viewNavItems : undefined}
             />
 
+            {!liveDashboardData.loading && !liveDashboardData.available && (
+              <div className="relative z-10 shrink-0 px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20">
+                Showing example preview — couldn't reach your live Home Assistant data.
+              </div>
+            )}
+            {!liveDashboardData.loading && liveDashboardData.available && liveDashboardData.viewNavItems.length === 0 && (
+              <div className="relative z-10 shrink-0 px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20">
+                Example navigation tabs — couldn't read your dashboard views.
+              </div>
+            )}
+
             <div className="flex-1 flex overflow-hidden relative z-10">
               <MockSidebar 
                 theme={theme} 

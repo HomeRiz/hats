@@ -28,11 +28,11 @@ export const MockHeader: React.FC<MockHeaderProps> = ({
   liveViewTabs,
 }) => {
   const views = liveViewTabs && liveViewTabs.length > 0
-    ? liveViewTabs.map((tab, i) => ({
+    ? liveViewTabs.map((tab) => ({
         id: tab.id,
         icon: <LayoutGrid className="w-4 h-4" />,
         title: tab.label,
-        isText: i === 0,
+        isText: true,
         label: tab.label,
       }))
     : [

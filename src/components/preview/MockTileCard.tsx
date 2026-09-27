@@ -36,7 +36,9 @@ export const MockTileCard: React.FC<MockTileCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className="group relative flex items-center gap-3.5 px-4 py-3 cursor-pointer select-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
+      className={`group relative flex items-center gap-3.5 px-4 py-3 select-none transition-all duration-200 overflow-hidden ${
+        onClick ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98]' : ''
+      }`}
       style={{
         borderRadius: `${engine.cardRadius || 24}px`,
         backgroundColor: cardBg,

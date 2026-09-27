@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { LiveDashboardSnapshot } from '../types/liveDashboard';
 import { mapAreasToTiles, mapViewTabsToNavItems } from './liveDashboardMapper';
 import type { LiveTile, LiveNavItem } from './liveDashboardMapper';
@@ -60,13 +60,17 @@ export function useLiveDashboardData(): LiveDashboardData {
     };
   }, [load]);
 
+  const viewNavItems = useMemo(() => mapViewTabsToNavItems(snapshot.viewTabs), [snapshot]);
+  const tiles = useMemo(() => mapAreasToTiles(snapshot.areas), [snapshot]);
+  const refresh = useCallback(() => load(true), [load]);
+
   return {
     available: snapshot.available,
     loading,
-    viewNavItems: mapViewTabsToNavItems(snapshot.viewTabs),
+    viewNavItems,
     activeViewId,
     setActiveViewId: setActiveViewIdState,
-    tiles: mapAreasToTiles(snapshot.areas),
-    refresh: () => load(true),
+    tiles,
+    refresh,
   };
 }

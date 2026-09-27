@@ -89,6 +89,11 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
           Showing example preview — couldn't reach your live Home Assistant data.
         </div>
       )}
+      {!live.loading && live.available && live.viewNavItems.length === 0 && (
+        <div className="px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20 shrink-0">
+          Example navigation tabs — couldn't read your dashboard views.
+        </div>
+      )}
 
       <div className="flex-1 flex overflow-hidden relative z-10">
         <MockSidebar 
