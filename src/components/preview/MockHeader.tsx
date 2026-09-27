@@ -1,21 +1,23 @@
 import React from 'react';
-import { 
-  Plus, 
-  Search, 
-  MessageSquare, 
-  Pencil, 
-  LayoutGrid, 
+import {
+  Plus,
+  Search,
+  MessageSquare,
+  Pencil,
+  LayoutGrid,
   DoorOpen,
   Thermometer,
-  Zap 
+  Zap
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import type { LiveNavItem } from '../../services/liveDashboardMapper';
 
 interface MockHeaderProps {
   theme: ThemeConfig;
   activeView?: string;
   setActiveView?: (view: string) => void;
   previewMode?: 'dark' | 'light';
+  liveViewTabs?: LiveNavItem[];
 }
 
 export const MockHeader: React.FC<MockHeaderProps> = ({
@@ -23,14 +25,23 @@ export const MockHeader: React.FC<MockHeaderProps> = ({
   activeView = 'home',
   setActiveView,
   previewMode = 'dark',
+  liveViewTabs,
 }) => {
-  const views = [
-    { id: 'home', label: 'Home', isText: true },
-    { id: 'overview', icon: <LayoutGrid className="w-4 h-4" />, title: 'Overview' },
-    { id: 'rooms', icon: <DoorOpen className="w-4 h-4" />, title: 'Rooms' },
-    { id: 'climate', icon: <Thermometer className="w-4 h-4" />, title: 'Climate' },
-    { id: 'energy', icon: <Zap className="w-4 h-4" />, title: 'Energy' },
-  ];
+  const views = liveViewTabs && liveViewTabs.length > 0
+    ? liveViewTabs.map((tab, i) => ({
+        id: tab.id,
+        icon: <LayoutGrid className="w-4 h-4" />,
+        title: tab.label,
+        isText: i === 0,
+        label: tab.label,
+      }))
+    : [
+        { id: 'home', label: 'Home', isText: true },
+        { id: 'overview', icon: <LayoutGrid className="w-4 h-4" />, title: 'Overview' },
+        { id: 'rooms', icon: <DoorOpen className="w-4 h-4" />, title: 'Rooms' },
+        { id: 'climate', icon: <Thermometer className="w-4 h-4" />, title: 'Climate' },
+        { id: 'energy', icon: <Zap className="w-4 h-4" />, title: 'Energy' },
+      ];
 
   const isLight = previewMode === 'light';
   const headerBg = isLight 
