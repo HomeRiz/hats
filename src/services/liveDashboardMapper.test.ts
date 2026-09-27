@@ -33,6 +33,15 @@ describe('formatStateText', () => {
   it('handles an empty/unknown state without throwing', () => {
     expect(formatStateText('')).toBe('Unknown');
   });
+
+  it('appends a unit when provided', () => {
+    expect(formatStateText('21.4', '°C')).toBe('21.4 °C');
+  });
+
+  it('does not append a unit to unknown/unavailable states', () => {
+    expect(formatStateText('unknown', '°C')).toBe('Unknown');
+    expect(formatStateText('unavailable', '°C')).toBe('Unavailable');
+  });
 });
 
 describe('mapEntityToTile', () => {

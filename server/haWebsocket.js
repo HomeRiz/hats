@@ -68,7 +68,11 @@ export async function fetchLiveDashboardSnapshot(supervisorToken) {
       'ha-websocket-fetch-timeout'
     );
 
-    const viewTabs = await fetchViewTabs(connection, dashboards);
+    const viewTabs = await withTimeout(
+      fetchViewTabs(connection, dashboards),
+      CONNECT_TIMEOUT_MS,
+      'ha-websocket-view-tabs-timeout'
+    );
     const areas = buildAreas(areaRegistry, deviceRegistry, entityRegistry, states);
 
     return { available: true, viewTabs, areas };
@@ -89,19 +93,19 @@ async function fetchViewTabs(connection, dashboards) {
           ? { type: 'lovelace/config', url_path: dashboard.url_path }
           : { type: 'lovelace/config' }
       );
-      for (const view of config.views || []) {
+      (config.views || []).forEach((view, index) => {
         tabs.push({
-          id: `${dashboard.id || dashboard.url_path || 'lovelace'}::${view.path || view.title}`,
+          id: `${dashboard.id || dashboard.url_path || 'lovelace'}::${view.path || view.title || 'view'}::${index}`,
           title: view.title || 'Home',
         });
-      }
+      });
     } catch {
     }
   }
   return tabs;
 }
 
-function buildAreas(areaRegistry, deviceRegistry, entityRegistry, states) {
+export function buildAreas(areaRegistry, deviceRegistry, entityRegistry, states) {
   const stateById = new Map(states.map((s) => [s.entity_id, s]));
   const deviceAreaById = new Map(
     deviceRegistry.filter((d) => d.area_id).map((d) => [d.id, d.area_id])
@@ -111,6 +115,8 @@ function buildAreas(areaRegistry, deviceRegistry, entityRegistry, states) {
   );
 
   for (const entry of entityRegistry) {
+    if (entry.disabled_by || entry.hidden_by || entry.entity_category) continue;
+
     const areaId = entry.area_id || deviceAreaById.get(entry.device_id);
     const area = areaId ? areasById.get(areaId) : undefined;
     if (!area) continue;
@@ -123,7 +129,7 @@ function buildAreas(areaRegistry, deviceRegistry, entityRegistry, states) {
       name: state.attributes?.friendly_name || entry.entity_id,
       domain: entry.entity_id.split('.')[0],
       state: state.state,
-      icon: state.attributes?.icon,
+      unit: state.attributes?.unit_of_measurement,
     });
   }
 

@@ -29,12 +29,18 @@ const ACTIVE_STATES = new Set([
   'armed_away', 'armed_home', 'armed_night',
 ]);
 
-export function formatStateText(state: string): string {
+const NO_UNIT_STATES = new Set(['unknown', 'unavailable']);
+
+export function formatStateText(state: string, unit?: string): string {
   if (!state) return 'Unknown';
   if (state === 'on') return 'On';
   if (state === 'off') return 'Off';
   const spaced = state.replace(/_/g, ' ');
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  const formatted = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  if (unit && !NO_UNIT_STATES.has(state)) {
+    return `${formatted} ${unit}`;
+  }
+  return formatted;
 }
 
 export interface LiveTile {
@@ -50,7 +56,7 @@ export function mapEntityToTile(entity: LiveEntity): LiveTile {
   return {
     id: entity.entityId,
     title: entity.name,
-    stateText: formatStateText(entity.state),
+    stateText: formatStateText(entity.state, entity.unit),
     domain: entity.domain,
     isActive: ACTIVE_STATES.has(entity.state),
     iconKey: domainIconKey(entity.domain),

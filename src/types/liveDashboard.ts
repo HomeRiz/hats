@@ -4,6 +4,7 @@ export interface LiveEntity {
   domain: string;
   state: string;
   icon?: string;
+  unit?: string;
 }
 
 export interface LiveArea {
