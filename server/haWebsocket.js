@@ -36,11 +36,25 @@ export async function fetchLiveDashboardSnapshot(supervisorToken) {
     const auth = createLongLivedTokenAuth(SUPERVISOR_HASS_URL, supervisorToken);
     Object.defineProperty(auth, 'wsUrl', { value: SUPERVISOR_WS_URL });
 
-    connection = await withTimeout(
-      createConnection({ auth }),
-      CONNECT_TIMEOUT_MS,
-      'ha-websocket-connect-timeout'
+    let connectTimedOut = false;
+    const connectionPromise = createConnection({ auth, connectTimeout: CONNECT_TIMEOUT_MS });
+    connectionPromise.then(
+      (lateConnection) => {
+        if (connectTimedOut) lateConnection.close();
+      },
+      () => {}
     );
+
+    try {
+      connection = await withTimeout(
+        connectionPromise,
+        CONNECT_TIMEOUT_MS,
+        'ha-websocket-connect-timeout'
+      );
+    } catch (err) {
+      if (err && err.message === 'ha-websocket-connect-timeout') connectTimedOut = true;
+      throw err;
+    }
 
     const [dashboards, areaRegistry, deviceRegistry, entityRegistry, states] = await withTimeout(
       Promise.all([
