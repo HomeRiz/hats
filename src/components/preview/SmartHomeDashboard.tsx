@@ -18,12 +18,12 @@ import {
 import { ThemeConfig } from '../../types/theme';
 import { MockTileCard } from './MockTileCard';
 import { MockCard } from './MockCard';
-import type { LiveTile, DomainIconKey } from '../../services/liveDashboardMapper';
+import type { LiveTileGroup, DomainIconKey } from '../../services/liveDashboardMapper';
 
 interface SmartHomeDashboardProps {
   theme: ThemeConfig;
   previewMode?: 'dark' | 'light';
-  liveTiles?: LiveTile[];
+  liveGroups?: LiveTileGroup[];
 }
 
 const DOMAIN_ICONS: Record<DomainIconKey, React.ReactNode> = {
@@ -45,7 +45,7 @@ const DOMAIN_ICONS: Record<DomainIconKey, React.ReactNode> = {
 export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({
   theme,
   previewMode = 'dark',
-  liveTiles,
+  liveGroups,
 }) => {
   const { palette } = theme;
   const isLight = previewMode === 'light';
@@ -67,27 +67,41 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4 pb-8 select-none">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {liveTiles ? (
-          liveTiles.length > 0 ? (
-            liveTiles.map((tile) => (
-              <MockTileCard
-                key={tile.id}
-                theme={theme}
-                previewMode={previewMode}
-                title={tile.title}
-                state={tile.stateText}
-                isActive={tile.isActive}
-                icon={DOMAIN_ICONS[tile.iconKey]}
-                activeColor={activeAccentColor}
-              />
-            ))
-          ) : (
-            <p className="col-span-full text-xs text-center py-6" style={{ color: subtextColor }}>
-              No entities found in your Home Assistant areas yet.
-            </p>
-          )
+      {liveGroups ? (
+        liveGroups.length > 0 ? (
+          <div className="space-y-5">
+            {liveGroups.map((group) => (
+              <div key={group.id}>
+                <h4
+                  className="text-xs font-bold uppercase tracking-wider mb-2 px-1"
+                  style={{ color: subtextColor }}
+                >
+                  {group.name}
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {group.tiles.map((tile) => (
+                    <MockTileCard
+                      key={tile.id}
+                      theme={theme}
+                      previewMode={previewMode}
+                      title={tile.title}
+                      state={tile.stateText}
+                      isActive={tile.isActive}
+                      icon={DOMAIN_ICONS[tile.iconKey]}
+                      activeColor={activeAccentColor}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
+          <p className="text-xs text-center py-6" style={{ color: subtextColor }}>
+            No entities found in your Home Assistant areas yet.
+          </p>
+        )
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <>
             <MockTileCard
               theme={theme}
@@ -188,8 +202,8 @@ export const SmartHomeDashboard: React.FC<SmartHomeDashboardProps> = ({
               onClick={() => setSceneState(sceneState === 'Home' ? 'Night' : (sceneState === 'Night' ? 'Away' : 'Home'))}
             />
           </>
-        )}
-      </div>
+        </div>
+      )}
 
       <MockCard theme={theme} previewMode={previewMode}>
         <div className="flex items-center justify-between px-2 py-1">

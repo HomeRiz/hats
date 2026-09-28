@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { LiveDashboardSnapshot } from '../types/liveDashboard';
-import { mapAreasToTiles, mapViewTabsToNavItems } from './liveDashboardMapper';
-import type { LiveTile, LiveNavItem } from './liveDashboardMapper';
+import type { LiveDashboardSnapshot, LivePanel } from '../types/liveDashboard';
+import { mapAreasToTileGroups, filterTileGroupsForTab, mapViewTabsToNavItems } from './liveDashboardMapper';
+import type { LiveTileGroup, LiveNavItem } from './liveDashboardMapper';
 import { getApiUrl } from './haService';
 
 export interface LiveDashboardData {
@@ -10,11 +10,12 @@ export interface LiveDashboardData {
   viewNavItems: LiveNavItem[];
   activeViewId: string | null;
   setActiveViewId: (id: string) => void;
-  tiles: LiveTile[];
+  tileGroups: LiveTileGroup[];
+  panels: LivePanel[];
   refresh: () => void;
 }
 
-const EMPTY_SNAPSHOT: LiveDashboardSnapshot = { available: false, viewTabs: [], areas: [] };
+const EMPTY_SNAPSHOT: LiveDashboardSnapshot = { available: false, viewTabs: [], areas: [], panels: [] };
 
 let sharedSnapshotPromise: Promise<LiveDashboardSnapshot> | null = null;
 
@@ -61,7 +62,14 @@ export function useLiveDashboardData(): LiveDashboardData {
   }, [load]);
 
   const viewNavItems = useMemo(() => mapViewTabsToNavItems(snapshot.viewTabs), [snapshot]);
-  const tiles = useMemo(() => mapAreasToTiles(snapshot.areas), [snapshot]);
+  const activeTabTitle = useMemo(
+    () => snapshot.viewTabs.find((tab) => tab.id === activeViewId)?.title ?? '',
+    [snapshot, activeViewId]
+  );
+  const tileGroups = useMemo(
+    () => filterTileGroupsForTab(mapAreasToTileGroups(snapshot.areas), activeTabTitle),
+    [snapshot, activeTabTitle]
+  );
   const refresh = useCallback(() => load(true), [load]);
 
   return {
@@ -70,7 +78,8 @@ export function useLiveDashboardData(): LiveDashboardData {
     viewNavItems,
     activeViewId,
     setActiveViewId: setActiveViewIdState,
-    tiles,
+    tileGroups,
+    panels: snapshot.panels ?? [],
     refresh,
   };
 }

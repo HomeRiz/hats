@@ -24,11 +24,63 @@ function withTimeout(promise, ms, message) {
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
-const EMPTY_SNAPSHOT = { available: false, viewTabs: [], areas: [] };
+const EMPTY_SNAPSHOT = { available: false, viewTabs: [], areas: [], panels: [] };
 
 export async function fetchLiveDashboardSnapshot(supervisorToken) {
+  return withHaConnection(supervisorToken, EMPTY_SNAPSHOT, async (connection) => {
+    const [dashboards, areaRegistry, deviceRegistry, entityRegistry, states, panels, sidebarOrder, sidebarHidden] =
+      await withTimeout(
+        Promise.all([
+          connection.sendMessagePromise({ type: 'lovelace/dashboards/list' }),
+          connection.sendMessagePromise({ type: 'config/area_registry/list' }),
+          connection.sendMessagePromise({ type: 'config/device_registry/list' }),
+          connection.sendMessagePromise({ type: 'config/entity_registry/list' }),
+          connection.sendMessagePromise({ type: 'get_states' }),
+          connection.sendMessagePromise({ type: 'get_panels' }),
+          connection.sendMessagePromise({ type: 'frontend/get_user_data', key: 'sidebar-panel-order' }),
+          connection.sendMessagePromise({ type: 'frontend/get_user_data', key: 'sidebar-panel-hidden' }),
+        ]),
+        CONNECT_TIMEOUT_MS,
+        'ha-websocket-fetch-timeout'
+      );
+
+    const viewTabs = await withTimeout(
+      fetchViewTabs(connection, dashboards),
+      CONNECT_TIMEOUT_MS,
+      'ha-websocket-view-tabs-timeout'
+    );
+    const areas = buildAreas(areaRegistry, deviceRegistry, entityRegistry, states);
+    const panelList = buildPanelList(panels, sidebarHidden?.value, sidebarOrder?.value);
+
+    return { available: true, viewTabs, areas, panels: panelList };
+  });
+}
+
+const EMPTY_HACS_SNAPSHOT = { available: false, repositories: [] };
+
+export async function fetchHacsRepositories(supervisorToken) {
+  return withHaConnection(supervisorToken, EMPTY_HACS_SNAPSHOT, async (connection) => {
+    const repos = await withTimeout(
+      connection.sendMessagePromise({ type: 'hacs/repositories/list' }),
+      CONNECT_TIMEOUT_MS,
+      'ha-websocket-hacs-fetch-timeout'
+    );
+    return {
+      available: true,
+      repositories: repos.map((r) => ({
+        id: r.id,
+        fullName: r.full_name,
+        domain: r.domain,
+        category: r.category,
+        installed: Boolean(r.installed),
+      })),
+    };
+  });
+}
+
+async function withHaConnection(supervisorToken, emptyResult, fn) {
   if (!supervisorToken) {
-    return { ...EMPTY_SNAPSHOT, reason: 'no-supervisor-token' };
+    return { ...emptyResult, reason: 'no-supervisor-token' };
   }
 
   let connection;
@@ -56,28 +108,9 @@ export async function fetchLiveDashboardSnapshot(supervisorToken) {
       throw err;
     }
 
-    const [dashboards, areaRegistry, deviceRegistry, entityRegistry, states] = await withTimeout(
-      Promise.all([
-        connection.sendMessagePromise({ type: 'lovelace/dashboards/list' }),
-        connection.sendMessagePromise({ type: 'config/area_registry/list' }),
-        connection.sendMessagePromise({ type: 'config/device_registry/list' }),
-        connection.sendMessagePromise({ type: 'config/entity_registry/list' }),
-        connection.sendMessagePromise({ type: 'get_states' }),
-      ]),
-      CONNECT_TIMEOUT_MS,
-      'ha-websocket-fetch-timeout'
-    );
-
-    const viewTabs = await withTimeout(
-      fetchViewTabs(connection, dashboards),
-      CONNECT_TIMEOUT_MS,
-      'ha-websocket-view-tabs-timeout'
-    );
-    const areas = buildAreas(areaRegistry, deviceRegistry, entityRegistry, states);
-
-    return { available: true, viewTabs, areas };
+    return await fn(connection);
   } catch (err) {
-    return { ...EMPTY_SNAPSHOT, reason: (err && err.message) || 'unknown-error' };
+    return { ...emptyResult, reason: (err && err.message) || 'unknown-error' };
   } finally {
     if (connection) connection.close();
   }
@@ -134,4 +167,31 @@ export function buildAreas(areaRegistry, deviceRegistry, entityRegistry, states)
   }
 
   return Array.from(areasById.values()).filter((a) => a.entities.length > 0);
+}
+
+const DEFAULT_HIDDEN_PANEL_IDS = new Set([
+  'config',
+  'lovelace',
+  'history',
+  'logbook',
+  'media-browser',
+  'energy',
+  'todo',
+]);
+
+export function buildPanelList(panels, hiddenPanelIds, orderedPanelIds) {
+  const explicitHidden = new Set(hiddenPanelIds || []);
+
+  const list = Object.values(panels)
+    .filter((p) => p.show_in_sidebar && p.title)
+    .filter((p) => !DEFAULT_HIDDEN_PANEL_IDS.has(p.url_path))
+    .filter((p) => !explicitHidden.has(p.url_path))
+    .map((p) => ({ id: p.url_path, title: p.title, icon: p.icon ?? null, component: p.component_name }));
+
+  if (orderedPanelIds && orderedPanelIds.length > 0) {
+    const orderIndex = new Map(orderedPanelIds.map((id, i) => [id, i]));
+    list.sort((a, b) => (orderIndex.get(a.id) ?? Infinity) - (orderIndex.get(b.id) ?? Infinity));
+  }
+
+  return list;
 }

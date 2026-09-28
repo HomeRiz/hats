@@ -18,6 +18,9 @@ const SNAPSHOT_RESPONSE = {
       ],
     },
   ],
+  panels: [
+    { id: 'smart-home', title: 'Smart Home', icon: 'mdi:home-automation', component: 'lovelace' },
+  ],
 };
 
 describe('useLiveDashboardData', () => {
@@ -48,16 +51,61 @@ describe('useLiveDashboardData', () => {
       { id: 'lovelace::default_view', label: 'Home' },
       { id: 'lovelace::rooms', label: 'Rooms' },
     ]);
-    expect(result.current.tiles).toEqual([
+    expect(result.current.panels).toEqual([
+      { id: 'smart-home', title: 'Smart Home', icon: 'mdi:home-automation', component: 'lovelace' },
+    ]);
+    expect(result.current.tileGroups).toEqual([
       {
-        id: 'light.living_room',
-        title: 'Living Room Light',
-        stateText: 'On',
-        domain: 'light',
-        isActive: true,
-        iconKey: 'light',
+        id: 'living_room',
+        name: 'Living Room',
+        tiles: [
+          {
+            id: 'light.living_room',
+            title: 'Living Room Light',
+            stateText: 'On',
+            domain: 'light',
+            isActive: true,
+            iconKey: 'light',
+          },
+        ],
       },
     ]);
+  });
+
+  it('filters tileGroups by the active tab title, and re-filters when the active tab changes', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            available: true,
+            viewTabs: [
+              { id: 'lovelace::default_view', title: 'Home' },
+              { id: 'lovelace::climate', title: 'Climate' },
+            ],
+            areas: [
+              {
+                id: 'living_room',
+                name: 'Living Room',
+                entities: [
+                  { entityId: 'climate.living_room', name: 'Living Room Thermostat', domain: 'climate', state: 'heat' },
+                  { entityId: 'light.living_room', name: 'Living Room Light', domain: 'light', state: 'on' },
+                ],
+              },
+            ],
+          }),
+      })
+    );
+
+    const { result } = renderHook(() => useLiveDashboardData());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.tileGroups[0].tiles).toHaveLength(2);
+
+    act(() => result.current.setActiveViewId('lovelace::climate'));
+
+    expect(result.current.tileGroups[0].tiles.map((t) => t.id)).toEqual(['climate.living_room']);
   });
 
   it('defaults activeViewId to the first view tab', async () => {
@@ -88,7 +136,7 @@ describe('useLiveDashboardData', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.available).toBe(false);
-    expect(result.current.tiles).toEqual([]);
+    expect(result.current.tileGroups).toEqual([]);
   });
 
   it('dedupes concurrent hook instances into a single fetch', async () => {

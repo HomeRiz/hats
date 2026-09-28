@@ -1,25 +1,44 @@
 import React from 'react';
-import { 
-  Home, 
-  Package, 
-  MapPin, 
+import {
+  Home,
+  Package,
+  MapPin,
   Zap,
   BookOpen,
   History,
   PlayCircle,
-  Settings, 
-  Bell, 
-  Menu 
+  Settings,
+  Bell,
+  Menu,
+  Blocks,
+  User,
+  ListChecks,
+  LayoutGrid,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { readableTextOn, normalizeHex } from '../../services/colorEngine';
+import type { LivePanel } from '../../types/liveDashboard';
 
 interface MockSidebarProps {
   theme: ThemeConfig;
   activeItem?: string;
   onSelectItem?: (label: string) => void;
   previewMode?: 'dark' | 'light';
+  livePanels?: LivePanel[];
 }
+
+const PANEL_COMPONENT_ICONS: Record<string, React.ReactNode> = {
+  lovelace: <Home className="w-4 h-4" />,
+  energy: <Zap className="w-4 h-4 text-amber-400" />,
+  map: <MapPin className="w-4 h-4" />,
+  logbook: <BookOpen className="w-4 h-4" />,
+  history: <History className="w-4 h-4" />,
+  'media-browser': <PlayCircle className="w-4 h-4" />,
+  custom: <Package className="w-4 h-4" />,
+  profile: <User className="w-4 h-4" />,
+  todo: <ListChecks className="w-4 h-4" />,
+  app: <Blocks className="w-4 h-4" />,
+};
 
 const HatsTopHatIcon: React.FC<{ className?: string; color?: string }> = ({ className = "w-4 h-4", color = "currentColor" }) => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -29,11 +48,12 @@ const HatsTopHatIcon: React.FC<{ className?: string; color?: string }> = ({ clas
   </svg>
 );
 
-export const MockSidebar: React.FC<MockSidebarProps> = ({ 
-  theme, 
+export const MockSidebar: React.FC<MockSidebarProps> = ({
+  theme,
   activeItem = 'Smart Home',
   onSelectItem,
   previewMode = 'dark',
+  livePanels,
 }) => {
   const { engine } = theme;
   const sidebarStyle = engine.sidebarStyle || 'translucent';
@@ -52,16 +72,23 @@ export const MockSidebar: React.FC<MockSidebarProps> = ({
     sidebarFilter = sidebarBlur > 0 ? `blur(${sidebarBlur}px) saturate(${engine.saturateAmount || 1.4})` : 'none';
   }
 
-  const topItems = [
-    { icon: <Home className="w-4 h-4" />, label: 'Smart Home' },
-    { icon: <Zap className="w-4 h-4 text-amber-400" />, label: 'Energy' },
-    { icon: <MapPin className="w-4 h-4" />, label: 'Map' },
-    { icon: <BookOpen className="w-4 h-4" />, label: 'Logbook' },
-    { icon: <History className="w-4 h-4" />, label: 'History' },
-    { icon: <PlayCircle className="w-4 h-4" />, label: 'Media' },
-    { icon: <Package className="w-4 h-4" />, label: 'HACS' },
-    { icon: <HatsTopHatIcon className="w-4 h-4 text-purple-300" color="#BF5AF2" />, label: 'HATS' },
-  ];
+  const topItems = livePanels && livePanels.length > 0
+    ? livePanels.map((panel) => ({
+        icon: panel.title === 'HATS'
+          ? <HatsTopHatIcon className="w-4 h-4 text-purple-300" color="#BF5AF2" />
+          : (PANEL_COMPONENT_ICONS[panel.component] ?? <LayoutGrid className="w-4 h-4" />),
+        label: panel.title,
+      }))
+    : [
+        { icon: <Home className="w-4 h-4" />, label: 'Smart Home' },
+        { icon: <Zap className="w-4 h-4 text-amber-400" />, label: 'Energy' },
+        { icon: <MapPin className="w-4 h-4" />, label: 'Map' },
+        { icon: <BookOpen className="w-4 h-4" />, label: 'Logbook' },
+        { icon: <History className="w-4 h-4" />, label: 'History' },
+        { icon: <PlayCircle className="w-4 h-4" />, label: 'Media' },
+        { icon: <Package className="w-4 h-4" />, label: 'HACS' },
+        { icon: <HatsTopHatIcon className="w-4 h-4 text-purple-300" color="#BF5AF2" />, label: 'HATS' },
+      ];
 
   const bottomItems = [
     { icon: <Settings className="w-4 h-4" />, label: 'Settings' },

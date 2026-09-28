@@ -18,9 +18,17 @@ export interface LiveViewTab {
   title: string;
 }
 
+export interface LivePanel {
+  id: string;
+  title: string;
+  icon: string | null;
+  component: string;
+}
+
 export interface LiveDashboardSnapshot {
   available: boolean;
   reason?: string;
   viewTabs: LiveViewTab[];
   areas: LiveArea[];
+  panels: LivePanel[];
 }

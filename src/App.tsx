@@ -242,6 +242,7 @@ export const App: React.FC = () => {
             onConfigFixed={() => {
               checkDiagnostics();
             }}
+            themes={themes}
           />
         </Suspense>
       )}

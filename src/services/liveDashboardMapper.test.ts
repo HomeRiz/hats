@@ -4,6 +4,8 @@ import {
   formatStateText,
   mapEntityToTile,
   mapAreasToTiles,
+  mapAreasToTileGroups,
+  filterTileGroupsForTab,
   mapViewTabsToNavItems,
 } from './liveDashboardMapper';
 import type { LiveArea, LiveEntity, LiveViewTab } from '../types/liveDashboard';
@@ -107,6 +109,88 @@ describe('mapAreasToTiles', () => {
 
   it('returns an empty array for no areas', () => {
     expect(mapAreasToTiles([])).toEqual([]);
+  });
+});
+
+describe('mapAreasToTileGroups', () => {
+  const areas: LiveArea[] = [
+    {
+      id: 'living_room',
+      name: 'Living Room',
+      entities: [
+        { entityId: 'light.living_room', name: 'Living Room Light', domain: 'light', state: 'on' },
+      ],
+    },
+    {
+      id: 'kitchen',
+      name: 'Kitchen',
+      entities: [
+        { entityId: 'light.kitchen', name: 'Kitchen Light', domain: 'light', state: 'off' },
+        { entityId: 'sensor.kitchen_temp', name: 'Kitchen Temperature', domain: 'sensor', state: '21.4' },
+      ],
+    },
+  ];
+
+  it('keeps each area as its own group instead of flattening', () => {
+    const groups = mapAreasToTileGroups(areas);
+    expect(groups).toHaveLength(2);
+    expect(groups[0]).toEqual({
+      id: 'living_room',
+      name: 'Living Room',
+      tiles: [mapEntityToTile(areas[0].entities[0])],
+    });
+    expect(groups[1].tiles.map((t) => t.id)).toEqual(['light.kitchen', 'sensor.kitchen_temp']);
+  });
+
+  it('returns an empty array for no areas', () => {
+    expect(mapAreasToTileGroups([])).toEqual([]);
+  });
+});
+
+describe('filterTileGroupsForTab', () => {
+  const groups = mapAreasToTileGroups([
+    {
+      id: 'living_room',
+      name: 'Living Room',
+      entities: [
+        { entityId: 'climate.living_room', name: 'Living Room Thermostat', domain: 'climate', state: 'heat' },
+        { entityId: 'light.living_room', name: 'Living Room Light', domain: 'light', state: 'on' },
+      ],
+    },
+    {
+      id: 'kitchen',
+      name: 'Kitchen',
+      entities: [
+        { entityId: 'light.kitchen', name: 'Kitchen Light', domain: 'light', state: 'off' },
+      ],
+    },
+  ]);
+
+  it('filters to matching-domain tiles when the tab title matches a known keyword', () => {
+    const filtered = filterTileGroupsForTab(groups, 'Climate');
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].id).toBe('living_room');
+    expect(filtered[0].tiles.map((t) => t.id)).toEqual(['climate.living_room']);
+  });
+
+  it('drops groups left with no tiles after filtering', () => {
+    const filtered = filterTileGroupsForTab(groups, 'Climate');
+    expect(filtered.find((g) => g.id === 'kitchen')).toBeUndefined();
+  });
+
+  it('returns every group unfiltered when the tab title matches no known keyword', () => {
+    expect(filterTileGroupsForTab(groups, 'Overview')).toEqual(groups);
+  });
+
+  it('falls back to unfiltered groups if a matched keyword would filter out everything', () => {
+    const lightOnlyGroups = mapAreasToTileGroups([
+      {
+        id: 'kitchen',
+        name: 'Kitchen',
+        entities: [{ entityId: 'light.kitchen', name: 'Kitchen Light', domain: 'light', state: 'off' }],
+      },
+    ]);
+    expect(filterTileGroupsForTab(lightOnlyGroups, 'Climate')).toEqual(lightOnlyGroups);
   });
 });
 

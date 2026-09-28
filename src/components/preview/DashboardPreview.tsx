@@ -96,18 +96,19 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
       )}
 
       <div className="flex-1 flex overflow-hidden relative z-10">
-        <MockSidebar 
-          theme={theme} 
+        <MockSidebar
+          theme={theme}
           activeItem={sidebarItem}
           onSelectItem={setSidebarItem}
           previewMode={previewMode}
+          livePanels={live.available ? live.panels : undefined}
         />
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <SmartHomeDashboard
             theme={theme}
             previewMode={previewMode}
-            liveTiles={live.available ? live.tiles : undefined}
+            liveGroups={live.available ? live.tileGroups : undefined}
           />
         </main>
       </div>

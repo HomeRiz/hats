@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildAreas } from './haWebsocket.js';
+import { buildAreas, buildPanelList } from './haWebsocket.js';
 
 const AREA_REGISTRY = [
   { area_id: 'living_room', name: 'Living Room' },
@@ -124,5 +124,57 @@ describe('buildAreas', () => {
   it('excludes areas that end up with zero entities', () => {
     const areas = buildAreas(AREA_REGISTRY, [], [], []);
     expect(areas).toEqual([]);
+  });
+});
+
+describe('buildPanelList', () => {
+  const PANELS = {
+    config: { url_path: 'config', title: 'config', icon: 'mdi:cog', show_in_sidebar: true, component_name: 'config' },
+    map: { url_path: 'map', title: 'Map', icon: 'mdi:map', show_in_sidebar: true, component_name: 'lovelace' },
+    'smart-home': { url_path: 'smart-home', title: 'Smart Home', icon: 'mdi:home-automation', show_in_sidebar: true, component_name: 'lovelace' },
+    lovelace: { url_path: 'lovelace', title: null, icon: null, show_in_sidebar: true, component_name: 'lovelace' },
+    light: { url_path: 'light', title: 'light', icon: 'mdi:lamps', show_in_sidebar: false, component_name: 'light' },
+    history: { url_path: 'history', title: 'history', icon: 'mdi:history', show_in_sidebar: true, component_name: 'history' },
+    hacs: { url_path: 'hacs', title: 'HACS', icon: 'mdi:puzzle', show_in_sidebar: true, component_name: 'custom' },
+    local_hats_dev: { url_path: 'local_hats_dev', title: 'HATS', icon: 'mdi:hat-fedora', show_in_sidebar: true, component_name: 'app' },
+  };
+
+  it('keeps panels with show_in_sidebar and a real title', () => {
+    const list = buildPanelList(PANELS, null, null);
+    expect(list.map((p) => p.id)).toContain('smart-home');
+    expect(list.map((p) => p.id)).toContain('hacs');
+    expect(list.map((p) => p.id)).toContain('local_hats_dev');
+  });
+
+  it('excludes a panel with show_in_sidebar: false', () => {
+    const list = buildPanelList(PANELS, null, null);
+    expect(list.map((p) => p.id)).not.toContain('light');
+  });
+
+  it('excludes a panel with a null title', () => {
+    const list = buildPanelList(PANELS, null, null);
+    expect(list.map((p) => p.id)).not.toContain('lovelace');
+  });
+
+  it('excludes config (rendered as the pinned Settings item, not the scrollable list) and HA-default-hidden panels like history', () => {
+    const list = buildPanelList(PANELS, null, null);
+    expect(list.map((p) => p.id)).not.toContain('config');
+    expect(list.map((p) => p.id)).not.toContain('history');
+  });
+
+  it('carries id/title/icon/component through', () => {
+    const list = buildPanelList(PANELS, null, null);
+    const hacs = list.find((p) => p.id === 'hacs');
+    expect(hacs).toEqual({ id: 'hacs', title: 'HACS', icon: 'mdi:puzzle', component: 'custom' });
+  });
+
+  it('respects an explicit sidebar-panel-hidden list over the default-hidden set', () => {
+    const list = buildPanelList(PANELS, ['map'], null);
+    expect(list.map((p) => p.id)).not.toContain('map');
+  });
+
+  it('orders by the explicit sidebar-panel-order list when provided', () => {
+    const list = buildPanelList(PANELS, null, ['hacs', 'local_hats_dev', 'smart-home', 'map']);
+    expect(list.map((p) => p.id)).toEqual(['hacs', 'local_hats_dev', 'smart-home', 'map']);
   });
 });

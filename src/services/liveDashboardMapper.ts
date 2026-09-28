@@ -67,6 +67,63 @@ export function mapAreasToTiles(areas: LiveArea[]): LiveTile[] {
   return areas.flatMap((area) => area.entities.map(mapEntityToTile));
 }
 
+export interface LiveTileGroup {
+  id: string;
+  name: string;
+  tiles: LiveTile[];
+}
+
+export function mapAreasToTileGroups(areas: LiveArea[]): LiveTileGroup[] {
+  return areas.map((area) => ({
+    id: area.id,
+    name: area.name,
+    tiles: area.entities.map(mapEntityToTile),
+  }));
+}
+
+interface TabFilterRule {
+  keywords: string[];
+  matches: (tile: LiveTile) => boolean;
+}
+
+const TAB_FILTER_RULES: TabFilterRule[] = [
+  {
+    keywords: ['climate', 'thermostat', 'heat', 'hvac'],
+    matches: (tile) => tile.domain === 'climate' || /temperature|humidity/i.test(tile.title),
+  },
+  {
+    keywords: ['energy', 'power'],
+    matches: (tile) =>
+      /kwh|kw\b|watt|w\/|energy/i.test(tile.stateText) || /power|energy/i.test(tile.title),
+  },
+  {
+    keywords: ['light', 'lighting'],
+    matches: (tile) => tile.domain === 'light',
+  },
+  {
+    keywords: ['security', 'alarm', 'lock'],
+    matches: (tile) =>
+      tile.domain === 'alarm_control_panel' || tile.domain === 'lock' ||
+      /lock|door|window|alarm/i.test(tile.title),
+  },
+  {
+    keywords: ['media'],
+    matches: (tile) => tile.domain === 'media_player',
+  },
+];
+
+export function filterTileGroupsForTab(groups: LiveTileGroup[], tabTitle: string): LiveTileGroup[] {
+  const normalized = tabTitle.trim().toLowerCase();
+  const rule = TAB_FILTER_RULES.find((r) => r.keywords.some((kw) => normalized.includes(kw)));
+  if (!rule) return groups;
+
+  const filtered = groups
+    .map((group) => ({ ...group, tiles: group.tiles.filter(rule.matches) }))
+    .filter((group) => group.tiles.length > 0);
+
+  return filtered.length > 0 ? filtered : groups;
+}
+
 export interface LiveNavItem {
   id: string;
   label: string;
