@@ -1,0 +1,87 @@
+ios-light-mode-blue-red:
+  modes:
+    light: {}
+  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/basnijholt/lovelace-ios-themes@a37376d918fcfe4785be99910dc9a7200ac37da9/themes/homekit-bg-blue-red.jpg')
+  lovelace-background: var(--background-image)
+  primary-color: '#ff9409'
+  light-primary-color: '#2c2c2e'
+  primary-background-color: '#e5e5ea'
+  secondary-background-color: rgba(255, 255, 255, 0.9)
+  divider-color: rgba(142, 142, 147, 0.3)
+  accent-color: rgba(255, 159, 9, 1)
+  primary-text-color: '#464a47'
+  secondary-text-color: '#000000'
+  text-primary-color: '#FFF'
+  disabled-text-color: '#555'
+  text-dark-color: '#FFF'
+  sidebar-background-color: var(--primary-background-color)
+  sidebar-icon-color: var(--light-primary-color)
+  sidebar-text-color: var(--light-primary-color)
+  sidebar-selected-background-color: var(--primary-background-color)
+  sidebar-selected-icon-color: '#8e8e93'
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  state-icon-color: '#333333'
+  state-icon-active-color: rgba(255, 214, 10, 1)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  paper-item-icon-active-color: rgba(255, 214, 10, 1)
+  paper-slider-knob-color: '#FFFFFF'
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--paper-slider-knob-color)
+  paper-slider-active-color: '#007aff'
+  paper-slider-secondary-color: var(--paper-slider-knob-color)
+  paper-slider-container-color: rgba(255, 255, 255, 0.5)
+  paper-slider-font-color: '#000'
+  ha-slider-background: none !important
+  label-badge-background-color: '#23232E'
+  label-badge-text-color: '#F1F1F1'
+  label-badge-red: rgba(255, 149, 9, 0.7)
+  card-background-color: var(--secondary-background-color)
+  paper-listbox-background-color: var(--primary-background-color)
+  ha-card-border-radius: 20px
+  ha-card-background: rgba(245, 245, 245, 0.4)
+  paper-card-background-color: var(--ha-card-background)
+  rgb-card-background-color: rgb(245, 245, 245)
+  ha-card-border-width: 0
+  paper-toggle-button-checked-button-color: '#484848'
+  paper-toggle-button-checked-bar-color: '#484848'
+  paper-toggle-button-unchecked-button-color: var(--paper-toggle-button-checked-button-color)
+  paper-toggle-button-unchecked-bar-color: var(--disabled-text-color)
+  table-row-background-color: var(--primary-background-color)
+  table-row-alternative-background-color: var(--secondary-background-color)
+  switch-checked-color: '#30d257'
+  switch-checked-track-color: '#34c759'
+  switch-checked-button-color: '#FFF'
+  paper-dialog-background-color: rgba(200, 200, 200, 0.8)
+  paper-item-icon-color: '#333333'
+  more-info-header-background: rgba(230, 230, 230, 0.5)
+  lumo-body-text-color: var(--primary-text-color)
+  app-header-background-color: rgba(30, 2, 61, 0.4)
+  markdown-code-background-color: '#FFFFFF'
+  code-editor-background-color: '#FFF'
+  clear-background-color: var(--ha-card-background)
+  ha-color-form-background: rgba(0, 0, 0, 0)
+  ha-color-form-background-hover: rgba(255, 255, 255, 0.05)
+  ha-color-form-background-disabled: rgba(0, 0, 0, 0.1)
+  mcg-title-letter-spacing: .15em
+  mini-media-player-base-color: white
+  mini-media-player-icon-color: white
+  input-ink-color: var(--primary-text-color)
+  input-fill-color: transparent
+  input-disabled-fill-color: transparent
+  input-label-ink-color: var(--primary-text-color)
+  input-disabled-ink-color: var(--disabled-text-color)
+  input-dropdown-icon-color: var(--primary-text-color)
+  input-idle-line-color: var(--secondary-text-color)
+  input-hover-line-color: var(--secondary-text-color)
+  codemirror-property: var(--accent-color)
+  ha-color-primary-05: '#1a0800'
+  ha-color-primary-10: '#331100'
+  ha-color-primary-20: '#663300'
+  ha-color-primary-30: '#994400'
+  ha-color-primary-40: '#ff9409'
+  ha-color-primary-50: '#ff9f09'
+  ha-color-primary-60: '#ffb333'
+  ha-color-primary-70: '#ffcc66'
+  ha-color-primary-80: '#ffe099'
+  ha-color-primary-90: '#fff0cc'
+  ha-color-primary-95: '#fff8e6'

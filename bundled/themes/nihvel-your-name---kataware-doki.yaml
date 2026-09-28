@@ -1,0 +1,159 @@
+Your Name. - Kataware-doki:
+  ha-dialog-scrim-backdrop-filter: blur(18px)
+  ha-dialog-scrim-background: rgba(6, 7, 20, 0.58)
+  ha-font-family-body: '''Plus Jakarta Sans'', ''Figtree'', system-ui, Arial, sans-serif'
+  primary-font-family: '''Plus Jakarta Sans'', ''Figtree'', system-ui, Arial, sans-serif'
+  paper-font-common-base_-_font-family: var(--primary-font-family)
+  paper-font-common-code_-_font-family: '''JetBrains Mono'', ''Consolas'', monospace'
+  paper-font-body1_-_font-family: var(--primary-font-family)
+  paper-font-subhead_-_font-family: var(--primary-font-family)
+  paper-font-headline_-_font-family: var(--primary-font-family)
+  paper-font-caption_-_font-family: var(--primary-font-family)
+  paper-font-title_-_font-family: var(--primary-font-family)
+  ha-card-header-font-family: var(--primary-font-family)
+  ha-card-header-font-size: 15px
+  ha-card-header-letter-spacing: 0.01em
+  header-height: 40px
+  app-header-background-color: rgba(7, 8, 22, 0.64)
+  app-header-text-color: '#EAE6F8'
+  app-header-edit-background-color: rgba(18, 14, 44, 0.82)
+  app-header-edit-text-color: '#EAE6F8'
+  app-header-selection-bar-color: '#B48FFF'
+  lovelace-background: center / cover no-repeat url("/local/backgrounds/yourname.jpg") fixed
+  primary-color: '#B48FFF'
+  light-primary-color: '#CEBFFF'
+  dark-primary-color: '#8260D8'
+  accent-color: '#E8933A'
+  light-accent-color: '#F2B06A'
+  error-color: '#CF5070'
+  warning-color: '#E8933A'
+  success-color: '#64C9A0'
+  info-color: '#7AACF0'
+  primary-background-color: '#0A0B1E'
+  secondary-background-color: '#0E1030'
+  rgb-primary-background-color: 10, 11, 30
+  rgb-secondary-background-color: 14, 16, 48
+  primary-text-color: '#EAE6F8'
+  secondary-text-color: '#9A8DC0'
+  text-primary-color: var(--primary-text-color)
+  disabled-text-color: '#544A72'
+  text-accent-color: '#1C3557'
+  error-state-color: var(--error-color)
+  divider-color: rgba(180, 143, 255, 0.13)
+  markdown-code-background-color: rgba(10, 8, 26, 0.72)
+  sidebar-background-color: rgba(8, 8, 22, 0.62)
+  sidebar-icon-color: '#70629E'
+  sidebar-text-color: '#BCB2DE'
+  sidebar-selected-background-color: rgba(180, 143, 255, 0.16)
+  sidebar-selected-icon-color: '#CEBFFF'
+  sidebar-selected-text-color: '#EAE6F8'
+  ha-card-border-radius: 16px
+  ha-card-background: rgba(16, 12, 42, 0.50)
+  ha-card-box-shadow: 0 2px 28px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(180, 143, 255, 0.08)
+  ha-card-border-color: rgba(180, 143, 255, 0.11)
+  ha-card-border-width: 1px
+  ha-card-header-color: var(--primary-text-color)
+  card-background-color: rgba(16, 12, 42, 0.50)
+  paper-card-background-color: rgba(16, 12, 42, 0.50)
+  paper-card-header-color: var(--primary-text-color)
+  paper-listbox-background-color: rgba(8, 8, 22, 0.75)
+  rgb-card-background-color: 16, 12, 42
+  mdc-dialog-box-shadow: 0 8px 56px rgba(0, 0, 0, 0.60)
+  popup-background-color: rgba(12, 9, 32, 0.88)
+  input-fill-color: rgba(180, 143, 255, 0.07)
+  input-label-ink-color: var(--light-primary-color)
+  input-ink-color: var(--primary-text-color)
+  input-idle-line-color: rgba(180, 143, 255, 0.28)
+  input-hover-line-color: rgba(180, 143, 255, 0.58)
+  input-disabled-fill-color: rgba(255, 255, 255, 0.03)
+  input-disabled-ink-color: var(--disabled-text-color)
+  input-disabled-line-color: rgba(255, 255, 255, 0.06)
+  input-outlined-idle-border-color: rgba(180, 143, 255, 0.28)
+  input-outlined-hover-border-color: rgba(180, 143, 255, 0.62)
+  input-outlined-disabled-border-color: rgba(180, 143, 255, 0.10)
+  mdc-text-field-fill-color: rgba(12, 9, 30, 0.65)
+  mdc-text-field-ink-color: var(--primary-text-color)
+  mdc-text-field-label-ink-color: var(--secondary-text-color)
+  mdc-select-fill-color: rgba(12, 9, 30, 0.65)
+  mdc-select-ink-color: var(--primary-text-color)
+  mdc-select-label-ink-color: var(--secondary-text-color)
+  mdc-select-idle-line-color: rgba(180, 143, 255, 0.28)
+  mdc-select-hover-line-color: rgba(180, 143, 255, 0.58)
+  mdc-theme-primary: var(--primary-color)
+  mdc-theme-secondary: var(--accent-color)
+  mdc-theme-on-primary: '#FFFFFF'
+  mdc-theme-on-secondary: '#0A0B1E'
+  mdc-theme-surface: rgba(16, 12, 42, 0.80)
+  mdc-theme-background: var(--primary-background-color)
+  mdc-theme-error: var(--error-color)
+  paper-slider-knob-color: var(--primary-color)
+  paper-slider-knob-start-color: var(--primary-color)
+  paper-slider-pin-color: var(--primary-color)
+  paper-slider-active-color: var(--primary-color)
+  paper-slider-secondary-color: var(--light-primary-color)
+  paper-slider-disabled-active-color: var(--disabled-text-color)
+  paper-slider-disabled-secondary-color: var(--disabled-text-color)
+  paper-slider-container-color: rgba(180, 143, 255, 0.18)
+  paper-toggle-button-checked-button-color: '#F4F0FF'
+  paper-toggle-button-checked-bar-color: var(--primary-color)
+  paper-toggle-button-unchecked-button-color: '#B8AEDE'
+  paper-toggle-button-unchecked-bar-color: rgba(94, 82, 144, 0.44)
+  switch-checked-color: var(--primary-color)
+  switch-checked-button-color: '#FFFFFF'
+  switch-checked-track-color: var(--primary-color)
+  switch-unchecked-button-color: '#8276AA'
+  switch-unchecked-track-color: rgba(88, 74, 128, 0.40)
+  ha-switch-checked-background-color: var(--secondary-background-color)
+  ha-switch-checked-border-color: var(--secondary-background-color)
+  ha-switch-checked-thumb-background-color: var(--primary-color)
+  ha-switch-checked-thumb-border-color: var(--primary-color)
+  ha-switch-background-color: var(--secondary-background-color)
+  ha-switch-border-color: var(--secondary-background-color)
+  ha-switch-thumb-background-color: '#8276AA'
+  ha-switch-thumb-border-color: '#8276AA'
+  state-icon-color: var(--primary-color)
+  state-icon-active-color: '#E8933A'
+  state-icon-unavailable-color: var(--disabled-text-color)
+  state-on-color: var(--primary-color)
+  state-off-color: '#453C5E'
+  label-badge-background-color: rgba(180, 143, 255, 0.13)
+  label-badge-text-color: var(--primary-text-color)
+  label-badge-border-color: rgba(180, 143, 255, 0.22)
+  label-badge-red: '#CF5070'
+  label-badge-yellow: '#E8933A'
+  label-badge-green: '#64C9A0'
+  label-badge-blue: '#7AACF0'
+  label-badge-grey: '#544A72'
+  table-row-background-color: rgba(10, 8, 26, 0.50)
+  table-row-alternative-background-color: rgba(180, 143, 255, 0.04)
+  data-table-background-color: rgba(10, 8, 26, 0.58)
+  mdc-tab-text-label-color-default: var(--secondary-text-color)
+  paper-tabs-selection-bar-color: var(--primary-color)
+  energy-grid-consumption-color: '#7AACF0'
+  energy-grid-return-color: '#B48FFF'
+  energy-solar-color: '#E8933A'
+  energy-battery-in-color: '#64C9A0'
+  energy-battery-out-color: '#CEBFFF'
+  energy-home-color: '#BCB2DE'
+  energy-gas-color: '#F2B06A'
+  energy-water-color: '#6BC4D4'
+  ha-color-neutral-95: '#060714'
+  wa-color-surface-default: '#07081C'
+  ha-color-fill-primary-quiet-resting: rgba(180, 143, 255, 0.16)
+  ha-color-fill-primary-quiet-hover: rgba(180, 143, 255, 0.26)
+  ha-color-fill-primary-quiet-pressed: rgba(180, 143, 255, 0.34)
+  ha-color-fill-neutral-normal-resting: '#18143C'
+  ha-color-fill-neutral-normal-hover: '#201A4A'
+  ha-color-fill-neutral-quiet-resting: rgba(180, 143, 255, 0.06)
+  ha-color-fill-neutral-quiet-hover: rgba(180, 143, 255, 0.12)
+  ha-color-form-background-hover: '#130F35'
+  ha-color-border-neutral-quiet: var(--divider-color)
+  ha-color-border-neutral-default: rgba(180, 143, 255, 0.22)
+  wa-color-surface-border: var(--divider-color)
+  wa-color-neutral-fill-normal: rgba(180, 143, 255, 0.82)
+  ha-color-text-primary: var(--primary-text-color)
+  ha-color-text-secondary: var(--secondary-text-color)
+  ha-color-text-disabled: var(--disabled-text-color)
+  scrollbar-thumb-color: rgba(180, 143, 255, 0.22)
+  mdc-ripple-color: var(--primary-color)
+  mdc-ripple-press-opacity: '0.11'

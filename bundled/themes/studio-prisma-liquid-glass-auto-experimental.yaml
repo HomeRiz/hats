@@ -1,0 +1,355 @@
+Liquid Glass Auto (experimental):
+  primary-background-color: '#0a0d18'
+  secondary-background-color: '#0f1320'
+  card-background-color: rgba(20, 25, 40, 0.75)
+  ha-card-background: rgba(20, 25, 40, 0.75)
+  popup-background-color: '#0f1320'
+  app-header-background-color: rgba(10, 13, 24, 0.85)
+  app-header-text-color: '#ffffff'
+  sidebar-background-color: '#0a0d18'
+  mdc-theme-surface: '#0f1320'
+  mdc-dialog-content-background: '#0f1320'
+  mdc-dialog-scrim-color: rgba(0, 0, 0, 0.75)
+  ha-dialog-surface-background: '#0f1320'
+  mdc-snackbar-fill-color: '#0f1320'
+  mdc-snackbar-action-color: '#7ab8ff'
+  ha-toast-background-color: '#0f1320'
+  ha-toast-text-color: '#f5f7fa'
+  lovelace-background: center / cover no-repeat url("/local/liquid_glass/aurora.png") fixed, var(--primary-background-color)
+  primary-text-color: '#f5f7fa'
+  secondary-text-color: rgba(245, 247, 250, 0.65)
+  text-primary-color: '#ffffff'
+  disabled-text-color: rgba(245, 247, 250, 0.35)
+  primary-color: '#7ab8ff'
+  accent-color: '#ffb454'
+  light-primary-color: '#a8d0ff'
+  dark-primary-color: '#2a6cb8'
+  state-icon-color: rgba(245, 247, 250, 0.85)
+  state-icon-active-color: '#ffb454'
+  state-icon-unavailable-color: rgba(245, 247, 250, 0.25)
+  paper-item-icon-color: rgba(245, 247, 250, 0.75)
+  paper-item-icon-active-color: '#ffb454'
+  state-light-active-color: '#ffb454'
+  state-switch-active-color: '#7ab8ff'
+  state-binary_sensor-alerting-color: '#ff5a6e'
+  state-climate-heating-color: '#ff8b4a'
+  state-climate-cooling-color: '#7ab8ff'
+  state-cover-active-color: '#a8d0ff'
+  state-fan-active-color: '#64dcdc'
+  state-media_player-active-color: '#9d82e6'
+  state-person-active-color: '#4ad295'
+  state-lock-active-color: '#4ad295'
+  state-vacuum-active-color: '#7ab8ff'
+  success-color: '#4ad295'
+  warning-color: '#ffb454'
+  error-color: '#ff5a6e'
+  info-color: '#7ab8ff'
+  sidebar-icon-color: rgba(245, 247, 250, 0.55)
+  sidebar-text-color: rgba(245, 247, 250, 0.85)
+  sidebar-selected-icon-color: '#7ab8ff'
+  sidebar-selected-text-color: '#ffffff'
+  sidebar-selected-background-color: rgba(122, 184, 255, 0.12)
+  divider-color: rgba(255, 255, 255, 0.08)
+  outline-color: rgba(255, 255, 255, 0.1)
+  ha-card-border-radius: 22px
+  ha-card-border-width: 1px
+  ha-card-border-color: rgba(255, 255, 255, 0.1)
+  ha-card-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25)
+  switch-checked-color: '#7ab8ff'
+  switch-unchecked-color: rgba(255, 255, 255, 0.2)
+  paper-slider-active-color: '#7ab8ff'
+  paper-slider-knob-color: '#ffffff'
+  paper-slider-pin-color: '#7ab8ff'
+  mdc-theme-primary: '#7ab8ff'
+  transition-duration: 200ms
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  energy-grid-consumption-color: '#7ab8ff'
+  energy-grid-return-color: '#4ad295'
+  energy-solar-color: '#ffb454'
+  energy-battery-in-color: '#9d82e6'
+  energy-battery-out-color: '#ff8b4a'
+  energy-non-fossil-color: '#4ad295'
+  energy-gas-color: '#ff5a6e'
+  energy-water-color: '#64dcdc'
+  room-living-rgb: 255, 180, 84
+  room-bedroom-rgb: 157, 130, 230
+  room-office-rgb: 122, 184, 255
+  room-kitchen-rgb: 255, 139, 74
+  room-bathroom-rgb: 100, 220, 220
+  room-garden-rgb: 74, 210, 149
+  room-garage-rgb: 120, 120, 130
+  room-workshop-rgb: 255, 200, 100
+  mush-rgb-amber: 255, 180, 84
+  mush-rgb-blue: 122, 184, 255
+  mush-rgb-cyan: 100, 220, 220
+  mush-rgb-green: 74, 210, 149
+  mush-rgb-orange: 255, 139, 74
+  mush-rgb-pink: 255, 122, 168
+  mush-rgb-purple: 157, 130, 230
+  mush-rgb-red: 255, 90, 110
+  mush-rgb-yellow: 255, 200, 100
+  mush-rgb-disabled: 120, 120, 130
+  mush-control-border-radius: 20px
+  mush-control-height: 42px
+  mush-icon-border-radius: 16px
+  mush-card-primary-font-size: 15px
+  mush-card-secondary-font-size: 13px
+  bubble-main-background-color: rgba(255, 255, 255, 0.05)
+  bubble-button-border-radius: 20px
+  bubble-pop-up-border-radius: 26px
+  bubble-accent-color: '#7ab8ff'
+  primary-font-family: '''Inter'', system-ui, ''Segoe UI'', Roboto, sans-serif'
+  glass-bg: rgba(255, 255, 255, 0.05)
+  glass-bg-hover: rgba(255, 255, 255, 0.08)
+  glass-border: 1px solid rgba(255, 255, 255, 0.1)
+  glass-blur: blur(30px) saturate(1.4)
+  glass-radius: 22px
+  glass-radius-lg: 26px
+  glass-radius-pill: 100px
+  glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25)
+  glass-glow-warm: linear-gradient(135deg, rgba(255, 180, 84, 0.22), rgba(255, 200, 140, 0.08))
+  glass-glow-cool: linear-gradient(135deg, rgba(122, 184, 255, 0.22), rgba(100, 220, 220, 0.08))
+  glass-glow-violet: linear-gradient(135deg, rgba(157, 130, 230, 0.22), rgba(190, 150, 230, 0.08))
+  glass-glow-mint: linear-gradient(135deg, rgba(74, 210, 149, 0.22), rgba(120, 230, 180, 0.08))
+  card-mod-theme: Liquid Glass Auto (experimental)
+  card-mod-card: |
+    :where(ha-card) {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: var(--glass-radius);
+      box-shadow: var(--glass-shadow);
+      transition: all var(--transition-duration) var(--transition-timing-function);
+    }
+    :where(ha-card:hover) {
+      background: var(--glass-bg-hover);
+    }
+    :host(.type-heading) ha-card,
+    :host(hui-heading-card) ha-card {
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      box-shadow: none;
+    }
+  modes:
+    light:
+      primary-background-color: '#f5f3ee'
+      secondary-background-color: '#ffffff'
+      card-background-color: rgba(255, 255, 255, 0.85)
+      ha-card-background: rgba(255, 255, 255, 0.85)
+      popup-background-color: '#ffffff'
+      app-header-background-color: rgba(245, 243, 238, 0.92)
+      app-header-text-color: '#1a1d24'
+      sidebar-background-color: '#fafaf7'
+      mdc-theme-surface: '#ffffff'
+      mdc-dialog-content-background: '#ffffff'
+      mdc-dialog-scrim-color: rgba(0, 0, 0, 0.45)
+      ha-dialog-surface-background: '#ffffff'
+      mdc-snackbar-fill-color: '#ffffff'
+      mdc-snackbar-action-color: '#3a7fcf'
+      ha-toast-background-color: '#ffffff'
+      ha-toast-text-color: '#1a1d24'
+      primary-text-color: '#1a1d24'
+      secondary-text-color: rgba(26, 29, 36, 0.65)
+      text-primary-color: '#ffffff'
+      disabled-text-color: rgba(26, 29, 36, 0.35)
+      primary-color: '#2a6cb8'
+      accent-color: '#d97a3a'
+      error-color: '#c4334a'
+      state-icon-color: rgba(26, 29, 36, 0.85)
+      state-icon-active-color: '#d97a3a'
+      paper-item-icon-color: rgba(26, 29, 36, 0.75)
+      paper-item-icon-active-color: '#d97a3a'
+      sidebar-icon-color: rgba(26, 29, 36, 0.55)
+      sidebar-text-color: rgba(26, 29, 36, 0.85)
+      sidebar-selected-icon-color: '#3a7fcf'
+      sidebar-selected-text-color: '#0a0d18'
+      sidebar-selected-background-color: rgba(58, 127, 207, 0.1)
+      divider-color: rgba(0, 0, 0, 0.08)
+      outline-color: rgba(0, 0, 0, 0.1)
+      ha-card-border-color: rgba(0, 0, 0, 0.06)
+      ha-card-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06)
+      switch-checked-color: '#3a7fcf'
+      switch-unchecked-color: rgba(0, 0, 0, 0.2)
+      paper-slider-active-color: '#3a7fcf'
+      mdc-theme-primary: '#3a7fcf'
+      glass-bg: rgba(255, 255, 255, 0.65)
+      glass-bg-hover: rgba(255, 255, 255, 0.85)
+      glass-border: 1px solid rgba(0, 0, 0, 0.08)
+      glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06)
+      mdc-text-field-fill-color: rgba(0, 0, 0, 0.05)
+      mdc-text-field-disabled-fill-color: rgba(0, 0, 0, 0.02)
+      mdc-text-field-ink-color: '#1a1d24'
+      mdc-text-field-label-ink-color: rgba(26, 29, 36, 0.65)
+      mdc-text-field-idle-line-color: rgba(0, 0, 0, 0.3)
+      mdc-text-field-hover-line-color: rgba(0, 0, 0, 0.5)
+      mdc-text-field-disabled-ink-color: rgba(26, 29, 36, 0.35)
+      mdc-select-fill-color: rgba(0, 0, 0, 0.05)
+      mdc-select-ink-color: '#1a1d24'
+      mdc-select-label-ink-color: rgba(26, 29, 36, 0.65)
+      mdc-select-idle-line-color: rgba(0, 0, 0, 0.3)
+      mdc-select-disabled-ink-color: rgba(26, 29, 36, 0.35)
+      mdc-list-item-text-color: '#1a1d24'
+      mdc-list-item-graphic-color: rgba(26, 29, 36, 0.7)
+      mwc-list-item-text-color: '#1a1d24'
+      paper-listbox-background-color: '#ffffff'
+      paper-listbox-color: '#1a1d24'
+      paper-input-container-color: rgba(26, 29, 36, 0.65)
+      paper-input-container-input-color: '#1a1d24'
+      paper-input-container-focus-color: '#3a7fcf'
+      input-fill-color: rgba(0, 0, 0, 0.05)
+      input-ink-color: '#1a1d24'
+      input-label-ink-color: rgba(26, 29, 36, 0.65)
+      input-idle-line-color: rgba(0, 0, 0, 0.3)
+      input-hover-line-color: rgba(0, 0, 0, 0.5)
+      input-outlined-idle-border-color: rgba(0, 0, 0, 0.2)
+      input-outlined-hover-border-color: rgba(0, 0, 0, 0.4)
+      input-disabled-fill-color: rgba(0, 0, 0, 0.02)
+      input-disabled-ink-color: rgba(26, 29, 36, 0.35)
+      input-disabled-line-color: rgba(0, 0, 0, 0.15)
+      mdc-text-field-outlined-idle-border-color: rgba(0, 0, 0, 0.2)
+      mdc-text-field-outlined-hover-border-color: rgba(0, 0, 0, 0.4)
+      mdc-text-field-outlined-disabled-border-color: rgba(0, 0, 0, 0.1)
+      mdc-menu-surface-fill-color: '#ffffff'
+      mdc-theme-text-primary-on-background: '#1a1d24'
+      mdc-theme-text-secondary-on-background: rgba(26, 29, 36, 0.65)
+      mdc-theme-text-hint-on-background: rgba(26, 29, 36, 0.5)
+      mdc-theme-text-disabled-on-background: rgba(26, 29, 36, 0.35)
+      mdc-list-item-hover-state-layer-color: rgba(0, 0, 0, 0.06)
+      mdc-list-item-hover-state-layer-opacity: '1'
+      mdc-list-item-focus-state-layer-color: rgba(0, 0, 0, 0.1)
+      mdc-button-disabled-fill-color: rgba(0, 0, 0, 0.05)
+      mdc-button-disabled-ink-color: rgba(26, 29, 36, 0.35)
+      mdc-button-outline-color: rgba(0, 0, 0, 0.2)
+      color-scheme: light
+      wa-color-surface-default: '#ffffff'
+      wa-color-surface-raised: '#ffffff'
+      wa-color-surface-lowered: '#f5f3ee'
+      wa-color-text-normal: '#1a1d24'
+      wa-color-text-quiet: rgba(26, 29, 36, 0.65)
+      wa-color-neutral-fill-quiet: rgba(0, 0, 0, 0.05)
+      wa-color-neutral-fill-normal: rgba(0, 0, 0, 0.08)
+      wa-color-neutral-border-normal: rgba(0, 0, 0, 0.2)
+      wa-color-brand-fill-normal: '#3a7fcf'
+      wa-color-brand-fill-loud: '#1d4f8f'
+      wa-color-brand-on-loud: '#ffffff'
+      wa-color-brand-text-normal: '#3a7fcf'
+      ha-color-form-background: rgba(0, 0, 0, 0.05)
+      ha-color-form-background-hover: rgba(0, 0, 0, 0.08)
+      ha-color-form-background-disabled: rgba(0, 0, 0, 0.02)
+      ha-color-border-neutral-quiet: rgba(0, 0, 0, 0.1)
+      ha-color-border-neutral-normal: rgba(0, 0, 0, 0.2)
+      ha-color-border-neutral-loud: rgba(0, 0, 0, 0.3)
+      ha-color-border-danger-normal: var(--error-color)
+      ha-color-text-primary: var(--primary-text-color)
+      ha-color-text-secondary: var(--secondary-text-color)
+      ha-color-neutral-60: rgba(26, 29, 36, 0.5)
+      md-sys-color-surface: var(--popup-background-color)
+      md-sys-color-surface-container: var(--popup-background-color)
+      md-sys-color-surface-container-low: var(--primary-background-color)
+      md-sys-color-surface-container-high: var(--secondary-background-color)
+      md-sys-color-surface-container-highest: var(--card-background-color)
+      md-sys-color-surface-variant: var(--card-background-color)
+      md-sys-color-on-surface: var(--primary-text-color)
+      md-sys-color-on-surface-variant: var(--secondary-text-color)
+      md-sys-color-primary: var(--primary-color)
+      md-sys-color-on-primary: var(--text-primary-color)
+      md-sys-color-secondary-container: var(--sidebar-selected-background-color)
+      md-sys-color-on-secondary-container: var(--primary-color)
+      md-sys-color-outline: var(--outline-color)
+      md-sys-color-outline-variant: var(--divider-color)
+      md-sys-color-background: var(--primary-background-color)
+      md-sys-color-on-background: var(--primary-text-color)
+      md-list-item-label-text-color: var(--primary-text-color)
+      md-list-item-supporting-text-color: var(--secondary-text-color)
+      md-list-item-leading-icon-color: var(--state-icon-color)
+      md-list-item-container-color: transparent
+  mdc-text-field-fill-color: rgba(255, 255, 255, 0.05)
+  mdc-text-field-disabled-fill-color: rgba(255, 255, 255, 0.02)
+  mdc-text-field-ink-color: '#f5f7fa'
+  mdc-text-field-label-ink-color: rgba(245, 247, 250, 0.65)
+  mdc-text-field-idle-line-color: rgba(255, 255, 255, 0.3)
+  mdc-text-field-hover-line-color: rgba(255, 255, 255, 0.5)
+  mdc-text-field-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-select-fill-color: rgba(255, 255, 255, 0.05)
+  mdc-select-ink-color: '#f5f7fa'
+  mdc-select-label-ink-color: rgba(245, 247, 250, 0.65)
+  mdc-select-idle-line-color: rgba(255, 255, 255, 0.3)
+  mdc-select-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-list-item-text-color: '#f5f7fa'
+  mdc-list-item-graphic-color: rgba(245, 247, 250, 0.7)
+  mwc-list-item-text-color: '#f5f7fa'
+  paper-listbox-background-color: '#0f1320'
+  paper-listbox-color: '#f5f7fa'
+  paper-input-container-color: rgba(245, 247, 250, 0.65)
+  paper-input-container-input-color: '#f5f7fa'
+  paper-input-container-focus-color: '#7ab8ff'
+  input-fill-color: rgba(255, 255, 255, 0.05)
+  input-ink-color: '#f5f7fa'
+  input-label-ink-color: rgba(245, 247, 250, 0.65)
+  input-idle-line-color: rgba(255, 255, 255, 0.3)
+  input-hover-line-color: rgba(255, 255, 255, 0.5)
+  input-outlined-idle-border-color: rgba(255, 255, 255, 0.2)
+  input-outlined-hover-border-color: rgba(255, 255, 255, 0.4)
+  input-disabled-fill-color: rgba(255, 255, 255, 0.02)
+  input-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  input-disabled-line-color: rgba(255, 255, 255, 0.15)
+  mdc-text-field-outlined-idle-border-color: rgba(255, 255, 255, 0.2)
+  mdc-text-field-outlined-hover-border-color: rgba(255, 255, 255, 0.4)
+  mdc-text-field-outlined-disabled-border-color: rgba(255, 255, 255, 0.1)
+  mdc-menu-surface-fill-color: '#0f1320'
+  mdc-theme-text-primary-on-background: '#f5f7fa'
+  mdc-theme-text-secondary-on-background: rgba(245, 247, 250, 0.65)
+  mdc-theme-text-hint-on-background: rgba(245, 247, 250, 0.5)
+  mdc-theme-text-disabled-on-background: rgba(245, 247, 250, 0.35)
+  mdc-list-item-hover-state-layer-color: rgba(255, 255, 255, 0.08)
+  mdc-list-item-hover-state-layer-opacity: '1'
+  mdc-list-item-focus-state-layer-color: rgba(255, 255, 255, 0.12)
+  mdc-button-disabled-fill-color: rgba(255, 255, 255, 0.05)
+  mdc-button-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-button-outline-color: rgba(255, 255, 255, 0.2)
+  color-scheme: dark
+  wa-color-surface-default: '#0f1320'
+  wa-color-surface-raised: '#141928'
+  wa-color-surface-lowered: '#0a0d18'
+  wa-color-text-normal: '#f5f7fa'
+  wa-color-text-quiet: rgba(245, 247, 250, 0.65)
+  wa-color-neutral-fill-quiet: rgba(255, 255, 255, 0.05)
+  wa-color-neutral-fill-normal: rgba(255, 255, 255, 0.08)
+  wa-color-neutral-border-normal: rgba(255, 255, 255, 0.2)
+  wa-color-brand-fill-normal: '#7ab8ff'
+  wa-color-brand-fill-loud: '#a8d0ff'
+  wa-color-brand-on-loud: '#0a0d18'
+  wa-color-brand-text-normal: '#7ab8ff'
+  ha-color-form-background: rgba(255, 255, 255, 0.05)
+  ha-color-form-background-hover: rgba(255, 255, 255, 0.08)
+  ha-color-form-background-disabled: rgba(255, 255, 255, 0.02)
+  ha-color-border-neutral-quiet: rgba(255, 255, 255, 0.1)
+  ha-color-border-neutral-normal: rgba(255, 255, 255, 0.2)
+  ha-color-border-neutral-loud: rgba(255, 255, 255, 0.3)
+  ha-color-border-danger-normal: var(--error-color)
+  ha-color-text-primary: var(--primary-text-color)
+  ha-color-text-secondary: var(--secondary-text-color)
+  ha-color-neutral-60: rgba(245, 247, 250, 0.5)
+  md-sys-color-surface: var(--popup-background-color)
+  md-sys-color-surface-container: var(--popup-background-color)
+  md-sys-color-surface-container-low: var(--primary-background-color)
+  md-sys-color-surface-container-high: var(--secondary-background-color)
+  md-sys-color-surface-container-highest: var(--card-background-color)
+  md-sys-color-surface-variant: var(--card-background-color)
+  md-sys-color-on-surface: var(--primary-text-color)
+  md-sys-color-on-surface-variant: var(--secondary-text-color)
+  md-sys-color-primary: var(--primary-color)
+  md-sys-color-on-primary: var(--text-primary-color)
+  md-sys-color-secondary-container: var(--sidebar-selected-background-color)
+  md-sys-color-on-secondary-container: var(--primary-color)
+  md-sys-color-outline: var(--outline-color)
+  md-sys-color-outline-variant: var(--divider-color)
+  md-sys-color-background: var(--primary-background-color)
+  md-sys-color-on-background: var(--primary-text-color)
+  md-list-item-label-text-color: var(--primary-text-color)
+  md-list-item-supporting-text-color: var(--secondary-text-color)
+  md-list-item-leading-icon-color: var(--state-icon-color)
+  md-list-item-container-color: transparent

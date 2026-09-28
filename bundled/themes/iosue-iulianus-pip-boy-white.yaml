@@ -1,0 +1,288 @@
+Pip-Boy White:
+  background-image: none
+  primary-background-color: '#0A0A0A'
+  secondary-background-color: '#0A0A0A'
+  app-header-background-color: rgba(8, 8, 8, 0.90)
+  ha-card-background: rgba(18, 18, 18, 0.80)
+  app-theme-color: '#000000'
+  lovelace-background: var(--background-image)
+  light-primary-color: '#E0E8E0'
+  divider-color: rgba(120, 130, 120, 0.4)
+  accent-color: var(--primary-color)
+  primary-text-color: rgba(224, 232, 224, 0.90)
+  secondary-text-color: rgba(160, 172, 160, 0.96)
+  text-primary-color: var(--primary-text-color)
+  disabled-text-color: rgba(80, 90, 80, 0.5)
+  text-dark-color: var(--primary-text-color)
+  sidebar-background-color: var(--secondary-background-color)
+  sidebar-icon-color: var(--light-primary-color)
+  sidebar-text-color: var(--light-primary-color)
+  sidebar-selected-background-color: var(--primary-background-color)
+  sidebar-selected-icon-color: var(--primary-text-color)
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  state-icon-color: var(--primary-text-color)
+  state-icon-active-color: var(--yellow-color)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  state-inactive-color: var(--disabled-text-color)
+  paper-item-icon-active-color: var(--state-icon-active-color)
+  paper-slider-knob-color: '#E0E8E0'
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--paper-slider-knob-color)
+  paper-slider-active-color: '#E0E8E0'
+  paper-slider-secondary-color: var(--paper-slider-knob-color)
+  paper-slider-container-color: rgba(224, 232, 224, 0.20)
+  paper-slider-font-color: '#0A0A0A'
+  ha-slider-background: none !important
+  label-badge-background-color: '#141414'
+  label-badge-text-color: '#E0E8E0'
+  label-badge-red: rgba(255, 106, 0, 0.7)
+  card-background-color: var(--secondary-background-color)
+  paper-listbox-background-color: var(--primary-background-color)
+  ha-card-border-radius: 2px
+  ha-card-features-border-radius: 2px
+  paper-card-background-color: var(--ha-card-background)
+  rgb-card-background-color: rgb(10, 10, 10)
+  ha-card-border-width: 0
+  ha-card-backdrop-filter: blur(8px)
+  ha-card-box-shadow: |
+    0 0 0 1px rgba(224, 232, 224, 0.20), 0 0 8px 0 rgba(224, 232, 224, 0.08) inset, 0 0 2px 0 rgba(0, 0, 0, 0.80)
+  paper-toggle-button-checked-button-color: '#E0E8E0'
+  paper-toggle-button-checked-bar-color: '#505850'
+  paper-toggle-button-unchecked-button-color: var(--paper-toggle-button-checked-button-color)
+  paper-toggle-button-unchecked-bar-color: var(--disabled-text-color)
+  table-row-background-color: var(--primary-background-color)
+  table-row-alternative-background-color: var(--secondary-background-color)
+  switch-checked-track-color: var(--green-color)
+  switch-checked-button-color: '#E0E8E0'
+  switch-unchecked-track-color: var(--disabled-text-color)
+  switch-unchecked-button-color: '#505850'
+  ha-dialog-surface-backdrop-filter: var(--ha-card-backdrop-filter)
+  dialog-box-shadow: var(--ha-card-box-shadow)
+  ha-dialog-surface-background: var(--ha-card-background)
+  ha-dialog-scrim-backdrop-filter: none
+  app-header-backdrop-filter: var(--ha-card-backdrop-filter)
+  app-header-edit-background-color: rgba(0, 0, 0, 0.2)
+  red-color: '#BB313D'
+  pink-color: '#BB313D'
+  purple-color: '#505850'
+  indigo-color: '#505850'
+  blue-color: '#E0E8E0'
+  light-blue-color: '#F0F4F0'
+  cyan-color: '#F0F4F0'
+  teal-color: '#A0ACA0'
+  green-color: '#E0E8E0'
+  yellow-color: '#F8FFF8'
+  orange-color: '#FF6A00'
+  brown-color: '#383838'
+  primary-color: var(--green-color)
+  ha-color-primary-05: '#141414'
+  ha-color-primary-10: '#282828'
+  ha-color-primary-20: '#505050'
+  ha-color-primary-30: '#909090'
+  ha-color-primary-40: '#E0E8E0'
+  ha-color-primary-50: '#ECEFF0'
+  ha-color-primary-60: '#F2F4F2'
+  ha-color-primary-70: '#F6F8F6'
+  ha-color-primary-80: '#F9FAF9'
+  ha-color-primary-90: '#FCFCFC'
+  ha-color-primary-95: '#FEFEFE'
+  paper-dialog-background-color: rgba(10, 10, 10, 0.92)
+  paper-item-icon-color: '#E0E8E0'
+  more-info-header-background: rgba(8, 8, 8, 0.90)
+  lumo-body-text-color: var(--primary-text-color)
+  markdown-code-background-color: '#141414'
+  code-editor-background-color: '#0A0A0A'
+  clear-background-color: var(--ha-card-background)
+  mdc-theme-surface: var(--secondary-background-color)
+  material-background-color: var(--secondary-background-color)
+  mdc-checkbox-unchecked-color: '#505850'
+  mdc-radio-unchecked-color: '#505850'
+  mdc-typography-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-body1-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-body2-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-subtitle1-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-subtitle2-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-headline6-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-button-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-caption-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mdc-typography-overline-font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  paper-font-common-base_-_font-family: '"Share Tech Mono", "Courier New", "VT323", monospace'
+  mcg-title-letter-spacing: .15em
+  mini-media-player-base-color: '#E0E8E0'
+  mini-media-player-icon-color: '#E0E8E0'
+  input-ink-color: var(--primary-text-color)
+  input-fill-color: transparent
+  input-disabled-fill-color: transparent
+  input-label-ink-color: var(--primary-text-color)
+  input-disabled-ink-color: var(--disabled-text-color)
+  input-dropdown-icon-color: var(--primary-text-color)
+  input-idle-line-color: var(--secondary-text-color)
+  input-hover-line-color: var(--secondary-text-color)
+  codemirror-property: var(--accent-color)
+  md-list-container-color: none
+  wa-border-style: none
+  wa-shadow-m: var(--ha-card-box-shadow)
+  wa-border-radius-s: 2px
+  wa-border-radius-m: 2px
+  ha-color-on-neutral-normal: var(--primary-text-color)
+  wa-color-neutral-fill-normal: rgba(224, 232, 224, 0.08)
+  card-mod-theme: Pip-Boy White
+  card-mod-root: |
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+    :host {
+      font-family: "Share Tech Mono", "Courier New", "VT323", monospace !important;
+      letter-spacing: 0.05em;
+    }
+    * {
+      font-family: "Share Tech Mono", "Courier New", "VT323", monospace !important;
+      letter-spacing: 0.05em;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center,
+        transparent 60%,
+        rgba(0, 0, 0, 0.40) 100%);
+      pointer-events: none;
+      z-index: 9999;
+    }
+  card-mod-drawer: |
+    .mdc-drawer {
+      background-color: rgba(8, 8, 8, 0.92) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.08) 0px,
+        rgba(0, 0, 0, 0.08) 1px,
+        transparent 1px,
+        transparent 2px
+      ) !important;
+    }
+  card-mod-sidebar: |
+    :host {
+      background: none !important;
+    }
+
+    ha-md-list-item,
+    ha-md-list-item.selected::before {
+      border-radius: 2px !important;
+    }
+  card-mod-card-yaml: |
+    .: |
+      ha-card {
+        backdrop-filter: unset !important;
+      }
+      ha-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        backdrop-filter: var(--ha-card-backdrop-filter);
+        z-index: -1;
+        pointer-events: none;
+        border-radius: inherit;
+        box-shadow: var(--ha-card-box-shadow);
+      }
+      :host(hui-heading-card) ha-card {
+        background: none !important;
+        backdrop-filter: none !important;
+        border: none !important;
+        border-top: 1px solid rgba(224, 232, 224, 0.60) !important;
+        border-right: 1px solid rgba(224, 232, 224, 0.35) !important;
+        padding-top: 24px !important;
+        padding-right: 8px !important;
+      }
+      :host(hui-heading-card) ha-card::before {
+        content: none !important;
+      }
+      :host(hui-heading-card) ha-card::after {
+        content: none !important;
+      }
+
+      :host(hui-heading-card) {
+        text-shadow: 0 0 8px rgba(224, 232, 224, 0.60),
+                     0 0 2px rgba(224, 232, 224, 0.80) !important;
+      }
+
+      .mdc-data-table,
+      .mdc-data-table__row,
+      .mdc-data-table__header-cell,
+      ha-sankey-chart {
+        background: none !important;
+      }
+
+      ha-card.text-only {
+        background: none !important;
+        backdrop-filter: none !important;
+        overflow: visible;
+      }
+      ha-card.text-only::before {
+        content: none !important;
+      }
+
+      :host(mushroom-title-card) ha-card {
+        background: none !important;
+        backdrop-filter: none !important;
+      }
+      :host(mushroom-title-card) ha-card::before {
+        content: none !important;
+      }
+
+      :host(mushroom-chips-card) ha-card {
+        background: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+      }
+      :host(mushroom-chips-card) ha-card::before {
+        content: none !important;
+        background: none !important;
+        backdrop-filter: none !important;
+      }
+
+      ha-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.18) 0px,
+          rgba(0, 0, 0, 0.18) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+        z-index: 0;
+        pointer-events: none;
+        border-radius: inherit;
+      }
+
+      ha-card {
+        border: 1px solid rgba(224, 232, 224, 0.18) !important;
+      }
+
+    hui-card-features $:
+      hui-card-feature $:
+        hui-target-humidity-card-feature $:
+          ha-control-slider$: |
+            .slider .slider-track-bar {
+              border-radius: 0px !important;
+            }
+        service-call $:
+          custom-feature-slider $: |
+            .default .thumb {
+              border-radius: 0px !important;
+            }
+        hui-cover-position-card-feature $:
+          ha-control-slider$: |
+            .slider .slider-track-bar {
+              border-radius: 0px !important;
+            }
+        hui-cover-tilt-position-card-feature $:
+          ha-control-slider$: |
+            .slider .slider-track-bar {
+              border-radius: 0px !important;
+            }
+        hui-light-brightness-card-feature $:
+          ha-control-slider$: |
+            .slider .slider-track-bar {
+              border-radius: 0px !important;
+            }

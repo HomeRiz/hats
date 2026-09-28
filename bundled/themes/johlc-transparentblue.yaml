@@ -1,0 +1,126 @@
+transparentblue:
+  main-color: rgba(14,14,112, 1)
+  main-color-tp: rgba(14,14,112, .2)
+  main-color-tp-less: rgba(3,3,30, .35)
+  main-color-very-tp: rgba(14,14,112, .05)
+  main-color-less-tp: rgba(14,14,112, 0.75)
+  main-color-2: rgba(3,3,50, 1)
+  main-color-2-tp: rgba(3,3,50, .75)
+  main-color-3: rgba(3,3,30, 1)
+  main-color-3-tp: rgba(3,3,30, 0.3)
+  main-color-4-less-tp: rgba(5,5,75, 0.95)
+  active-color: red
+  text-color: white
+  text-dark-color: '#A0A0A0'
+  warning-color-1: '#ff8a2c'
+  primary-background-color: var(--main-color-2)
+  mdc-dialog-scrim-color: rgba(0,0,0,.75)
+  mdc-theme-on-primary: var(--main-color-3)
+  markdown-code-background-color: var(--main-color-2)
+  material-background-color: var(--main-color-2-tp)
+  material-primary-color: red
+  accent-color: var(--primary-color)
+  border-color: transparent
+  input-dropdown-icon-color: var(--primary-color)
+  mdc-radio-unchecked-color: rgb(255,255,255,0.5)
+  ha-color-fill-neutral-quiet-resting: var(--main-color)
+  ha-color-fill-primary-normal-resting: var(--main-color)
+  ha-color-fill-primary-quiet-resting: var(--main-color-2)
+  ha-color-on-neutral-quiet: var(--text-color)
+  ha-color-text-secondary: var(--text-color)
+  ha-color-fill-warning-quiet-resting: var(--warning-color-1)
+  ha-color-form-background: var(--main-color-very-tp)
+  ha-color-form-background-hover: var(--main-color-tp)
+  clear-background-color: var(--accent-color)
+  primary-color: ''
+  text-primary-color: ''
+  text-accent-color: var(--text-color)
+  primary-text-color: var(--text-color)
+  ha-card-header-font-size: 16px
+  app-header-text-color: white
+  ha-card-header-color: ''
+  mdc-theme-on-secondary: black
+  disabled-text-color: var(--text-dark-color)
+  mdc-theme-primary: var(--text-color)
+  ha-label-badge-label-color: black
+  dark-primary-opacity: '1'
+  mdc-select-label-ink-color: var(--text-color)
+  mdc-select-ink-color: var(--text-color)
+  wa-color-text-normal: var(--text-color)
+  ha-color-on-neutral-normal: var(--text-color)
+  wa-color-neutral-fill-normal: var(--accent-color)
+  mdc-dialog-content-ink-color: var(--text-color)
+  input-label-ink-color: var(--text-color)
+  mdc-text-field-idle-line-color: var(--text-color)
+  icon-color: var(--text-color)
+  state-icon-color: var(--icon-color)
+  paper-item-icon-color: var(--icon-color)
+  mdc-text-field-ink-color: var(--text-color)
+  mdc-text-field-label-ink-color: var(--text-color)
+  mdc-checkbox-unchecked-color: var(--icon-color)
+  app-header-background-color: var(--main-color-less-tp)
+  app-header-edit-background-color: var(--main-color-2)
+  app-header-edit-text-color: var(--text-color)
+  app-header-selection-bar-color: var(--primary-color)
+  ha-card-background: var(--main-color-tp)
+  background-card-color: red
+  card-background-color: var(--main-color-4-less-tp)
+  paper-listbox-background-color: var(--main-color-2)
+  mdc-theme-surface: var(--main-color-less-tp)
+  round-slider-path-color: var(--main-color-less-tp)
+  mini-media-player-button-color: var(--main-color-tp)
+  mini-media-player-overlay-color: var(--main-color-tp)
+  entities-divider-color: var(--accent-color)
+  ha-card-border-color: transparent
+  data-table-background-color: var(--main-color-tp)
+  paper-listbox-color: var(--text-color)
+  light-primary-color: var(--text-dark-color)
+  secondary-text-color: var(--text-color)
+  paper-dialog-button-color: var(--text-color)
+  secondary-background-color: var(--main-color-3)
+  ha-card-border-radius: 6px
+  ha-picture-card-background-color: var(--main-color-tp)
+  paper-card-header-color: ''
+  divider-color: ''
+  code-editor-background-color: rgba(25,25,25, 1)
+  table-row-alternative-background-color: var(--main-color-3-tp)
+  table-row-background-color: rgba(25,25,25, 1)
+  sidebar-icon-color: var(--icon-color)
+  sidebar-selected-text-color: var(--text-color)
+  sidebar-background-color: transparent
+  sidebar-menu-button-background-color: transparent
+  app-drawer-scrim-background: rgba(0, 0, 0, .75)
+  switch-checked-button-color: ''
+  switch-unchecked-button-color: var(--icon-color)
+  switch-unchecked-track-color: var(--main-color-tp)
+  paper-slider-active-color: dodgerblue
+  paper-slider-knob-color: var(--text-color)
+  paper-slider-container-color: var(--text-color)
+  paper-slider-knob-start-color: var(--text-color)
+  paper-slider-pin-color: var(--main-color-2)
+  paper-slider-pin-start-color: var(--main-color-2)
+  label-badge-text-color: var(--text-color)
+  label-badge-background-color: var(--main-color)
+  ha-label-badge-color: ''
+  mdc-button-outline-color: var(--text-color)
+  ha-card-box-shadow: 2px 2px 10px 2px rgba(3,3,30, 0.75)
+  hacs-badge-color: var(--primary-color)
+  hacs-status-installed: var(--text-color)
+  hacs-status-pending-restart: var(--text-dark-color)
+  hacs-status-pending-update: var(--primary-color)
+  dialog-backdrop-filter: blur(2.5px)
+  mdc-select-fill-color: var(--main-color-very-tp)
+  mdc-select-dropdown-icon-color: var(--text-color)
+  ha-bar-background-color: var(--main-color)
+  restriction-regular-lock-color: var(--accent-color)
+  restriction-success-lock-color: transparent
+  restriction-lock-icon-size: 20px
+  mmp-artwork-opacity: '0'
+  mini-media-player-background-opacity: '0'
+  mdc-text-field-fill-color: transparent
+  input-fill-color: var(--main-color-less-tp)
+  mdc-text-field-disabled-fill-color: var(--main-color-tp)
+  mdc-select-disabled-fill-color: var(--main-color-tp)
+  paper-slider-height: 5px
+  input-disabled-ink-color: rgb(255 255 255 / 37%)
+  lovelace-background: center / cover no-repeat fixed url(https://pages-johlc.jt-a46.workers.dev/projects/transparentblue/background.webp)

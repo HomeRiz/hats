@@ -1,0 +1,211 @@
+Liquid Glass Sunset:
+  primary-background-color: '#1a0d18'
+  secondary-background-color: '#22161e'
+  card-background-color: rgba(50, 28, 38, 0.75)
+  ha-card-background: rgba(50, 28, 38, 0.75)
+  popup-background-color: '#1f1218'
+  app-header-background-color: rgba(26, 13, 24, 0.85)
+  app-header-text-color: '#fff5ec'
+  sidebar-background-color: '#1a0d18'
+  mdc-theme-surface: '#1f1218'
+  mdc-dialog-content-background: '#1f1218'
+  mdc-dialog-scrim-color: rgba(20, 5, 12, 0.75)
+  ha-dialog-surface-background: '#1f1218'
+  mdc-snackbar-fill-color: '#1f1218'
+  ha-toast-background-color: '#1f1218'
+  ha-toast-text-color: '#fff5ec'
+  lovelace-background: center / cover no-repeat url("/local/liquid_glass/dawn.png") fixed, var(--primary-background-color)
+  primary-text-color: '#fff5ec'
+  secondary-text-color: rgba(255, 245, 236, 0.65)
+  text-primary-color: '#ffffff'
+  disabled-text-color: rgba(255, 245, 236, 0.35)
+  primary-color: '#ff7aa8'
+  accent-color: '#ffb454'
+  light-primary-color: '#ffb0c8'
+  dark-primary-color: '#cf3a7f'
+  state-icon-color: rgba(255, 245, 236, 0.85)
+  state-icon-active-color: '#ffb454'
+  state-light-active-color: '#ffb454'
+  state-switch-active-color: '#ff7aa8'
+  state-binary_sensor-alerting-color: '#ff5a6e'
+  state-climate-heating-color: '#ff8b4a'
+  state-climate-cooling-color: '#ff7aa8'
+  state-cover-active-color: '#ffb0c8'
+  state-fan-active-color: '#ffd1a8'
+  state-media_player-active-color: '#cc82e6'
+  state-person-active-color: '#ffb454'
+  state-lock-active-color: '#ffb454'
+  success-color: '#a8d295'
+  warning-color: '#ffb454'
+  error-color: '#ff5a6e'
+  info-color: '#ff7aa8'
+  sidebar-icon-color: rgba(255, 245, 236, 0.55)
+  sidebar-text-color: rgba(255, 245, 236, 0.85)
+  sidebar-selected-icon-color: '#ff7aa8'
+  sidebar-selected-text-color: '#ffffff'
+  sidebar-selected-background-color: rgba(255, 122, 168, 0.14)
+  divider-color: rgba(255, 245, 236, 0.08)
+  outline-color: rgba(255, 245, 236, 0.1)
+  ha-card-border-radius: 22px
+  ha-card-border-color: rgba(255, 245, 236, 0.1)
+  ha-card-box-shadow: 0 8px 32px rgba(40, 10, 24, 0.35)
+  switch-checked-color: '#ff7aa8'
+  paper-slider-active-color: '#ff7aa8'
+  mdc-theme-primary: '#ff7aa8'
+  transition-duration: 200ms
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  energy-grid-consumption-color: '#ff7aa8'
+  energy-grid-return-color: '#a8d295'
+  energy-solar-color: '#ffb454'
+  energy-battery-in-color: '#cc82e6'
+  energy-battery-out-color: '#ff8b4a'
+  energy-non-fossil-color: '#a8d295'
+  energy-gas-color: '#ff5a6e'
+  energy-water-color: '#ffd1a8'
+  room-living-rgb: 255, 180, 84
+  room-bedroom-rgb: 204, 130, 230
+  room-office-rgb: 255, 122, 168
+  room-kitchen-rgb: 255, 139, 74
+  room-bathroom-rgb: 255, 209, 168
+  room-garden-rgb: 168, 210, 149
+  room-garage-rgb: 150, 130, 140
+  room-workshop-rgb: 255, 200, 100
+  mush-rgb-amber: 255, 180, 84
+  mush-rgb-blue: 255, 122, 168
+  mush-rgb-cyan: 255, 209, 168
+  mush-rgb-green: 168, 210, 149
+  mush-rgb-orange: 255, 139, 74
+  mush-rgb-pink: 255, 122, 168
+  mush-rgb-purple: 204, 130, 230
+  mush-rgb-red: 255, 90, 110
+  mush-rgb-yellow: 255, 200, 100
+  glass-bg: rgba(255, 245, 236, 0.05)
+  glass-bg-hover: rgba(255, 245, 236, 0.08)
+  glass-border: 1px solid rgba(255, 245, 236, 0.1)
+  glass-blur: blur(30px) saturate(1.4)
+  glass-radius: 22px
+  glass-radius-lg: 26px
+  glass-shadow: 0 8px 32px rgba(40, 10, 24, 0.35)
+  glass-glow-warm: linear-gradient(135deg, rgba(255, 122, 168, 0.28), rgba(255, 180, 84, 0.1))
+  glass-glow-cool: linear-gradient(135deg, rgba(255, 122, 168, 0.22), rgba(204, 130, 230, 0.08))
+  primary-font-family: '''Inter'', system-ui, ''Segoe UI'', Roboto, sans-serif'
+  mdc-text-field-fill-color: rgba(255, 245, 236, 0.05)
+  mdc-text-field-disabled-fill-color: rgba(255, 255, 255, 0.02)
+  mdc-text-field-ink-color: '#fff5ec'
+  mdc-text-field-label-ink-color: rgba(255, 245, 236, 0.65)
+  mdc-text-field-idle-line-color: rgba(255, 255, 255, 0.3)
+  mdc-text-field-hover-line-color: rgba(255, 255, 255, 0.5)
+  mdc-text-field-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-select-fill-color: rgba(255, 245, 236, 0.05)
+  mdc-select-ink-color: '#fff5ec'
+  mdc-select-label-ink-color: rgba(255, 245, 236, 0.65)
+  mdc-select-idle-line-color: rgba(255, 255, 255, 0.3)
+  mdc-select-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-list-item-text-color: '#fff5ec'
+  mdc-list-item-graphic-color: rgba(245, 247, 250, 0.7)
+  mwc-list-item-text-color: '#fff5ec'
+  paper-listbox-background-color: '#1f1218'
+  paper-listbox-color: '#fff5ec'
+  paper-input-container-color: rgba(245, 247, 250, 0.65)
+  paper-input-container-input-color: '#fff5ec'
+  paper-input-container-focus-color: '#ff7aa8'
+  input-fill-color: rgba(255, 255, 255, 0.05)
+  input-ink-color: '#f5f7fa'
+  input-label-ink-color: rgba(245, 247, 250, 0.65)
+  input-idle-line-color: rgba(255, 255, 255, 0.3)
+  input-hover-line-color: rgba(255, 255, 255, 0.5)
+  input-outlined-idle-border-color: rgba(255, 255, 255, 0.2)
+  input-outlined-hover-border-color: rgba(255, 255, 255, 0.4)
+  input-disabled-fill-color: rgba(255, 255, 255, 0.02)
+  input-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  input-disabled-line-color: rgba(255, 255, 255, 0.15)
+  mdc-text-field-outlined-idle-border-color: rgba(255, 255, 255, 0.2)
+  mdc-text-field-outlined-hover-border-color: rgba(255, 255, 255, 0.4)
+  mdc-text-field-outlined-disabled-border-color: rgba(255, 255, 255, 0.1)
+  mdc-menu-surface-fill-color: '#0f1320'
+  mdc-theme-text-primary-on-background: '#f5f7fa'
+  mdc-theme-text-secondary-on-background: rgba(245, 247, 250, 0.65)
+  mdc-theme-text-hint-on-background: rgba(245, 247, 250, 0.5)
+  mdc-theme-text-disabled-on-background: rgba(245, 247, 250, 0.35)
+  mdc-list-item-hover-state-layer-color: rgba(255, 255, 255, 0.08)
+  mdc-list-item-hover-state-layer-opacity: '1'
+  mdc-list-item-focus-state-layer-color: rgba(255, 255, 255, 0.12)
+  mdc-button-disabled-fill-color: rgba(255, 255, 255, 0.05)
+  mdc-button-disabled-ink-color: rgba(245, 247, 250, 0.35)
+  mdc-button-outline-color: rgba(255, 255, 255, 0.2)
+  color-scheme: dark
+  wa-color-surface-default: '#0f1320'
+  wa-color-surface-raised: '#141928'
+  wa-color-surface-lowered: '#0a0d18'
+  wa-color-text-normal: '#f5f7fa'
+  wa-color-text-quiet: rgba(245, 247, 250, 0.65)
+  wa-color-neutral-fill-quiet: rgba(255, 255, 255, 0.05)
+  wa-color-neutral-fill-normal: rgba(255, 255, 255, 0.08)
+  wa-color-neutral-border-normal: rgba(255, 255, 255, 0.2)
+  wa-color-brand-fill-normal: '#7ab8ff'
+  wa-color-brand-fill-loud: '#a8d0ff'
+  wa-color-brand-on-loud: '#0a0d18'
+  wa-color-brand-text-normal: '#7ab8ff'
+  ha-color-form-background: rgba(255, 255, 255, 0.05)
+  ha-color-form-background-hover: rgba(255, 255, 255, 0.08)
+  ha-color-form-background-disabled: rgba(255, 255, 255, 0.02)
+  ha-color-border-neutral-quiet: rgba(255, 255, 255, 0.1)
+  ha-color-border-neutral-normal: rgba(255, 255, 255, 0.2)
+  ha-color-border-neutral-loud: rgba(255, 255, 255, 0.3)
+  ha-color-border-danger-normal: var(--error-color)
+  ha-color-text-primary: var(--primary-text-color)
+  ha-color-text-secondary: var(--secondary-text-color)
+  ha-color-neutral-60: rgba(245, 247, 250, 0.5)
+  md-sys-color-surface: var(--popup-background-color)
+  md-sys-color-surface-container: var(--popup-background-color)
+  md-sys-color-surface-container-low: var(--primary-background-color)
+  md-sys-color-surface-container-high: var(--secondary-background-color)
+  md-sys-color-surface-container-highest: var(--card-background-color)
+  md-sys-color-surface-variant: var(--card-background-color)
+  md-sys-color-on-surface: var(--primary-text-color)
+  md-sys-color-on-surface-variant: var(--secondary-text-color)
+  md-sys-color-primary: var(--primary-color)
+  md-sys-color-on-primary: var(--text-primary-color)
+  md-sys-color-secondary-container: var(--sidebar-selected-background-color)
+  md-sys-color-on-secondary-container: var(--primary-color)
+  md-sys-color-outline: var(--outline-color)
+  md-sys-color-outline-variant: var(--divider-color)
+  md-sys-color-background: var(--primary-background-color)
+  md-sys-color-on-background: var(--primary-text-color)
+  md-list-item-label-text-color: var(--primary-text-color)
+  md-list-item-supporting-text-color: var(--secondary-text-color)
+  md-list-item-leading-icon-color: var(--state-icon-color)
+  md-list-item-container-color: transparent
+  ha-color-fill-primary-loud-resting: var(--dark-primary-color)
+  ha-color-fill-primary-loud-hover: var(--primary-color)
+  ha-color-fill-primary-loud-active: var(--dark-primary-color)
+  ha-color-fill-primary-normal-resting: var(--dark-primary-color)
+  ha-color-fill-primary-normal-hover: var(--primary-color)
+  ha-color-fill-primary-normal-active: var(--dark-primary-color)
+  ha-color-on-primary-quiet: var(--primary-text-color)
+  ha-color-on-primary-normal: var(--primary-text-color)
+  ha-color-on-primary-loud: var(--text-primary-color)
+  card-mod-theme: Liquid Glass Sunset
+  card-mod-card: |
+    :where(ha-card) {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: var(--glass-radius);
+      box-shadow: var(--glass-shadow);
+      transition: all var(--transition-duration) var(--transition-timing-function);
+    }
+    :where(ha-card:hover) {
+      background: var(--glass-bg-hover);
+    }
+    :host(.type-heading) ha-card,
+    :host(hui-heading-card) ha-card {
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      box-shadow: none;
+    }
+  modes:
+    dark: {}

@@ -1,0 +1,455 @@
+Windows 10 Cool Blue Bright:
+  card-mod-theme: Windows 10 Cool Blue Bright
+  modes:
+    light:
+      primary-background-color: rgb(255, 255, 255)
+      secondary-background-color: rgb(243, 243, 243)
+      primary-text-color: rgb(0, 0, 0)
+      secondary-text-color: rgb(100, 100, 100)
+      sidebar-selected-icon-color: var(--primary-color)
+    dark:
+      primary-background-color: rgb(0, 0, 0)
+      secondary-background-color: rgb(21, 21, 21)
+      primary-text-color: rgb(255, 255, 255)
+      secondary-text-color: rgb(180, 180, 180)
+      sidebar-selected-icon-color: var(--light-primary-color)
+  paper-font-common-base_-_font-family: Segoe UI, sans-serif
+  paper-font-common-base_-_-webkit-font-smoothing: subpixel-antialiased
+  paper-font-common-code_-_font-family: Lucida Console, Consolas, monospace
+  paper-font-common-code_-_-webkit-font-smoothing: subpixel-antialiased
+  paper-font-common-expensive-kerning_-_text-rendering: optimizeLegibility
+  primary-color: rgb(0, 153, 188)
+  light-primary-color: rgb(10, 165, 200)
+  primary-background-color: rgb(255, 255, 255)
+  secondary-background-color: rgb(243, 243, 243)
+  divider-color: rgb(102, 102, 102)
+  accent-color: var(--primary-color)
+  ha-color-primary-05: rgb(0, 15, 18)
+  ha-color-primary-10: rgb(0, 30, 37)
+  ha-color-primary-20: rgb(0, 61, 75)
+  ha-color-primary-30: rgb(0, 91, 112)
+  ha-color-primary-40: rgb(0, 122, 150)
+  ha-color-primary-50: rgb(0, 153, 188)
+  ha-color-primary-60: rgb(0, 205, 252)
+  ha-color-primary-70: rgb(61, 219, 255)
+  ha-color-primary-80: rgb(126, 231, 255)
+  ha-color-primary-90: rgb(190, 243, 255)
+  ha-color-primary-95: rgb(222, 249, 255)
+  app-header-background-color: var(--primary-color)
+  app-header-text-color: rgb(255, 255, 255)
+  paper-tabs-selection-bar-color: rgb(255, 255, 255)
+  ha-card-header-color: var(--primary-color)
+  primary-text-color: rgb(0, 0, 0)
+  secondary-text-color: rgb(100, 100, 100)
+  text-primary-color: rgb(255, 255, 255)
+  disabled-text-color: rgb(110, 110, 110)
+  sidebar-icon-color: var(--secondary-text-color)
+  sidebar-text-color: var(--primary-text-color)
+  sidebar-background-color: var(--secondary-background-color)
+  sidebar-selected-background-color: var(--secondary-background-color)
+  sidebar-selected-icon-color: var(--primary-color)
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  paper-item-icon-color: var(--primary-text-color)
+  paper-item-icon-active-color: var(--primary-color)
+  state-icon-color: var(--primary-text-color)
+  state-icon-active-color: var(--primary-color)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  state-active-color: var(--primary-color)
+  state-inactive-color: var(--primary-text-color)
+  state-unavailable-color: var(--disabled-text-color)
+  state-alarm_control_panel-armed_away-color: var(--primary-color)
+  state-alarm_control_panel-armed_custom_bypass-color: var(--primary-color)
+  state-alarm_control_panel-armed_home-color: var(--primary-color)
+  state-alarm_control_panel-armed_night-color: var(--primary-color)
+  state-alarm_control_panel-armed_vacation-color: var(--primary-color)
+  state-alarm_control_panel-arming-color: var(--secondary-text-color)
+  state-alarm_control_panel-disarming-color: var(--secondary-text-color)
+  state-alarm_control_panel-pending-color: var(--secondary-text-color)
+  state-alarm_control_panel-triggered-color: var(--label-badge-red)
+  state-alert-off-color: var(--primary-text-color)
+  state-alert-on-color: var(--label-badge-red)
+  state-binary_sensor-active-color: var(--primary-color)
+  state-binary_sensor-battery-on-color: var(--primary-color)
+  state-binary_sensor-carbon_monoxide-on-color: var(--primary-color)
+  state-binary_sensor-gas-on-color: var(--primary-color)
+  state-binary_sensor-heat-on-color: var(--primary-color)
+  state-binary_sensor-lock-on-color: var(--primary-color)
+  state-binary_sensor-moisture-on-color: var(--primary-color)
+  state-binary_sensor-problem-on-color: var(--primary-color)
+  state-binary_sensor-safety-on-color: var(--primary-color)
+  state-binary_sensor-smoke-on-color: var(--primary-color)
+  state-binary_sensor-sound-on-color: var(--primary-color)
+  state-binary_sensor-tamper-on-color: var(--primary-color)
+  state-climate-auto-color: var(--primary-color)
+  state-climate-cool-color: var(--primary-color)
+  state-climate-dry-color: var(--primary-color)
+  state-climate-fan_only-color: var(--primary-color)
+  state-climate-heat-color: var(--primary-color)
+  state-climate-heat-cool-color: var(--primary-color)
+  state-cover-active-color: var(--primary-color)
+  state-device_tracker-active-color: var(--primary-color)
+  state-device_tracker-home-color: var(--primary-color)
+  state-fan-active-color: var(--primary-color)
+  state-humidifier-on-color: var(--primary-color)
+  state-lawn_mower-error-color: var(--label-badge-red)
+  state-lawn_mower-mowing-color: var(--primary-color)
+  state-light-active-color: var(--primary-color)
+  state-lock-jammed-color: var(--label-badge-red)
+  state-lock-locked-color: var(--primary-color)
+  state-lock-pending-color: var(--secondary-text-color)
+  state-lock-unlocked-color: var(--primary-text-color)
+  state-media_player-active-color: var(--primary-color)
+  state-person-active-color: var(--primary-color)
+  state-person-home-color: var(--primary-color)
+  state-plant-active-color: var(--primary-color)
+  state-siren-active-color: var(--primary-color)
+  state-sun-above_horizon-color: var(--light-primary-color)
+  state-sun-below_horizon-color: var(--primary-color)
+  state-switch-active-color: var(--primary-color)
+  state-update-active-color: var(--primary-color)
+  state-vacuum-active-color: var(--primary-color)
+  state-sensor-battery-high-color: var(--light-primary-color)
+  state-sensor-battery-low-color: var(--label-badge-red)
+  state-sensor-battery-medium-color: var(--primary-color)
+  state-water_heater-eco-color: var(--primary-color)
+  state-water_heater-electric-color: var(--primary-color)
+  state-water_heater-gas-color: var(--primary-color)
+  state-water_heater-heat_pump-color: var(--primary-color)
+  state-water_heater-high_demand-color: var(--primary-color)
+  state-water_heater-performance-color: var(--primary-color)
+  paper-slider-knob-color: var(--primary-color)
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--primary-color)
+  paper-slider-active-color: var(--primary-color)
+  paper-slider-secondary-color: var(--disabled-text-color)
+  label-badge-background-color: var(--primary-background-color)
+  label-badge-text-color: var(--primary-text-color)
+  label-badge-red: rgb(232, 17, 35)
+  label-badge-green: rgb(73, 130, 5)
+  label-badge-blue: rgb(0, 99, 177)
+  label-badge-yellow: rgb(255, 185, 0)
+  label-badge-gray: rgb(118, 118, 118)
+  card-background-color: var(--secondary-background-color)
+  ha-card-border-radius: 0px
+  ha-card-border-width: 0px
+  ha-card-box-shadow: none
+  paper-dialog-background-color: var(--card-background-color)
+  paper-listbox-background-color: var(--background-color)
+  paper-card-background-color: var(--card-background-color)
+  ha-view-sections-column-gap: 8px
+  ha-heading-card-title-color: var(--primary-color)
+  ha-heading-card-title-font-size: 20px
+  ha-heading-card-title-line-height: 30px
+  switch-checked-button-color: var(--primary-color)
+  switch-checked-track-color: var(--primary-color)
+  switch-unchecked-button-color: var(--disabled-text-color)
+  switch-unchecked-track-color: var(--disabled-text-color)
+  paper-toggle-button-checked-button-color: var(--switch-checked-button-color)
+  paper-toggle-button-checked-bar-color: var(--switch-checked-track-color)
+  paper-toggle-button-unchecked-button-color: var(--switch-unchecked-button-color)
+  paper-toggle-button-unchecked-bar-color: var(--switch-unchecked-track-color)
+  table-row-background-color: var(--primary-background-color)
+  table-row-alternative-background-color: var(--secondary-background-color)
+  data-table-background-color: var(--primary-background-color)
+  material-background-color: var(--primary-background-color)
+  material-secondary-background-color: var(--secondary-background-color)
+  mdc-theme-surface: var(--primary-background-color)
+  control-switch-border-radius: 0px
+  markdown-code-background-color: var(--secondary-background-color)
+  time-picker-elements-background-color: var(--primary-background-color)
+  time-picker-text-color: var(--primary-text-color)
+  time-picker-icon-color: var(--primary-color)
+  bar-card-color: var(--light-primary-color)
+  bar-card-border-radius: 0px
+  bar-card-disabled-color: var(--disabled-text-color)
+  hacs-badge-color: var(--light-primary-color)
+  hacs-status-installed: var(--label-badge-green)
+  hacs-status-pending-restart: var(--label-badge-red)
+  hacs-status-pending-update: var(--label-badge-yellow)
+  hacs-status-not-loaded: var(--disabled-text-color)
+  hacs-new-color: var(--primary-color)
+  link-text-color: var(--primary-color)
+  ha-dialog-border-radius: var(--ha-card-border-radius)
+  ha-config-card-border-radius: var(--ha-card-border-radius)
+  feature-border-radius: var(--ha-card-border-radius)
+  ha-button-radius: var(--ha-card-border-radius)
+  ha-border-radius-sm: var(--ha-card-border-radius)
+  ha-border-radius-md: var(--ha-card-border-radius)
+  ha-border-radius-lg: var(--ha-card-border-radius)
+  ha-border-radius-xl: 16px
+  ha-border-radius-2xl: var(--ha-card-border-radius)
+  ha-border-radius-3xl: var(--ha-card-border-radius)
+  ha-border-radius-4xl: var(--ha-card-border-radius)
+  ha-border-radius-5xl: var(--ha-card-border-radius)
+  ha-border-radius-6xl: var(--ha-card-border-radius)
+  ha-badge-border-radius: var(--ha-card-border-radius)
+  card-mod-view-yaml: |
+    # Badges aligned left old style
+    "*:first-child$": |
+      .badges, #badges {
+      display: flex !important;
+      justify-content: flex-start;
+      margin: 0px !important;
+      justify-content: left !important;
+      }
+
+    "hui-sections-view $": 
+        # Badges aligned left sections
+        "hui-view-badges $": 
+          #.: |
+          #  :host {
+          #    margin: 8px !important;
+          #  }
+          #  .badges, #badges {
+          #    display: flex !important;
+          #    justify-content: flex-start;
+          #    margin: 0px !important;
+          #    justify-content: left !important;
+          #  }
+            
+          "hui-entity-badge $": 
+            "ha-badge $": |
+              .badge {
+                padding: 0px 0.75em 0px 0.75em !important;
+                border-radius: 0px !important;
+              }
+              ::slotted(img[slot="icon"]) {
+                border-radius: 0px !important;
+              }
+        "hui-grid-section $":
+          .: |
+            .card.fit-rows {
+              height: auto !important;
+            }
+
+    "hui-masonry-view $": 
+        # Badges aligned left 2024.8 style
+        "hui-view-badges $": 
+          .: |
+            :host {
+              margin: 8px !important;
+            }
+            .badges, #badges {
+              display: flex !important;
+              justify-content: flex-start;
+              margin: 0px !important;
+              justify-content: left !important;
+            }
+            
+          "hui-entity-badge $": 
+            "ha-badge $": |
+              .badge {
+                padding: 0px 0.75em 0px 0.75em !important;
+                border-radius: 0px !important;
+              }
+              ::slotted(img[slot="icon"]) {
+                border-radius: 0px !important;
+              }
+  card-mod-badge-yaml: |
+    .: |
+      .badge: {
+        padding: 2px 8px !important;
+        border-radius: 0px !important;
+      }
+      :host {
+        background-color: var(--secondary-background-color);
+        border-radius: 0px;
+        border: 0px;
+        padding: 0px;
+        margin: 4px;
+        box-shadow: none;
+      }
+      img {
+        border-radius: 0% !important;
+      }
+    ha-state-label-badge $ ha-label-badge $: |
+            .label-badge {
+                height: 3.5em !important;
+                color: var(--primary-color) !important;
+                border-radius: 0px !important;
+                background: none !important;
+                border: 0px !important;
+                border-bottom: solid 1px !important;
+            }
+            .label-badge .label {
+                position: static !important;
+            }
+            .label-badge .label span {
+                border-radius: 0px !important;
+                width: 100% !important;
+                background: none !important;
+                color: var(--primary-color) !important;
+            }
+            .title {
+                height: 100% !important;
+                vertical-align: bottom !important;
+                margin-top: 5% !important;
+                margin-bottom: 5% !important;
+                position: static !important;
+            }
+  card-mod-more-info-yaml: |
+    .: |
+      .mdc-dialog .mdc-dialog__container .mdc-dialog__surface {
+        box-shadow: none;
+        border-radius: 0px;
+      }
+      ha-control-switch {
+        border-radius: 0px !important;
+      }
+    ha-dialog-header: |
+        .mdc-top-app-bar {
+          background: var(--primary-color) !important;
+          color: var(--primary-background-color) !important;
+        }   
+  card-mod-card-yaml: |
+    .: |
+      ha-card.type-heading .content {
+        --mdc-icon-size: 22px !important;
+      }
+      ha-card.type-custom-vacuum-card {
+        border-radius: 0px;
+      }
+      ha-card.type-custom-vacuum-card .preview {
+        background: none;
+      }
+      ha-card.type-custom-vacuum-card .header {
+        color: var(--primary-text-color)
+      }
+      ha-card.type-custom-vacuum-card .status-text {
+        color: var(--primary-text-color)
+      }
+      ha-card.type-custom-vacuum-card ha-icon {
+        color: var(--primary-text-color)
+      }
+      ha-card.type-custom-vacuum-card .stats {
+        color: var(--primary-text-color)
+      }
+      ha-card.type-custom-vacuum-card .vacuum-name {
+        color: var(--primary-text-color)
+      }
+      ha-card.type-custom-vacuum-card .not-available {
+        color: var(--disabled-text-color)
+      }
+      ha-card.type-custom-vacuum-card .source {
+        color: var(--primary-color)
+      }
+      ha-card.type-custom-vacuum-card .source ha-icon {
+        color: var(--primary-color)
+      }
+      ha-card.type-custom-mini-graph-card .graph__labels > span {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.05em 0.5em !important;
+        background-color: var(--primary-color) !important;
+        color: var(--primary-background-color) !important;
+      }
+      ha-card.type-custom-mini-graph-card .name .ellipsis {
+        opacity: 1 !important;
+        font-weight: normal !important;
+      }
+      ha-card.type-custom-zha-network-card th {
+        background-color: var(--primary-color);
+        color: var(--primary-background-color);
+      }
+    # Custom sonos card
+    sonos-player$: 
+      .: |
+        .header, .controls {
+           border-radius: 0px !important;
+         }
+      sonos-player-controls$: 
+        sonos-volume$: 
+          ha-control-slider$: |
+            [class*="slider"] {
+              border-radius: 0px !important;
+            }
+            .slider .slider-track-background {
+              background: none !important;
+            }
+            .slider .slider-track-bar {
+              top: 40% !important;
+              bottom: 0px !important;
+              height: 20% !important;
+            }
+            .slider .slider-track-bar::after {
+              top: 0px !important;
+              bottom: 0px !important;
+              right: calc(var(--control-slider-thickness) * -0.2) !important;
+              height: 200% !important;
+              width: auto !important;
+              aspect-ratio: 1 / 1 !important;
+              background-color: var(--primary-text-color) !important;
+              border-radius: 50% !important;
+            }
+            .tooltip {
+              border-radius: 0px !important;
+            }
+    sonos-volumes$: 
+      sonos-volume$: 
+        ha-control-slider$: |
+          [class*="slider"] {
+            border-radius: 0px !important;
+          }
+          .slider .slider-track-background {
+            background: none !important;
+          }
+          .slider .slider-track-bar {
+            top: 40% !important;
+            bottom: 0px !important;
+            height: 20% !important;
+          }
+          .slider .slider-track-bar::after {
+            top: 0px !important;
+            bottom: 0px !important;
+            right: calc(var(--control-slider-thickness) * -0.2) !important;
+            height: 200% !important;
+            width: auto !important;
+            aspect-ratio: 1 / 1 !important;
+            background-color: var(--primary-text-color) !important;
+            border-radius: 50% !important;
+          }
+          .tooltip {
+            border-radius: 0px !important;
+          }
+    sonos-groups$:
+      sonos-group$: |
+        mwc-list-item[hasmeta] {
+          border-radius: 0;
+        }
+    sonos-grouping$:
+      sonos-grouping-button$: |
+        ha-control-button {
+          --control-button-border-radius: 0;
+        }
+      .: |
+        ha-control-button {
+          --control-button-border-radius: 0;
+        }
+      sonos-volume$:
+        ha-control-slider$: |
+          .slider {
+            border-radius: 0 !important;
+          }
+          .slider-track-bar {
+            border-radius: 0 !important;
+          }
+          
+    sonos-media-browser$:
+      sonos-media-browser-icons$: 
+        .: |
+          .title {
+            color: white !important;
+            font-weight: lighter !important;
+            background-color: var(--primary-color) !important;
+          }
+        ha-control-button$: |
+          button {            
+            border-radius: 0 !important;
+          } 
+          
+  card-mod-row-yaml: |
+    # Square icon
+    "*:first-child$": |
+      state-badge {
+        border-radius: 0% !important;
+      }

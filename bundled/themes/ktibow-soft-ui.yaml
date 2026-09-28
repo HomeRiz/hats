@@ -1,0 +1,35 @@
+Soft UI:
+  card-mod-theme: Soft UI
+  card-mod-card: |
+    ha-card {
+      margin: 20px;
+      border-radius: 15px;
+    }
+  app-header-background-color: var(--primary-background-color)
+  app-header-text-color: var(--primary-text-color)
+  app-header-selection-bar-color: var(--primary-color)
+  card-mod-root: |
+    paper-tab[aria-selected="true"] {
+      color: var(--primary-color);
+    }
+  accent-color: var(--primary-color)
+  divider-color: transparent
+  ha-card-background: var(--primary-background-color)
+  card-background-color: var(--primary-background-color)
+  lovelace-background: var(--primary-background-color)
+  paper-item-icon-color: var(--secondary-text-color)
+  modes:
+    dark:
+      primary-color: '#4C3FF9'
+      light-primary-color: '#7A71FB'
+      primary-background-color: '#222222'
+      primary-text-color: '#F7F8F9'
+      ha-card-box-shadow: '-5px -5px 15px #2c2c2c, 5px 5px 15px #191919'
+      soft-ui-pressed: 'inset -4px -4px 5px #2c2c2c, inset 4px 4px 5px #191919'
+    light:
+      primary-color: '#7A71FB'
+      light-primary-color: '#918AFC'
+      primary-background-color: '#F3F5F7'
+      primary-text-color: '#222222'
+      ha-card-box-shadow: '-5px -5px 15px #ffffff, 5px 5px 15px #ebebeb'
+      soft-ui-pressed: 'inset -4px -4px 5px #ffffff, inset 4px 4px 5px #ebebeb'

@@ -1,0 +1,135 @@
+weylandyutani:
+  primary-color: '#00ff00'
+  accent-color: '#33ff33'
+  primary-background-color: '#0d0a08'
+  secondary-background-color: '#1a1410'
+  primary-text-color: '#00ff00'
+  secondary-text-color: '#33ff33'
+  text-primary-color: '#00ff00'
+  disabled-text-color: '#004400'
+  app-header-background-color: '#0d0a08'
+  app-header-text-color: '#00ff00'
+  card-background-color: '#1a1410'
+  paper-card-background-color: '#1a1410'
+  sidebar-background-color: '#0d0a08'
+  sidebar-text-color: '#00ff00'
+  sidebar-icon-color: '#00ff00'
+  sidebar-selected-background-color: '#2a1f15'
+  sidebar-selected-icon-color: '#33ff33'
+  sidebar-selected-text-color: '#33ff33'
+  state-active-color: '#33ff33'
+  state-inactive-color: '#004400'
+  state-icon-color: '#00ff00'
+  state-icon-active-color: '#33ff33'
+  paper-item-icon-color: '#00ff00'
+  paper-item-icon-active-color: '#33ff33'
+  divider-color: '#2a1f15'
+  ha-card-border-color: '#004400'
+  card-mod-theme: weylandyutani
+  card-mod-view-yaml: |
+    .: |
+      hui-view {
+        font-family: 'Thedus Condensed', 'Orbitron', sans-serif !important;
+        background-color: #0d0a08 !important;
+      }
+  card-mod-card-yaml: |
+    .: |
+      ha-card {
+        font-family: 'Thedus Condensed', 'Orbitron', sans-serif !important;
+        border: 2px solid #00ff00 !important;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.3) !important;
+        border-radius: 0 !important;
+        background-color: #1a1410 !important;
+      }
+      
+      ha-card .card-header {
+        font-family: 'Thedus Wide', 'Audiowide', sans-serif !important;
+        font-size: 1.8em !important;
+        letter-spacing: 0.15em !important;
+        text-transform: uppercase !important;
+        border-bottom: 2px solid #00ff00 !important;
+        padding: 16px !important;
+        background: linear-gradient(180deg, #0d0a08 0%, #1a1410 100%) !important;
+      }
+      
+      ha-card .card-content {
+        font-family: 'Thedus Condensed', 'Orbitron', sans-serif !important;
+      }
+      
+      ha-card ha-icon,
+      ha-card ha-state-icon,
+      ha-card state-badge {
+        color: #00ff00 !important;
+        --mdc-icon-button-size: 40px !important;
+      }
+      
+      ha-card ha-icon[data-state="on"],
+      ha-card ha-state-icon[data-state="on"] {
+        color: #33ff33 !important;
+      }
+  card-mod-card-type-heading-yaml: |
+    .: |
+      ha-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      ha-card .heading {
+        font-family: 'Thedus Stencil Wide', 'Audiowide', sans-serif !important;
+        font-size: 3em !important;
+        letter-spacing: 0.2em !important;
+        text-transform: uppercase !important;
+        text-align: center !important;
+        padding: 24px !important;
+        border-top: 3px solid #00ff00 !important;
+        border-bottom: 3px solid #00ff00 !important;
+        text-shadow: 0 0 20px rgba(0, 255, 0, 0.8) !important;
+      }
+  card-mod-card-type-markdown-yaml: |
+    .: |
+      ha-card .card-content {
+        font-family: 'Thedus Condensed', 'Orbitron', sans-serif !important;
+      }
+      
+      ha-card ha-markdown {
+        font-size: 1.1em !important;
+        line-height: 1.6 !important;
+      }
+  card-mod-card-type-entities-yaml: |
+    $: |
+      #states > * {
+        border-bottom: 1px solid #2a1f15 !important;
+      }
+      
+      hui-generic-entity-row state-badge,
+      hui-generic-entity-row ha-icon,
+      hui-generic-entity-row ha-state-icon {
+        color: #00ff00 !important;
+      }
+      
+      hui-generic-entity-row[data-state="on"] state-badge,
+      hui-generic-entity-row[data-state="on"] ha-icon,
+      hui-generic-entity-row[data-state="on"] ha-state-icon {
+        color: #33ff33 !important;
+      }
+      
+      hui-generic-entity-row .text-content .name {
+        font-family: 'Thedus Wide Light', 'Audiowide', sans-serif !important;
+        font-size: 1.2em !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+      }
+      
+      hui-generic-entity-row .text-content .state {
+        font-family: 'Thedus Stencil Condensed', 'Orbitron', sans-serif !important;
+        font-size: 1.4em !important;
+        letter-spacing: 0.1em !important;
+        font-weight: bold !important;
+      }
+      
+      hui-generic-entity-row .text-content .secondary {
+        font-family: 'Thedus Condensed', 'Orbitron', sans-serif !important;
+        font-size: 0.9em !important;
+        opacity: 0.8 !important;
+      }

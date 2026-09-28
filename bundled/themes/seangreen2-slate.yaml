@@ -1,0 +1,34 @@
+slate:
+  modes:
+    dark:
+      primary-color: '#2980b9'
+      accent-color: '#b58e31'
+      dark-primary-color: '#2980b9'
+      light-primary-color: '#2980b9'
+      primary-text-color: '#FFFFFF'
+      text-primary-color: var(--primary-text-color)
+      secondary-text-color: '#a1a1a1'
+      mush-card-secondary-color: '#a1a1a1'
+      disabled-text-color: '#777777'
+      label-badge-border-color: green
+      sidebar-icon-color: '#777777'
+      primary-background-color: '#222222'
+      secondary-background-color: '#222222'
+      clear-background-color: '#212121'
+      divider-color: rgba(255, 255, 255, .12)
+      table-row-background-color: '#292929'
+      table-row-alternative-background-color: '#292929'
+      label-badge-red: var(--primary-color)
+      label-badge-text-color: var(--primary-text-color)
+      label-badge-background-color: '#222222'
+      switch-checked-color: '#2980b9'
+      switch-unchecked-color: var(--disabled-text-color)
+      switch-unchecked-button-color: var(--disabled-text-color)
+      switch-unchecked-track-color: var(--disabled-text-color)
+      google-red-500: '#b93829'
+      google-green-500: '#2980b9'
+      card-background-color: '#292929'
+      st-mode-background: var(--primary-background-color)
+      state-icon-color: var(--primary-text-color)
+      ha-card-border-width: 0px
+      ha-card-border-radius: 7px
