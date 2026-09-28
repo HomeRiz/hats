@@ -25,7 +25,7 @@ interface ThemeOverviewModalProps {
   allThemes: ThemeConfig[];
   onSelectTheme: (themeId: string) => void;
   onEditTheme: (themeId: string) => void;
-  onApplyTheme: (theme: ThemeConfig) => void;
+  onApplyTheme: (theme: ThemeConfig) => void | Promise<void>;
   onUninstallTheme?: (theme: ThemeConfig) => void;
   onDuplicateTheme: (themeId: string) => void;
 }
@@ -44,6 +44,16 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 }) => {
   const [sidebarItem, setSidebarItem] = useState('Smart Home');
   const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
+  const [installing, setInstalling] = useState(false);
+
+  const handleInstallClick = async () => {
+    setInstalling(true);
+    try {
+      await onApplyTheme(theme);
+    } finally {
+      setInstalling(false);
+    }
+  };
 
   const currentIndex = allThemes.findIndex((t) => t.id === theme.id);
   const hasMultiple = allThemes.length > 1;
@@ -162,7 +172,23 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-400">By {theme.author || 'Community Designer'}</p>
+              <p className="text-[11px] text-slate-400">
+                By {theme.author || 'Community Designer'}
+                {theme.sourceUrl && (
+                  <>
+                    {' · '}
+                    <a
+                      href={theme.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-blue-400 hover:text-blue-300 underline"
+                    >
+                      View source
+                    </a>
+                  </>
+                )}
+              </p>
             </div>
           </div>
 
@@ -240,16 +266,17 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
             )}
 
             <div className="flex-1 flex overflow-hidden relative z-10">
-              <MockSidebar 
-                theme={theme} 
+              <MockSidebar
+                theme={theme}
                 activeItem={sidebarItem}
                 onSelectItem={(label) => setSidebarItem(label)}
+                livePanels={liveDashboardData.available ? liveDashboardData.panels : undefined}
               />
 
               <main className="flex-1 overflow-y-auto p-4 sm:p-6">
                 <SmartHomeDashboard
                   theme={theme}
-                  liveTiles={liveDashboardData.available ? liveDashboardData.tiles : undefined}
+                  liveGroups={liveDashboardData.available ? liveDashboardData.tileGroups : undefined}
                 />
               </main>
             </div>
@@ -383,14 +410,12 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
             </button>
 
             <button
-              onClick={() => {
-                onClose();
-                onApplyTheme(theme);
-              }}
-              className="flex items-center justify-center gap-2 px-5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              onClick={handleInstallClick}
+              disabled={installing}
+              className="flex items-center justify-center gap-2 px-5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait disabled:hover:scale-100"
             >
               <Zap className="w-4 h-4" />
-              <span>{theme.isInstalled ? 'Apply / Save to HA' : 'Install Directly to Home Assistant'}</span>
+              <span>{installing ? 'Installing...' : theme.isInstalled ? 'Apply / Save to HA' : 'Install'}</span>
             </button>
           </div>
         </div>

@@ -38,7 +38,7 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
     try {
       setIsProcessing(true);
       const result = await processBackgroundImage(file, 1920, 1080, background.darken);
-      
+
       onChange({
         background: {
           ...background,
@@ -56,6 +56,20 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
           glowColor: result.dominantAccent,
         }
       });
+
+      const newPreset: CustomArtworkPreset = {
+        id: `artwork_${Date.now()}`,
+        name: file.name.replace(/\.[^./]+$/, ''),
+        type: 'image',
+        imageUrl: result.dataUrl,
+        imageFileName: file.name,
+        avgColor: result.avgColor,
+        accent: result.dominantAccent,
+        createdAt: Date.now(),
+      };
+      const updatedArtworks = [newPreset, ...customArtworks];
+      setCustomArtworks(updatedArtworks);
+      saveCustomArtworks(updatedArtworks);
     } catch (err) {
       console.error('Failed to process image:', err);
     } finally {
@@ -226,7 +240,7 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
   return (
     <div className="space-y-6 text-slate-200 text-xs">
       <div className="space-y-2">
-        <label 
+        <label
           className="font-semibold text-slate-300 flex items-center gap-1.5"
           title="Upload a 16:9 wallpaper image. HATS will auto-extract dominant colors and average header tint."
         >
@@ -234,11 +248,7 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
           <span>Upload Wallpaper / Artwork</span>
         </label>
 
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          title="Click to browse and upload image files (PNG, JPG, WebP)"
-          className="border-2 border-dashed border-slate-800 hover:border-blue-500/50 bg-slate-900/40 hover:bg-slate-900/80 rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer transition-all group text-center"
-        >
+        <div className="flex items-center gap-3">
           <input
             type="file"
             ref={fileInputRef}
@@ -251,15 +261,19 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
             className="hidden"
           />
 
-          <div className="w-10 h-10 rounded-full bg-slate-800 group-hover:bg-blue-600/20 group-hover:text-blue-400 text-slate-400 flex items-center justify-center mb-2 transition-colors">
-            <Upload className="w-5 h-5" />
-          </div>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isProcessing}
+            title="Click to browse and upload image files (PNG, JPG, WebP)"
+            className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 hover:bg-blue-600/20 hover:text-blue-400 text-slate-200 border border-slate-700 hover:border-blue-500/50 text-xs font-semibold transition-colors disabled:opacity-60 disabled:cursor-wait"
+          >
+            <Upload className="w-4 h-4" />
+            <span>{isProcessing ? 'Processing...' : 'Upload Image'}</span>
+          </button>
 
-          <span className="font-semibold text-xs text-slate-200">
-            {isProcessing ? 'Processing & Extracting Colors...' : 'Click to Upload Artwork (PNG, JPG, WebP)'}
-          </span>
-          <span className="text-[11px] text-slate-500 mt-0.5">
-            Auto crops to 16:9, extracts dominant accent & average header color
+          <span className="text-[11px] text-slate-500 leading-snug">
+            Auto crops to 16:9, extracts dominant accent & average header color, saved to your library below.
           </span>
         </div>
       </div>
@@ -439,10 +453,10 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
           <input
             type="range"
             min="0"
-            max="20"
+            max="60"
             value={background.blur}
             onChange={(e) => updateBg({ blur: parseInt(e.target.value) })}
-            title={`Ambient wallpaper blur: ${background.blur}px. Softens sharp background textures.`}
+            title={`Ambient wallpaper blur: ${background.blur}px. Softens sharp background textures - past ~30px reads as a true frosted-glass wallpaper.`}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
           />
         </div>

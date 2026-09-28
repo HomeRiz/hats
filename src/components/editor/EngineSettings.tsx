@@ -261,14 +261,14 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-2 gap-1.5">
           {[
             {
               id: 'translucent',
               label: 'Translucent',
-              tooltip: 'Translucent: a properly frosted glass sidebar - clicking applies a frosted default (55% opacity, 24px blur), then the sliders below fine-tune it',
-              autoOpacity: 0.55,
-              autoBlur: 24,
+              tooltip: 'Translucent: a properly frosted glass sidebar - clicking applies a frosted default (50% opacity, 8px blur), then the sliders below fine-tune it',
+              autoOpacity: 0.50,
+              autoBlur: 8,
             },
             {
               id: 'opaque',
@@ -281,6 +281,13 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
               tooltip: 'Ultra Clear: true see-through - clicking sets 2% opacity and 0px blur, then the sliders below fine-tune it',
               autoOpacity: 0.02,
               autoBlur: 0,
+            },
+            {
+              id: 'frosted',
+              label: 'Frosted Glass',
+              tooltip: 'Frosted Glass: fully transparent background but heavily blurred - clicking sets 0% opacity and 32px blur, then the sliders below fine-tune it',
+              autoOpacity: 0,
+              autoBlur: 32,
             },
           ].map((mode) => (
             <button
