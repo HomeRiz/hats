@@ -57,6 +57,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
   const currentIndex = allThemes.findIndex((t) => t.id === theme.id);
   const hasMultiple = allThemes.length > 1;
+  const isPackPreview = hasMultiple && allThemes.every((t) => t.sourceUrl && t.sourceUrl === theme.sourceUrl);
   const prevTheme = hasMultiple ? allThemes[(currentIndex - 1 + allThemes.length) % allThemes.length] : null;
   const nextTheme = hasMultiple ? allThemes[(currentIndex + 1) % allThemes.length] : null;
 
@@ -221,6 +222,27 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
         <div className="flex-1 flex overflow-hidden relative">
           {theme.customCss && (
             <style dangerouslySetInnerHTML={{ __html: sanitizeThemeCss(theme.customCss) }} />
+          )}
+
+          {isPackPreview && (
+            <div className="w-44 shrink-0 h-full overflow-y-auto border-r border-slate-800 bg-slate-950/80 py-2">
+              {allThemes.map((variant) => (
+                <button
+                  key={variant.id}
+                  type="button"
+                  onClick={() => onSelectTheme(variant.id)}
+                  title={variant.name}
+                  className={`w-full text-left px-3 py-2 text-xs truncate transition-colors border-l-2 ${
+                    variant.id === theme.id
+                      ? 'border-blue-500 bg-blue-950/40 text-white font-semibold'
+                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                  }`}
+                >
+                  {variant.name}
+                  {variant.isInstalled && <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 align-middle" />}
+                </button>
+              ))}
+            </div>
           )}
 
           <div className="flex-1 flex flex-col h-full overflow-hidden relative">

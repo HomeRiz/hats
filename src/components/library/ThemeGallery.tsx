@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   Plus,
   Copy,
@@ -18,8 +18,10 @@ import {
   CheckCircle2,
   HardDriveDownload,
   Eye,
+  Layers,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
+import { groupThemesIntoPacks } from '../../services/themePacks';
 import type { LiveDashboardData } from '../../services/useLiveDashboardData';
 import { GithubIcon } from '../common/icons/GithubIcon';
 import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
@@ -100,6 +102,8 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     }
     return matchesSearch && matchesCategory;
   });
+
+  const themePacks = useMemo(() => groupThemesIntoPacks(filteredThemes), [filteredThemes]);
 
   useEffect(() => {
     const handleCloseMenu = () => setContextMenu(null);
@@ -396,9 +400,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
-        {filteredThemes.map((theme) => {
+        {themePacks.map(({ representative: theme, variants }) => {
           const isActive = theme.id === activeThemeId;
           const isSelected = selectedThemeIds.has(theme.id);
+          const packHasMultipleVariants = variants.length > 1;
+          const packIsInstalled = variants.some((v) => v.isInstalled);
           const requiresCardMod = theme.requirements?.requiresCardMod ?? (theme.category === 'Glass' || theme.category === 'Kids' || theme.category === 'Neon');
 
           return (
@@ -454,10 +460,17 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     </div>
                   )}
 
-                  {theme.isInstalled && (
+                  {packIsInstalled && (
                     <div className="absolute top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 text-[9px] font-mono border border-emerald-600/50 backdrop-blur-md">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                       <span>Installed</span>
+                    </div>
+                  )}
+
+                  {packHasMultipleVariants && (
+                    <div className="absolute bottom-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 text-slate-300 text-[9px] font-mono border border-slate-600/50 backdrop-blur-md">
+                      <Layers className="w-2.5 h-2.5" />
+                      <span>{variants.length} variants</span>
                     </div>
                   )}
 
@@ -774,7 +787,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           onClose={() => setOverviewThemeId(null)}
           theme={overviewTargetTheme}
           liveDashboardData={liveDashboardData}
-          allThemes={filteredThemes.length > 0 ? filteredThemes : themes}
+          allThemes={(() => {
+            const pack = themePacks.find((p) => p.variants.some((v) => v.id === overviewTargetTheme.id));
+            if (pack && pack.variants.length > 1) return pack.variants;
+            return filteredThemes.length > 0 ? filteredThemes : themes;
+          })()}
           onSelectTheme={(newId) => setOverviewThemeId(newId)}
           onEditTheme={(id) => {
             onSelectTheme(id);
