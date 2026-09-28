@@ -40,7 +40,7 @@ export interface EngineSettings {
   fallbackCardBg: string;
   scanlines: boolean;
   scanlineIntensity: number;
-  sidebarStyle?: 'translucent' | 'opaque' | 'transparent';
+  sidebarStyle?: 'translucent' | 'opaque' | 'transparent' | 'frosted';
   sidebarOpacity?: number;
   sidebarBlur?: number;
 }
@@ -70,10 +70,17 @@ export interface RecommendedCard {
   installUrl?: string;
 }
 
+export interface RequiredIntegration {
+  name: string;
+  domain: string;
+  repoFullName?: string;
+}
+
 export interface ThemeRequirements {
   requiresCardMod: boolean;
   requiresThemesDirective?: boolean;
   recommendedCards?: RecommendedCard[];
+  requiredIntegrations?: RequiredIntegration[];
   note?: string;
 }
 
@@ -83,6 +90,7 @@ export interface ThemeConfig {
   category: 'Glass' | 'Velvet' | 'Neon' | 'Kids' | 'Retro' | 'Nature' | 'SciFi' | 'Minimal' | 'Community';
   author: string;
   authorGithub?: string;
+  sourceUrl?: string;
   description: string;
   version: string;
   createdAt: string;

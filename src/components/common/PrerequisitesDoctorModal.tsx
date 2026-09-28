@@ -12,24 +12,28 @@ import {
   FileCode,
   Sparkles,
   Layers,
-  Puzzle,
   DownloadCloud,
 } from 'lucide-react';
 import { getHaDiagnostics, fixHaConfiguration, repairAllHaThemes, getGithubStatus, saveGithubToken, waitForAddonBackUp, GithubStatus, DiagnosticsResult } from '../../services/haService';
 import { KeyRound } from 'lucide-react';
 import { GithubIcon } from './icons/GithubIcon';
+import { CustomComponentsPanel } from './CustomComponentsPanel';
+import { ThemeConfig } from '../../types/theme';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfigFixed?: () => void;
+  themes?: ThemeConfig[];
 }
 
 export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> = ({
   isOpen,
   onClose,
   onConfigFixed,
+  themes = [],
 }) => {
+  const [activeTab, setActiveTab] = useState<'diagnostics' | 'custom-components'>('diagnostics');
   const [loading, setLoading] = useState(false);
   const [fixing, setFixing] = useState(false);
   const [repairing, setRepairing] = useState(false);
@@ -221,6 +225,34 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
           </div>
         </div>
 
+        <div className="flex items-center gap-1 px-6 pt-3 border-b border-slate-800 bg-slate-900/90">
+          {(['diagnostics', 'custom-components'] as const).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
+                activeTab === tab
+                  ? 'border-blue-500 text-white'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {tab === 'diagnostics' ? 'Diagnostics' : 'Custom Components'}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'custom-components' ? (
+          <div className="overflow-y-auto flex-1">
+            <CustomComponentsPanel
+              themes={themes}
+              isActive={isOpen && activeTab === 'custom-components'}
+              diagnostics={diagnostics}
+              isCardModInstalled={Boolean(isCardModOnDisk || isCardModInConfig)}
+              getHacsUrl={getHacsUrl}
+            />
+          </div>
+        ) : (
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
           {fixMessage && (
             <div className={`p-3 rounded-xl border text-xs font-medium ${
@@ -466,75 +498,6 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 
           <div className="space-y-2.5">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Puzzle className="w-3.5 h-3.5 text-purple-400" />
-              Recommended Lovelace Add-ons & Cards
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {[
-                {
-                  id: 'card-mod',
-                  name: 'lovelace-card-mod',
-                  desc: 'Glass blur & CSS theme shaders',
-                  hacsId: 190927524,
-                  installed: Boolean(isCardModOnDisk || isCardModInConfig),
-                },
-                {
-                  id: 'mushroom',
-                  name: 'Mushroom Cards',
-                  desc: 'Modern sleek UI sliders & chips',
-                  hacsId: 444350375,
-                  installed: Boolean(diagnostics?.detectedCards.includes('mushroom')),
-                },
-                {
-                  id: 'bubble-card',
-                  name: 'Bubble Card',
-                  desc: 'Pop-up glassmorphism subviews',
-                  hacsId: 680112919,
-                  installed: Boolean(diagnostics?.detectedCards.includes('bubble-card')),
-                },
-                {
-                  id: 'layout-card',
-                  name: 'Layout Card',
-                  desc: 'Advanced CSS grid & masonry',
-                  hacsId: 156434866,
-                  installed: Boolean(diagnostics?.detectedCards.includes('layout-card')),
-                },
-              ].map((card) => (
-                <div key={card.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between gap-2">
-                  <div>
-                    <div className="font-semibold text-slate-200 flex items-center gap-1.5">
-                      <span>{card.name}</span>
-                      {card.installed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                    </div>
-                    <div className="text-[10px] text-slate-400">{card.desc}</div>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {card.installed ? (
-                      <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold flex items-center gap-1">
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span>Installed</span>
-                      </span>
-                    ) : (
-                      <a
-                        href={getHacsUrl(card.hacsId)}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="Install via HACS"
-                        className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors shadow-sm"
-                      >
-                        <DownloadCloud className="w-3 h-3" />
-                        <span>Install in HACS</span>
-                        <ExternalLink className="w-2.5 h-2.5 opacity-70" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2.5">
-            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
               <GithubIcon className="w-3.5 h-3.5 text-purple-400" />
               GitHub Token for Theme Submissions
             </h3>
@@ -624,6 +587,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
             </div>
           </div>
         </div>
+        )}
 
         <div className="px-6 py-3 border-t border-slate-800 flex items-center justify-end bg-slate-900/90">
           <button

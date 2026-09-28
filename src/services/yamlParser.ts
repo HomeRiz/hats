@@ -2,6 +2,7 @@ import * as yaml from 'js-yaml';
 import { ThemeConfig } from '../types/theme';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
+import { detectRequiresCardMod } from './themeRequirementDetector';
 
 export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
   try {
@@ -115,9 +116,8 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
           textSecondary: themeData.modes?.light?.['secondary-text-color'] || defaultGlassTheme.light.textSecondary,
         },
         requirements: {
-          requiresCardMod: Boolean(themeData['card-mod-theme'] || themeData['card-mod-root'] || themeData['card-mod-card']),
+          requiresCardMod: detectRequiresCardMod(themeData),
           requiresThemesDirective: true,
-          recommendedCards: defaultGlassTheme.requirements?.recommendedCards,
         },
       };
 

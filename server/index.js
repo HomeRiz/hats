@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import * as yaml from 'js-yaml';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
-import { fetchLiveDashboardSnapshot } from './haWebsocket.js';
+import { fetchLiveDashboardSnapshot, fetchHacsRepositories } from './haWebsocket.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,6 +72,15 @@ const META_DIR = path.join(DATA_DIR, 'theme-meta');
 const DEFAULT_WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
 const sha256 = text => crypto.createHash('sha256').update(text).digest('hex');
 const metaPath = id => path.join(META_DIR, `${String(id).replace(/[^a-z0-9_-]/g, '-')}.json`);
+
+function readImportMeta(themeFullPath) {
+  try {
+    const metaPath = themeFullPath.replace(/\.ya?ml$/, '.meta.json');
+    return JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
 
 function readThemeMeta(id, rawYaml) {
   try {
@@ -193,14 +202,20 @@ function parseThemeFile(fullPath, isInstalled) {
         console.warn(`Could not stat theme file ${fullPath}:`, statErr.message);
       }
 
+      const importMeta = readImportMeta(fullPath);
+
       themes.push({
         id: cleanId,
         name: themeName,
         category,
-        author: isInstalled ? 'Installed Theme' : 'HATS Collection',
+        author: importMeta?.author || (isInstalled ? 'Installed Theme' : 'HATS Collection'),
+        authorGithub: importMeta?.authorGithub,
+        sourceUrl: importMeta?.sourceUrl,
         description: isInstalled
           ? `Installed in Home Assistant (/config/themes/${path.relative(THEMES_DIR, fullPath)})`
-          : `Official HATS Theme (${themeName})`,
+          : importMeta
+            ? `Community theme by ${importMeta.author} (${themeName})`
+            : `Official HATS Theme (${themeName})`,
         isCustom: isInstalled,
         isInstalled,
         installedFilePath: isInstalled ? fullPath : undefined,
@@ -276,10 +291,7 @@ function parseThemeFile(fullPath, isInstalled) {
         requirements: {
           requiresCardMod: Boolean(themeData['card-mod-theme'] || themeData['card-mod-root'] || themeData['card-mod-card']),
           requiresThemesDirective: true,
-          recommendedCards: [
-            { name: 'Mushroom Cards', slug: 'mushroom', description: 'Clean minimalist cards' },
-            { name: 'Bubble Card', slug: 'bubble-card', description: 'Pop-up subviews' },
-          ],
+          requiredIntegrations: importMeta?.requiredIntegrations?.length ? importMeta.requiredIntegrations : undefined,
         },
       });
     }
@@ -439,6 +451,12 @@ app.get('/api/ha/status', (req, res) => {
 
 app.get('/api/ha/live-dashboard', async (req, res) => {
   const snapshot = await fetchLiveDashboardSnapshot(SUPERVISOR_TOKEN);
+  res.set('Cache-Control', 'no-store');
+  res.json(snapshot);
+});
+
+app.get('/api/ha/hacs-repositories', async (req, res) => {
+  const snapshot = await fetchHacsRepositories(SUPERVISOR_TOKEN);
   res.set('Cache-Control', 'no-store');
   res.json(snapshot);
 });

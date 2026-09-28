@@ -1,5 +1,6 @@
 import { ThemeConfig } from '../types/theme';
 import { parseHomeAssistantThemeYaml } from './yamlParser';
+import { detectRequiredIntegrations } from './themeRequirementDetector';
 
 export interface GitHubImportResult {
   success: boolean;
@@ -91,6 +92,10 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
       };
     }
 
+    const requiredIntegrations = detectRequiredIntegrations(
+      tree.filter((item: any) => item.type === 'blob').map((item: any) => item.path)
+    ).map((integration) => ({ ...integration, repoFullName: `${owner}/${repo}` }));
+
     const allImportedThemes: ThemeConfig[] = [];
     const filesToFetch = yamlFiles.slice(0, 15);
 
@@ -104,6 +109,9 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
           for (const t of parsedThemes) {
             if (t.author === 'Unknown' || t.author === 'Community') {
               t.author = owner;
+            }
+            if (requiredIntegrations.length > 0) {
+              t.requirements = { ...t.requirements, requiresCardMod: t.requirements?.requiresCardMod ?? false, requiredIntegrations };
             }
             allImportedThemes.push(t);
           }
