@@ -25,8 +25,13 @@ export function mountMockFrontendStatic(app) {
 
   app.get(`${MOUNT_PREFIX}/*splat`, (req, res) => {
     const relPath = req.params.splat.join('/');
-    const filePath = path.join(dir, relPath);
+    const filePath = path.resolve(dir, relPath);
     const ext = path.extname(filePath);
+
+    if (filePath !== dir && !filePath.startsWith(dir + path.sep)) {
+      res.status(404).end();
+      return;
+    }
 
     if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
       res.status(404).end();

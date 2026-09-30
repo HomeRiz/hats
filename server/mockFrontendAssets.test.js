@@ -76,4 +76,19 @@ describe('mountMockFrontendStatic - ingress rewriting', () => {
     expect(await res1.text()).toContain('/prefix-one/mock-frontend/static/');
     expect(await res2.text()).toContain('/prefix-two/mock-frontend/static/');
   });
+
+  it('rejects a path-traversal request instead of reading a file outside the vendored dir', async () => {
+    const secretPath = path.join(VENDOR_DIR, '..', 'secret.json');
+    fs.writeFileSync(secretPath, '{"leaked":true}');
+    try {
+      const res = await fetch(
+        `${baseUrl}/mock-frontend/frontend_latest/%2e%2e/%2e%2e/secret.json`
+      );
+      expect(res.status).toBe(404);
+      const body = await res.text();
+      expect(body).not.toContain('leaked');
+    } finally {
+      fs.rmSync(secretPath, { force: true });
+    }
+  });
 });
