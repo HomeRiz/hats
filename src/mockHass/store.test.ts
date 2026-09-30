@@ -91,4 +91,28 @@ describe('MockHassStore - theme subscription', () => {
     expect(a).toHaveBeenCalledTimes(1);
     expect(b).toHaveBeenCalledTimes(1);
   });
+
+  it('delivers two back-to-back setTheme calls independently, without losing or coalescing the second', () => {
+    const store = new MockHassStore([]);
+    const listener = vi.fn();
+    store.subscribeTheme(listener);
+    store.setTheme('first', { 'primary-color': '#f00' });
+    store.setTheme('second', { 'primary-color': '#0f0' });
+    expect(listener).toHaveBeenCalledTimes(2);
+    expect(listener).toHaveBeenNthCalledWith(1, { name: 'first', vars: { 'primary-color': '#f00' } });
+    expect(listener).toHaveBeenNthCalledWith(2, { name: 'second', vars: { 'primary-color': '#0f0' } });
+  });
+
+  it('a listener subscribed only before the second call does not see the first', () => {
+    const store = new MockHassStore([]);
+    const early = vi.fn();
+    store.subscribeTheme(early);
+    store.setTheme('first', {});
+    const late = vi.fn();
+    store.subscribeTheme(late);
+    store.setTheme('second', {});
+    expect(early).toHaveBeenCalledTimes(2);
+    expect(late).toHaveBeenCalledTimes(1);
+    expect(late).toHaveBeenCalledWith({ name: 'second', vars: {} });
+  });
 });
