@@ -117,3 +117,30 @@ describe('createFakeHaSocket - completion', () => {
     conn.close();
   });
 });
+
+describe('createFakeHaSocket - themes and lovelace', () => {
+  it('frontend/get_themes returns the store\'s current theme', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    store.setTheme('candidate', { 'primary-color': '#f00' });
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({ type: 'frontend/get_themes' });
+    expect(result.themes.candidate).toEqual({ 'primary-color': '#f00' });
+    conn.close();
+  });
+
+  it('lovelace/config returns a single default view referencing demo entities', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({ type: 'lovelace/config' });
+    expect(result.views.length).toBeGreaterThan(0);
+    conn.close();
+  });
+
+  it('lovelace/resources returns an array (empty until mod loading exists)', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({ type: 'lovelace/resources' });
+    expect(Array.isArray(result)).toBe(true);
+    conn.close();
+  });
+});

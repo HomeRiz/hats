@@ -19,6 +19,7 @@ const TOGGLE_SERVICES: Record<string, { on: string; off: string; onState: string
 export class MockHassStore {
   private states = new Map<string, MockEntityState>();
   private listeners = new Set<Listener>();
+  private themeListeners = new Set<(theme: { name: string; vars: Record<string, string> }) => void>();
   private theme: { name: string; vars: Record<string, string> } | null = null;
 
   constructor(initialEntities: MockEntityState[]) {
@@ -63,10 +64,16 @@ export class MockHassStore {
 
   setTheme(themeName: string, themeVars: Record<string, string>): void {
     this.theme = { name: themeName, vars: themeVars };
+    for (const listener of this.themeListeners) listener(this.theme);
   }
 
   getTheme(): { name: string; vars: Record<string, string> } | null {
     return this.theme;
+  }
+
+  subscribeTheme(listener: (theme: { name: string; vars: Record<string, string> }) => void): () => void {
+    this.themeListeners.add(listener);
+    return () => this.themeListeners.delete(listener);
   }
 
   private notify(): void {

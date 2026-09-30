@@ -59,3 +59,36 @@ describe('MockHassStore', () => {
     expect(store.getState('light.living_room')?.state).toBe('off');
   });
 });
+
+describe('MockHassStore - theme subscription', () => {
+  it('notifies theme subscribers on setTheme, not entity-state subscribers', () => {
+    const store = new MockHassStore([]);
+    const themeListener = vi.fn();
+    const stateListener = vi.fn();
+    store.subscribeTheme(themeListener);
+    store.subscribe(stateListener);
+    store.setTheme('candidate', { 'primary-color': '#f00' });
+    expect(themeListener).toHaveBeenCalledWith({ name: 'candidate', vars: { 'primary-color': '#f00' } });
+    expect(stateListener).not.toHaveBeenCalled();
+  });
+
+  it('unsubscribeTheme stops notifications', () => {
+    const store = new MockHassStore([]);
+    const listener = vi.fn();
+    const unsubscribe = store.subscribeTheme(listener);
+    unsubscribe();
+    store.setTheme('candidate', {});
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('notifies multiple theme subscribers registered before a change', () => {
+    const store = new MockHassStore([]);
+    const a = vi.fn();
+    const b = vi.fn();
+    store.subscribeTheme(a);
+    store.subscribeTheme(b);
+    store.setTheme('candidate', {});
+    expect(a).toHaveBeenCalledTimes(1);
+    expect(b).toHaveBeenCalledTimes(1);
+  });
+});

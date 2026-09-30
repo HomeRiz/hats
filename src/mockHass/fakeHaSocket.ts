@@ -120,6 +120,36 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
       send({ id, type: 'result', success: true, result: null });
       return;
     }
+    if (type === 'frontend/get_themes') {
+      const current = store.getTheme();
+      send({
+        id,
+        type: 'result',
+        success: true,
+        result: { themes: current ? { [current.name]: current.vars } : {}, default_theme: current?.name ?? 'default' },
+      });
+      return;
+    }
+    if (type === 'lovelace/config') {
+      send({
+        id,
+        type: 'result',
+        success: true,
+        result: {
+          views: [
+            {
+              title: 'Home',
+              cards: store.getStates().map((s) => ({ type: 'entity', entity: s.entity_id })),
+            },
+          ],
+        },
+      });
+      return;
+    }
+    if (type === 'lovelace/resources') {
+      send({ id, type: 'result', success: true, result: [] });
+      return;
+    }
     if (EMPTY_RESULT_COMMANDS.has(type)) {
       send({ id, type: 'result', success: true, result: [] });
       return;
