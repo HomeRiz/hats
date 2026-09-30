@@ -7,6 +7,7 @@ import { rewriteRootRelativePaths, normalizeIngressPath } from './ingressRewrite
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const VENDOR_DIR = path.join(__dirname, '..', 'vendor', 'mock-frontend', 'hass_frontend');
 const BOOTSTRAP_DIR = path.join(__dirname, '..', 'vendor', 'mock-frontend-bootstrap');
+const MODS_DIR = path.join(__dirname, '..', 'vendor', 'mock-mods');
 const MOUNT_PREFIX = '/mock-frontend';
 
 export function resolveMockFrontendDir(vendorDir = VENDOR_DIR) {
@@ -76,4 +77,12 @@ export function mountMockFrontendBootstrap(app, { bootstrapDir = BOOTSTRAP_DIR }
     next();
   });
   app.use('/mock-frontend-bootstrap', express.static(dir, { redirect: false }));
+}
+
+export function mountMockMods(app, { modsDir = MODS_DIR } = {}) {
+  if (!fs.existsSync(modsDir)) {
+    console.warn('mockModSources: vendor/mock-mods not found - live-render preview mods unavailable');
+    return;
+  }
+  app.use('/mock-mods', express.static(modsDir, { redirect: false }));
 }

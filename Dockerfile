@@ -5,7 +5,8 @@ RUN npm ci
 COPY . .
 RUN apk add --no-cache curl unzip bash
 COPY scripts/fetch-mock-frontend.sh scripts/fetch-mock-frontend.sh
-RUN chmod +x scripts/fetch-mock-frontend.sh && ./scripts/fetch-mock-frontend.sh
+COPY scripts/fetch-mock-mods.sh scripts/fetch-mock-mods.sh
+RUN chmod +x scripts/fetch-mock-frontend.sh scripts/fetch-mock-mods.sh && ./scripts/fetch-mock-frontend.sh && ./scripts/fetch-mock-mods.sh
 RUN npm run build:mock-frontend-bootstrap
 RUN npm run build
 
