@@ -48,4 +48,16 @@ describe('rewriteRootRelativePaths', () => {
     const input = 'fetch("/api/ha/status")';
     expect(rewriteRootRelativePaths(input, '/prefix', '/mock-frontend')).toBe(input);
   });
+
+  it('rewrites /static/ references expressed as a backtick template literal with an interpolated suffix', () => {
+    const input = 'fetch(`/static/translations/${e}`,{credentials:"same-origin"})';
+    const output = rewriteRootRelativePaths(input, '/api/hassio_ingress/abc123', '/mock-frontend');
+    expect(output).toBe('fetch(`/api/hassio_ingress/abc123/mock-frontend/static/translations/${e}`,{credentials:"same-origin"})');
+  });
+
+  it('rewrites /static/ references expressed as a backtick template literal with an interpolated directory segment', () => {
+    const input = 'fetch(`/static/locale-data/intl-${e.toLowerCase()}/${t}.json`)';
+    const output = rewriteRootRelativePaths(input, '/prefix', '/mock-frontend');
+    expect(output).toBe('fetch(`/prefix/mock-frontend/static/locale-data/intl-${e.toLowerCase()}/${t}.json`)');
+  });
 });

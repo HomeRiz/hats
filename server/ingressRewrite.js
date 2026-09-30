@@ -3,13 +3,20 @@ export function normalizeIngressPath(headerValue) {
   return value || '';
 }
 
-const REWRITE_TARGETS = ['/static/', '/frontend_latest/', '/frontend_es5/', '/sw-modern.js"', '/sw-legacy.js"'];
+const PREFIX_TARGETS = ['/static/', '/frontend_latest/', '/frontend_es5/'];
+const EXACT_TARGETS = ['/sw-modern.js', '/sw-legacy.js'];
+const QUOTE_CHARS = ['"', '`', "'"];
 
 export function rewriteRootRelativePaths(content, ingressPath, mountPrefix) {
   const prefix = `${ingressPath}${mountPrefix}`;
   let out = content;
-  for (const target of REWRITE_TARGETS) {
-    out = out.split(`"${target}`).join(`"${prefix}${target}`);
+  for (const q of QUOTE_CHARS) {
+    for (const target of PREFIX_TARGETS) {
+      out = out.split(`${q}${target}`).join(`${q}${prefix}${target}`);
+    }
+    for (const target of EXACT_TARGETS) {
+      out = out.split(`${q}${target}${q}`).join(`${q}${prefix}${target}${q}`);
+    }
   }
   return out;
 }

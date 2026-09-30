@@ -4,8 +4,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TRANSLATIONS_DIR = path.join(__dirname, '..', '..', 'vendor', 'mock-frontend', 'hass_frontend', 'static', 'translations');
+function translationsDir(): string {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  return path.join(__dirname, '..', '..', 'vendor', 'mock-frontend', 'hass_frontend', 'static', 'translations');
+}
 
 const FAKE_HA_VERSION = '2026.9.0';
 
@@ -15,7 +17,8 @@ function loadTranslationResources(language: string, category?: string): Record<s
   if (typeof language !== 'string' || !SAFE_SEGMENT.test(language)) return {};
   if (category !== undefined && (typeof category !== 'string' || !SAFE_SEGMENT.test(category))) return {};
   try {
-    const dir = category ? path.join(TRANSLATIONS_DIR, category) : TRANSLATIONS_DIR;
+    const base = translationsDir();
+    const dir = category ? path.join(base, category) : base;
     if (!fs.existsSync(dir)) return {};
     const match = fs.readdirSync(dir).find((f) => f.startsWith(`${language}-`) && f.endsWith('.json'));
     if (!match) return {};
