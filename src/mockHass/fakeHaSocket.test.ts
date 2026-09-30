@@ -92,4 +92,28 @@ describe('createFakeHaSocket - completion', () => {
     expect(result.resources).toEqual({});
     conn.close();
   });
+
+  it('rejects a path-traversal category without reading outside TRANSLATIONS_DIR', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({
+      type: 'frontend/get_translations',
+      language: 'en',
+      category: '../../../../../../../../etc',
+    });
+    expect(result.resources).toEqual({});
+    conn.close();
+  });
+
+  it('rejects a path-traversal language without reading outside TRANSLATIONS_DIR', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({
+      type: 'frontend/get_translations',
+      language: '../../../../../../../../etc/passwd',
+      category: 'app',
+    });
+    expect(result.resources).toEqual({});
+    conn.close();
+  });
 });

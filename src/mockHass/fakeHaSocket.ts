@@ -9,7 +9,11 @@ const TRANSLATIONS_DIR = path.join(__dirname, '..', '..', 'vendor', 'mock-fronte
 
 const FAKE_HA_VERSION = '2026.9.0';
 
+const SAFE_SEGMENT = /^[a-zA-Z0-9_-]+$/;
+
 function loadTranslationResources(language: string, category?: string): Record<string, unknown> {
+  if (typeof language !== 'string' || !SAFE_SEGMENT.test(language)) return {};
+  if (category !== undefined && (typeof category !== 'string' || !SAFE_SEGMENT.test(category))) return {};
   try {
     const dir = category ? path.join(TRANSLATIONS_DIR, category) : TRANSLATIONS_DIR;
     if (!fs.existsSync(dir)) return {};
