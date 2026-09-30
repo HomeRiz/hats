@@ -14,6 +14,13 @@ describe('normalizeIngressPath', () => {
     expect(normalizeIngressPath('/api/hassio_ingress/abc123')).toBe('/api/hassio_ingress/abc123');
   });
 
+  it('treats a value that is not a Supervisor ingress path as absent', () => {
+    expect(normalizeIngressPath('/api/hassio_ingress/abc";alert(1);"')).toBe('');
+    expect(normalizeIngressPath('/some/other/prefix')).toBe('');
+    expect(normalizeIngressPath('/api/hassio_ingress/abc/extra')).toBe('');
+    expect(normalizeIngressPath('/api/hassio_ingress/')).toBe('');
+  });
+
   it('takes the first entry when Express gives an array (duplicate header)', () => {
     expect(normalizeIngressPath(['/api/hassio_ingress/abc123', '/other'])).toBe('/api/hassio_ingress/abc123');
   });

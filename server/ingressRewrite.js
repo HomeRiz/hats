@@ -1,6 +1,9 @@
+const INGRESS_PATH_SHAPE = /^\/api\/hassio_ingress\/[A-Za-z0-9_-]+$/;
+
 export function normalizeIngressPath(headerValue) {
   const value = Array.isArray(headerValue) ? headerValue[0] : headerValue;
-  return value || '';
+  if (typeof value !== 'string' || !INGRESS_PATH_SHAPE.test(value)) return '';
+  return value;
 }
 
 const PREFIX_TARGETS = ['/static/', '/frontend_latest/', '/frontend_es5/'];

@@ -435,8 +435,10 @@ app.use(express.static(DIST_DIR, {
     }
   }
 }));
-mountMockFrontendStatic(app);
-mountMockFrontendBootstrap(app);
+if (process.env.HATS_ENABLE_LIVE_PREVIEW === 'true') {
+  mountMockFrontendStatic(app);
+  mountMockFrontendBootstrap(app);
+}
 
 app.get('/api/ha/status', (req, res) => {
   const isAddon = fs.existsSync(CONFIG_DIR) || Boolean(SUPERVISOR_TOKEN);

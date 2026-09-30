@@ -6,18 +6,19 @@ import { rewriteRootRelativePaths, normalizeIngressPath } from './ingressRewrite
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const VENDOR_DIR = path.join(__dirname, '..', 'vendor', 'mock-frontend', 'hass_frontend');
+const BOOTSTRAP_DIR = path.join(__dirname, '..', 'vendor', 'mock-frontend-bootstrap');
 const MOUNT_PREFIX = '/mock-frontend';
 
-export function resolveMockFrontendDir() {
-  return fs.existsSync(path.join(VENDOR_DIR, 'index.html')) ? VENDOR_DIR : null;
+export function resolveMockFrontendDir(vendorDir = VENDOR_DIR) {
+  return fs.existsSync(path.join(vendorDir, 'index.html')) ? vendorDir : null;
 }
 
-const TEXT_REWRITE_EXTENSIONS = new Set(['.js', '.json', '.html']);
-const CONTENT_TYPES = { '.js': 'application/javascript', '.json': 'application/json', '.html': 'text/html' };
+const TEXT_REWRITE_EXTENSIONS = new Set(['.js', '.json']);
+const CONTENT_TYPES = { '.js': 'application/javascript', '.json': 'application/json' };
 const rewriteCache = new Map();
 
-export function mountMockFrontendStatic(app) {
-  const dir = resolveMockFrontendDir();
+export function mountMockFrontendStatic(app, { vendorDir = VENDOR_DIR } = {}) {
+  const dir = resolveMockFrontendDir(vendorDir);
   if (!dir) {
     console.warn('mockFrontendAssets: hass_frontend not found - live-render preview unavailable, falling back to fake-tile preview');
     return;
@@ -26,9 +27,14 @@ export function mountMockFrontendStatic(app) {
   app.get(`${MOUNT_PREFIX}/*splat`, (req, res) => {
     const relPath = req.params.splat.join('/');
     const filePath = path.resolve(dir, relPath);
-    const ext = path.extname(filePath);
+    const ext = path.extname(filePath).toLowerCase();
 
     if (filePath !== dir && !filePath.startsWith(dir + path.sep)) {
+      res.status(404).end();
+      return;
+    }
+
+    if (ext === '.html' || ext === '.htm') {
       res.status(404).end();
       return;
     }
@@ -52,16 +58,22 @@ export function mountMockFrontendStatic(app) {
       rewriteCache.set(cacheKey, rewritten);
     }
 
-    if (ext === '.html') {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
     res.setHeader('Content-Type', CONTENT_TYPES[ext]);
     res.send(rewritten);
   });
 }
 
-export function mountMockFrontendBootstrap(app) {
-  const dir = path.join(__dirname, '..', 'vendor', 'mock-frontend-bootstrap');
+export function mountMockFrontendBootstrap(app, { bootstrapDir = BOOTSTRAP_DIR } = {}) {
+  const dir = bootstrapDir;
   if (!fs.existsSync(path.join(dir, 'index.html'))) return;
-  app.use('/mock-frontend-bootstrap', express.static(dir));
+  app.use('/mock-frontend-bootstrap', (req, res, next) => {
+    const originalPath = req.originalUrl.split('?')[0];
+    if (originalPath === '/mock-frontend-bootstrap') {
+      const query = req.originalUrl.slice(originalPath.length);
+      res.redirect(301, `mock-frontend-bootstrap/${query}`);
+      return;
+    }
+    next();
+  });
+  app.use('/mock-frontend-bootstrap', express.static(dir, { redirect: false }));
 }

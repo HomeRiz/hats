@@ -13,11 +13,11 @@ const FAKE_HA_VERSION = '2026.9.0';
 
 const SAFE_SEGMENT = /^[a-zA-Z0-9_-]+$/;
 
-function loadTranslationResources(language: string, category?: string): Record<string, unknown> {
+function loadTranslationResources(language: string, category?: string, baseDir?: string): Record<string, unknown> {
   if (typeof language !== 'string' || !SAFE_SEGMENT.test(language)) return {};
   if (category !== undefined && (typeof category !== 'string' || !SAFE_SEGMENT.test(category))) return {};
   try {
-    const base = translationsDir();
+    const base = baseDir ?? translationsDir();
     const dir = category ? path.join(base, category) : base;
     if (!fs.existsSync(dir)) return {};
     const match = fs.readdirSync(dir).find((f) => f.startsWith(`${language}-`) && f.endsWith('.json'));
@@ -49,11 +49,14 @@ const EMPTY_RESULT_COMMANDS = new Set([
   'persistent_notification/subscribe',
 ]);
 
-export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
+export interface FakeHaSocketOptions {
+  translationsDir?: string;
+}
+
+export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOptions = {}): HaWebSocket {
   const listeners: Record<string, WsListener[]> = { open: [], message: [], close: [], error: [] };
   let closed = false;
-  let eventSubscriptionId: number | null = null;
-  let storeUnsubscribe: (() => void) | null = null;
+  const subscriptions = new Map<number, () => void>();
 
   function emit(type: string, ev: any) {
     for (const l of listeners[type] || []) l(ev);
@@ -71,7 +74,7 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
       return;
     }
     if (type === 'get_config') {
-      send({ id, type: 'result', success: true, result: { location_name: 'HATS Preview', version: 'mock', components: [], state: 'RUNNING' } });
+      send({ id, type: 'result', success: true, result: { location_name: 'HATS Preview', version: FAKE_HA_VERSION, components: [], state: 'RUNNING' } });
       return;
     }
     if (type === 'get_panels') {
@@ -87,7 +90,7 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
       return;
     }
     if (type === 'frontend/get_translations') {
-      send({ id, type: 'result', success: true, result: { resources: loadTranslationResources(msg.language, msg.category) } });
+      send({ id, type: 'result', success: true, result: { resources: loadTranslationResources(msg.language, msg.category, options.translationsDir) } });
       return;
     }
     if (type === 'call_service') {
@@ -96,30 +99,37 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
       return;
     }
     if (type === 'subscribe_events') {
-      eventSubscriptionId = id;
-      storeUnsubscribe = store.subscribe((states) => {
-        for (const s of states) {
-          send({ id: eventSubscriptionId, type: 'event', event: { event_type: 'state_changed', data: { entity_id: s.entity_id, new_state: s } } });
-        }
-      });
+      const eventType = msg.event_type;
+      if (eventType === undefined || eventType === 'state_changed') {
+        const subId: number = id;
+        subscriptions.set(
+          subId,
+          store.subscribe((states) => {
+            for (const s of states) {
+              send({ id: subId, type: 'event', event: { event_type: 'state_changed', data: { entity_id: s.entity_id, new_state: s } } });
+            }
+          })
+        );
+      }
       send({ id, type: 'result', success: true, result: null });
       return;
     }
     if (type === 'subscribe_entities') {
-      eventSubscriptionId = id;
+      const subId: number = id;
       const sendSnapshot = (states: MockEntityState[]) => {
         const add: Record<string, unknown> = {};
         for (const s of states) add[s.entity_id] = toCompactState(s);
-        send({ id: eventSubscriptionId, type: 'event', event: { a: add } });
+        send({ id: subId, type: 'event', event: { a: add } });
       };
-      storeUnsubscribe = store.subscribe(sendSnapshot);
+      subscriptions.set(subId, store.subscribe(sendSnapshot));
       send({ id, type: 'result', success: true, result: null });
       sendSnapshot(store.getStates());
       return;
     }
     if (type === 'unsubscribe_events') {
-      storeUnsubscribe?.();
-      storeUnsubscribe = null;
+      const unsubscribe = subscriptions.get(msg.subscription);
+      unsubscribe?.();
+      subscriptions.delete(msg.subscription);
       send({ id, type: 'result', success: true, result: null });
       return;
     }
@@ -184,7 +194,8 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
     close() {
       closed = true;
       socket.readyState = 3;
-      storeUnsubscribe?.();
+      for (const unsubscribe of subscriptions.values()) unsubscribe();
+      subscriptions.clear();
       emit('close', {});
     },
   };

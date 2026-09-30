@@ -36,6 +36,7 @@ class FakeWebSocketConstructor {
 (window as any).__hatsMockStore = sharedStore;
 
 window.addEventListener('message', (event) => {
+  if (event.source !== window.parent) return;
   const data = event.data;
   if (!data || data.type !== 'hats:apply-theme') return;
   if (typeof data.themeName !== 'string' || typeof data.themeVars !== 'object' || data.themeVars === null) return;
