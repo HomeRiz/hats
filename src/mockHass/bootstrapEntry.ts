@@ -34,3 +34,10 @@ class FakeWebSocketConstructor {
   return { auth, conn };
 });
 (window as any).__hatsMockStore = sharedStore;
+
+window.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || data.type !== 'hats:apply-theme') return;
+  if (typeof data.themeName !== 'string' || typeof data.themeVars !== 'object' || data.themeVars === null) return;
+  sharedStore.setTheme(data.themeName, data.themeVars);
+});
