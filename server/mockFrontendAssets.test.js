@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -21,5 +21,59 @@ describe('resolveMockFrontendDir', () => {
     fs.mkdirSync(VENDOR_DIR, { recursive: true });
     fs.writeFileSync(path.join(VENDOR_DIR, 'index.html'), '<html></html>');
     expect(resolveMockFrontendDir()).toBe(VENDOR_DIR);
+  });
+});
+
+import express from 'express';
+import http from 'http';
+import { mountMockFrontendStatic } from './mockFrontendAssets.js';
+
+describe('mountMockFrontendStatic - ingress rewriting', () => {
+  let server;
+  let baseUrl;
+
+  beforeEach(async () => {
+    fs.mkdirSync(VENDOR_DIR, { recursive: true });
+    fs.writeFileSync(path.join(VENDOR_DIR, 'index.html'), '<html></html>');
+    fs.mkdirSync(path.join(VENDOR_DIR, 'frontend_latest'), { recursive: true });
+    fs.writeFileSync(
+      path.join(VENDOR_DIR, 'frontend_latest', 'core.abc123.js'),
+      'fetch("/static/translations/en.json")'
+    );
+    const app = express();
+    mountMockFrontendStatic(app);
+    server = await new Promise((resolve) => {
+      const s = app.listen(0, () => resolve(s));
+    });
+    baseUrl = `http://localhost:${server.address().port}`;
+  });
+
+  afterEach(async () => {
+    await new Promise((resolve) => server.close(resolve));
+  });
+
+  it('rewrites /static/ references when X-Ingress-Path is present', async () => {
+    const res = await fetch(`${baseUrl}/mock-frontend/frontend_latest/core.abc123.js`, {
+      headers: { 'X-Ingress-Path': '/api/hassio_ingress/abc123' },
+    });
+    const body = await res.text();
+    expect(body).toBe('fetch("/api/hassio_ingress/abc123/mock-frontend/static/translations/en.json")');
+  });
+
+  it('rewrites to the unprefixed mount path when X-Ingress-Path is absent', async () => {
+    const res = await fetch(`${baseUrl}/mock-frontend/frontend_latest/core.abc123.js`);
+    const body = await res.text();
+    expect(body).toBe('fetch("/mock-frontend/static/translations/en.json")');
+  });
+
+  it('serves the same file differently for two different ingress paths (no cross-contamination)', async () => {
+    const res1 = await fetch(`${baseUrl}/mock-frontend/frontend_latest/core.abc123.js`, {
+      headers: { 'X-Ingress-Path': '/prefix-one' },
+    });
+    const res2 = await fetch(`${baseUrl}/mock-frontend/frontend_latest/core.abc123.js`, {
+      headers: { 'X-Ingress-Path': '/prefix-two' },
+    });
+    expect(await res1.text()).toContain('/prefix-one/mock-frontend/static/');
+    expect(await res2.text()).toContain('/prefix-two/mock-frontend/static/');
   });
 });

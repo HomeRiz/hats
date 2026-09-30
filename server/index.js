@@ -6,7 +6,7 @@ import * as yaml from 'js-yaml';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
 import { fetchLiveDashboardSnapshot, fetchHacsRepositories } from './haWebsocket.js';
-import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockFrontendRootAssets } from './mockFrontendAssets.js';
+import { mountMockFrontendStatic, mountMockFrontendBootstrap } from './mockFrontendAssets.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -437,7 +437,6 @@ app.use(express.static(DIST_DIR, {
 }));
 mountMockFrontendStatic(app);
 mountMockFrontendBootstrap(app);
-mountMockFrontendRootAssets(app);
 
 app.get('/api/ha/status', (req, res) => {
   const isAddon = fs.existsSync(CONFIG_DIR) || Boolean(SUPERVISOR_TOKEN);
