@@ -16,7 +16,7 @@ if (!coreMatch || !appMatch) {
 }
 
 let out = fs.readFileSync(TEMPLATE, 'utf8');
-out = out.replace('__CORE_JS__', coreMatch[0]).replace('__APP_JS__', appMatch[0]);
+out = out.replace('__CORE_JS__', `../mock-frontend${coreMatch[0]}`).replace('__APP_JS__', `../mock-frontend${appMatch[0]}`);
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, out);
 console.log(`compose-mock-frontend-index: wrote ${OUT} (core=${coreMatch[0]}, app=${appMatch[0]})`);
