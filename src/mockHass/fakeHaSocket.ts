@@ -1,5 +1,35 @@
 import type { HaWebSocket } from 'home-assistant-js-websocket';
-import type { MockHassStore } from './store';
+import type { MockHassStore, MockEntityState } from './store';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const TRANSLATIONS_DIR = path.join(__dirname, '..', '..', 'vendor', 'mock-frontend', 'hass_frontend', 'static', 'translations');
+
+const FAKE_HA_VERSION = '2026.9.0';
+
+function loadTranslationResources(language: string, category?: string): Record<string, unknown> {
+  try {
+    const dir = category ? path.join(TRANSLATIONS_DIR, category) : TRANSLATIONS_DIR;
+    if (!fs.existsSync(dir)) return {};
+    const match = fs.readdirSync(dir).find((f) => f.startsWith(`${language}-`) && f.endsWith('.json'));
+    if (!match) return {};
+    return JSON.parse(fs.readFileSync(path.join(dir, match), 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function toCompactState(s: MockEntityState) {
+  return {
+    s: s.state,
+    a: s.attributes,
+    c: s.context,
+    lc: Math.floor(new Date(s.last_changed).getTime() / 1000),
+    lu: Math.floor(new Date(s.last_updated).getTime() / 1000),
+  };
+}
 
 type WsListener = (ev: any) => void;
 
@@ -45,6 +75,14 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
       send({ id, type: 'result', success: true, result: {} });
       return;
     }
+    if (type === 'ping') {
+      send({ id, type: 'pong' });
+      return;
+    }
+    if (type === 'frontend/get_translations') {
+      send({ id, type: 'result', success: true, result: { resources: loadTranslationResources(msg.language, msg.category) } });
+      return;
+    }
     if (type === 'call_service') {
       store.callService(msg.domain, msg.service, msg.service_data || {});
       send({ id, type: 'result', success: true, result: {} });
@@ -58,6 +96,18 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
         }
       });
       send({ id, type: 'result', success: true, result: null });
+      return;
+    }
+    if (type === 'subscribe_entities') {
+      eventSubscriptionId = id;
+      const sendSnapshot = (states: MockEntityState[]) => {
+        const add: Record<string, unknown> = {};
+        for (const s of states) add[s.entity_id] = toCompactState(s);
+        send({ id: eventSubscriptionId, type: 'event', event: { a: add } });
+      };
+      storeUnsubscribe = store.subscribe(sendSnapshot);
+      send({ id, type: 'result', success: true, result: null });
+      sendSnapshot(store.getStates());
       return;
     }
     if (type === 'unsubscribe_events') {
@@ -74,7 +124,7 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
   }
 
   const socket: any = {
-    haVersion: 'mock',
+    haVersion: FAKE_HA_VERSION,
     readyState: 0,
     CONNECTING: 0,
     OPEN: 1,
@@ -89,7 +139,7 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
     send(data: string) {
       const msg = JSON.parse(data);
       if (msg.type === 'auth') {
-        send({ type: 'auth_ok', ha_version: 'mock' });
+        send({ type: 'auth_ok', ha_version: FAKE_HA_VERSION });
         return;
       }
       handleCommand(msg);
@@ -105,7 +155,7 @@ export function createFakeHaSocket(store: MockHassStore): HaWebSocket {
   queueMicrotask(() => {
     socket.readyState = 1;
     emit('open', {});
-    send({ type: 'auth_required', ha_version: 'mock' });
+    send({ type: 'auth_required', ha_version: FAKE_HA_VERSION });
   });
 
   return socket as HaWebSocket;

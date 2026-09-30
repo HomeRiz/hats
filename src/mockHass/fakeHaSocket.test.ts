@@ -3,6 +3,12 @@ import { Connection, createConnection, getStates, subscribeEntities } from 'home
 import { MockHassStore } from './store';
 import { DEMO_ENTITIES } from './demoEntities';
 import { createFakeHaSocket } from './fakeHaSocket';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const TRANSLATIONS_DIR = path.join(__dirname, '..', '..', 'vendor', 'mock-frontend', 'hass_frontend', 'static', 'translations');
 
 async function connectToFakeSocket(store: MockHassStore): Promise<Connection> {
   return createConnection({
@@ -46,6 +52,44 @@ describe('createFakeHaSocket', () => {
     const conn = await connectToFakeSocket(store);
     await conn.sendMessagePromise({ type: 'call_service', domain: 'lock', service: 'unlock', service_data: { entity_id: 'lock.front_door' } });
     expect(store.getState('lock.front_door')?.state).toBe('unlocked');
+    conn.close();
+  });
+});
+
+describe('createFakeHaSocket - completion', () => {
+  it('responds to ping with pong', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    await expect(conn.ping()).resolves.toBeUndefined();
+    conn.close();
+  });
+
+  it('reports a real, parseable haVersion, not "mock"', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    expect(conn.haVersion).not.toBe('mock');
+    expect(conn.haVersion).toMatch(/^\d{4}\.\d+/);
+    conn.close();
+  });
+
+  it('returns real translation resources for a category that exists on disk', async () => {
+    if (!fs.existsSync(TRANSLATIONS_DIR)) {
+      console.warn('translations not extracted - run ./scripts/fetch-mock-frontend.sh first, skipping');
+      return;
+    }
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({ type: 'frontend/get_translations', language: 'en', category: 'app' });
+    expect(result.resources).toBeTruthy();
+    expect(Object.keys(result.resources).length).toBeGreaterThan(0);
+    conn.close();
+  });
+
+  it('returns empty resources for a category with no matching file, does not throw', async () => {
+    const store = new MockHassStore(DEMO_ENTITIES);
+    const conn = await connectToFakeSocket(store);
+    const result: any = await conn.sendMessagePromise({ type: 'frontend/get_translations', language: 'xx', category: 'not-a-real-category' });
+    expect(result.resources).toEqual({});
     conn.close();
   });
 });
