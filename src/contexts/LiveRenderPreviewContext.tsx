@@ -5,6 +5,7 @@ export interface LiveRenderPreviewContextValue {
   timedOut: boolean;
   registerSlot: (el: HTMLDivElement | null) => void;
   applyTheme: (themeName: string, themeVars: Record<string, string>) => boolean;
+  retry: () => void;
 }
 
 const noop = () => {};
@@ -14,6 +15,7 @@ const defaultValue: LiveRenderPreviewContextValue = {
   timedOut: true,
   registerSlot: noop,
   applyTheme: () => false,
+  retry: noop,
 };
 
 export const LiveRenderPreviewContext = createContext<LiveRenderPreviewContextValue>(defaultValue);

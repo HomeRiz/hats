@@ -26,18 +26,20 @@ function renderWithLiveRenderContext(
     timedOut: false,
     registerSlot: vi.fn(),
     applyTheme: vi.fn(() => true),
+    retry: vi.fn(),
     ...overrides,
   };
   return { ...render(<LiveRenderPreviewProvider value={value}>{ui}</LiveRenderPreviewProvider>), value };
 }
 
 describe('DashboardPreview fallback', () => {
-  it('renders the fake-tile fallback when the live-render preview never becomes ready before the timeout', () => {
+  it('shows the retry failed-state (not the slot) when the boot genuinely times out with no ready signal', () => {
     renderWithLiveRenderContext(<DashboardPreview theme={minimalTheme} />, { ready: false, timedOut: true });
     expect(screen.queryByTestId('live-render-slot')).toBeNull();
+    expect(screen.getByText(/didn.t load in time/i)).not.toBeNull();
   });
 
-  it('renders the live-render slot (not the fake-tile fallback) when ready', () => {
+  it('renders the live-render slot (not the failed state) when ready', () => {
     renderWithLiveRenderContext(<DashboardPreview theme={minimalTheme} />, { ready: true, timedOut: false });
     expect(screen.getByTestId('live-render-slot')).not.toBeNull();
   });
@@ -50,8 +52,15 @@ describe('DashboardPreview fallback', () => {
     expect(lastCallArg).not.toBeNull();
   });
 
-  it('still renders the fake-tile fallback (not the slot) while not yet ready and not yet timed out', () => {
+  it('shows the booting spinner (not the slot, not the failed state) while not yet ready and not yet timed out', () => {
     renderWithLiveRenderContext(<DashboardPreview theme={minimalTheme} />, { ready: false, timedOut: false });
     expect(screen.queryByTestId('live-render-slot')).toBeNull();
+    expect(screen.queryByText(/didn.t load in time/i)).toBeNull();
+  });
+
+  it('is sticky: a ready signal that arrives after the give-up timeout still shows the slot, not the failed state', () => {
+    renderWithLiveRenderContext(<DashboardPreview theme={minimalTheme} />, { ready: true, timedOut: true });
+    expect(screen.getByTestId('live-render-slot')).not.toBeNull();
+    expect(screen.queryByText(/didn.t load in time/i)).toBeNull();
   });
 });

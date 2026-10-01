@@ -11,11 +11,9 @@ import {
   HardDriveDownload,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
-import type { LiveDashboardData } from '../../services/useLiveDashboardData';
-import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
-import { MockHeader } from '../preview/MockHeader';
-import { MockSidebar } from '../preview/MockSidebar';
-import { SmartHomeDashboard } from '../preview/SmartHomeDashboard';
+import { sanitizeThemeCss } from '../../services/themeSecurityValidator';
+import { LiveRenderBooting } from '../preview/LiveRenderBooting';
+import { LiveRenderFailed } from '../preview/LiveRenderFailed';
 import { useLiveRenderPreview } from '../../contexts/LiveRenderPreviewContext';
 import { themeToCssVars } from '../../services/themeToCssVars';
 
@@ -23,7 +21,6 @@ interface ThemeOverviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   theme: ThemeConfig;
-  liveDashboardData: LiveDashboardData;
   allThemes: ThemeConfig[];
   onSelectTheme: (themeId: string) => void;
   onEditTheme: (themeId: string) => void;
@@ -36,7 +33,6 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   isOpen,
   onClose,
   theme,
-  liveDashboardData,
   allThemes,
   onSelectTheme,
   onEditTheme,
@@ -44,9 +40,9 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onUninstallTheme,
   onDuplicateTheme,
 }) => {
-  const [sidebarItem, setSidebarItem] = useState('Smart Home');
-  const { ready: liveRenderReady, timedOut: liveRenderTimedOut, registerSlot, applyTheme } = useLiveRenderPreview();
-  const useLiveRender = isOpen && liveRenderReady && !liveRenderTimedOut;
+  const { ready: liveRenderReady, timedOut: liveRenderTimedOut, registerSlot, applyTheme, retry } = useLiveRenderPreview();
+  const useLiveRender = isOpen && liveRenderReady;
+  const isBooting = isOpen && !liveRenderReady && !liveRenderTimedOut;
 
   useEffect(() => {
     if (!useLiveRender) return;
@@ -110,28 +106,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
   if (!isOpen) return null;
 
-  const { palette, engine, background, customSvgOverlay } = theme;
-
-  let bgStyle: React.CSSProperties = {};
-  if (background.type === 'image' && background.imageUrl) {
-    bgStyle = {
-      backgroundImage: `url(${background.imageUrl})`,
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      filter: `brightness(${1 - (background.darken || 0)}) blur(${background.blur || 0}px) saturate(${background.saturation || 1})`,
-    };
-  } else if (background.type === 'gradient' && background.gradientString) {
-    bgStyle = {
-      backgroundImage: background.gradientString,
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-    };
-  } else if (background.type === 'solid' && background.solidColor) {
-    bgStyle = {
-      backgroundColor: background.solidColor,
-    };
-  }
+  const { palette, engine } = theme;
 
   return (
     <div 
@@ -263,65 +238,10 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
           <div className="flex-1 flex flex-col h-full overflow-hidden relative">
             {useLiveRender ? (
               <div ref={registerSlot} data-testid="live-render-slot" className="w-full h-full" />
+            ) : isBooting ? (
+              <LiveRenderBooting theme={theme} />
             ) : (
-              <>
-                <div
-                  className="absolute inset-0 z-0 pointer-events-none transition-all duration-300"
-                  style={bgStyle}
-                />
-                {customSvgOverlay && sanitizeSvgCode(customSvgOverlay).valid && (
-                  <div
-                    className="absolute inset-0 z-0 pointer-events-none opacity-35"
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(sanitizeSvgCode(customSvgOverlay).sanitized)}")`,
-                      backgroundRepeat: 'repeat',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                )}
-                <div
-                  className="absolute inset-0 z-0 pointer-events-none transition-colors"
-                  style={{ background: engine.backgroundScrim || 'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%)' }}
-                />
-
-                {engine.scanlines && (
-                  <div className="absolute inset-0 z-[1] scanlines-overlay opacity-80 pointer-events-none" />
-                )}
-
-                <MockHeader
-                  theme={theme}
-                  activeView={liveDashboardData.activeViewId ?? 'home'}
-                  setActiveView={liveDashboardData.setActiveViewId}
-                  liveViewTabs={liveDashboardData.available ? liveDashboardData.viewNavItems : undefined}
-                />
-
-                {!liveDashboardData.loading && !liveDashboardData.available && (
-                  <div className="relative z-10 shrink-0 px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20">
-                    Showing example preview — couldn't reach your live Home Assistant data.
-                  </div>
-                )}
-                {!liveDashboardData.loading && liveDashboardData.available && liveDashboardData.viewNavItems.length === 0 && (
-                  <div className="relative z-10 shrink-0 px-3 py-1 text-[11px] text-center text-amber-300/80 bg-amber-500/10 border-b border-amber-500/20">
-                    Example navigation tabs — couldn't read your dashboard views.
-                  </div>
-                )}
-
-                <div className="flex-1 flex overflow-hidden relative z-10">
-                  <MockSidebar
-                    theme={theme}
-                    activeItem={sidebarItem}
-                    onSelectItem={(label) => setSidebarItem(label)}
-                    livePanels={liveDashboardData.available ? liveDashboardData.panels : undefined}
-                  />
-
-                  <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-                    <SmartHomeDashboard
-                      theme={theme}
-                      liveGroups={liveDashboardData.available ? liveDashboardData.tileGroups : undefined}
-                    />
-                  </main>
-                </div>
-              </>
+              <LiveRenderFailed theme={theme} onRetry={retry} />
             )}
           </div>
 

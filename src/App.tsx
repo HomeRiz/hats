@@ -8,9 +8,8 @@ import { LiveRenderPreviewProvider, LiveRenderPreviewContextValue } from './cont
 import { applyThemeToLivePreview } from './services/mockFrontendBridge';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
 import { getHaDiagnostics } from './services/haService';
-import { useLiveDashboardData } from './services/useLiveDashboardData';
 
-const LIVE_RENDER_BOOT_TIMEOUT_MS = 8000;
+const LIVE_RENDER_BOOT_TIMEOUT_MS = 25000;
 
 const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
 const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
@@ -47,7 +46,6 @@ export const App: React.FC = () => {
     syncInstalledThemesFromHa,
   } = useThemeStore();
 
-  const liveDashboardData = useLiveDashboardData();
 
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
@@ -57,6 +55,7 @@ export const App: React.FC = () => {
 
   const [liveRenderReady, setLiveRenderReady] = useState(false);
   const [liveRenderTimedOut, setLiveRenderTimedOut] = useState(false);
+  const [liveRenderRetryTick, setLiveRenderRetryTick] = useState(0);
   const liveRenderIframeRef = useRef<HTMLIFrameElement | null>(null);
   const liveRenderSlotElRef = useRef<HTMLDivElement | null>(null);
   const [hasLiveRenderSlot, setHasLiveRenderSlot] = useState(false);
@@ -66,7 +65,12 @@ export const App: React.FC = () => {
     if (liveRenderReady) return;
     const timer = setTimeout(() => setLiveRenderTimedOut(true), LIVE_RENDER_BOOT_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [liveRenderReady]);
+  }, [liveRenderReady, liveRenderRetryTick]);
+
+  const retryLiveRender = useCallback(() => {
+    setLiveRenderTimedOut(false);
+    setLiveRenderRetryTick((t) => t + 1);
+  }, []);
 
   const registerLiveRenderSlot = useCallback((el: HTMLDivElement | null) => {
     liveRenderSlotElRef.current = el;
@@ -101,8 +105,9 @@ export const App: React.FC = () => {
       timedOut: liveRenderTimedOut,
       registerSlot: registerLiveRenderSlot,
       applyTheme: applyLiveRenderTheme,
+      retry: retryLiveRender,
     }),
-    [liveRenderReady, liveRenderTimedOut, registerLiveRenderSlot, applyLiveRenderTheme]
+    [liveRenderReady, liveRenderTimedOut, registerLiveRenderSlot, applyLiveRenderTheme, retryLiveRender]
   );
 
   const checkDiagnostics = async () => {
@@ -202,7 +207,6 @@ export const App: React.FC = () => {
               <ThemeGallery
                 themes={themes}
                 activeThemeId={activeThemeId}
-                liveDashboardData={liveDashboardData}
                 onSelectTheme={(id) => {
                   setActiveThemeId(id);
                   setActiveTab('editor');
