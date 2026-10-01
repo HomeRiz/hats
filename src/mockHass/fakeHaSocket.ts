@@ -118,7 +118,7 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
         pl: 'demo',
         ec: undefined,
         hn: false,
-        en: null,
+        en: typeof s.attributes.friendly_name === 'string' ? s.attributes.friendly_name : null,
         ic: null,
         hb: false,
         dp: null,
