@@ -175,12 +175,13 @@ describe('createFakeHaSocket - translation path safety', () => {
 });
 
 describe('createFakeHaSocket - themes and lovelace', () => {
-  it('frontend/get_themes returns the store\'s current theme', async () => {
+  it('frontend/get_themes returns the store\'s current theme merged over the default dark palette, custom vars winning', async () => {
     const store = new MockHassStore(DEMO_ENTITIES);
     store.setTheme('candidate', { 'primary-color': '#f00' });
     const conn = await connectToFakeSocket(store);
     const result: any = await conn.sendMessagePromise({ type: 'frontend/get_themes' });
-    expect(result.themes.candidate).toEqual({ 'primary-color': '#f00' });
+    expect(result.themes.candidate['primary-color']).toBe('#f00');
+    expect(result.themes.candidate['card-background-color']).toBeTruthy();
     conn.close();
   });
 

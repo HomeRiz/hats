@@ -11,6 +11,26 @@ function translationsDir(): string {
 
 const FAKE_HA_VERSION = '2026.9.0';
 
+const DEFAULT_DARK_THEME_VARS: Record<string, string> = {
+  'primary-background-color': '#111111',
+  'secondary-background-color': '#282828',
+  'card-background-color': '#1c1c1c',
+  'primary-text-color': '#e1e1e1',
+  'secondary-text-color': '#9b9b9b',
+  'disabled-text-color': '#6f6f6f',
+  'divider-color': 'rgba(225, 225, 225, .12)',
+  'primary-color': '#03a9f4',
+  'accent-color': '#ff9800',
+  'app-header-background-color': '#1c1c1c',
+  'app-header-text-color': '#e1e1e1',
+  'mdc-theme-surface': '#1c1c1c',
+  'mdc-theme-on-surface': '#e1e1e1',
+  'mdc-theme-primary': '#03a9f4',
+  'mdc-theme-on-primary': '#111111',
+};
+
+const DEMO_NAV_PANEL_ORDER = ['lovelace', 'demo-energy', 'demo-history', 'demo-logbook', 'demo-map', 'demo-hacs', 'demo-hats'];
+
 const SAFE_SEGMENT = /^[a-zA-Z0-9_-]+$/;
 
 function loadTranslationResources(language: string, category?: string, baseDir?: string): Record<string, unknown> {
@@ -74,7 +94,58 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
       return;
     }
     if (type === 'get_config') {
-      send({ id, type: 'result', success: true, result: { location_name: 'HATS Preview', version: FAKE_HA_VERSION, components: [], state: 'RUNNING' } });
+      send({
+        id,
+        type: 'result',
+        success: true,
+        result: {
+          location_name: 'HATS Preview',
+          version: FAKE_HA_VERSION,
+          components: [],
+          state: 'RUNNING',
+          unit_system: { length: 'km', mass: 'kg', temperature: '°C', volume: 'L', pressure: 'Pa', wind_speed: 'm/s', accumulated_precipitation: 'mm' },
+        },
+      });
+      return;
+    }
+    if (type === 'config/entity_registry/list_for_display') {
+      const entities = store.getStates().map((s) => ({
+        ei: s.entity_id,
+        di: null,
+        ai: null,
+        lb: [],
+        tk: null,
+        pl: 'demo',
+        ec: undefined,
+        hn: false,
+        en: null,
+        ic: null,
+        hb: false,
+        dp: null,
+      }));
+      send({ id, type: 'result', success: true, result: { entities, entity_categories: [] } });
+      return;
+    }
+    if (type === 'frontend/subscribe_user_data' || type === 'frontend/subscribe_system_data') {
+      if (msg.key === 'sidebar') {
+        const subId: number = id;
+        send({ id, type: 'result', success: true, result: null });
+        send({ id: subId, type: 'event', event: { value: { panelOrder: DEMO_NAV_PANEL_ORDER, hiddenPanels: [] } } });
+        return;
+      }
+      const subId: number = id;
+      send({ id, type: 'result', success: true, result: null });
+      send({ id: subId, type: 'event', event: { value: null } });
+      return;
+    }
+    if (type === 'labs/subscribe') {
+      const subId: number = id;
+      send({ id, type: 'result', success: true, result: null });
+      send({ id: subId, type: 'event', event: { preview_feature_enabled: false } });
+      return;
+    }
+    if (type === 'lovelace/info') {
+      send({ id, type: 'result', success: true, result: { mode: 'storage', views: [] } });
       return;
     }
     if (type === 'get_panels') {
@@ -85,11 +156,29 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
         config: { mode: 'auto' },
         url_path: 'lovelace',
       };
+      const demoNavPanel = (urlPath: string, title: string, icon: string) => ({
+        component_name: 'lovelace',
+        icon,
+        title,
+        config: { mode: 'auto' },
+        url_path: urlPath,
+      });
+      const homePanel = { ...demoNavPanel('demo-home', 'Home', 'mdi:home'), url_path: 'lovelace' };
       send({
         id,
         type: 'result',
         success: true,
-        result: { lovelace: dashboardPanel, home: dashboardPanel },
+        result: {
+          lovelace: dashboardPanel,
+          home: dashboardPanel,
+          'demo-home': homePanel,
+          'demo-energy': demoNavPanel('demo-energy', 'Energy', 'mdi:lightning-bolt'),
+          'demo-history': demoNavPanel('demo-history', 'History', 'mdi:history'),
+          'demo-logbook': demoNavPanel('demo-logbook', 'Logbook', 'mdi:format-list-bulleted'),
+          'demo-map': demoNavPanel('demo-map', 'Map', 'mdi:map'),
+          'demo-hacs': demoNavPanel('demo-hacs', 'HACS', 'mdi:storefront'),
+          'demo-hats': demoNavPanel('demo-hats', 'HATS', 'mdi:hat-fedora'),
+        },
       });
       return;
     }
@@ -171,11 +260,12 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
     }
     if (type === 'frontend/get_themes') {
       const current = store.getTheme();
+      const themeVars = { ...DEFAULT_DARK_THEME_VARS, ...(current?.vars ?? {}) };
       send({
         id,
         type: 'result',
         success: true,
-        result: { themes: current ? { [current.name]: current.vars } : {}, default_theme: current?.name ?? 'default' },
+        result: { themes: { [current?.name ?? 'default']: themeVars }, default_theme: current?.name ?? 'default' },
       });
       return;
     }

@@ -7,15 +7,19 @@ function entity(entity_id: string, state: string, attributes: Record<string, unk
   return { entity_id, state, attributes, last_changed: now, last_updated: now, context: ctx };
 }
 
+const COVER_OPEN_CLOSE_STOP = 1 | 2 | 8;
+const ALARM_HOME_AWAY_NIGHT = 1 | 2 | 4;
+const CLIMATE_TARGET_TEMP_ON_OFF = 1 | 128 | 256;
+
 export const DEMO_ENTITIES: MockEntityState[] = [
   entity('light.living_room', 'on', { friendly_name: 'Living Room Light', icon: 'mdi:sofa' }),
   entity('light.kitchen', 'off', { friendly_name: 'Kitchen Light' }),
   entity('light.bedroom', 'off', { friendly_name: 'Bedroom Light' }),
   entity('switch.porch_plug', 'on', { friendly_name: 'Porch Plug' }),
-  entity('alarm_control_panel.home', 'disarmed', { friendly_name: 'Home Alarm', code_format: null }),
-  entity('climate.living_room', 'heat', { friendly_name: 'Living Room Thermostat', temperature: 21, current_temperature: 20.5, hvac_modes: ['off', 'heat', 'cool'] }),
+  entity('alarm_control_panel.home', 'disarmed', { friendly_name: 'Home Alarm', code_format: null, supported_features: ALARM_HOME_AWAY_NIGHT }),
+  entity('climate.living_room', 'heat', { friendly_name: 'Living Room Thermostat', temperature: 21, current_temperature: 20.5, hvac_modes: ['off', 'heat', 'cool'], supported_features: CLIMATE_TARGET_TEMP_ON_OFF, min_temp: 7, max_temp: 35, target_temp_step: 0.5 }),
   entity('lock.front_door', 'locked', { friendly_name: 'Front Door' }),
-  entity('cover.garage_door', 'closed', { friendly_name: 'Garage Door' }),
+  entity('cover.garage_door', 'closed', { friendly_name: 'Garage Door', device_class: 'garage', current_position: 0, supported_features: COVER_OPEN_CLOSE_STOP }),
   entity('media_player.living_room_speaker', 'playing', { friendly_name: 'Living Room Speaker', media_title: 'Demo Track', volume_level: 0.4 }),
   entity('sensor.living_room_temperature', '21.4', { friendly_name: 'Living Room Temperature', unit_of_measurement: '°C', device_class: 'temperature' }),
   entity('sensor.front_door_battery', '92', { friendly_name: 'Front Door Sensor Battery', unit_of_measurement: '%', device_class: 'battery' }),
