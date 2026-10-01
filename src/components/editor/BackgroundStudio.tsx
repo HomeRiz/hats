@@ -227,6 +227,37 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
     }
   };
 
+  const handleApplyPreset = async (preset: (typeof backgroundPresets)[number]) => {
+    if (preset.type === 'gradient') {
+      onChange({
+        background: { ...background, type: 'gradient', gradientString: preset.gradient, imageUrl: undefined, avgColor: preset.avg },
+        palette: { ...palette, accent: preset.accent },
+        engine: { ...engine, glowColor: preset.accent },
+      });
+      return;
+    }
+    if (!preset.imageUrl) return;
+    try {
+      setIsProcessing(true);
+      const result = await processBackgroundImage(preset.imageUrl, 1920, 1080, background.darken);
+      onChange({
+        background: {
+          ...background,
+          type: 'image',
+          imageUrl: result.dataUrl,
+          imageFileName: `${preset.name}.jpg`,
+          avgColor: result.avgColor,
+        },
+        palette: { ...palette, accent: preset.accent },
+        engine: { ...engine, glowColor: preset.accent },
+      });
+    } catch (err) {
+      console.error('Failed to apply preset artwork:', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleApplyArtwork = (a: CustomArtworkPreset) => {
     if (a.type === 'image' && a.imageUrl) {
       onChange({
@@ -396,28 +427,10 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
             <button
               key={idx}
               type="button"
-              onClick={() => {
-                onChange({
-                  background: {
-                    ...background,
-                    type: preset.type,
-                    gradientString: preset.type === 'gradient' ? preset.gradient : undefined,
-                    imageUrl: preset.type === 'image' ? preset.imageUrl : undefined,
-                    imageFileName: preset.type === 'image' ? preset.name : undefined,
-                    avgColor: preset.avg,
-                  },
-                  palette: {
-                    ...palette,
-                    accent: preset.accent,
-                  },
-                  engine: {
-                    ...engine,
-                    glowColor: preset.accent,
-                  }
-                });
-              }}
+              disabled={isProcessing}
+              onClick={() => handleApplyPreset(preset)}
               title={preset.tooltip}
-              className="p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/60 flex items-center gap-3 transition-colors text-left group"
+              className="p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/60 flex items-center gap-3 transition-colors text-left group disabled:opacity-60 disabled:cursor-wait"
             >
               <div
                 className="w-10 h-8 rounded-lg shadow-sm shrink-0 border border-white/10 bg-cover bg-center"

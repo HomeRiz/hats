@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { ThemeConfig, CommunityThemeSubmission } from '../types/theme';
 import { defaultThemes, defaultGlassTheme } from '../presets/defaultThemes';
 import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
+import { processBackgroundImage } from '../services/imageProcessor';
+import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
 
 const STORAGE_KEY_CUSTOM = 'hats_custom_themes_v2';
 const STORAGE_KEY_ACTIVE = 'hats_active_theme_id_v2';
@@ -154,6 +156,26 @@ export function useThemeStore() {
     setThemes(prev => [newTheme, ...prev]);
     setActiveThemeId(newId);
     setActiveTab('editor');
+
+    if (!template.background) {
+      processBackgroundImage(alpineLightningLake, 1920, 1080, defaultGlassTheme.background.darken)
+        .then((result) => {
+          setThemes(prev => prev.map(t => t.id === newId ? {
+            ...t,
+            background: {
+              ...t.background,
+              type: 'image',
+              imageUrl: result.dataUrl,
+              imageFileName: 'alpine-lightning-lake.jpg',
+              avgColor: result.avgColor,
+            },
+            palette: { ...t.palette, accent: '#E8A54D' },
+            engine: { ...t.engine, glowColor: '#E8A54D' },
+          } : t));
+        })
+        .catch((err) => console.error('Failed to set default theme background:', err));
+    }
+
     return newTheme;
   };
 

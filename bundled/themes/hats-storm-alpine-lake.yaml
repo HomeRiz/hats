@@ -9,9 +9,9 @@
   disabled-text-color: "rgba(208, 208, 208, 0.45)"
   divider-color: "rgba(152, 152, 157, 0.28)"
 
-  hats-background: "url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
-  ultimate-background: "url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
-  background-image: "center / cover repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
+  hats-background: "url('https://raw.githubusercontent.com/HomeRiz/hats/main/src/assets/backgrounds/alpine-lightning-lake.jpg')"
+  ultimate-background: "url('https://raw.githubusercontent.com/HomeRiz/hats/main/src/assets/backgrounds/alpine-lightning-lake.jpg')"
+  background-image: "center / cover repeat fixed url('https://raw.githubusercontent.com/HomeRiz/hats/main/src/assets/backgrounds/alpine-lightning-lake.jpg')"
   lovelace-background: var(--background-image)
 
   app-header-background-color: "#161b18"
