@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Assistant</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,user-scalable=no,viewport-fit=cover,initial-scale=1">
+  <style>body{font-family:Roboto,Noto,sans-serif;margin:0;padding:0;height:100%}</style>
+</head>
+<body>
+  <home-assistant></home-assistant>
+  <script>
+  (function () {
+    function makeStorageShim() {
+      var data = {};
+      return {
+        getItem: function (k) { return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+        setItem: function (k, v) { data[k] = String(v); },
+        removeItem: function (k) { delete data[k]; },
+        clear: function () { data = {}; },
+        key: function (i) { return Object.keys(data)[i] || null; },
+        get length() { return Object.keys(data).length; },
+      };
+    }
+    try {
+      Object.defineProperty(window, 'localStorage', { value: makeStorageShim(), configurable: true });
+    } catch (e) {}
+    try {
+      Object.defineProperty(window, 'sessionStorage', { value: makeStorageShim(), configurable: true });
+    } catch (e) {}
+    function GuardWebSocket() {
+      this.readyState = 3;
+      this.send = function () {};
+      this.close = function () {};
+      this.addEventListener = function () {};
+      this.removeEventListener = function () {};
+    }
+    window.WebSocket = GuardWebSocket;
+    window.hassConnection = new Promise(function () {});
+    function unregisterAnyServiceWorker() {
+      if (!navigator.serviceWorker || typeof navigator.serviceWorker.getRegistrations !== 'function') return;
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        for (var i = 0; i < regs.length; i++) regs[i].unregister();
+      });
+    }
+    unregisterAnyServiceWorker();
+    setTimeout(unregisterAnyServiceWorker, 3000);
+  })();
+  </script>
+  <script src="./boot.js"></script>
+  <script type="module" crossorigin="use-credentials" src="__CORE_JS__"></script>
+  <script type="module" crossorigin="use-credentials" src="__APP_JS__"></script>
+</body>
+</html>

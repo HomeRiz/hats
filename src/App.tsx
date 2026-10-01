@@ -1,11 +1,16 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, Suspense, lazy } from 'react';
 import { useThemeStore } from './state/useThemeStore';
 import { Navbar } from './components/navbar/Navbar';
 import { ThemeEditor } from './components/editor/ThemeEditor';
 import { DashboardPreview } from './components/preview/DashboardPreview';
+import { LiveRenderPreview } from './components/preview/LiveRenderPreview';
+import { LiveRenderPreviewProvider, LiveRenderPreviewContextValue } from './contexts/LiveRenderPreviewContext';
+import { applyThemeToLivePreview } from './services/mockFrontendBridge';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
 import { getHaDiagnostics } from './services/haService';
 import { useLiveDashboardData } from './services/useLiveDashboardData';
+
+const LIVE_RENDER_BOOT_TIMEOUT_MS = 8000;
 
 const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
 const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
@@ -50,6 +55,56 @@ export const App: React.FC = () => {
   const [isDoctorReady, setIsDoctorReady] = useState(true);
   const [hasPendingDoctorAction, setHasPendingDoctorAction] = useState(false);
 
+  const [liveRenderReady, setLiveRenderReady] = useState(false);
+  const [liveRenderTimedOut, setLiveRenderTimedOut] = useState(false);
+  const liveRenderIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const liveRenderSlotElRef = useRef<HTMLDivElement | null>(null);
+  const [hasLiveRenderSlot, setHasLiveRenderSlot] = useState(false);
+  const [liveRenderSlotRect, setLiveRenderSlotRect] = useState<DOMRect | null>(null);
+
+  useEffect(() => {
+    if (liveRenderReady) return;
+    const timer = setTimeout(() => setLiveRenderTimedOut(true), LIVE_RENDER_BOOT_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [liveRenderReady]);
+
+  const registerLiveRenderSlot = useCallback((el: HTMLDivElement | null) => {
+    liveRenderSlotElRef.current = el;
+    setHasLiveRenderSlot(!!el);
+    if (!el) setLiveRenderSlotRect(null);
+  }, []);
+
+  useEffect(() => {
+    if (!hasLiveRenderSlot) return;
+    const el = liveRenderSlotElRef.current;
+    if (!el) return;
+    const update = () => setLiveRenderSlotRect(el.getBoundingClientRect());
+    update();
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(el);
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update, true);
+    };
+  }, [hasLiveRenderSlot]);
+
+  const applyLiveRenderTheme = useCallback((themeName: string, themeVars: Record<string, string>) => {
+    return applyThemeToLivePreview(liveRenderIframeRef.current, themeName, themeVars);
+  }, []);
+
+  const liveRenderContextValue: LiveRenderPreviewContextValue = useMemo(
+    () => ({
+      ready: liveRenderReady,
+      timedOut: liveRenderTimedOut,
+      registerSlot: registerLiveRenderSlot,
+      applyTheme: applyLiveRenderTheme,
+    }),
+    [liveRenderReady, liveRenderTimedOut, registerLiveRenderSlot, applyLiveRenderTheme]
+  );
+
   const checkDiagnostics = async () => {
     const diag = await getHaDiagnostics();
     if (diag) {
@@ -84,6 +139,7 @@ export const App: React.FC = () => {
   }
 
   return (
+    <LiveRenderPreviewProvider value={liveRenderContextValue}>
     <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
       <div 
         className="absolute inset-0 z-0 transition-all duration-700 pointer-events-none"
@@ -247,6 +303,26 @@ export const App: React.FC = () => {
         </Suspense>
       )}
       </div>
+
+      <div
+        style={{
+          position: 'fixed',
+          zIndex: 50,
+          display: liveRenderSlotRect ? 'block' : 'none',
+          pointerEvents: liveRenderSlotRect ? 'auto' : 'none',
+          top: liveRenderSlotRect?.top ?? 0,
+          left: liveRenderSlotRect?.left ?? 0,
+          width: liveRenderSlotRect?.width ?? 0,
+          height: liveRenderSlotRect?.height ?? 0,
+        }}
+      >
+        <LiveRenderPreview
+          visible={!!liveRenderSlotRect}
+          onReadyChange={setLiveRenderReady}
+          onIframeMount={(el) => { liveRenderIframeRef.current = el; }}
+        />
+      </div>
     </div>
+    </LiveRenderPreviewProvider>
   );
 };

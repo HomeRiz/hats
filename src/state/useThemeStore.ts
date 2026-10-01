@@ -95,6 +95,7 @@ export function useThemeStore() {
   const activeTheme = themes.find(t => t.id === activeThemeId) || themes[0] || defaultGlassTheme;
 
   const syncInstalledThemesFromHa = useCallback(async () => {
+    const syncStartedAt = Date.now();
     try {
       const installed = await fetchInstalledHaThemes();
       if (installed && installed.length > 0) {
@@ -103,7 +104,13 @@ export function useThemeStore() {
           const customDrafts = prev.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
           const serverThemeIds = new Set(cleanInstalled.map(t => t.id));
           const nonCollidingCustom = customDrafts.filter(c => !serverThemeIds.has(c.id));
-          return [...cleanInstalled, ...nonCollidingCustom];
+          const prevById = new Map(prev.map(t => [t.id, t]));
+          const mergedInstalled = cleanInstalled.map(server => {
+            const local = prevById.get(server.id);
+            const localEditedDuringSync = local?.updatedAt && new Date(local.updatedAt).getTime() > syncStartedAt;
+            return localEditedDuringSync ? local! : server;
+          });
+          return [...mergedInstalled, ...nonCollidingCustom];
         });
       }
     } catch (e) {

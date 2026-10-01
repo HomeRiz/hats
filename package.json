@@ -10,7 +10,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "start": "node server/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "postinstall": "bash scripts/fetch-mock-frontend.sh && bash scripts/fetch-mock-mods.sh || true",
+    "build:mock-frontend-bootstrap": "node scripts/build-mock-frontend-bootstrap.mjs && node scripts/compose-mock-frontend-index.mjs"
   },
   "dependencies": {
     "dompurify": "^3.4.16",
