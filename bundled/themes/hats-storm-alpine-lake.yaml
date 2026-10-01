@@ -1,0 +1,323 @@
+---
+"HATS Signature Nature - Alpine Storm Lake":
+  card-mod-theme: "HATS Signature Nature - Alpine Storm Lake"
+
+  primary-color: "#E8A54D"
+  accent-color: "#E8A54D"
+  primary-text-color: "rgba(255, 255, 255, 0.96)"
+  secondary-text-color: "rgba(228, 228, 232, 0.78)"
+  disabled-text-color: "rgba(208, 208, 208, 0.45)"
+  divider-color: "rgba(152, 152, 157, 0.28)"
+
+  hats-background: "url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
+  ultimate-background: "url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
+  background-image: "center / cover repeat fixed url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/hats-storm-alpine-lake/default.jpg')"
+  lovelace-background: var(--background-image)
+
+  app-header-background-color: "#161b18"
+  app-header-text-color: "#FFFFFF"
+  app-header-selection-bar-color: "#E8A54D"
+
+  sidebar-background-color: "rgba(18, 18, 24, 0.45)"
+  sidebar-text-color: "rgba(255, 255, 255, 0.94)"
+  sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
+  sidebar-selected-background-color: "rgba(232, 165, 77, 0.88)"
+  sidebar-selected-text-color: "#0B0D14"
+  sidebar-selected-icon-color: "#0B0D14"
+  sidebar-border-color: "rgba(255, 255, 255, 0.08)"
+
+  --ha-color-primary-05: "#1d150a"
+  --ha-color-primary-10: "#3a2913"
+  --ha-color-primary-20: "#745327"
+  --ha-color-primary-30: "#ae7c3a"
+  --ha-color-primary-40: "#E8A54D"
+  --ha-color-primary-50: "#ecb46b"
+  --ha-color-primary-60: "#f0c388"
+  --ha-color-primary-70: "#f4d2a6"
+  --ha-color-primary-80: "#f7e1c4"
+  --ha-color-primary-90: "#fbf0e1"
+  --ha-color-primary-95: "#fdf8f0"
+
+  --token-rgb-primary: 232, 165, 77
+  --token-rgb-black: 0, 0, 0
+  --token-rgb-white: 255, 255, 255
+  --token-rgb-purple: 155, 138, 168
+  --token-rgb-pink: 232, 149, 107
+  --token-rgb-red: 255, 107, 74
+  --token-rgb-deep-purple: 155, 138, 168
+  --token-rgb-indigo: 110, 127, 158
+  --token-rgb-blue: 90, 155, 184
+  --token-rgb-light-blue: 143, 193, 212
+  --token-rgb-cyan: 95, 175, 163
+  --token-rgb-teal: 62, 143, 132
+  --token-rgb-green: 111, 168, 107
+  --token-rgb-light-green: 111, 168, 107
+  --token-rgb-lime: 111, 168, 107
+  --token-rgb-yellow: 242, 193, 78
+  --token-rgb-amber: 242, 193, 78
+  --token-rgb-orange: 232, 149, 77
+  --token-rgb-deep-orange: 232, 149, 77
+  --token-rgb-brown: 138, 107, 79
+  --token-rgb-grey: 142, 148, 142
+  --token-rgb-state-icon: 255, 255, 255
+  --token-size-radius-card: var(--ha-card-border-radius)
+
+  wa-shadow-m: var(--ha-card-box-shadow)
+  wa-border-radius-s: var(--ha-card-border-radius)
+  wa-border-radius-m: "24px"
+  wa-border-width-s: 0px
+  wa-color-neutral-fill-normal: "rgba(255, 255, 255, 0.12)"
+  ha-color-on-neutral-normal: var(--primary-text-color)
+  ha-color-fill-primary-quiet-resting: "rgba(255, 255, 255, 0.12)"
+  ha-color-fill-primary-quiet-hover: "rgba(255, 255, 255, 0.20)"
+
+  ha-card-border-radius: "24px"
+  ha-card-border-width: "0px"
+  ha-card-border-color: "rgba(255, 255, 255, 0.16)"
+  ha-card-glass-tint: "rgba(255, 255, 255, 0.05)"
+  ha-card-glass-sheen: "linear-gradient(150deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 22%, rgba(255,255,255,0) 45%)"
+  ha-card-backdrop-filter: "blur(18px) saturate(1.3)"
+  ha-card-glass-inset-shadow: "3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60)"
+  ha-card-box-shadow: "3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60)"
+  ha-dialog-surface-backdrop-filter: "none"
+  hats-transition: "box-shadow 220ms ease, transform 220ms ease"
+  ultimate-transition: "box-shadow 220ms ease, transform 220ms ease"
+
+  hats-glow-color: "#E8A54D"
+  ultimate-glow-color: "#E8A54D"
+  hats-sheen: "linear-gradient(150deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 22%, rgba(255,255,255,0) 45%)"
+  ultimate-sheen: "linear-gradient(150deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 22%, rgba(255,255,255,0) 45%)"
+  hats-header-tint: "#161b18"
+  ultimate-header-tint: "#161b18"
+
+  modes:
+    dark:
+      primary-background-color: "rgb(16, 18, 17)"
+      secondary-background-color: "rgb(16, 18, 17)"
+      ha-card-background: "rgba(20, 22, 20, 0.40)"
+      primary-text-color: "rgba(255, 248, 238, 0.96)"
+      secondary-text-color: "rgba(228, 220, 206, 0.78)"
+      sidebar-background-color: "rgba(18, 18, 24, 0.45)"
+      sidebar-text-color: "rgba(255, 255, 255, 0.94)"
+      sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
+      sidebar-selected-background-color: "rgba(232, 165, 77, 0.88)"
+      sidebar-selected-text-color: "#0B0D14"
+      sidebar-selected-icon-color: "#0B0D14"
+      sidebar-border-color: "rgba(255, 255, 255, 0.08)"
+    light:
+      primary-background-color: "rgb(58, 54, 46)"
+      secondary-background-color: "rgb(58, 54, 46)"
+      ha-card-background: "rgba(58, 54, 46, 0.42)"
+      primary-text-color: "rgba(255, 248, 238, 0.96)"
+      secondary-text-color: "rgba(228, 220, 206, 0.78)"
+      sidebar-background-color: "rgba(18, 18, 24, 0.45)"
+      sidebar-text-color: "rgba(255, 255, 255, 0.94)"
+      sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
+      sidebar-selected-background-color: "rgba(232, 165, 77, 0.88)"
+      sidebar-selected-text-color: "#0B0D14"
+      sidebar-selected-icon-color: "#0B0D14"
+      sidebar-border-color: "rgba(255, 255, 255, 0.08)"
+
+  card-mod-root: |
+    :host::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--hats-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      z-index: -2;
+      pointer-events: none;
+    }
+    :host::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.42) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    app-header {
+      background: var(--hats-header-tint, var(--ultimate-header-tint, #161b18)) !important;
+      backdrop-filter: blur(20px) saturate(1.4) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+
+  card-mod-sidebar: |
+    :host {
+      background-color: rgba(18, 18, 24, 0.45) !important;
+    }
+    .menu,
+    .panels-list {
+      backdrop-filter: blur(20px) saturate(1.3) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
+    }
+    paper-listbox,
+    ha-md-list {
+      background: transparent !important;
+    }
+    .menu-text,
+    .panel-title,
+    .title,
+    .name,
+    .user-title,
+    ha-md-list-item,
+    ha-list-item-button,
+    paper-icon-item {
+      color: var(--sidebar-text-color, var(--primary-text-color)) !important;
+      --md-list-item-label-text-color: var(--sidebar-text-color, var(--primary-text-color)) !important;
+      --md-list-item-leading-icon-color: var(--sidebar-icon-color, var(--sidebar-text-color)) !important;
+      --md-list-item-trailing-icon-color: var(--sidebar-icon-color, var(--sidebar-text-color)) !important;
+      transition: background-color 150ms ease, color 150ms ease !important;
+    }
+    ha-list-item-button,
+    ha-list-item-button.selected::before,
+    ha-md-list-item,
+    ha-md-list-item.selected::before,
+    paper-icon-item {
+      border-radius: var(--ha-card-border-radius, 16px) !important;
+      --ha-list-item-focus-radius: var(--ha-card-border-radius, 16px) !important;
+    }
+    ha-md-list-item:hover,
+    paper-icon-item:hover,
+    ha-list-item-button:hover {
+      background: var(--ha-color-fill-primary-quiet-hover, rgba(255, 255, 255, 0.08)) !important;
+    }
+    ha-md-list-item.selected,
+    paper-icon-item.iron-selected,
+    paper-icon-item[selected],
+    ha-list-item-button.selected {
+      background: var(--sidebar-selected-background-color, rgba(255, 255, 255, 0.12)) !important;
+      box-shadow: inset 3px 0 0 var(--primary-color) !important;
+      color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
+      --md-list-item-label-text-color: var(--sidebar-selected-text-color, var(--primary-color)) !important;
+      --md-list-item-leading-icon-color: var(--sidebar-selected-icon-color, var(--primary-color)) !important;
+    }
+    .profile {
+      border-top: 1px solid var(--sidebar-border-color, rgba(255, 255, 255, 0.08)) !important;
+    }
+
+  card-mod-top-app-bar-fixed: |
+    :host {
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+    }
+
+  card-mod-dialog: |
+    :host {
+      --dialog-backdrop-filter: none;
+    }
+
+  card-mod-view: |
+    hui-view {
+      background: none !important;
+    }
+
+  card-mod-config: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--hats-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-config,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+    ha-card {
+      background: var(--ha-card-glass-tint, rgba(255, 255, 255, 0.05)) !important;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      border-radius: var(--ha-card-border-radius, 24px) !important;
+      box-shadow: var(--ha-card-glass-inset-shadow, 3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60)) !important;
+    }
+
+  card-mod-panel-custom: |
+    ha-drawer {
+      background-image: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.30) 100%), var(--hats-background, var(--ultimate-background));
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    ha-panel-custom,
+    partial-panel-resolver {
+      background: transparent !important;
+    }
+
+  card-mod-card: |
+    ha-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-radius: var(--ha-card-border-radius, 24px) !important;
+      border: 0px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow: 3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60) !important;
+      overflow: hidden;
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+    ha-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      backdrop-filter: var(--ha-card-backdrop-filter);
+      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    ha-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: var(--hats-sheen, var(--ultimate-sheen));
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    ha-card:hover {
+      box-shadow: 0 0 20px -4px var(--hats-glow-color, var(--ultimate-glow-color, #E8A54D)), 3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60) !important;
+      transform: translateY(-2px);
+    }
+    :host(hui-heading-card) ha-card,
+    :host(hui-glance-card) ha-card,
+    :host(mushroom-title-card) ha-card,
+    :host(mushroom-chips-card) ha-card,
+    :host(.type-custom-bubble-card) ha-card,
+    ha-card.text-only {
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    :host(hui-heading-card) ha-card::before,
+    :host(hui-heading-card) ha-card::after,
+    :host(hui-glance-card) ha-card::before,
+    :host(hui-glance-card) ha-card::after,
+    :host(mushroom-title-card) ha-card::before,
+    :host(mushroom-title-card) ha-card::after,
+    :host(mushroom-chips-card) ha-card::before,
+    :host(mushroom-chips-card) ha-card::after,
+    :host(.type-custom-bubble-card) ha-card::before,
+    :host(.type-custom-bubble-card) ha-card::after,
+    ha-card.text-only::before,
+    ha-card.text-only::after {
+      content: none !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    :host(.type-custom-bubble-card) ha-card {
+      border-radius: 0px !important;
+    }
+

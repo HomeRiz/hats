@@ -1,4 +1,5 @@
 import { ThemeConfig } from '../types/theme';
+import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
 
 export const defaultGlassTheme: ThemeConfig = {
   id: 'hats-glass-violet',
@@ -264,6 +265,91 @@ export const defaultVelvetTheme: ThemeConfig = {
   },
 };
 
+export const defaultStormLakeTheme: ThemeConfig = {
+  id: 'hats-storm-alpine-lake',
+  name: 'HATS Signature Nature - Alpine Storm Lake',
+  category: 'Nature',
+  author: 'HomeRiz',
+  authorGithub: 'HomeRiz',
+  description: 'A real photo backdrop of a lightning storm over an alpine lake, warm amber glow against deep teal water and liquid glass cards.',
+  version: '1.0.0',
+  createdAt: '2026-10-01T00:00:00Z',
+  updatedAt: '2026-10-01T00:00:00Z',
+  palette: {
+    primary: '#E8A54D',
+    accent: '#E8A54D',
+    red: '#FF6B4A',
+    pink: '#E8956B',
+    purple: '#9B8AA8',
+    indigo: '#6E7F9E',
+    blue: '#5A9BB8',
+    lightBlue: '#8FC1D4',
+    cyan: '#5FAFA3',
+    teal: '#3E8F84',
+    green: '#6FA86B',
+    yellow: '#F2C14E',
+    orange: '#E8954D',
+    brown: '#8A6B4F',
+    grey: '#8E948E',
+  },
+  engine: {
+    engineType: 'glass',
+    blurAmount: 18,
+    saturateAmount: 1.3,
+    brightnessAmount: 1.0,
+    cardRadius: 24,
+    badgeRadius: 20,
+    mushRadius: 20,
+    borderWidth: 0,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
+    glassTint: 'rgba(255, 255, 255, 0.05)',
+    sheenOpacity: 0.18,
+    sheenAngle: 150,
+    sheenBlend: 'normal',
+    insetShadow: '3px 3px 0.5px -3.5px rgba(255,255,255,0.30) inset, -2px -2px 0.5px -2px rgba(255,255,255,0.24) inset, 0 0 10px 1px rgba(255,255,255,0.08) inset, 0 8px 24px -12px rgba(0,0,0,0.60)',
+    hoverGlow: true,
+    glowColor: '#E8A54D',
+    hoverGlowIntensity: 20,
+    backgroundScrim: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.42) 100%)',
+    fallbackCardBg: 'rgba(28, 32, 30, 0.86)',
+    scanlines: false,
+    scanlineIntensity: 0,
+  },
+  background: {
+    type: 'image',
+    imageUrl: alpineLightningLake,
+    imageFileName: 'alpine-lightning-lake.jpg',
+    darken: 0.28,
+    blur: 0,
+    saturation: 1.1,
+    vignette: 0.45,
+    headerTintAuto: true,
+    avgColor: '#1d2420',
+  },
+  dark: {
+    primaryBackground: 'rgb(16, 18, 17)',
+    secondaryBackground: 'rgb(16, 18, 17)',
+    cardBackground: 'rgba(20, 22, 20, 0.40)',
+    textPrimary: 'rgba(255, 248, 238, 0.96)',
+    textSecondary: 'rgba(228, 220, 206, 0.78)',
+  },
+  light: {
+    primaryBackground: 'rgb(58, 54, 46)',
+    secondaryBackground: 'rgb(58, 54, 46)',
+    cardBackground: 'rgba(58, 54, 46, 0.42)',
+    textPrimary: 'rgba(255, 248, 238, 0.96)',
+    textSecondary: 'rgba(228, 220, 206, 0.78)',
+  },
+  requirements: {
+    requiresCardMod: true,
+    requiresThemesDirective: true,
+    recommendedCards: [
+      { name: 'Mushroom Cards', slug: 'mushroom', description: 'Clean minimalist cards with glowing icons' },
+      { name: 'Bubble Card', slug: 'bubble-card', description: 'Pop-up subviews and header chips' },
+    ],
+  },
+};
+
 export const defaultNeonTheme: ThemeConfig = {
   id: 'hats-neon-cyan',
   name: 'HATS Signature Neon - Cyan',
@@ -353,4 +439,5 @@ export const defaultThemes: ThemeConfig[] = [
   defaultKidsTheme,
   defaultVelvetTheme,
   defaultNeonTheme,
+  defaultStormLakeTheme,
 ];

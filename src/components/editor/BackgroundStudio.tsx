@@ -4,6 +4,7 @@ import { ThemeConfig } from '../../types/theme';
 import { processBackgroundImage } from '../../services/imageProcessor';
 import { CustomArtworkPreset } from '../../types/customPresets';
 import { loadCustomArtworks, saveCustomArtworks } from '../../utils/customPresetsStorage';
+import alpineLightningLake from '../../assets/backgrounds/alpine-lightning-lake.jpg';
 
 interface BackgroundStudioProps {
   theme: ThemeConfig;
@@ -77,7 +78,23 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
     }
   };
 
-  const backgroundPresets = [
+  const backgroundPresets: Array<{
+    name: string;
+    type: 'gradient' | 'image';
+    gradient?: string;
+    imageUrl?: string;
+    avg: string;
+    accent: string;
+    tooltip: string;
+  }> = [
+    {
+      name: 'Alpine Storm Lake',
+      type: 'image',
+      imageUrl: alpineLightningLake,
+      avg: '#1d2420',
+      accent: '#E8A54D',
+      tooltip: 'Alpine Storm Lake: A real photo backdrop of a lightning storm over an alpine lake, warm amber glow against deep teal water. Built-in, always available.',
+    },
     {
       name: 'Liquid Glass Dark Violet',
       type: 'gradient' as const,
@@ -357,10 +374,10 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
         <div className="flex items-center justify-between">
           <label
             className="font-semibold text-slate-300 flex items-center gap-1.5"
-            title="Curated multi-stop atmospheric gradient backdrops designed for liquid glass cards"
+            title="Curated atmospheric gradient and photo backdrops designed for liquid glass cards, built into HATS"
           >
             <Wand2 className="w-3.5 h-3.5 text-pink-400" />
-            <span>Preset Atmosphere Gradients</span>
+            <span>Preset Atmosphere Artwork</span>
           </label>
 
           <button
@@ -384,7 +401,9 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
                   background: {
                     ...background,
                     type: preset.type,
-                    gradientString: preset.gradient,
+                    gradientString: preset.type === 'gradient' ? preset.gradient : undefined,
+                    imageUrl: preset.type === 'image' ? preset.imageUrl : undefined,
+                    imageFileName: preset.type === 'image' ? preset.name : undefined,
                     avgColor: preset.avg,
                   },
                   palette: {
@@ -400,9 +419,13 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
               title={preset.tooltip}
               className="p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/60 flex items-center gap-3 transition-colors text-left group"
             >
-              <div 
-                className="w-10 h-8 rounded-lg shadow-sm shrink-0 border border-white/10"
-                style={{ background: preset.gradient }}
+              <div
+                className="w-10 h-8 rounded-lg shadow-sm shrink-0 border border-white/10 bg-cover bg-center"
+                style={
+                  preset.type === 'image'
+                    ? { backgroundImage: `url(${preset.imageUrl})` }
+                    : { background: preset.gradient }
+                }
               />
               <div className="flex-1 min-w-0">
                 <div className="font-semibold text-xs text-white group-hover:text-pink-300 transition-colors truncate">
