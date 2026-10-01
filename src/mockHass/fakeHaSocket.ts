@@ -78,11 +78,39 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
       return;
     }
     if (type === 'get_panels') {
-      send({ id, type: 'result', success: true, result: {} });
+      const dashboardPanel = {
+        component_name: 'lovelace',
+        icon: null,
+        title: null,
+        config: { mode: 'auto' },
+        url_path: 'lovelace',
+      };
+      send({
+        id,
+        type: 'result',
+        success: true,
+        result: { lovelace: dashboardPanel, home: dashboardPanel },
+      });
       return;
     }
     if (type === 'get_services') {
       send({ id, type: 'result', success: true, result: {} });
+      return;
+    }
+    if (type === 'auth/current_user') {
+      send({
+        id,
+        type: 'result',
+        success: true,
+        result: {
+          id: 'hats-preview-user',
+          name: 'HATS Preview',
+          is_owner: true,
+          is_admin: true,
+          credentials: [],
+          mfa_modules: [],
+        },
+      });
       return;
     }
     if (type === 'ping') {
@@ -108,6 +136,14 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
             for (const s of states) {
               send({ id: subId, type: 'event', event: { event_type: 'state_changed', data: { entity_id: s.entity_id, new_state: s } } });
             }
+          })
+        );
+      } else if (eventType === 'themes_updated') {
+        const subId: number = id;
+        subscriptions.set(
+          subId,
+          store.subscribeTheme(() => {
+            send({ id: subId, type: 'event', event: { event_type: 'themes_updated', data: {} } });
           })
         );
       }
@@ -152,7 +188,7 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
           views: [
             {
               title: 'Home',
-              cards: store.getStates().map((s) => ({ type: 'entity', entity: s.entity_id })),
+              cards: store.getStates().map((s) => ({ type: 'tile', entity: s.entity_id })),
             },
           ],
         },

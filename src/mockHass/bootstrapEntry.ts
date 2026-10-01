@@ -2,6 +2,7 @@ import { buildMockConnection } from './buildMockConnection';
 import { MockHassStore } from './store';
 import { DEMO_ENTITIES } from './demoEntities';
 import { createFakeHaSocket } from './fakeHaSocket';
+import { loadModsSequentially } from './modLoader';
 
 const sharedStore = new MockHassStore(DEMO_ENTITIES);
 
@@ -34,6 +35,28 @@ class FakeWebSocketConstructor {
   return { auth, conn };
 });
 (window as any).__hatsMockStore = sharedStore;
+
+const CURATED_MOD_SLUGS = ['card-mod', 'bubble-card', 'mushroom-cards'];
+
+function waitForRealHassReady(): Promise<void> {
+  return new Promise((resolve) => {
+    const POLL_INTERVAL_MS = 100;
+    const check = () => {
+      const haEl = document.querySelector('home-assistant') as (HTMLElement & { hass?: unknown }) | null;
+      if (haEl?.hass) {
+        resolve();
+        return;
+      }
+      setTimeout(check, POLL_INTERVAL_MS);
+    };
+    check();
+  });
+}
+
+waitForRealHassReady().then(() => {
+  void loadModsSequentially(CURATED_MOD_SLUGS);
+  window.parent.postMessage({ type: 'hats:ready' }, window.location.origin);
+});
 
 window.addEventListener('message', (event) => {
   if (event.source !== window.parent) return;

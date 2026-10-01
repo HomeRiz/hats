@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeConfig } from '../../types/theme';
 import { sanitizeThemeCss, sanitizeSvgCode } from '../../services/themeSecurityValidator';
 import { useLiveDashboardData } from '../../services/useLiveDashboardData';
+import { useLiveRenderPreview } from '../../contexts/LiveRenderPreviewContext';
+import { themeToCssVars } from '../../services/themeToCssVars';
 import { MockHeader } from './MockHeader';
 import { MockSidebar } from './MockSidebar';
 import { SmartHomeDashboard } from './SmartHomeDashboard';
@@ -19,6 +21,28 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
 }) => {
   const live = useLiveDashboardData();
   const [sidebarItem, setSidebarItem] = useState('Smart Home');
+  const { ready, timedOut, registerSlot, applyTheme } = useLiveRenderPreview();
+
+  const useLiveRender = ready && !timedOut;
+
+  useEffect(() => {
+    if (!useLiveRender) return;
+    const { name, vars } = themeToCssVars(theme, previewMode);
+    applyTheme(name, vars);
+  }, [useLiveRender, theme, previewMode, applyTheme]);
+
+  useEffect(() => {
+    if (!useLiveRender) return;
+    return () => registerSlot(null);
+  }, [useLiveRender, registerSlot]);
+
+  if (useLiveRender) {
+    return (
+      <div className="relative w-full h-full overflow-hidden">
+        <div ref={registerSlot} data-testid="live-render-slot" className="w-full h-full" />
+      </div>
+    );
+  }
 
   const { background, engine } = theme;
 

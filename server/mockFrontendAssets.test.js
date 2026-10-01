@@ -145,11 +145,13 @@ describe('mountMockFrontendBootstrap - trailing slash redirect', () => {
 
   beforeEach(async () => {
     makeTmpVendor();
+    fs.mkdirSync(VENDOR_DIR, { recursive: true });
+    fs.writeFileSync(path.join(VENDOR_DIR, 'index.html'), '<html></html>');
     const bootstrapDir = path.join(tmpRoot, 'mock-frontend-bootstrap');
     fs.mkdirSync(bootstrapDir, { recursive: true });
     fs.writeFileSync(path.join(bootstrapDir, 'index.html'), '<html>bootstrap</html>');
     const app = express();
-    mountMockFrontendBootstrap(app, { bootstrapDir });
+    mountMockFrontendBootstrap(app, { bootstrapDir, vendorDir: VENDOR_DIR });
     server = await listen(app);
     port = server.address().port;
   });
@@ -171,5 +173,33 @@ describe('mountMockFrontendBootstrap - trailing slash redirect', () => {
     const res = await rawGet(port, '/mock-frontend-bootstrap/');
     expect(res.status).toBe(200);
     expect(res.body).toContain('bootstrap');
+  });
+});
+
+describe('mountMockFrontendBootstrap - falls back when the real bundle is missing', () => {
+  let server;
+  let port;
+
+  beforeEach(async () => {
+    makeTmpVendor();
+    const bootstrapDir = path.join(tmpRoot, 'mock-frontend-bootstrap');
+    fs.mkdirSync(bootstrapDir, { recursive: true });
+    fs.writeFileSync(path.join(bootstrapDir, 'index.html'), '<html>bootstrap</html>');
+    const app = express();
+    mountMockFrontendBootstrap(app, { bootstrapDir, vendorDir: VENDOR_DIR });
+    app.get('/*splat', (req, res) => res.status(200).send('<html>spa shell</html>'));
+    server = await listen(app);
+    port = server.address().port;
+  });
+
+  afterEach(async () => {
+    await new Promise((resolve) => server.close(resolve));
+    removeTmpVendor();
+  });
+
+  it('404s the bootstrap page instead of falling through to the SPA catch-all', async () => {
+    const res = await rawGet(port, '/mock-frontend-bootstrap/');
+    expect(res.status).toBe(404);
+    expect(res.body).not.toContain('spa shell');
   });
 });

@@ -64,9 +64,13 @@ export function mountMockFrontendStatic(app, { vendorDir = VENDOR_DIR } = {}) {
   });
 }
 
-export function mountMockFrontendBootstrap(app, { bootstrapDir = BOOTSTRAP_DIR } = {}) {
+export function mountMockFrontendBootstrap(app, { bootstrapDir = BOOTSTRAP_DIR, vendorDir = VENDOR_DIR } = {}) {
   const dir = bootstrapDir;
   if (!fs.existsSync(path.join(dir, 'index.html'))) return;
+  if (!resolveMockFrontendDir(vendorDir)) {
+    app.use('/mock-frontend-bootstrap', (req, res) => res.status(404).end());
+    return;
+  }
   app.use('/mock-frontend-bootstrap', (req, res, next) => {
     const originalPath = req.originalUrl.split('?')[0];
     if (originalPath === '/mock-frontend-bootstrap') {
