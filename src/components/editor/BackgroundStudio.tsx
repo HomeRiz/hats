@@ -278,9 +278,84 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
         </div>
       </div>
 
+      {customArtworks.length > 0 && (
+        <div className="space-y-2 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
+          <label
+            className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs"
+            title="Your personal saved wallpapers and custom atmosphere gradients"
+          >
+            <ImageIcon className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Custom Saved Artworks & Gradients</span>
+          </label>
+
+          <div className="grid grid-cols-1 gap-1.5">
+            {customArtworks.map((item) => (
+              <div
+                key={item.id}
+                className="p-2 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-2"
+              >
+                <div
+                  onClick={() => handleApplyArtwork(item)}
+                  title={`Click to apply ${item.name}`}
+                  className="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer group"
+                >
+                  {item.type === 'image' && item.imageUrl ? (
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="w-10 h-8 rounded-lg object-cover border border-slate-700 shrink-0"
+                    />
+                  ) : (
+                    <div
+                      className="w-10 h-8 rounded-lg shrink-0 border border-white/10"
+                      style={{ background: item.gradientString || '#1e1e2e' }}
+                    />
+                  )}
+
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-xs text-slate-200 group-hover:text-indigo-300 truncate">
+                      {item.name}
+                    </div>
+                    <div className="text-[10px] text-slate-400 capitalize">
+                      {item.type} {item.accent ? `• ${item.accent}` : ''}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => handleApplyArtwork(item)}
+                    title={`Apply ${item.name} to active theme`}
+                    className="px-2 py-1 rounded bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 text-[10px] font-semibold transition-colors"
+                  >
+                    Apply
+                  </button>
+                  {item.type === 'gradient' && (
+                    <button
+                      onClick={() => handleOpenEditModal(item)}
+                      title={`Edit ${item.name}`}
+                      className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDeleteArtwork(item.id, item.name)}
+                    title={`Delete ${item.name}`}
+                    className="p-1 rounded hover:bg-red-950/50 text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label 
+          <label
             className="font-semibold text-slate-300 flex items-center gap-1.5"
             title="Curated multi-stop atmospheric gradient backdrops designed for liquid glass cards"
           >
@@ -339,81 +414,6 @@ export const BackgroundStudio: React.FC<BackgroundStudioProps> = ({ theme, onCha
           ))}
         </div>
       </div>
-
-      {customArtworks.length > 0 && (
-        <div className="space-y-2 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
-          <label 
-            className="font-semibold text-slate-300 flex items-center gap-1.5 text-xs"
-            title="Your personal saved wallpapers and custom atmosphere gradients"
-          >
-            <ImageIcon className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Custom Saved Artworks & Gradients</span>
-          </label>
-
-          <div className="grid grid-cols-1 gap-1.5">
-            {customArtworks.map((item) => (
-              <div
-                key={item.id}
-                className="p-2 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-2"
-              >
-                <div 
-                  onClick={() => handleApplyArtwork(item)}
-                  title={`Click to apply ${item.name}`}
-                  className="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer group"
-                >
-                  {item.type === 'image' && item.imageUrl ? (
-                    <img 
-                      src={item.imageUrl} 
-                      alt={item.name} 
-                      className="w-10 h-8 rounded-lg object-cover border border-slate-700 shrink-0" 
-                    />
-                  ) : (
-                    <div 
-                      className="w-10 h-8 rounded-lg shrink-0 border border-white/10" 
-                      style={{ background: item.gradientString || '#1e1e2e' }}
-                    />
-                  )}
-
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-xs text-slate-200 group-hover:text-indigo-300 truncate">
-                      {item.name}
-                    </div>
-                    <div className="text-[10px] text-slate-400 capitalize">
-                      {item.type} {item.accent ? `• ${item.accent}` : ''}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => handleApplyArtwork(item)}
-                    title={`Apply ${item.name} to active theme`}
-                    className="px-2 py-1 rounded bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 text-[10px] font-semibold transition-colors"
-                  >
-                    Apply
-                  </button>
-                  {item.type === 'gradient' && (
-                    <button
-                      onClick={() => handleOpenEditModal(item)}
-                      title={`Edit ${item.name}`}
-                      className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
-                    >
-                      <Edit2 className="w-3 h-3" />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDeleteArtwork(item.id, item.name)}
-                    title={`Delete ${item.name}`}
-                    className="p-1 rounded hover:bg-red-950/50 text-red-400 hover:text-red-300 transition-colors"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="space-y-3 bg-slate-900/40 p-3.5 rounded-xl border border-slate-800/80">
         <div 
