@@ -51,6 +51,14 @@ export class MockHassStore {
   callService(domain: string, service: string, serviceData: Record<string, unknown>): void {
     const entityId = serviceData.entity_id;
     if (typeof entityId !== 'string') return;
+    if (domain === 'climate') {
+      if (service === 'set_hvac_mode' && typeof serviceData.hvac_mode === 'string') {
+        this.setState(entityId, { state: serviceData.hvac_mode });
+      } else if (service === 'set_temperature' && typeof serviceData.temperature === 'number') {
+        this.setState(entityId, { attributes: { temperature: serviceData.temperature } });
+      }
+      return;
+    }
     const toggle = TOGGLE_SERVICES[domain];
     if (!toggle) return;
     if (service === toggle.on) this.setState(entityId, { state: toggle.onState });

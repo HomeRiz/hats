@@ -43,6 +43,36 @@ describe('MockHassStore', () => {
     expect(() => store.callService('light', 'turn_on', { entity_id: 'light.does_not_exist' })).not.toThrow();
   });
 
+  it('callService for climate.set_hvac_mode changes the entity state', () => {
+    const climate = {
+      entity_id: 'climate.living_room',
+      state: 'heat',
+      attributes: { temperature: 21 },
+      last_changed: '2026-09-29T00:00:00Z',
+      last_updated: '2026-09-29T00:00:00Z',
+      context: { id: '1', parent_id: null, user_id: null },
+    };
+    const store = new MockHassStore([climate]);
+    store.callService('climate', 'set_hvac_mode', { entity_id: 'climate.living_room', hvac_mode: 'cool' });
+    expect(store.getState('climate.living_room')?.state).toBe('cool');
+  });
+
+  it('callService for climate.set_temperature updates the temperature attribute without changing state', () => {
+    const climate = {
+      entity_id: 'climate.living_room',
+      state: 'heat',
+      attributes: { temperature: 21 },
+      last_changed: '2026-09-29T00:00:00Z',
+      last_updated: '2026-09-29T00:00:00Z',
+      context: { id: '1', parent_id: null, user_id: null },
+    };
+    const store = new MockHassStore([climate]);
+    store.callService('climate', 'set_temperature', { entity_id: 'climate.living_room', temperature: 24 });
+    const updated = store.getState('climate.living_room');
+    expect(updated?.attributes.temperature).toBe(24);
+    expect(updated?.state).toBe('heat');
+  });
+
   it('unsubscribe stops notifications', () => {
     const store = new MockHassStore([light]);
     const listener = vi.fn();
