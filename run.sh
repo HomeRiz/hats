@@ -15,5 +15,7 @@ fi
 
 cd /app
 
+export HATS_ENABLE_LIVE_PREVIEW=true
+
 echo "[INFO] Launching HATS Ingress Server on port 4287..."
 exec node server/index.js
