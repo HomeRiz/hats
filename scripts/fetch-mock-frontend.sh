@@ -4,7 +4,7 @@ set -euo pipefail
 VERSION="20260826.7"
 DEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/vendor/mock-frontend"
 WHEEL_URL="https://files.pythonhosted.org/packages/py3/h/home-assistant-frontend/home_assistant_frontend-${VERSION}-py3-none-any.whl"
-TMP_WHEEL="$(mktemp -t hats-mock-frontend-XXXXXX.whl)"
+TMP_WHEEL="$(mktemp -t hats-mock-frontend-XXXXXX)"
 EXPECTED_SHA256="a2714fdc1ba9fac29e380ae3b57a37a1a04cbc6f0f58bff3458c2281b9152a94"
 
 command -v curl >/dev/null || { echo "fetch-mock-frontend: curl is required" >&2; exit 1; }

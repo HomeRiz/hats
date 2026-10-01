@@ -24,7 +24,7 @@ if [ -f "$dest_file" ]; then
   else
     echo "fetch-mock-mods: $slug exists but checksum mismatch, re-downloading"
     rm -f "$dest_file"
-    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
     if ! curl -fsSL -o "$tmp_file" "$download_url"; then
       echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
       rm -f "$tmp_file"
@@ -46,7 +46,7 @@ if [ -f "$dest_file" ]; then
   fi
 else
   echo "fetch-mock-mods: downloading $slug..."
-  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
   if ! curl -fsSL -o "$tmp_file" "$download_url"; then
     echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
     rm -f "$tmp_file"
@@ -83,7 +83,7 @@ if [ -f "$dest_file" ]; then
   else
     echo "fetch-mock-mods: $slug exists but checksum mismatch, re-downloading"
     rm -f "$dest_file"
-    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
     if ! curl -fsSL -o "$tmp_file" "$download_url"; then
       echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
       rm -f "$tmp_file"
@@ -105,7 +105,7 @@ if [ -f "$dest_file" ]; then
   fi
 else
   echo "fetch-mock-mods: downloading $slug..."
-  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
   if ! curl -fsSL -o "$tmp_file" "$download_url"; then
     echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
     rm -f "$tmp_file"
@@ -142,7 +142,7 @@ if [ -f "$dest_file" ]; then
   else
     echo "fetch-mock-mods: $slug exists but checksum mismatch, re-downloading"
     rm -f "$dest_file"
-    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+    tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
     if ! curl -fsSL -o "$tmp_file" "$download_url"; then
       echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
       rm -f "$tmp_file"
@@ -164,7 +164,7 @@ if [ -f "$dest_file" ]; then
   fi
 else
   echo "fetch-mock-mods: downloading $slug..."
-  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX.js)" || tmp_file="/tmp/hats-mock-mod-$RANDOM.js"
+  tmp_file="$(mktemp -t hats-mock-mod-XXXXXX)" || tmp_file="/tmp/hats-mock-mod-$RANDOM"
   if ! curl -fsSL -o "$tmp_file" "$download_url"; then
     echo "fetch-mock-mods: FAILED to download $slug from $download_url" >&2
     rm -f "$tmp_file"
