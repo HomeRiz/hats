@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, Search } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 
@@ -15,18 +16,26 @@ export const ActiveThemeDropdown: React.FC<ActiveThemeDropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (!dropdownRef.current?.contains(target) && !listRef.current?.contains(target)) {
         setIsOpen(false);
       }
     };
+    const handleResize = () => setIsOpen(false);
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('resize', handleResize);
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [isOpen]);
 
   const filtered = allThemes.filter((t) =>
@@ -37,7 +46,11 @@ export const ActiveThemeDropdown: React.FC<ActiveThemeDropdownProps> = ({
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          const rect = dropdownRef.current?.getBoundingClientRect();
+          if (rect) setPosition({ top: rect.bottom + 8, left: rect.left });
+          setIsOpen(!isOpen);
+        }}
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 text-xs font-medium text-slate-200 border border-slate-700/80 shadow-sm transition-all group"
         title="Select Active Theme"
       >
@@ -61,8 +74,12 @@ export const ActiveThemeDropdown: React.FC<ActiveThemeDropdownProps> = ({
         <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {isOpen && (
-        <div className="absolute left-0 mt-2 w-72 max-h-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl z-50 overflow-hidden flex flex-col animate-fade-in">
+      {isOpen && createPortal(
+        <div
+          ref={listRef}
+          style={{ position: 'fixed', top: position.top, left: position.left }}
+          className="w-72 max-h-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl z-[55] overflow-hidden flex flex-col animate-fade-in"
+        >
           <div className="p-2.5 border-b border-slate-800 bg-slate-950/60 shrink-0">
             <div className="relative">
               <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -128,7 +145,8 @@ export const ActiveThemeDropdown: React.FC<ActiveThemeDropdownProps> = ({
             <span>{filtered.length} themes</span>
             <span>{allThemes.filter(t => t.isInstalled).length} installed in HA</span>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

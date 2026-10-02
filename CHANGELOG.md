@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the neon pulse animates a glow instead of a shadow the theme overrides, the
   font snippet uses rounded system fonts instead of a web font that cannot load
   inside a card, and the frosted glass snippet now targets every card.
+- The theme list in the top bar no longer slides under the live preview.
 
 ## [1.0.0] - 2026-10-02
 
