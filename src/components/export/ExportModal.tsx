@@ -22,6 +22,7 @@ import {
   reloadHomeAssistantThemes, 
   restartHomeAssistant 
 } from '../../services/haService';
+import { copyText } from '../../utils/copyText';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -62,14 +63,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     ? generateHomeAssistantThemeYaml(theme, 'local')
     : generatePerViewSnippet(theme);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(yamlContent);
+  const handleCopy = async () => {
+    if (!(await copyText(yamlContent))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleCopyThemeName = () => {
-    navigator.clipboard.writeText(theme.name);
+  const handleCopyThemeName = async () => {
+    if (!(await copyText(theme.name))) return;
     setCopiedThemeName(true);
     setTimeout(() => setCopiedThemeName(false), 2000);
   };

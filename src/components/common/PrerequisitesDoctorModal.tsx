@@ -19,6 +19,7 @@ import { KeyRound } from 'lucide-react';
 import { GithubIcon } from './icons/GithubIcon';
 import { CustomComponentsPanel } from './CustomComponentsPanel';
 import { ThemeConfig } from '../../types/theme';
+import { copyText } from '../../utils/copyText';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -135,32 +136,8 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const themesDirectiveOnly = `frontend:\n  themes: !include_dir_merge_named themes`;
   const cardModDirectiveOnly = `frontend:\n  extra_module_url:\n    - ${exactCardModUrl}`;
 
-  const copyToClipboard = async (text: string): Promise<boolean> => {
-    try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return true;
-      }
-    } catch (_) {}
-    try {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      return successful;
-    } catch (_) {
-      return false;
-    }
-  };
-
   const handleCopyYaml = async (textToCopy: string = yamlSnippet) => {
-    const ok = await copyToClipboard(textToCopy);
+    const ok = await copyText(textToCopy);
     if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
