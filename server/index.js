@@ -6,7 +6,7 @@ import * as yaml from 'js-yaml';
 import { loadThemeYaml, readThemeColors, fallbackGradient } from './themeValues.js';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
-import { fetchLiveDashboardSnapshot, fetchHacsRepositories } from './haWebsocket.js';
+import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -456,12 +456,6 @@ app.get('/api/ha/status', (req, res) => {
     hasSupervisorToken: Boolean(SUPERVISOR_TOKEN),
     autoReloadThemes: AUTO_RELOAD_THEMES,
   });
-});
-
-app.get('/api/ha/live-dashboard', async (req, res) => {
-  const snapshot = await fetchLiveDashboardSnapshot(SUPERVISOR_TOKEN);
-  res.set('Cache-Control', 'no-store');
-  res.json(snapshot);
 });
 
 app.get('/api/ha/hacs-repositories', async (req, res) => {
