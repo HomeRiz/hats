@@ -680,7 +680,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       )}
 
       {batchInstallStatus && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-xl bg-emerald-900/95 border border-emerald-500/60 text-emerald-100 text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 animate-fade-in">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[70] px-5 py-2.5 rounded-xl bg-emerald-900/95 border border-emerald-500/60 text-emerald-100 text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 animate-fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-300" />
           <span>{batchInstallStatus}</span>
         </div>
@@ -688,7 +688,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
       {contextMenu && (
         <div
-          className="fixed z-50 w-52 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl p-1.5 text-xs space-y-1 animate-fade-in"
+          className="fixed z-[60] w-52 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl p-1.5 text-xs space-y-1 animate-fade-in"
           style={{ top: contextMenu.y, left: contextMenu.x }}
           onClick={(e) => e.stopPropagation()}
         >

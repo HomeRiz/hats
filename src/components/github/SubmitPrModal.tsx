@@ -73,7 +73,7 @@ export const SubmitPrModal: React.FC<SubmitPrModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
+      className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
       onClick={onClose}
     >
       <div 

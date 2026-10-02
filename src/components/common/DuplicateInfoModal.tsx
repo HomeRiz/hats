@@ -28,7 +28,7 @@ export const DuplicateInfoModal: React.FC<DuplicateInfoModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fade-in cursor-pointer"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md select-none animate-fade-in cursor-pointer"
       onClick={onClose}
     >
       <div 
