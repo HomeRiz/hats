@@ -1,5 +1,8 @@
 import { ThemeConfig } from '../types/theme';
 import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
+import kidsStorybookVillage from '../assets/backgrounds/kids-storybook-village.jpg';
+import kidsSpaceAdventure from '../assets/backgrounds/kids-space-adventure.jpg';
+import kidsForestFriends from '../assets/backgrounds/kids-forest-friends.jpg';
 
 export const defaultGlassTheme: ThemeConfig = {
   id: 'hats-storm-alpine-lake',
@@ -350,9 +353,120 @@ export const defaultNeonTheme: ThemeConfig = {
   },
 };
 
+interface KidsPhotoOptions {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  imageFileName: string;
+  avgColor: string;
+  darken: number;
+  primary: string;
+  accent: string;
+  palette: Partial<ThemeConfig['palette']>;
+  surface: string;
+  card: string;
+  cardTextSecondary: string;
+}
+
+function kidsPhotoTheme(options: KidsPhotoOptions): ThemeConfig {
+  return {
+    ...defaultKidsTheme,
+    id: options.id,
+    name: options.name,
+    author: 'HomeRiz',
+    description: options.description,
+    createdAt: '2026-10-02T00:00:00Z',
+    updatedAt: '2026-10-02T00:00:00Z',
+    palette: {
+      ...defaultKidsTheme.palette,
+      ...options.palette,
+      primary: options.primary,
+      accent: options.accent,
+    },
+    engine: {
+      ...defaultKidsTheme.engine,
+      glowColor: options.accent,
+      insetShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4) inset, 0 12px 32px -10px rgba(0, 0, 0, 0.45)',
+      backgroundScrim: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.30) 100%)',
+      fallbackCardBg: options.card,
+    },
+    background: {
+      type: 'image',
+      imageUrl: options.imageUrl,
+      imageFileName: options.imageFileName,
+      darken: options.darken,
+      blur: 0,
+      saturation: 1.1,
+      vignette: 0.3,
+      headerTintAuto: true,
+      avgColor: options.avgColor,
+    },
+    dark: {
+      primaryBackground: options.surface,
+      secondaryBackground: options.surface,
+      cardBackground: options.card,
+      textPrimary: '#FFFFFF',
+      textSecondary: options.cardTextSecondary,
+    },
+    customSvgOverlay: undefined,
+  };
+}
+
+export const defaultStorybookVillageTheme: ThemeConfig = kidsPhotoTheme({
+  id: 'hats-kids-storybook-village',
+  name: 'HATS Kids - Storybook Village',
+  description: 'A sunny watercolour seaside village with a toy train, a sailboat and a treehouse, under bubbly glass cards.',
+  imageUrl: kidsStorybookVillage,
+  imageFileName: 'kids-storybook-village.jpg',
+  avgColor: '#5d8f6b',
+  darken: 0.34,
+  primary: '#F08A3C',
+  accent: '#F5B71B',
+  palette: { red: '#E0573F', pink: '#F29BB8', purple: '#A78BCB', blue: '#2F9BD1', lightBlue: '#7CC4E8', cyan: '#3FB6C4', teal: '#2AA7A0', green: '#6FB65A', yellow: '#F5C84B', orange: '#F08A3C' },
+  surface: 'rgb(24, 40, 52)',
+  card: 'rgba(22, 44, 56, 0.58)',
+  cardTextSecondary: '#E6F0E8',
+});
+
+export const defaultSpaceAdventureTheme: ThemeConfig = kidsPhotoTheme({
+  id: 'hats-kids-space-adventure',
+  name: 'HATS Kids - Space Adventure',
+  description: 'A watercolour night sky full of astronauts, rockets, planets and a friendly whale, with soft glowing cards.',
+  imageUrl: kidsSpaceAdventure,
+  imageFileName: 'kids-space-adventure.jpg',
+  avgColor: '#2a2f6b',
+  darken: 0.12,
+  primary: '#9B7BFF',
+  accent: '#FFC94D',
+  palette: { red: '#FF7A8A', pink: '#FF8AD8', purple: '#9B7BFF', indigo: '#6C7BE0', blue: '#5AA9FF', lightBlue: '#8CC8FF', cyan: '#5FD3E8', teal: '#5FD3C8', green: '#7FD99A', yellow: '#FFD966', orange: '#FFA94D' },
+  surface: 'rgb(18, 18, 48)',
+  card: 'rgba(22, 20, 58, 0.58)',
+  cardTextSecondary: '#DAD6F5',
+});
+
+export const defaultForestFriendsTheme: ThemeConfig = kidsPhotoTheme({
+  id: 'hats-kids-forest-friends',
+  name: 'HATS Kids - Forest Friends',
+  description: 'A sunlit meadow stream with a deer, rabbits, a hedgehog and a frog, wrapped in leafy green glass cards.',
+  imageUrl: kidsForestFriends,
+  imageFileName: 'kids-forest-friends.jpg',
+  avgColor: '#5a7d3a',
+  darken: 0.3,
+  primary: '#5BB75F',
+  accent: '#FFB63D',
+  palette: { red: '#E0503A', pink: '#E26FB0', purple: '#9C7BC4', blue: '#5B8DEF', lightBlue: '#8FB8F5', cyan: '#4DC2C8', teal: '#3FA79A', green: '#5BB75F', yellow: '#FFD24D', orange: '#FFB63D' },
+  surface: 'rgb(20, 40, 26)',
+  card: 'rgba(18, 42, 26, 0.58)',
+  cardTextSecondary: '#E4F0DA',
+});
+
 export const defaultThemes: ThemeConfig[] = [
   defaultGlassTheme,
   defaultKidsTheme,
+  defaultStorybookVillageTheme,
+  defaultSpaceAdventureTheme,
+  defaultForestFriendsTheme,
   defaultVelvetTheme,
   defaultNeonTheme,
 ];
