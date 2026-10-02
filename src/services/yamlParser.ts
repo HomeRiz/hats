@@ -1,12 +1,12 @@
-import * as yaml from 'js-yaml';
 import { ThemeConfig } from '../types/theme';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
 import { detectRequiresCardMod } from './themeRequirementDetector';
+import { loadThemeYaml, readThemeColors, fallbackGradient } from '../../server/themeValues.js';
 
 export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
   try {
-    const doc = yaml.load(rawYaml) as Record<string, any>;
+    const doc = loadThemeYaml(rawYaml) as Record<string, any>;
     if (!doc || typeof doc !== 'object') {
       return [];
     }
@@ -16,9 +16,10 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
     for (const [themeName, themeData] of Object.entries(doc)) {
       if (!themeData || typeof themeData !== 'object') continue;
 
-      const primary = themeData['primary-color'] || themeData['accent-color'] || '#0A84FF';
-      const accent = themeData['accent-color'] || primary;
-      const bg = themeData['hats-background'] || themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
+      const colors = readThemeColors(themeData);
+      const primary = colors.primary || '#0A84FF';
+      const accent = colors.accent || primary;
+      const bg = colors.background;
       
       let customSvgOverlay: string | undefined;
       const b64SvgMatch = typeof bg === 'string' ? bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/) : null;
@@ -43,6 +44,8 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
           if (gradMatch) gradientString = gradMatch[0];
         }
       }
+
+      if (!bgUrl && !gradientString) gradientString = fallbackGradient(colors);
 
       const category = /kids/i.test(themeName) ? 'Kids'
         : /neon/i.test(themeName) ? 'Neon'
@@ -96,24 +99,24 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
         },
         background: {
           ...defaultGlassTheme.background,
-          type: bgUrl ? 'image' : (gradientString ? 'gradient' : defaultGlassTheme.background.type),
+          type: bgUrl ? 'image' : 'gradient',
           imageUrl: bgUrl,
-          gradientString: gradientString || defaultGlassTheme.background.gradientString,
+          gradientString: gradientString || 'linear-gradient(140deg, #1b1030 0%, #0b0d14 55%, #12202e 100%)',
         },
         customSvgOverlay,
         dark: {
-          primaryBackground: themeData.modes?.dark?.['primary-background-color'] || defaultGlassTheme.dark.primaryBackground,
-          secondaryBackground: themeData.modes?.dark?.['secondary-background-color'] || defaultGlassTheme.dark.secondaryBackground,
-          cardBackground: themeData.modes?.dark?.['ha-card-background'] || defaultGlassTheme.dark.cardBackground,
-          textPrimary: themeData.modes?.dark?.['primary-text-color'] || defaultGlassTheme.dark.textPrimary,
-          textSecondary: themeData.modes?.dark?.['secondary-text-color'] || defaultGlassTheme.dark.textSecondary,
+          primaryBackground: colors.dark.primaryBackground || defaultGlassTheme.dark.primaryBackground,
+          secondaryBackground: colors.dark.secondaryBackground || defaultGlassTheme.dark.secondaryBackground,
+          cardBackground: colors.dark.cardBackground || defaultGlassTheme.dark.cardBackground,
+          textPrimary: colors.dark.textPrimary || defaultGlassTheme.dark.textPrimary,
+          textSecondary: colors.dark.textSecondary || defaultGlassTheme.dark.textSecondary,
         },
         light: {
-          primaryBackground: themeData.modes?.light?.['primary-background-color'] || defaultGlassTheme.light.primaryBackground,
-          secondaryBackground: themeData.modes?.light?.['secondary-background-color'] || defaultGlassTheme.light.secondaryBackground,
-          cardBackground: themeData.modes?.light?.['ha-card-background'] || defaultGlassTheme.light.cardBackground,
-          textPrimary: themeData.modes?.light?.['primary-text-color'] || defaultGlassTheme.light.textPrimary,
-          textSecondary: themeData.modes?.light?.['secondary-text-color'] || defaultGlassTheme.light.textSecondary,
+          primaryBackground: colors.light.primaryBackground || defaultGlassTheme.light.primaryBackground,
+          secondaryBackground: colors.light.secondaryBackground || defaultGlassTheme.light.secondaryBackground,
+          cardBackground: colors.light.cardBackground || defaultGlassTheme.light.cardBackground,
+          textPrimary: colors.light.textPrimary || defaultGlassTheme.light.textPrimary,
+          textSecondary: colors.light.textSecondary || defaultGlassTheme.light.textSecondary,
         },
         requirements: {
           requiresCardMod: detectRequiresCardMod(themeData),

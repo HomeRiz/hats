@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import * as yaml from 'js-yaml';
+import { loadThemeYaml, readThemeColors, fallbackGradient } from './themeValues.js';
 import crypto from 'crypto';
 import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
 import { fetchLiveDashboardSnapshot, fetchHacsRepositories } from './haWebsocket.js';
@@ -153,7 +154,7 @@ function parseThemeFile(fullPath, isInstalled) {
     const raw = fs.readFileSync(fullPath, 'utf8');
     const sanitized = sanitizeThemeYamlContent(raw);
 
-    const parsed = yaml.load(sanitized);
+    const parsed = loadThemeYaml(sanitized);
     if (!parsed || typeof parsed !== 'object') return [];
 
     const themes = [];
@@ -166,9 +167,10 @@ function parseThemeFile(fullPath, isInstalled) {
         .toLowerCase()
         .replace(/[^a-z0-9_-]/g, '-');
 
-      const primary = themeData['primary-color'] || themeData['accent-color'] || '#0A84FF';
-      const accent = themeData['accent-color'] || primary;
-      const bg = themeData['hats-background'] || themeData['ultimate-background'] || themeData['background-image'] || themeData['lovelace-background'] || '';
+      const colors = readThemeColors(themeData);
+      const primary = colors.primary || '#0A84FF';
+      const accent = colors.accent || primary;
+      const bg = colors.background;
       
       let customSvgOverlay = undefined;
       const b64SvgMatch = bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/);
@@ -187,6 +189,8 @@ function parseThemeFile(fullPath, isInstalled) {
         const gradM = bg.match(/linear-gradient\([^)]+\)/);
         if (gradM) gradientString = gradM[0];
       }
+
+      if (!bgUrl && !gradientString) gradientString = fallbackGradient(colors);
 
       const category = /kids/i.test(themeName) ? 'Kids'
         : /neon/i.test(themeName) ? 'Neon'
@@ -276,18 +280,18 @@ function parseThemeFile(fullPath, isInstalled) {
         },
         customSvgOverlay,
         dark: {
-          primaryBackground: themeData.modes?.dark?.['primary-background-color'] || 'rgb(14, 14, 20)',
-          secondaryBackground: themeData.modes?.dark?.['secondary-background-color'] || 'rgb(14, 14, 20)',
-          cardBackground: themeData.modes?.dark?.['ha-card-background'] || 'rgba(0, 0, 0, 0.26)',
-          textPrimary: themeData.modes?.dark?.['primary-text-color'] || 'rgba(255, 255, 255, 0.96)',
-          textSecondary: themeData.modes?.dark?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
+          primaryBackground: colors.dark.primaryBackground || 'rgb(14, 14, 20)',
+          secondaryBackground: colors.dark.secondaryBackground || 'rgb(14, 14, 20)',
+          cardBackground: colors.dark.cardBackground || 'rgba(0, 0, 0, 0.26)',
+          textPrimary: colors.dark.textPrimary || 'rgba(255, 255, 255, 0.96)',
+          textSecondary: colors.dark.textSecondary || 'rgba(228, 228, 232, 0.78)',
         },
         light: {
-          primaryBackground: themeData.modes?.light?.['primary-background-color'] || 'rgb(70, 74, 80)',
-          secondaryBackground: themeData.modes?.light?.['secondary-background-color'] || 'rgb(70, 74, 80)',
-          cardBackground: themeData.modes?.light?.['ha-card-background'] || 'rgba(190, 195, 205, 0.26)',
-          textPrimary: themeData.modes?.light?.['primary-text-color'] || 'rgb(241, 241, 241)',
-          textSecondary: themeData.modes?.light?.['secondary-text-color'] || 'rgba(228, 228, 232, 0.78)',
+          primaryBackground: colors.light.primaryBackground || 'rgb(70, 74, 80)',
+          secondaryBackground: colors.light.secondaryBackground || 'rgb(70, 74, 80)',
+          cardBackground: colors.light.cardBackground || 'rgba(190, 195, 205, 0.26)',
+          textPrimary: colors.light.textPrimary || 'rgb(241, 241, 241)',
+          textSecondary: colors.light.textSecondary || 'rgba(228, 228, 232, 0.78)',
         },
         requirements: {
           requiresCardMod: Boolean(themeData['card-mod-theme'] || themeData['card-mod-root'] || themeData['card-mod-card']),
