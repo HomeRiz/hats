@@ -1,9 +1,10 @@
-Bubble 2026 BFG Header mod:
-  card-mod-theme: Bubble 2026 BFG Header mod
+Bubble One Dark Pro:
+  card-mod-theme: Bubble One Dark Pro
   '<<':
     card-mod-root-yaml: |
       .: |
         @media only screen and (max-width: 768px) {
+            .header { display: none; opacity: 0; }
             #view { padding-top: 0 !important; margin-top: 0 !important; height: calc(100vh - env(safe-area-inset-top)) !important; }
         }
     card-mod-more-info-yaml: |
@@ -45,66 +46,80 @@ Bubble 2026 BFG Header mod:
       .bubble-sub-button[style*="bubble-accent-color"],
       .bubble-sub-button[style*="bubble-sub-button-light-background-color"],
       .bubble-sub-button.background-on {
-        --primary-text-color: var(--token-text-on-accent) !important;
-        --bubble-icon-color: var(--token-text-on-accent) !important;
-        --bubble-name-color: var(--token-text-on-accent) !important;
-        --bubble-state-color: var(--token-text-on-accent) !important;
-        color: var(--token-text-on-accent) !important;
+        --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
       }
+
+      .bubble-button-card-container.background-on .bubble-name,
+      .bubble-button-card-container.background-on .bubble-state,
+      .bubble-button-card-container.background-on ha-icon,
       .bubble-sub-button.background-on .bubble-sub-button-name-container,
       .bubble-sub-button.background-on .bubble-sub-button-icon,
       .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
       .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-icon {
-        color: var(--token-text-on-accent) !important;
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
       }
       ha-icon {
         color: inherit !important;
       }
     card-mod-card-yaml: |
       "ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
         .bubble-sub-button.background-on,
         .bubble-sub-button[style*="bubble-accent-color"],
         .bubble-sub-button[style*="bubble-sub-button-light-background-color"] {
-          --primary-text-color: var(--token-text-on-accent) !important;
-          --bubble-icon-color: var(--token-text-on-accent) !important;
-          --bubble-name-color: var(--token-text-on-accent) !important;
-          --bubble-state-color: var(--token-text-on-accent) !important;
-          color: var(--token-text-on-accent) !important;
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
 
+        .bubble-button-card-container.background-on .bubble-name,
+        .bubble-button-card-container.background-on .bubble-state,
+        .bubble-button-card-container.background-on ha-icon,
+        .bubble-button-card-container[style*="background-color"] .bubble-name,
+        .bubble-button-card-container[style*="background-color"] .bubble-state,
+        .bubble-button-card-container[style*="background-color"] ha-icon,
         .bubble-sub-button.background-on .bubble-sub-button-name-container,
         .bubble-sub-button.background-on ha-icon,
         .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
         .bubble-sub-button[style*="bubble-accent-color"] ha-icon {
-          color: var(--token-text-on-accent) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
 
       "hui-element$ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
         .bubble-sub-button.background-on,
         .bubble-sub-button[style*="bubble-accent-color"] {
-          --primary-text-color: var(--token-text-on-accent) !important;
-          color: var(--token-text-on-accent) !important;
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
   modes:
     dark:
-      token-accent: rgb(80, 110, 172)
-      token-rgb-primary: 80, 110, 172
-      token-text-on-accent: '#ffffff'
-      token-bg: rgba(57, 54, 70, 1)
-      token-bg-secondary: rgb(92, 83, 103)
-      token-card: rgba(79, 69, 87, 1)
-      token-text: '#ffffff'
-      token-text-secondary: '#b0b0b0'
-      token-sidebar-icon: '#98a7b9'
-      token-success: rgba(0, 202, 139, 1)
-      token-rgb-green: 0, 202, 139
-      token-warning: rgba(222, 176, 107, 1)
-      token-rgb-yellow: 222, 176, 107
-      token-error: rgba(247, 53, 67, 1)
-      token-rgb-red: 247, 53, 67
-      token-info: rgba(26, 137, 245, 1)
-      token-rgb-blue: 26, 137, 245
-      lovelace-background: center / cover no-repeat url('https://raw.githubusercontent.com/silasmariusz/Bubble_Theme_2026/refs/heads/main/www/bubble_2026_bfg_background.png') fixed
+      token-accent: '#61afef'
+      token-rgb-primary: 97, 175, 239
+      token-text-on-accent: '#282c34'
+      token-bg: '#282c34'
+      token-bg-secondary: '#21252b'
+      token-card: '#343a45'
+      token-text: '#abb2bf'
+      token-text-secondary: '#828997'
+      token-sidebar-icon: '#abb2bf'
+      token-success: '#98c379'
+      token-rgb-green: 152, 195, 121
+      token-warning: '#e5c07b'
+      token-rgb-yellow: 229, 192, 123
+      token-error: '#e06c75'
+      token-rgb-red: 224, 108, 117
+      token-info: '#56b6c2'
+      token-rgb-cyan: 86, 182, 194
+      token-rgb-purple: 198, 120, 221
       bubble-accent-color: var(--token-accent)
       bubble-button-accent-color: var(--token-accent)
       '<<':
@@ -258,44 +273,24 @@ Bubble 2026 BFG Header mod:
           mush-rgb-black: var(--rgb-black-color)
           mush-rgb-disabled: var(--rgb-disabled-color)
         bubble-border: '1.8px solid var(--divider-color, #e0e0e0)'
-        token-rgb-white: 255, 255, 255
-        token-rgb-black: 0, 0, 0
-        token-rgb-purple: 181, 108, 255
-        token-rgb-pink: 255, 120, 190
-        token-rgb-deep-purple: 124, 77, 255
-        token-rgb-indigo: 83, 109, 254
-        token-rgb-light-blue: 3, 169, 244
-        token-rgb-cyan: 0, 188, 212
-        token-rgb-teal: 64, 200, 186
-        token-rgb-light-green: 156, 255, 166
-        token-rgb-lime: 205, 220, 57
-        token-rgb-amber: 255, 211, 99
-        token-rgb-orange: 255, 152, 0
-        token-rgb-deep-orange: 255, 87, 34
-        token-rgb-brown: 121, 85, 72
-        token-rgb-grey: 158, 158, 158
-        token-rgb-blue-grey: 96, 125, 139
-        token-rgb-disabled: 158, 158, 158
-        token-rgb-state-inactive: 123, 126, 139
     light:
-      token-accent: '#e69c9c'
-      token-rgb-primary: 230, 156, 156
+      token-accent: '#0184bc'
+      token-rgb-primary: 1, 132, 188
       token-text-on-accent: '#ffffff'
-      token-bg: '#eff1f5'
-      token-bg-secondary: '#ccd0da'
-      token-card: '#dce0e8'
-      token-text: '#4c4f69'
-      token-text-secondary: '#6c6f85'
-      token-sidebar-icon: '#8c8fa1'
-      token-success: rgba(46, 204, 113, 1)
-      token-rgb-green: 46, 204, 113
-      token-warning: rgba(245, 166, 35, 1)
-      token-rgb-yellow: 245, 166, 35
-      token-error: rgba(231, 76, 60, 1)
-      token-rgb-red: 231, 76, 60
-      token-info: rgba(0, 122, 255, 1)
-      token-rgb-blue: 0, 122, 255
-      lovelace-background: center / cover no-repeat url('https://raw.githubusercontent.com/silasmariusz/Bubble_Theme_2026/refs/heads/main/www/bubble_2026_bfg_background-light.png') fixed
+      token-bg: '#fafafa'
+      token-bg-secondary: '#f0f0f0'
+      token-card: '#ffffff'
+      token-text: '#383a42'
+      token-text-secondary: '#a0a1a7'
+      token-sidebar-icon: '#a0a1a7'
+      token-success: '#50a14f'
+      token-rgb-green: 80, 161, 79
+      token-warning: '#c18401'
+      token-rgb-yellow: 193, 132, 1
+      token-error: '#e45649'
+      token-rgb-red: 228, 86, 73
+      token-info: '#0184bc'
+      token-rgb-blue: 1, 132, 188
       bubble-accent-color: var(--token-accent)
       bubble-button-accent-color: var(--token-accent)
       '<<':

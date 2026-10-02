@@ -1,0 +1,337 @@
+Bubble Gruvbox Material:
+  card-mod-theme: Bubble Gruvbox Material
+  '<<':
+    card-mod-root-yaml: |
+      .: |
+        @media only screen and (max-width: 768px) {
+            .header { display: none; opacity: 0; }
+            #view { padding-top: 0 !important; margin-top: 0 !important; height: calc(100vh - env(safe-area-inset-top)) !important; }
+        }
+    card-mod-more-info-yaml: |
+      $: |
+       .mdc-dialog .mdc-dialog__scrim { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); background: rgba(0,0,0,.6); }
+       .mdc-dialog .mdc-dialog__container .mdc-dialog__surface { box-shadow: none !important; border-radius: var(--ha-card-border-radius); }
+      .: |
+       :host { --ha-card-box-shadow: none; }
+    card-mod-view-yaml: |
+      hui-sidebar-view:
+        $: |
+          .container { overflow: hidden; }
+          @media only screen and (min-width: 768px) { .container { max-width: 520px; margin: auto !important; width: -webkit-fill-available; } }
+          #wrapper: |
+            $: |
+              #progressContainer { border-radius: 14px !important; }
+        .: |
+          hui-view { transform: translate3d(0px, -60px, 0px); }
+          "#view>hui-view>hui-sidebar-view$#main>hui-card-options:nth-child(7)>vertical-stack-in-card$ha-card>div>hui-horizontal-stack-card$#root>hui-grid-card$#root>hui-entities-card$#states>div:nth-child(4)>slider-entity-row$div>ha-slider$#sliderBar$#progressContainer" { border-radius: 14px !important; }
+    card-mod-card: |
+      ha-card {
+        transition: none;
+        border-style: none !important;
+        --bubble-text-on-accent: var(--token-text-on-accent);
+      }
+      .is-light .bubble-range-fill,
+      .is-light .slider-use-light-color {
+        opacity: 0.6;
+        filter: saturate(0.7);
+      }
+    $: |
+      .bubble-button-card-container {
+        --primary-text-color: var(--token-text);
+        color: var(--token-text) !important;
+      }
+      .bubble-button-card-container[style*="background-color"],
+      .bubble-button-card-container.background-on,
+      .bubble-sub-button[style*="background-color"],
+      .bubble-sub-button[style*="bubble-accent-color"],
+      .bubble-sub-button[style*="bubble-sub-button-light-background-color"],
+      .bubble-sub-button.background-on {
+        --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+      }
+
+      .bubble-button-card-container.background-on .bubble-name,
+      .bubble-button-card-container.background-on .bubble-state,
+      .bubble-button-card-container.background-on ha-icon,
+      .bubble-sub-button.background-on .bubble-sub-button-name-container,
+      .bubble-sub-button.background-on .bubble-sub-button-icon,
+      .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
+      .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-icon {
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+      }
+      ha-icon {
+        color: inherit !important;
+      }
+    card-mod-card-yaml: |
+      "ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
+        .bubble-sub-button.background-on,
+        .bubble-sub-button[style*="bubble-accent-color"],
+        .bubble-sub-button[style*="bubble-sub-button-light-background-color"] {
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        }
+
+        .bubble-button-card-container.background-on .bubble-name,
+        .bubble-button-card-container.background-on .bubble-state,
+        .bubble-button-card-container.background-on ha-icon,
+        .bubble-button-card-container[style*="background-color"] .bubble-name,
+        .bubble-button-card-container[style*="background-color"] .bubble-state,
+        .bubble-button-card-container[style*="background-color"] ha-icon,
+        .bubble-sub-button.background-on .bubble-sub-button-name-container,
+        .bubble-sub-button.background-on ha-icon,
+        .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
+        .bubble-sub-button[style*="bubble-accent-color"] ha-icon {
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        }
+
+      "hui-element$ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
+        .bubble-sub-button.background-on,
+        .bubble-sub-button[style*="bubble-accent-color"] {
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        }
+  modes:
+    dark:
+      token-accent: '#d3869b'
+      token-rgb-primary: 211, 134, 155
+      token-text-on-accent: '#282828'
+      token-bg: '#282828'
+      token-bg-secondary: '#32302f'
+      token-card: '#3c3836'
+      token-text: '#d4be98'
+      token-text-secondary: '#a89984'
+      token-sidebar-icon: '#d4be98'
+      token-success: '#a9b665'
+      token-rgb-green: 169, 182, 101
+      token-warning: '#d8a657'
+      token-rgb-yellow: 216, 166, 87
+      token-error: '#ea6962'
+      token-rgb-red: 234, 105, 98
+      token-info: '#7daea3'
+      token-rgb-blue: 125, 174, 163
+      bubble-accent-color: var(--token-accent)
+      bubble-button-accent-color: var(--token-accent)
+      '<<':
+        '<<': &ref_0
+          primary-font-family: Inter, Lato, Roboto, Figtree, sans-serif
+          ha-font-family-body: var(--primary-font-family)
+          ha-font-family-heading: var(--primary-font-family)
+          ha-font-family-code: var(--primary-font-family)
+          ha-font-family-longform: var(--primary-font-family)
+          ha-card-header-font-family: var(--primary-font-family)
+          mdc-typography-font-family: var(--primary-font-family)
+          mdc-typography-button-font-family: var(--primary-font-family)
+          mdc-typography-body1-font-family: var(--primary-font-family)
+          md-list-item-label-text-font: var(--primary-font-family)
+          paper-font-common-base_-_font-family: var(--primary-font-family)
+          paper-font-common-code_-_font-family: var(--primary-font-family)
+          paper-font-body1_-_font-family: var(--primary-font-family)
+          paper-font-subhead_-_font-family: var(--primary-font-family)
+          paper-font-headline_-_font-family: var(--primary-font-family)
+          paper-font-caption_-_font-family: var(--primary-font-family)
+          paper-font-title_-_font-family: var(--primary-font-family)
+          token-weight-font-body: 400
+          token-weight-font-title: 600
+          token-weight-font-title-card: var(--token-weight-font-title)
+          token-size-font-xs: calc(10px * var(--ha-font-size-scale))
+          token-size-font-s: calc(12px * var(--ha-font-size-scale))
+          token-size-font-m: calc(14px * var(--ha-font-size-scale))
+          token-size-font-l: calc(15px * var(--ha-font-size-scale))
+          token-size-font-xl: calc(20px * var(--ha-font-size-scale))
+          token-size-font-2xl: calc(24px * var(--ha-font-size-scale))
+          token-size-font-3xl: calc(28px * var(--ha-font-size-scale))
+          token-size-font-4xl: calc(32px * var(--ha-font-size-scale))
+          token-size-font-5xl: calc(40px * var(--ha-font-size-scale))
+          token-size-font-title: var(--token-size-font-3xl)
+          token-size-font-title-card: var(--token-size-font-l)
+          title-font-size: var(--token-size-font-title)
+          ha-heading-card-title-font-size: var(--token-size-font-title-card)
+          ha-heading-card-title-font-weight: var(--token-weight-font-title-card)
+          ha-font-smoothing: antialiased
+          webkit-font-smoothing: antialiased
+          ha-font-weight-normal: var(--token-weight-font-body)
+          ha-font-weight-medium: var(--token-weight-font-title)
+          ha-font-weight-bold: var(--token-weight-font-title)
+          ha-font-weight-body: var(--token-weight-font-body)
+          ha-font-weight-heading: var(--token-weight-font-title)
+          ha-font-weight-action: var(--token-weight-font-title)
+          mdc-typography-button-font-weight: var(--token-weight-font-title)
+          title-font-weight: var(--token-weight-font-title)
+          ha-font-size-xs: var(--token-size-font-xs)
+          ha-font-size-s: var(--token-size-font-s)
+          ha-font-size-m: var(--token-size-font-m)
+          ha-font-size-l: var(--token-size-font-l)
+          ha-font-size-xl: var(--token-size-font-xl)
+          ha-font-size-2xl: var(--token-size-font-2xl)
+          ha-font-size-3xl: var(--token-size-font-3xl)
+          ha-font-size-4xl: var(--token-size-font-4xl)
+          ha-font-size-5xl: var(--token-size-font-5xl)
+          mcg-title-font-weight: 400
+          mush-title-font-weight: var(--title-font-weight)
+          mush-title-font-size: var(--title-font-size)
+          primary-color: var(--token-accent)
+          accent-color: var(--token-accent)
+          text-color: var(--token-text)
+          primary-text-color: var(--token-text)
+          secondary-text-color: var(--token-text-secondary)
+          pbs-button-color: var(--token-text)
+          pbs-button-rgb-color: var(--token-text)
+          pbs-button-rgb-state-color: var(--token-text)
+          pbs-button-rgb-default-color: var(--token-text)
+          rgb-state-default-color: var(--token-text)
+          pbs-button-rgb-fallback: var(--token-text)
+          text-primary-color: var(--token-text-on-accent)
+          background-color: var(--token-bg)
+          primary-background-color: var(--token-bg)
+          secondary-background-color: var(--token-bg-secondary)
+          ha-card-background: var(--token-card)
+          card-background-color: var(--token-card)
+          app-header-background-color: var(--token-bg)
+          app-header-text-color: var(--token-text)
+          sidebar-background-color: var(--token-bg)
+          sidebar-text-color: var(--token-text)
+          sidebar-icon-color: var(--token-sidebar-icon)
+          sidebar-selected-icon-color: var(--token-accent)
+          sidebar-selected-text-color: var(--token-text)
+          divider-color: var(--token-bg)
+          switch-checked-button-color: var(--token-accent)
+          switch-checked-track-color: var(--token-card)
+          switch-unchecked-button-color: var(--token-text-secondary)
+          switch-unchecked-track-color: var(--token-bg-secondary)
+          slider-color: var(--token-accent)
+          paper-slider-knob-color: var(--token-accent)
+          paper-slider-active-color: var(--token-accent)
+          paper-slider-pin-color: var(--token-accent)
+          ha-card-border-radius: 28px
+          ha-card-box-shadow: none
+          ha-card-border-width: 0px
+          control-button-border-radius: 24px
+          success-color: var(--token-success)
+          warning-color: var(--token-warning)
+          error-color: var(--token-error)
+          info-color: var(--token-info)
+          red-color: var(--error-color)
+          green-color: var(--success-color)
+          yellow-color: var(--warning-color)
+          blue-color: var(--info-color)
+          rgb-primary-color: var(--token-rgb-primary)
+          rgb-accent-color: var(--token-rgb-primary)
+          rgb-white-color: var(--token-rgb-white)
+          rgb-purple-color: var(--token-rgb-purple)
+          rgb-pink-color: var(--token-rgb-pink)
+          rgb-red-color: var(--token-rgb-red)
+          rgb-deep-purple-color: var(--token-rgb-deep-purple)
+          rgb-indigo-color: var(--token-rgb-indigo)
+          rgb-blue-color: var(--token-rgb-blue)
+          rgb-light-blue-color: var(--token-rgb-light-blue)
+          rgb-cyan-color: var(--token-rgb-cyan)
+          rgb-teal-color: var(--token-rgb-teal)
+          rgb-green-color: var(--token-rgb-green)
+          rgb-light-green-color: var(--token-rgb-light-green)
+          rgb-lime-color: var(--token-rgb-lime)
+          rgb-yellow-color: var(--token-rgb-yellow)
+          rgb-amber-color: var(--token-rgb-amber)
+          rgb-orange-color: var(--token-rgb-orange)
+          rgb-deep-orange-color: var(--token-rgb-deep-orange)
+          rgb-brown-color: var(--token-rgb-brown)
+          rgb-grey-color: var(--token-rgb-grey)
+          rgb-blue-grey-color: var(--token-rgb-blue-grey)
+          rgb-black-color: var(--token-rgb-black)
+          rgb-disabled-color: var(--token-rgb-disabled)
+          rgb-state-inactive-color: var(--token-rgb-state-inactive)
+          mush-rgb-white: var(--rgb-white-color)
+          mush-rgb-purple: var(--rgb-purple-color)
+          mush-rgb-pink: var(--rgb-pink-color)
+          mush-rgb-red: var(--rgb-red-color)
+          mush-rgb-deep-purple: var(--rgb-deep-purple-color)
+          mush-rgb-indigo: var(--rgb-indigo-color)
+          mush-rgb-blue: var(--rgb-blue-color)
+          mush-rgb-light-blue: var(--rgb-light-blue-color)
+          mush-rgb-cyan: var(--rgb-cyan-color)
+          mush-rgb-teal: var(--rgb-teal-color)
+          mush-rgb-green: var(--rgb-green-color)
+          mush-rgb-light-green: var(--rgb-light-green-color)
+          mush-rgb-lime: var(--rgb-lime-color)
+          mush-rgb-yellow: var(--rgb-yellow-color)
+          mush-rgb-amber: var(--rgb-amber-color)
+          mush-rgb-orange: var(--rgb-orange-color)
+          mush-rgb-deep-orange: var(--rgb-deep-orange-color)
+          mush-rgb-brown: var(--rgb-brown-color)
+          mush-rgb-grey: var(--rgb-grey-color)
+          mush-rgb-blue-grey: var(--rgb-blue-grey-color)
+          mush-rgb-black: var(--rgb-black-color)
+          mush-rgb-disabled: var(--rgb-disabled-color)
+        bubble-border: '1.8px solid var(--divider-color, #e0e0e0)'
+        token-rgb-white: 255, 255, 255
+        token-rgb-black: 0, 0, 0
+        token-rgb-purple: 181, 108, 255
+        token-rgb-pink: 255, 120, 190
+        token-rgb-deep-purple: 124, 77, 255
+        token-rgb-indigo: 83, 109, 254
+        token-rgb-light-blue: 3, 169, 244
+        token-rgb-cyan: 0, 188, 212
+        token-rgb-teal: 64, 200, 186
+        token-rgb-light-green: 156, 255, 166
+        token-rgb-lime: 205, 220, 57
+        token-rgb-amber: 255, 211, 99
+        token-rgb-orange: 255, 152, 0
+        token-rgb-deep-orange: 255, 87, 34
+        token-rgb-brown: 121, 85, 72
+        token-rgb-grey: 158, 158, 158
+        token-rgb-blue-grey: 96, 125, 139
+        token-rgb-disabled: 158, 158, 158
+        token-rgb-state-inactive: 123, 126, 139
+    light:
+      token-accent: '#8f3f71'
+      token-rgb-primary: 143, 63, 113
+      token-text-on-accent: '#ffffff'
+      token-bg: '#fbf1c7'
+      token-bg-secondary: '#f2e5bc'
+      token-card: '#fffbf1'
+      token-text: '#5c6a72'
+      token-text-secondary: '#928374'
+      token-sidebar-icon: '#928374'
+      token-success: '#6c782e'
+      token-rgb-green: 108, 120, 46
+      token-warning: '#b47109'
+      token-rgb-yellow: 180, 113, 9
+      token-error: '#c14a4a'
+      token-rgb-red: 193, 74, 74
+      token-info: '#45707a'
+      token-rgb-blue: 69, 112, 122
+      bubble-accent-color: var(--token-accent)
+      bubble-button-accent-color: var(--token-accent)
+      '<<':
+        '<<':
+          '<<': *ref_0
+          bubble-border: 1.8px solid var(--divider-color, rgba(31, 31, 31, 1))
+          dummy_entry: none
+        token-rgb-white: 255, 255, 255
+        token-rgb-black: 0, 0, 0
+        token-rgb-purple: 146, 107, 199
+        token-rgb-pink: 233, 30, 99
+        token-rgb-deep-purple: 110, 65, 171
+        token-rgb-indigo: 63, 81, 181
+        token-rgb-light-blue: 3, 169, 244
+        token-rgb-cyan: 0, 188, 212
+        token-rgb-teal: 0, 150, 136
+        token-rgb-light-green: 139, 195, 74
+        token-rgb-lime: 205, 220, 57
+        token-rgb-amber: 255, 193, 7
+        token-rgb-orange: 255, 152, 0
+        token-rgb-deep-orange: 255, 111, 34
+        token-rgb-brown: 121, 85, 72
+        token-rgb-grey: 158, 158, 158
+        token-rgb-blue-grey: 96, 125, 139
+        token-rgb-disabled: 158, 158, 158
+        token-rgb-state-inactive: 123, 126, 139

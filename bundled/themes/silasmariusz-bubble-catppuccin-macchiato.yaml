@@ -1,9 +1,10 @@
-Bubble IDKFA Header mod:
-  card-mod-theme: Bubble IDKFA Header mod
+Bubble Catppuccin Macchiato:
+  card-mod-theme: Bubble Catppuccin Macchiato
   '<<':
     card-mod-root-yaml: |
       .: |
         @media only screen and (max-width: 768px) {
+            .header { display: none; opacity: 0; }
             #view { padding-top: 0 !important; margin-top: 0 !important; height: calc(100vh - env(safe-area-inset-top)) !important; }
         }
     card-mod-more-info-yaml: |
@@ -45,82 +46,81 @@ Bubble IDKFA Header mod:
       .bubble-sub-button[style*="bubble-accent-color"],
       .bubble-sub-button[style*="bubble-sub-button-light-background-color"],
       .bubble-sub-button.background-on {
-        --primary-text-color: var(--token-text-on-accent) !important;
-        --bubble-icon-color: var(--token-text-on-accent) !important;
-        --bubble-name-color: var(--token-text-on-accent) !important;
-        --bubble-state-color: var(--token-text-on-accent) !important;
-        color: var(--token-text-on-accent) !important;
+        --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
       }
+
+      .bubble-button-card-container.background-on .bubble-name,
+      .bubble-button-card-container.background-on .bubble-state,
+      .bubble-button-card-container.background-on ha-icon,
       .bubble-sub-button.background-on .bubble-sub-button-name-container,
       .bubble-sub-button.background-on .bubble-sub-button-icon,
       .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
       .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-icon {
-        color: var(--token-text-on-accent) !important;
+        color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
       }
       ha-icon {
         color: inherit !important;
       }
     card-mod-card-yaml: |
       "ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
         .bubble-sub-button.background-on,
         .bubble-sub-button[style*="bubble-accent-color"],
         .bubble-sub-button[style*="bubble-sub-button-light-background-color"] {
-          --primary-text-color: var(--token-text-on-accent) !important;
-          --bubble-icon-color: var(--token-text-on-accent) !important;
-          --bubble-name-color: var(--token-text-on-accent) !important;
-          --bubble-state-color: var(--token-text-on-accent) !important;
-          color: var(--token-text-on-accent) !important;
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-icon-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-name-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          --bubble-state-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
 
+        .bubble-button-card-container.background-on .bubble-name,
+        .bubble-button-card-container.background-on .bubble-state,
+        .bubble-button-card-container.background-on ha-icon,
+        .bubble-button-card-container[style*="background-color"] .bubble-name,
+        .bubble-button-card-container[style*="background-color"] .bubble-state,
+        .bubble-button-card-container[style*="background-color"] ha-icon,
         .bubble-sub-button.background-on .bubble-sub-button-name-container,
         .bubble-sub-button.background-on ha-icon,
         .bubble-sub-button[style*="bubble-accent-color"] .bubble-sub-button-name-container,
         .bubble-sub-button[style*="bubble-accent-color"] ha-icon {
-          color: var(--token-text-on-accent) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
 
       "hui-element$ha-card$": |
+        .bubble-button-card-container.background-on,
+        .bubble-button-card-container[style*="background-color"],
         .bubble-sub-button.background-on,
         .bubble-sub-button[style*="bubble-accent-color"] {
-          --primary-text-color: var(--token-text-on-accent) !important;
-          color: var(--token-text-on-accent) !important;
+          --primary-text-color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
+          color: var(--token-text-on-accent, rgba(0,0,0,0.8)) !important;
         }
   modes:
     dark:
-      token-accent: '#a0a0a0'
-      token-rgb-primary: 160, 160, 160
-      token-text-on-accent: '#0d0d0d'
-      token-bg: '#0d0d0d'
-      token-bg-secondary: '#1a1a1a'
-      token-card: '#252525'
-      token-text: '#e0e0e0'
-      token-text-secondary: '#a0a0a0'
-      token-sidebar-icon: '#b0b0b0'
-      token-success: '#6b6b6b'
-      token-rgb-green: 107, 107, 107
-      token-warning: '#8c8c8c'
-      token-rgb-yellow: 140, 140, 140
-      token-error: '#525252'
-      token-rgb-red: 82, 82, 82
-      token-info: '#787878'
-      token-rgb-blue: 120, 120, 120
-      token-rgb-purple: 140, 140, 140
-      token-rgb-pink: 145, 145, 145
-      token-rgb-cyan: 115, 115, 115
-      token-rgb-teal: 105, 105, 105
-      token-rgb-orange: 130, 130, 130
-      token-rgb-lime: 125, 125, 125
-      token-rgb-amber: 135, 135, 135
-      token-rgb-deep-orange: 115, 115, 115
-      token-rgb-brown: 95, 95, 95
-      token-rgb-grey: 158, 158, 158
-      token-rgb-blue-grey: 110, 110, 110
-      token-rgb-indigo: 100, 100, 100
-      token-rgb-deep-purple: 90, 90, 90
-      token-rgb-light-blue: 125, 125, 125
-      token-rgb-light-green: 130, 130, 130
-      token-rgb-disabled: 100, 100, 100
-      token-rgb-state-inactive: 90, 90, 90
+      token-accent: '#c6a0f6'
+      token-rgb-primary: 198, 160, 246
+      token-text-on-accent: '#24273a'
+      token-bg: '#24273a'
+      token-bg-secondary: '#1e2030'
+      token-card: '#363a4f'
+      token-text: '#cad3f5'
+      token-text-secondary: '#939ab7'
+      token-sidebar-icon: '#cad3f5'
+      token-success: '#a6da95'
+      token-rgb-green: 166, 218, 149
+      token-warning: '#eed49f'
+      token-rgb-yellow: 238, 212, 159
+      token-error: '#ed8796'
+      token-rgb-red: 237, 135, 150
+      token-info: '#8aadf4'
+      token-rgb-blue: 138, 173, 244
+      token-rgb-purple: 198, 160, 246
+      token-rgb-pink: 245, 189, 230
       bubble-accent-color: var(--token-accent)
       bubble-button-accent-color: var(--token-accent)
       '<<':
@@ -275,43 +275,46 @@ Bubble IDKFA Header mod:
           mush-rgb-disabled: var(--rgb-disabled-color)
         bubble-border: '1.8px solid var(--divider-color, #e0e0e0)'
     light:
-      token-accent: '#505050'
-      token-rgb-primary: 80, 80, 80
-      token-text-on-accent: '#d3d3d3'
-      token-bg: '#d3d3d3'
-      token-bg-secondary: '#c0c0c0'
-      token-card: '#b8b8b8'
-      token-text: '#2d2d2d'
-      token-text-secondary: '#505050'
-      token-sidebar-icon: '#606060'
-      token-success: '#5a5a5a'
-      token-rgb-green: 90, 90, 90
-      token-warning: '#656565'
-      token-rgb-yellow: 101, 101, 101
-      token-error: '#454545'
-      token-rgb-red: 69, 69, 69
-      token-info: '#555555'
-      token-rgb-blue: 85, 85, 85
-      token-rgb-purple: 95, 95, 95
-      token-rgb-pink: 98, 98, 98
-      token-rgb-cyan: 88, 88, 88
-      token-rgb-teal: 82, 82, 82
-      token-rgb-orange: 92, 92, 92
-      token-rgb-lime: 90, 90, 90
-      token-rgb-amber: 94, 94, 94
-      token-rgb-deep-orange: 85, 85, 85
-      token-rgb-brown: 75, 75, 75
-      token-rgb-grey: 115, 115, 115
-      token-rgb-blue-grey: 100, 100, 100
-      token-rgb-indigo: 88, 88, 88
-      token-rgb-deep-purple: 80, 80, 80
-      token-rgb-light-blue: 90, 90, 90
-      token-rgb-light-green: 92, 92, 92
-      token-rgb-disabled: 105, 105, 105
-      token-rgb-state-inactive: 95, 95, 95
+      token-accent: '#8839ef'
+      token-rgb-primary: 136, 57, 239
+      token-text-on-accent: '#ffffff'
+      token-bg: '#eff1f5'
+      token-bg-secondary: '#e6e9ef'
+      token-card: '#ffffff'
+      token-text: '#4c4f69'
+      token-success: '#40a02b'
+      token-rgb-green: 64, 160, 43
+      token-warning: '#df8e1d'
+      token-rgb-yellow: 223, 142, 29
+      token-error: '#d20f39'
+      token-rgb-red: 210, 15, 57
+      token-info: '#1e66f5'
+      token-rgb-blue: 30, 102, 245
+      token-text-secondary: '#7c7f93'
+      token-sidebar-icon: '#7c7f93'
       bubble-accent-color: var(--token-accent)
       bubble-button-accent-color: var(--token-accent)
       '<<':
-        '<<': *ref_0
-        bubble-border: 1.8px solid var(--divider-color, rgba(31, 31, 31, 1))
-        dummy_entry: none
+        '<<':
+          '<<': *ref_0
+          bubble-border: 1.8px solid var(--divider-color, rgba(31, 31, 31, 1))
+          dummy_entry: none
+        token-rgb-white: 255, 255, 255
+        token-rgb-black: 0, 0, 0
+        token-rgb-purple: 146, 107, 199
+        token-rgb-pink: 233, 30, 99
+        token-rgb-deep-purple: 110, 65, 171
+        token-rgb-indigo: 63, 81, 181
+        token-rgb-light-blue: 3, 169, 244
+        token-rgb-cyan: 0, 188, 212
+        token-rgb-teal: 0, 150, 136
+        token-rgb-light-green: 139, 195, 74
+        token-rgb-lime: 205, 220, 57
+        token-rgb-amber: 255, 193, 7
+        token-rgb-orange: 255, 152, 0
+        token-rgb-deep-orange: 255, 111, 34
+        token-rgb-brown: 121, 85, 72
+        token-rgb-grey: 158, 158, 158
+        token-rgb-blue-grey: 96, 125, 139
+        token-rgb-disabled: 158, 158, 158
+        token-rgb-state-inactive: 123, 126, 139
