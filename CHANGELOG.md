@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-03
+
 ### Added
 
 - The Submit PR button is now Send PR / Issue. Besides sending a theme as a
@@ -19,22 +21,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   those cards. Turned on, the theme sets that card's own variables (Mushroom,
   Bubble Card, Layout Card, Button Card) and lists it as a requirement.
 - The Custom Components list now includes Button Card and Stack-in-Card.
-- The Cyber Scanlines Overlay switch now does something: it draws the CRT
-  scanlines over the dashboard, with an intensity slider. It needs card-mod.
+- An intensity slider for the Cyber Scanlines Overlay.
+
+### Changed
+
 - The add, search and edit buttons in the live preview header are greyed out
   and do nothing, and the search and command keyboard shortcuts are blocked,
   so the preview cannot be used to change anything.
+- The Setup Needed button in the top bar only appears when something is missing
+  or misconfigured in Home Assistant (HACS, the card-mod entry or the themes
+  folder setting). The HA Doctor button stays on the Themes page.
+- On the Themes page the whole page scrolls with the mouse wheel, not just the
+  narrow strip with the scroll bar, and the title, buttons, search box and
+  filters stay in place at the top while you scroll.
+
+### Fixed
+
+- The Cyber Scanlines Overlay switch did nothing. It now draws the CRT
+  scanlines over the dashboard. It needs card-mod.
 - Three of the four ready-made Custom CSS snippets did nothing and now work:
   the neon pulse animates a glow instead of a shadow the theme overrides, the
   font snippet uses rounded system fonts instead of a web font that cannot load
   inside a card, and the frosted glass snippet now targets every card.
-- The theme list in the top bar no longer slides under the live preview.
-- On the Themes page the whole page scrolls with the mouse wheel, not just the
-  narrow strip with the scroll bar, and the title, buttons, search box and
-  filters stay in place at the top while you scroll.
-- The Setup Needed button in the top bar only appears when something is missing
-  or misconfigured in Home Assistant (HACS, the card-mod entry or the themes
-  folder setting). The HA Doctor button stays on the Themes page.
+- The theme list in the top bar slid under the live preview.
 
 ## [1.0.0] - 2026-10-02
 
