@@ -19,6 +19,8 @@ const RECOMMENDED_CARDS = [
   { id: 'mushroom', name: 'Mushroom Cards', desc: 'Modern sleek UI sliders & chips', hacsId: 444350375 },
   { id: 'bubble-card', name: 'Bubble Card', desc: 'Pop-up glassmorphism subviews', hacsId: 680112919 },
   { id: 'layout-card', name: 'Layout Card', desc: 'Advanced CSS grid & masonry', hacsId: 156434866 },
+  { id: 'button-card', name: 'Button Card', desc: 'Fully customisable buttons', hacsId: 146194325 },
+  { id: 'stack-in-card', name: 'Stack-in-Card', desc: 'Merge several cards into one', hacsId: 248954055 },
 ] as const;
 
 const STATE_LABEL: Record<IntegrationState, string> = {

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new Cards tab in the designer turns theme support on or off for each of
   those cards. Turned on, the theme sets that card's own variables (Mushroom,
   Bubble Card, Layout Card, Button Card) and lists it as a requirement.
+- The Custom Components list now includes Button Card and Stack-in-Card.
 
 ## [1.0.0] - 2026-10-02
 

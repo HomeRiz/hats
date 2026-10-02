@@ -493,6 +493,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
         if (/bubble-card\.js/i.test(rawRes)) detectedCards.push('bubble-card');
         if (/layout-card\.js/i.test(rawRes)) detectedCards.push('layout-card');
         if (/button-card\.js/i.test(rawRes)) detectedCards.push('button-card');
+        if (/stack-in-card\.js/i.test(rawRes)) detectedCards.push('stack-in-card');
       } catch (err) {
         console.debug('Could not parse lovelace_resources:', err);
       }
@@ -506,6 +507,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
         if (communityFolders.some(f => f.includes('bubble')) && !detectedCards.includes('bubble-card')) detectedCards.push('bubble-card');
         if (communityFolders.some(f => f.includes('layout')) && !detectedCards.includes('layout-card')) detectedCards.push('layout-card');
         if (communityFolders.some(f => f.includes('button')) && !detectedCards.includes('button-card')) detectedCards.push('button-card');
+        if (communityFolders.some(f => f.includes('stack-in')) && !detectedCards.includes('stack-in-card')) detectedCards.push('stack-in-card');
       } catch (err) {
         console.debug('Could not read community directory:', err);
       }
