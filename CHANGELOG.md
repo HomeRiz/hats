@@ -27,7 +27,7 @@ First public release of HATS, the Home Assistant Theme Store.
   your own Home Assistant entities, and a live-render preview that runs the
   real Home Assistant frontend against a built-in mock backend.
 - Theme requirement detection and a Custom Components tab.
-- Alpine Storm Lake theme with a built-in photo artwork preset.
+- HATS Signature Nature - Alpine Storm Lake as the default theme, with the lake photo built in so it works offline.
 - Keyboard focus rings and reduced-motion support.
 - PNG add-on icon and logo.
 - GitHub Actions workflow that typechecks, tests, builds, lints the add-on
