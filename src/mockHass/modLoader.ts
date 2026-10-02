@@ -2,7 +2,14 @@ import { resolveModUrl } from './modSources';
 
 type ImportFn = (url: string) => Promise<unknown>;
 
-const defaultImportFn: ImportFn = (url) => import(/* @vite-ignore */ new URL(url, document.baseURI).href);
+const scriptBase =
+  typeof document !== 'undefined' && document.currentScript instanceof HTMLScriptElement && document.currentScript.src
+    ? document.currentScript.src
+    : typeof location !== 'undefined'
+      ? location.href
+      : '';
+
+const defaultImportFn: ImportFn = (url) => import(/* @vite-ignore */ new URL(url, scriptBase).href);
 
 export async function loadModsSequentially(
   slugs: string[],
