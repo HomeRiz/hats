@@ -47,7 +47,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
   useEffect(() => {
     if (!useLiveRender) return;
-    const { name, vars } = themeToCssVars(theme, 'dark');
+    const { name, vars } = themeToCssVars(theme);
     applyTheme(name, vars);
   }, [useLiveRender, theme, applyTheme]);
 

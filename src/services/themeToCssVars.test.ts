@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { themeToCssVars } from './themeToCssVars';
+import { themeToCssVars, isLightTheme } from './themeToCssVars';
 import type { ThemeConfig } from '../types/theme';
 
 const minimalTheme = {
@@ -50,5 +50,57 @@ describe('themeToCssVars', () => {
   it('never includes the nested modes object itself as a var value', () => {
     const { vars } = themeToCssVars(minimalTheme, 'dark');
     expect(vars.modes).toBeUndefined();
+  });
+});
+
+describe('isLightTheme', () => {
+  const withBackground = (primaryBackground: string) =>
+    ({ ...minimalTheme, dark: { ...minimalTheme.dark, primaryBackground } }) as ThemeConfig;
+
+  it('is true for light hex and rgb backgrounds', () => {
+    expect(isLightTheme(withBackground('#e5e5ea'))).toBe(true);
+    expect(isLightTheme(withBackground('#fff'))).toBe(true);
+    expect(isLightTheme(withBackground('rgb(245, 245, 245)'))).toBe(true);
+    expect(isLightTheme(withBackground('rgba(250, 250, 250, 0.9)'))).toBe(true);
+  });
+
+  it('is false for dark backgrounds', () => {
+    expect(isLightTheme(withBackground('#2c2c2e'))).toBe(false);
+    expect(isLightTheme(withBackground('rgb(14, 14, 20)'))).toBe(false);
+  });
+
+  it('is false when the background cannot be read', () => {
+    expect(isLightTheme(withBackground('transparent'))).toBe(false);
+    expect(isLightTheme(withBackground(''))).toBe(false);
+  });
+});
+
+describe('themeToCssVars light themes', () => {
+  const lightTheme = {
+    ...minimalTheme,
+    dark: { ...minimalTheme.dark, primaryBackground: '#e5e5ea', textPrimary: '#222222' },
+    light: { ...minimalTheme.light, primaryBackground: '#e5e5ea', textPrimary: '#222222' },
+  } as ThemeConfig;
+
+  it('picks light mode for a light theme when no mode is given', () => {
+    const { vars } = themeToCssVars(lightTheme);
+    expect(vars['mdc-theme-surface']).toBe('#ffffff');
+    expect(vars['mdc-theme-on-surface']).toBe('#212121');
+  });
+
+  it('keeps the theme values on top of the light base', () => {
+    const { vars } = themeToCssVars(lightTheme);
+    expect(vars['primary-background-color']).toBe('#e5e5ea');
+    expect(vars['primary-color']?.toLowerCase()).toBe('#3366ff');
+  });
+
+  it('does not add the light base to a dark theme', () => {
+    const { vars } = themeToCssVars(minimalTheme);
+    expect(vars['mdc-theme-surface']).not.toBe('#ffffff');
+  });
+
+  it('uses the light base when light mode is requested explicitly and none when dark is', () => {
+    expect(themeToCssVars(minimalTheme, 'light').vars['mdc-theme-surface']).toBe('#ffffff');
+    expect(themeToCssVars(lightTheme, 'dark').vars['mdc-theme-surface']).not.toBe('#ffffff');
   });
 });
