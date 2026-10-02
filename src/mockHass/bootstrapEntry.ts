@@ -4,6 +4,7 @@ import { DEMO_ENTITIES } from './demoEntities';
 import { createFakeHaSocket } from './fakeHaSocket';
 import { loadModsSequentially } from './modLoader';
 import { CURATED_MOD_SLUGS } from './modSources';
+import { installToolbarLock } from './toolbarLock';
 
 const sharedStore = new MockHassStore(DEMO_ENTITIES);
 
@@ -53,6 +54,7 @@ function waitForRealHassReady(): Promise<void> {
 }
 
 waitForRealHassReady().then(() => {
+  installToolbarLock(window);
   void loadModsSequentially(CURATED_MOD_SLUGS);
   window.parent.postMessage({ type: 'hats:ready' }, window.location.origin);
 });
