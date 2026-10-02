@@ -1,4 +1,4 @@
-FROM node:25-alpine AS builder
+FROM node:26-alpine AS builder
 WORKDIR /build
 COPY package*.json ./
 RUN npm ci
@@ -10,7 +10,7 @@ RUN chmod +x scripts/fetch-mock-frontend.sh scripts/fetch-mock-mods.sh && ./scri
 RUN npm run build:mock-frontend-bootstrap
 RUN npm run build
 
-FROM node:25-alpine
+FROM node:26-alpine
 
 RUN apk add --no-cache bash tini
 
