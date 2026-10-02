@@ -1,5 +1,6 @@
 import type { HaWebSocket } from 'home-assistant-js-websocket';
 import type { MockHassStore, MockEntityState } from './store';
+import { DEMO_DASHBOARD } from './demoDashboard';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -270,19 +271,7 @@ export function createFakeHaSocket(store: MockHassStore, options: FakeHaSocketOp
       return;
     }
     if (type === 'lovelace/config') {
-      send({
-        id,
-        type: 'result',
-        success: true,
-        result: {
-          views: [
-            {
-              title: 'Home',
-              cards: store.getStates().map((s) => ({ type: 'tile', entity: s.entity_id })),
-            },
-          ],
-        },
-      });
+      send({ id, type: 'result', success: true, result: DEMO_DASHBOARD });
       return;
     }
     if (type === 'lovelace/resources') {

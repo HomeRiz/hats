@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { MOD_SOURCES, resolveModUrl } from './modSources';
+import { CURATED_MOD_SLUGS, MOD_SOURCES, resolveModUrl } from './modSources';
 
 describe('modSources', () => {
-  it('includes the three curated mod cards', () => {
-    for (const slug of ['card-mod', 'bubble-card', 'mushroom-cards']) {
+  it('includes every curated mod card', () => {
+    const slugs = ['card-mod', 'bubble-card', 'mushroom-cards', 'layout-card', 'button-card', 'stack-in-card'];
+    expect(CURATED_MOD_SLUGS).toEqual(slugs);
+    for (const slug of slugs) {
       expect(MOD_SOURCES[slug]).toMatch(/^\.\.\/mock-mods\//);
     }
   });

@@ -185,11 +185,11 @@ describe('createFakeHaSocket - themes and lovelace', () => {
     conn.close();
   });
 
-  it('lovelace/config returns a single default view referencing demo entities', async () => {
+  it('lovelace/config returns one view per supported custom card', async () => {
     const store = new MockHassStore(DEMO_ENTITIES);
     const conn = await connectToFakeSocket(store);
     const result: any = await conn.sendMessagePromise({ type: 'lovelace/config' });
-    expect(result.views.length).toBeGreaterThan(0);
+    expect(result.views.map((v: any) => v.path)).toEqual(['home', 'mushroom', 'bubble-card', 'layout-card', 'button-card', 'stack-in-card', 'card-mod']);
     conn.close();
   });
 

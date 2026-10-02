@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Submit PR button is now Send PR / Issue. Besides sending a theme as a
   pull request, the same dialog can open an issue on the HATS repository to
   report a bug with a theme or to ask for a theme to be removed.
+- The live preview now has a view for each supported custom card: Mushroom,
+  Bubble Card, Layout Card, Button Card, Stack-in-Card and card-mod, each with
+  demo entities, so you can see how a theme looks on them before installing.
 
 ## [1.0.0] - 2026-10-02
 

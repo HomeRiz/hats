@@ -3,6 +3,7 @@ import { MockHassStore } from './store';
 import { DEMO_ENTITIES } from './demoEntities';
 import { createFakeHaSocket } from './fakeHaSocket';
 import { loadModsSequentially } from './modLoader';
+import { CURATED_MOD_SLUGS } from './modSources';
 
 const sharedStore = new MockHassStore(DEMO_ENTITIES);
 
@@ -35,8 +36,6 @@ class FakeWebSocketConstructor {
   return { auth, conn };
 });
 (window as any).__hatsMockStore = sharedStore;
-
-const CURATED_MOD_SLUGS = ['card-mod', 'bubble-card', 'mushroom-cards'];
 
 function waitForRealHassReady(): Promise<void> {
   return new Promise((resolve) => {
