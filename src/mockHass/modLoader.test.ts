@@ -18,7 +18,7 @@ describe('loadModsSequentially', () => {
     let releaseFirst: () => void = () => {};
     const firstGate = new Promise<void>((resolve) => { releaseFirst = resolve; });
     const importFn = vi.fn(async (url: string) => {
-      if (url === '/mock-mods/card-mod.js') {
+      if (url === '../mock-mods/card-mod.js') {
         await firstGate;
       }
       resolveOrder.push(url);
@@ -28,12 +28,12 @@ describe('loadModsSequentially', () => {
     expect(resolveOrder).toEqual([]);
     releaseFirst();
     await pending;
-    expect(resolveOrder).toEqual(['/mock-mods/card-mod.js', '/mock-mods/bubble-card.js']);
+    expect(resolveOrder).toEqual(['../mock-mods/card-mod.js', '../mock-mods/bubble-card.js']);
   });
 
   it('continues the queue and reports a failure when one mod throws', async () => {
     const importFn = vi.fn(async (url: string) => {
-      if (url === '/mock-mods/bubble-card.js') throw new Error('boom');
+      if (url === '../mock-mods/bubble-card.js') throw new Error('boom');
     });
     const result = await loadModsSequentially(['card-mod', 'bubble-card', 'mushroom-cards'], importFn);
     expect(result.loaded).toEqual(['card-mod', 'mushroom-cards']);
