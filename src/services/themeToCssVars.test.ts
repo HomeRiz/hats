@@ -128,6 +128,12 @@ describe('themeToCssVars wallpapers', () => {
     expect(vars['background-image']).not.toContain('cdn.jsdelivr.net');
   });
 
+  it('handles a bundled picture that the build resolved to a full address on the app origin', () => {
+    const { vars } = themeToCssVars(withBackground({ type: 'image', imageUrl: 'http://localhost/api/hassio_ingress/abc/assets/forest-abc123.jpg' }));
+    expect(vars['background-image']).toContain('http://localhost/api/hassio_ingress/abc/assets/forest-abc123.jpg');
+    expect(vars['background-image']).not.toContain('cdn.jsdelivr.net');
+  });
+
   it('keeps an embedded picture as it is', () => {
     const { vars } = themeToCssVars(withBackground({ type: 'image', imageUrl: 'data:image/webp;base64,AAAA' }));
     expect(vars['background-image']).toContain('data:image/webp;base64,AAAA');

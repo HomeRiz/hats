@@ -18,9 +18,17 @@ describe('embedBundledBackground', () => {
 
   it('turns a bundled image path into an uploadable data URL', async () => {
     const result = await embedBundledBackground(themeWithBackground({ type: 'image', imageUrl: '/assets/kids-123.jpg' }));
-    expect(processBackgroundImage).toHaveBeenCalledWith('/assets/kids-123.jpg', 1920, 1080, 0.2);
+    expect(processBackgroundImage).toHaveBeenCalledWith('http://localhost/assets/kids-123.jpg', 1920, 1080, 0.2);
     expect(result.background.imageUrl).toBe('data:image/webp;base64,AAAA');
     expect(result.background.avgColor).toBe('#123456');
+  });
+
+  it('also embeds a bundled picture that the build resolved to a full address on the app origin', async () => {
+    const result = await embedBundledBackground(
+      themeWithBackground({ type: 'image', imageUrl: 'http://localhost/api/hassio_ingress/abc/assets/kids-123.jpg' }),
+    );
+    expect(processBackgroundImage).toHaveBeenCalledTimes(1);
+    expect(result.background.imageUrl).toBe('data:image/webp;base64,AAAA');
   });
 
   it.each([

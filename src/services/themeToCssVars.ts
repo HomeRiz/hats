@@ -1,5 +1,6 @@
 import * as yaml from 'js-yaml';
 import { generateHomeAssistantThemeYaml, fallbackBackgroundUrl } from './yamlGenerator';
+import { resolveBundledPicture } from './bundledPicture';
 import { ThemeConfig } from '../types/theme';
 
 const LIGHT_BASE_VARS: Record<string, string> = {
@@ -49,11 +50,7 @@ export function isLightTheme(theme: ThemeConfig): boolean {
 }
 
 function bundledPictureUrl(theme: ThemeConfig): string | null {
-  const { type, imageUrl } = theme.background;
-  if (type !== 'image' || !imageUrl) return null;
-  if (/^(data:|https?:|\/local\/)/i.test(imageUrl)) return null;
-  const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
-  return new URL(imageUrl, base).href;
+  return theme.background.type === 'image' ? resolveBundledPicture(theme.background.imageUrl) : null;
 }
 
 export function themeToCssVars(
