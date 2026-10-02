@@ -14,20 +14,27 @@ First public release of HATS, the Home Assistant Theme Store.
 - Visual theme designer with palettes, SVG patterns, artwork presets, custom
   CSS, glass and sidebar controls, and a background studio (upload, crop,
   darken and palette extraction).
-- Theme gallery with 21 original bundled themes and more than 90 community
-  themes imported from the HACS themes directory. Variants of the same theme
-  are grouped into a single gallery entry.
+- Theme library with 21 original themes, 95 community themes and 7 built-in
+  themes. Themes from the same author are grouped into packs.
+- Pack browsing: the arrow keys and the side arrows step through the variants
+  of a pack and carry on into the next pack.
+- Import from any public GitHub repository or raw YAML link. A repository
+  with several themes is imported as one pack.
+- Three Kids themes with picture backgrounds (Storybook Village, Space
+  Adventure and Forest Friends), next to Playful Wonder.
+- Live preview that runs the real Home Assistant frontend against a built-in
+  demo backend, with card-mod, Bubble Card and Mushroom Cards loaded. Light
+  themes are previewed with light colours.
 - One-click install to `/config/themes` with an automatic theme reload,
-  uninstall, batch install, and an importer for themes hosted on GitHub.
+  uninstall and batch install. Wallpapers, including the ones bundled with
+  the built-in themes, are uploaded to Home Assistant.
 - Pull request submission to the official themes repository using an optional
   GitHub token.
 - Environment doctor that detects card-mod, Bubble Card and HACS and can fix
   `configuration.yaml` for you.
-- Dashboard previews: a Lovelace dashboard simulation, a preview built from
-  your own Home Assistant entities, and a live-render preview that runs the
-  real Home Assistant frontend against a built-in mock backend.
 - Theme requirement detection and a Custom Components tab.
-- HATS Signature Nature - Alpine Storm Lake as the default theme, with the lake photo built in so it works offline.
+- HATS Signature Nature - Alpine Storm Lake as the default theme, with the
+  lake photo built in so it works offline.
 - Keyboard focus rings and reduced-motion support.
 - PNG add-on icon and logo.
 - GitHub Actions workflow that typechecks, tests, builds, lints the add-on
