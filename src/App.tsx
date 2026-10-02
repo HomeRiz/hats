@@ -50,8 +50,7 @@ export const App: React.FC = () => {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
   const [isDoctorOpen, setIsDoctorOpen] = useState(false);
-  const [isDoctorReady, setIsDoctorReady] = useState(true);
-  const [hasPendingDoctorAction, setHasPendingDoctorAction] = useState(false);
+  const [needsSetup, setNeedsSetup] = useState(false);
 
   const [liveRenderReady, setLiveRenderReady] = useState(false);
   const [liveRenderTimedOut, setLiveRenderTimedOut] = useState(false);
@@ -113,8 +112,9 @@ export const App: React.FC = () => {
   const checkDiagnostics = async () => {
     const diag = await getHaDiagnostics();
     if (diag) {
-      setIsDoctorReady(diag.readyForGlassmorphism);
-      setHasPendingDoctorAction(Boolean(diag.cardModNeedsConfig || !diag.readyForThemes));
+      setNeedsSetup(
+        !diag.hasHacs || !diag.readyForThemes || !diag.readyForGlassmorphism || Boolean(diag.cardModNeedsConfig)
+      );
     }
   };
 
@@ -175,8 +175,7 @@ export const App: React.FC = () => {
           onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
           onNewTheme={() => createNewTheme()}
           onOpenDoctor={() => setIsDoctorOpen(true)}
-          isDoctorReady={isDoctorReady}
-          hasPendingDoctorAction={hasPendingDoctorAction}
+          needsSetup={needsSetup}
         />
 
         <div className="flex-1 flex overflow-hidden relative">
@@ -221,7 +220,7 @@ export const App: React.FC = () => {
                 }}
                 onSwitchToEditor={() => setActiveTab('editor')}
                 onOpenDoctor={() => setIsDoctorOpen(true)}
-                isDoctorReady={isDoctorReady}
+                isDoctorReady={!needsSetup}
               />
               </Suspense>
             </div>

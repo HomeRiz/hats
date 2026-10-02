@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On the Themes page the whole page scrolls with the mouse wheel, not just the
   narrow strip with the scroll bar, and the title, buttons, search box and
   filters stay in place at the top while you scroll.
+- The Setup Needed button in the top bar only appears when something is missing
+  or misconfigured in Home Assistant (HACS, the card-mod entry or the themes
+  folder setting). The HA Doctor button stays on the Themes page.
 
 ## [1.0.0] - 2026-10-02
 
