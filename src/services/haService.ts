@@ -1,6 +1,7 @@
 import { ThemeConfig } from '../types/theme';
 import { generateHomeAssistantThemeYaml } from './yamlGenerator';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
+import { processBackgroundImage } from './imageProcessor';
 
 export interface HaStatusResult {
   isAddon: boolean;
@@ -115,7 +116,16 @@ export async function fixHaConfiguration(options: { addThemes?: boolean; addCard
   }
 }
 
-export async function applyThemeDirectlyToHa(theme: ThemeConfig): Promise<ApplyThemeResult> {
+export async function embedBundledBackground(theme: ThemeConfig): Promise<ThemeConfig> {
+  const { type, imageUrl, darken } = theme.background;
+  if (type !== 'image' || !imageUrl) return theme;
+  if (imageUrl.startsWith('data:') || imageUrl.startsWith('/local/') || /^https?:/i.test(imageUrl)) return theme;
+  const processed = await processBackgroundImage(imageUrl, 1920, 1080, darken);
+  return { ...theme, background: { ...theme.background, imageUrl: processed.dataUrl, avgColor: processed.avgColor } };
+}
+
+export async function applyThemeDirectlyToHa(sourceTheme: ThemeConfig): Promise<ApplyThemeResult> {
+  const theme = await embedBundledBackground(sourceTheme);
   const yamlContent = generateHomeAssistantThemeYaml(theme, 'local');
   const uploadedImage =
     theme.background.type === 'image' && theme.background.imageUrl?.startsWith('data:image/') ? theme.background.imageUrl : undefined;
