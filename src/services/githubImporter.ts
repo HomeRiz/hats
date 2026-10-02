@@ -9,6 +9,17 @@ export interface GitHubImportResult {
   repoName?: string;
 }
 
+function rawYamlSource(url: string): { sourceUrl: string; owner?: string } {
+  const match = url.match(/^https?:\/\/raw\.githubusercontent\.com\/([a-zA-Z0-9._-]+)\/([a-zA-Z0-9._-]+)\//);
+  return match ? { sourceUrl: `https://github.com/${match[1]}/${match[2]}`, owner: match[1] } : { sourceUrl: url };
+}
+
+function packMessage(count: number, source: string): string {
+  return count > 1
+    ? `Found a pack of ${count} themes in ${source}.`
+    : `Found 1 theme in ${source}.`;
+}
+
 export function parseGitHubRepoUrl(urlOrSlug: string): { owner: string; repo: string; branch?: string } | null {
   const cleaned = urlOrSlug.trim().replace(/\/$/, '');
   
@@ -37,11 +48,16 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
         if (themes.length === 0) {
           return { success: false, themes: [], message: 'No valid Home Assistant themes found in the provided YAML file.' };
         }
+        const { sourceUrl, owner } = rawYamlSource(repoInput.trim());
+        for (const t of themes) {
+          t.sourceUrl = sourceUrl;
+          if (owner) t.authorGithub = owner;
+        }
         return {
           success: true,
           themes,
-          message: `Successfully imported ${themes.length} theme(s) from raw YAML URL!`,
-          repoName: 'Direct YAML Link',
+          message: packMessage(themes.length, 'the YAML file'),
+          repoName: owner ? sourceUrl.replace('https://github.com/', '') : 'Direct YAML Link',
         };
       } catch (err: any) {
         return { success: false, themes: [], message: `Failed to fetch YAML: ${err.message}` };
@@ -107,7 +123,9 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
           const yamlText = await rawRes.text();
           const parsedThemes = parseHomeAssistantThemeYaml(yamlText);
           for (const t of parsedThemes) {
-            if (t.author === 'Unknown' || t.author === 'Community') {
+            t.sourceUrl = `https://github.com/${owner}/${repo}`;
+            t.authorGithub = owner;
+            if (t.author === 'Unknown' || t.author === 'Community' || t.author === 'Imported') {
               t.author = owner;
             }
             if (requiredIntegrations.length > 0) {
@@ -132,7 +150,7 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
     return {
       success: true,
       themes: allImportedThemes,
-      message: `Successfully imported ${allImportedThemes.length} theme(s) from "${owner}/${repo}"!`,
+      message: packMessage(allImportedThemes.length, `"${owner}/${repo}"`),
       repoName: `${owner}/${repo}`,
     };
   } catch (err: any) {

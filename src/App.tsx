@@ -216,7 +216,7 @@ export const App: React.FC = () => {
                 onDeleteTheme={deleteTheme}
                 onSyncHaThemes={syncInstalledThemesFromHa}
                 onImportThemes={(imported) => {
-                  setThemes((prev) => [...imported, ...prev]);
+                  setThemes((prev) => [...imported, ...prev.filter((t) => !imported.some((i) => i.id === t.id))]);
                   if (imported[0]) setActiveThemeId(imported[0].id);
                 }}
                 onSwitchToEditor={() => setActiveTab('editor')}

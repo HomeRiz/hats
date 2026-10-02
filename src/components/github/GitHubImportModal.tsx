@@ -141,7 +141,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
             <div className="space-y-2 border-t border-slate-800 pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-200">
-                  Found {discoveredThemes.length} Theme(s) to Import:
+                  {discoveredThemes.length > 1 ? `Theme pack with ${discoveredThemes.length} themes:` : 'Theme to import:'}
                 </span>
               </div>
               <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1">
@@ -173,7 +173,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
               onClick={handleConfirmImport}
               className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow transition-all"
             >
-              Import {discoveredThemes.length} Theme(s) to HATS
+              {discoveredThemes.length > 1 ? `Import pack (${discoveredThemes.length} themes)` : 'Import theme'}
             </button>
           )}
         </div>
