@@ -24,12 +24,11 @@ export const CustomCssEditor: React.FC<CustomCssEditorProps> = ({ theme, onChang
   const cssSnippets = [
     {
       name: 'Pulsing Card Neon Glow',
-      desc: 'Smooth breathing keyframe pulse animation around all ha-card elements',
-      tooltip: 'Pulsing Card Neon Glow: Injects @keyframes neonPulse and assigns infinite breathing animation to ha-card shadow roots',
+      desc: 'Smooth breathing glow that pulses around every card',
+      tooltip: 'Pulsing Card Neon Glow: Animates a drop-shadow glow in the theme glow color around all ha-card elements',
       css: `@keyframes neonPulse {
-  0% { box-shadow: 0 0 15px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
-  50% { box-shadow: 0 0 35px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
-  100% { box-shadow: 0 0 15px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color))); }
+  0%, 100% { filter: drop-shadow(0 0 4px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color)))); }
+  50% { filter: drop-shadow(0 0 16px var(--hats-glow-color, var(--ultimate-glow-color, var(--primary-color)))); }
 }
 ha-card {
   animation: neonPulse 3s infinite ease-in-out;
@@ -46,22 +45,22 @@ ha-card {
 }`,
     },
     {
-      name: 'Playful Storybook Font Injection',
-      desc: 'Imports Google Font "Fredoka" and applies across Lovelace views',
-      tooltip: 'Playful Storybook Font Injection: Loads Google Fonts Fredoka and applies playful typography to cards, header, and views',
-      css: `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
-ha-card, app-header, hui-view {
-  font-family: 'Fredoka', 'Inter', sans-serif !important;
+      name: 'Playful Rounded Font',
+      desc: 'Friendly rounded fonts on every card, no download needed',
+      tooltip: 'Playful Rounded Font: Uses the rounded or handwriting fonts already on the device (SF Rounded, Nunito, Quicksand, Chalkboard, Comic Sans) for card text',
+      css: `ha-card {
+  font-family: ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', 'Hiragino Maru Gothic ProN', 'Chalkboard SE', 'Comic Sans MS', 'Segoe UI', sans-serif !important;
 }`,
     },
     {
-      name: 'Frosted Glass Sub-Cards',
-      desc: 'Deep multi-level glassmorphism on nested mushroom & tile cards',
-      tooltip: 'Frosted Glass Sub-Cards: Forces 16px backdrop-filter blur and subtle border strokes on inner nested cards',
-      css: `ha-card hui-card, ha-card mushroom-card, ha-card hui-tile-card {
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+      name: 'Frosted Glass Cards',
+      desc: 'Heavier blur and a clearer pane with a soft rim on every card',
+      tooltip: 'Frosted Glass Cards: Forces a 16px backdrop blur, a near-clear tint, 20px corners and a thin light border on every card',
+      css: `ha-card {
+  backdrop-filter: blur(16px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.2) !important;
   background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 20px !important;
 }`,
     },

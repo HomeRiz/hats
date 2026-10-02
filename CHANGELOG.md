@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The add, search and edit buttons in the live preview header are greyed out
   and do nothing, and the search and command keyboard shortcuts are blocked,
   so the preview cannot be used to change anything.
+- Three of the four ready-made Custom CSS snippets did nothing and now work:
+  the neon pulse animates a glow instead of a shadow the theme overrides, the
+  font snippet uses rounded system fonts instead of a web font that cannot load
+  inside a card, and the frosted glass snippet now targets every card.
 
 ## [1.0.0] - 2026-10-02
 
