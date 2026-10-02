@@ -425,7 +425,6 @@ function resolveCardModResourceInfo() {
 }
 
 const DIST_DIR = path.join(__dirname, '..', 'dist');
-app.use('/_private', (req, res) => res.status(404).end());
 app.use(express.static(DIST_DIR, {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.html')) {
