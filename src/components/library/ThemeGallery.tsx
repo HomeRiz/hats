@@ -239,393 +239,401 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   }, [themePacks, overviewThemeId, overviewTargetTheme]);
 
   return (
-    <div className="h-full flex flex-col p-6 overflow-y-auto max-w-7xl mx-auto space-y-6 relative select-none">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-5">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span>Theme Registry & Library</span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-600/20 text-blue-400 border border-blue-500/30">
-              {themes.length} Themes
-            </span>
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Left-click any theme for live dashboard overview. Right-click for options or batch install.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => {
-              setIsSelectMode(!isSelectMode);
-              if (isSelectMode) clearSelection();
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-              isSelectMode
-                ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/20'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
-            }`}
-          >
-            <CheckSquare className="w-3.5 h-3.5" />
-            <span>{isSelectMode ? 'Exit Select Mode' : 'Select'}</span>
-          </button>
-
-          {onSyncHaThemes && (
-            <button
-              onClick={handleSyncFromHa}
-              disabled={isSyncing}
-              title="Sync and read all theme files directly from /config/themes"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 text-blue-400 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'Syncing...' : 'Sync HA'}</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => setIsGitHubImportOpen(true)}
-            title="Import themes from any public GitHub repo"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
-          >
-            <GithubIcon className="w-3.5 h-3.5 text-blue-400" />
-            <span>Import GitHub</span>
-          </button>
-
-          {onOpenDoctor && (
-            <button
-              onClick={onOpenDoctor}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                isDoctorReady 
-                  ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700' 
-                  : 'bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 border-amber-600/60 animate-pulse'
-              }`}
-            >
-              <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
-              <span>{isDoctorReady ? 'HA Doctor' : 'HA Setup Needed'}</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
-          >
-            <Upload className="w-3.5 h-3.5" />
-            <span>Import YAML</span>
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={(e) => {
-              if (e.target.files && e.target.files[0]) {
-                handleImportYaml(e.target.files[0]);
-              }
-            }}
-            accept=".yaml,.yml"
-            className="hidden"
-          />
-
-          <button
-            onClick={onNewTheme}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Create</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search themes, authors..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
-          />
-        </div>
-
-        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          <button
-            onClick={() => setSelectedFilter('available')}
-            title={`All available themes in the registry (${totalAvailableCount} total)`}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-              selectedFilter === 'available'
-                ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-            }`}
-          >
-            <span>Available</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-              selectedFilter === 'available' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
-            }`}>
-              {totalAvailableCount}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setSelectedFilter('installed')}
-            title={`Themes currently installed in Home Assistant (${totalInstalledCount} installed)`}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-              selectedFilter === 'installed'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-            }`}
-          >
-            <HardDrive className={`w-3 h-3 ${selectedFilter === 'installed' ? 'text-white' : 'text-emerald-400'}`} />
-            <span>Installed</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-              selectedFilter === 'installed' ? 'bg-emerald-950 text-emerald-200' : 'bg-emerald-950/80 text-emerald-300'
-            }`}>
-              {totalInstalledCount}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setSelectedFilter('kids')}
-            title="Kids have their own themes (NO ADULTS ALLOWED!)"
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-              selectedFilter === 'kids'
-                ? 'bg-gradient-to-r from-pink-500 to-amber-500 text-white border-pink-400 shadow-sm font-bold'
-                : 'bg-slate-900 border-pink-900/40 text-pink-300/90 hover:text-pink-200 hover:border-pink-500/50'
-            }`}
-          >
-            <Sparkles className="w-3 h-3 text-amber-300" />
-            <span>Kids</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-              selectedFilter === 'kids' ? 'bg-black/30 text-amber-200' : 'bg-pink-950/80 text-pink-300'
-            }`}>
-              {kidsInstalledCount}/{kidsAvailableCount}
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
-        {themePacks.map(({ representative: theme, variants }) => {
-          const isActive = theme.id === activeThemeId;
-          const isSelected = selectedThemeIds.has(theme.id);
-          const packHasMultipleVariants = variants.length > 1;
-          const packIsInstalled = variants.some((v) => v.isInstalled);
-          const requiresCardMod = theme.requirements?.requiresCardMod ?? (theme.category === 'Glass' || theme.category === 'Kids' || theme.category === 'Neon');
-
-          return (
-            <div
-              key={theme.id}
-              onClick={() => {
-                if (isSelectMode) {
-                  toggleSelectTheme(theme.id);
-                } else {
-                  setOverviewThemeId(theme.id);
-                }
-              }}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                setContextMenu({
-                  x: Math.min(e.clientX, window.innerWidth - 220),
-                  y: Math.min(e.clientY, window.innerHeight - 240),
-                  theme,
-                });
-              }}
-              className={`group relative rounded-2xl border p-4 cursor-pointer transition-all flex flex-col justify-between overflow-hidden ${
-                isSelected
-                  ? 'bg-blue-950/40 border-blue-500 ring-2 ring-blue-500/30 shadow-xl'
-                  : isActive
-                  ? 'bg-slate-900/90 border-blue-500/80 ring-1 ring-blue-500/20 shadow-lg'
-                  : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/70'
-              }`}
-            >
-              <div>
-                <div 
-                  className="h-24 w-full rounded-xl mb-3 relative overflow-hidden flex items-center justify-center border border-white/10 shadow-inner"
-                  style={{
-                    background: theme.background.type === 'gradient' 
-                      ? theme.background.gradientString 
-                      : (theme.background.imageUrl ? `url(${theme.background.imageUrl}) center / cover` : theme.palette.primary),
-                  }}
-                >
-                  <div className="absolute inset-0 bg-black/20" />
-                  
-                  {isSelectMode && (
-                    <div 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSelectTheme(theme.id);
-                      }}
-                      className="absolute top-2 left-2 z-20 p-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-white/20 text-white"
-                    >
-                      {isSelected ? (
-                        <CheckSquare className="w-4 h-4 text-blue-400" />
-                      ) : (
-                        <Square className="w-4 h-4 text-slate-400" />
-                      )}
-                    </div>
-                  )}
-
-                  {packIsInstalled && (
-                    <div className="absolute top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 text-[9px] font-mono border border-emerald-600/50 backdrop-blur-md">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      <span>Installed</span>
-                    </div>
-                  )}
-
-                  {packHasMultipleVariants && (
-                    <div className="absolute bottom-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 text-slate-300 text-[9px] font-mono border border-slate-600/50 backdrop-blur-md">
-                      <Layers className="w-2.5 h-2.5" />
-                      <span>{variants.length} variants</span>
-                    </div>
-                  )}
-
-                  <div 
-                    className="relative z-10 px-3 py-1.5 rounded-xl border border-white/20 text-[10px] font-semibold text-white shadow-lg backdrop-blur-md flex items-center gap-1.5"
-                    style={{
-                      backgroundColor: theme.engine.glassTint || 'rgba(255,255,255,0.1)',
-                      borderRadius: `${Math.min(16, theme.engine.cardRadius / 2)}px`,
-                    }}
-                  >
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.palette.primary }} />
-                    <span>{theme.name}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors truncate">
-                      {theme.name}
-                    </h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
-                      {theme.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 mt-2.5">
-                  {requiresCardMod && (
-                    <span 
-                      onClick={(e) => {
-                        if (onOpenDoctor) {
-                          e.stopPropagation();
-                          onOpenDoctor();
-                        }
-                      }}
-                      title="Requires lovelace-card-mod for blur and styling"
-                      className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80 cursor-pointer transition-colors"
-                    >
-                      <Puzzle className="w-2.5 h-2.5" />
-                      card-mod
-                    </span>
-                  )}
-
-                  {theme.requirements?.recommendedCards && theme.requirements.recommendedCards.length > 0 ? (
-                    theme.requirements.recommendedCards.map((card, idx) => (
-                      <span
-                        key={idx}
-                        onClick={(e) => {
-                          if (onOpenDoctor) {
-                            e.stopPropagation();
-                            onOpenDoctor();
-                          }
-                        }}
-                        title={`${card.name}: ${card.description}`}
-                        className="text-[9px] px-1.5 py-0.5 rounded border border-slate-700/60 bg-slate-800/80 text-slate-300 font-medium flex items-center gap-1 cursor-pointer hover:bg-slate-700/80 transition-colors"
-                      >
-                        {card.name}
-                      </span>
-                    ))
-                  ) : (
-                    <>
-                      {theme.category === 'Kids' && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/70 border border-amber-800/60 text-amber-300 font-medium">
-                          Mushroom
-                        </span>
-                      )}
-                      {(theme.category === 'Glass' || theme.category === 'Neon') && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/70 border border-blue-800/60 text-blue-300 font-medium">
-                          Bubble Card
-                        </span>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                    {theme.category}
-                  </span>
-                  <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: theme.palette.primary }} />
-                </div>
-
-                <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOverviewThemeId(theme.id);
-                    }}
-                    title="Live Overview Modal (Left-Click)"
-                    className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      triggerDuplicate(theme);
-                    }}
-                    title="Duplicate Theme"
-                    className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                  </button>
-
-                  {theme.isInstalled && (
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Uninstall "${theme.name}" from Home Assistant /config/themes?`)) {
-                          await handleUninstallFromHa(theme);
-                        }
-                      }}
-                      title="Uninstall theme from Home Assistant"
-                      className="p-1.5 rounded-lg hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-colors"
-                    >
-                      <HardDriveDownload className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-
-                  {theme.isCustom && !theme.isInstalled && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Delete theme "${theme.name}"?`)) {
-                          onDeleteTheme(theme.id);
-                        }
-                      }}
-                      title="Delete Theme"
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectTheme(theme.id);
-                      onSwitchToEditor();
-                    }}
-                    title="Edit in Designer"
-                    className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm transition-colors"
-                  >
-                    <span>Edit</span>
-                  </button>
-                </div>
-              </div>
+    <div className="h-full flex flex-col relative select-none">
+      <div className="shrink-0 border-b border-slate-800 bg-slate-950/70 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 pt-6 pb-4 space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                <span>Theme Registry & Library</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  {themes.length} Themes
+                </span>
+              </h1>
+              <p className="text-xs text-slate-400 mt-1">
+                Left-click any theme for live dashboard overview. Right-click for options or batch install.
+              </p>
             </div>
-          );
-        })}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => {
+                  setIsSelectMode(!isSelectMode);
+                  if (isSelectMode) clearSelection();
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                  isSelectMode
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/20'
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+                }`}
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+                <span>{isSelectMode ? 'Exit Select Mode' : 'Select'}</span>
+              </button>
+
+              {onSyncHaThemes && (
+                <button
+                  onClick={handleSyncFromHa}
+                  disabled={isSyncing}
+                  title="Sync and read all theme files directly from /config/themes"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 text-blue-400 ${isSyncing ? 'animate-spin' : ''}`} />
+                  <span>{isSyncing ? 'Syncing...' : 'Sync HA'}</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => setIsGitHubImportOpen(true)}
+                title="Import themes from any public GitHub repo"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              >
+                <GithubIcon className="w-3.5 h-3.5 text-blue-400" />
+                <span>Import GitHub</span>
+              </button>
+
+              {onOpenDoctor && (
+                <button
+                  onClick={onOpenDoctor}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                    isDoctorReady 
+                      ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700' 
+                      : 'bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 border-amber-600/60 animate-pulse'
+                  }`}
+                >
+                  <ShieldCheck className={`w-3.5 h-3.5 ${isDoctorReady ? 'text-emerald-400' : 'text-amber-400'}`} />
+                  <span>{isDoctorReady ? 'HA Doctor' : 'HA Setup Needed'}</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Import YAML</span>
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleImportYaml(e.target.files[0]);
+                  }
+                }}
+                accept=".yaml,.yml"
+                className="hidden"
+              />
+
+              <button
+                onClick={onNewTheme}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Create</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="relative w-full md:w-80">
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search themes, authors..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+              <button
+                onClick={() => setSelectedFilter('available')}
+                title={`All available themes in the registry (${totalAvailableCount} total)`}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+                  selectedFilter === 'available'
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                }`}
+              >
+                <span>Available</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  selectedFilter === 'available' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                }`}>
+                  {totalAvailableCount}
+                </span>
+              </button>
+
+              <button
+                onClick={() => setSelectedFilter('installed')}
+                title={`Themes currently installed in Home Assistant (${totalInstalledCount} installed)`}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+                  selectedFilter === 'installed'
+                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                }`}
+              >
+                <HardDrive className={`w-3 h-3 ${selectedFilter === 'installed' ? 'text-white' : 'text-emerald-400'}`} />
+                <span>Installed</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  selectedFilter === 'installed' ? 'bg-emerald-950 text-emerald-200' : 'bg-emerald-950/80 text-emerald-300'
+                }`}>
+                  {totalInstalledCount}
+                </span>
+              </button>
+
+              <button
+                onClick={() => setSelectedFilter('kids')}
+                title="Kids have their own themes (NO ADULTS ALLOWED!)"
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+                  selectedFilter === 'kids'
+                    ? 'bg-gradient-to-r from-pink-500 to-amber-500 text-white border-pink-400 shadow-sm font-bold'
+                    : 'bg-slate-900 border-pink-900/40 text-pink-300/90 hover:text-pink-200 hover:border-pink-500/50'
+                }`}
+              >
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                <span>Kids</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  selectedFilter === 'kids' ? 'bg-black/30 text-amber-200' : 'bg-pink-950/80 text-pink-300'
+                }`}>
+                  {kidsInstalledCount}/{kidsAvailableCount}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto px-6 pt-6 pb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
+            {themePacks.map(({ representative: theme, variants }) => {
+              const isActive = theme.id === activeThemeId;
+              const isSelected = selectedThemeIds.has(theme.id);
+              const packHasMultipleVariants = variants.length > 1;
+              const packIsInstalled = variants.some((v) => v.isInstalled);
+              const requiresCardMod = theme.requirements?.requiresCardMod ?? (theme.category === 'Glass' || theme.category === 'Kids' || theme.category === 'Neon');
+
+              return (
+                <div
+                  key={theme.id}
+                  onClick={() => {
+                    if (isSelectMode) {
+                      toggleSelectTheme(theme.id);
+                    } else {
+                      setOverviewThemeId(theme.id);
+                    }
+                  }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({
+                      x: Math.min(e.clientX, window.innerWidth - 220),
+                      y: Math.min(e.clientY, window.innerHeight - 240),
+                      theme,
+                    });
+                  }}
+                  className={`group relative rounded-2xl border p-4 cursor-pointer transition-all flex flex-col justify-between overflow-hidden ${
+                    isSelected
+                      ? 'bg-blue-950/40 border-blue-500 ring-2 ring-blue-500/30 shadow-xl'
+                      : isActive
+                      ? 'bg-slate-900/90 border-blue-500/80 ring-1 ring-blue-500/20 shadow-lg'
+                      : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/70'
+                  }`}
+                >
+                  <div>
+                    <div 
+                      className="h-24 w-full rounded-xl mb-3 relative overflow-hidden flex items-center justify-center border border-white/10 shadow-inner"
+                      style={{
+                        background: theme.background.type === 'gradient' 
+                          ? theme.background.gradientString 
+                          : (theme.background.imageUrl ? `url(${theme.background.imageUrl}) center / cover` : theme.palette.primary),
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-black/20" />
+                  
+                      {isSelectMode && (
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSelectTheme(theme.id);
+                          }}
+                          className="absolute top-2 left-2 z-20 p-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-white/20 text-white"
+                        >
+                          {isSelected ? (
+                            <CheckSquare className="w-4 h-4 text-blue-400" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-400" />
+                          )}
+                        </div>
+                      )}
+
+                      {packIsInstalled && (
+                        <div className="absolute top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 text-[9px] font-mono border border-emerald-600/50 backdrop-blur-md">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          <span>Installed</span>
+                        </div>
+                      )}
+
+                      {packHasMultipleVariants && (
+                        <div className="absolute bottom-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 text-slate-300 text-[9px] font-mono border border-slate-600/50 backdrop-blur-md">
+                          <Layers className="w-2.5 h-2.5" />
+                          <span>{variants.length} variants</span>
+                        </div>
+                      )}
+
+                      <div 
+                        className="relative z-10 px-3 py-1.5 rounded-xl border border-white/20 text-[10px] font-semibold text-white shadow-lg backdrop-blur-md flex items-center gap-1.5"
+                        style={{
+                          backgroundColor: theme.engine.glassTint || 'rgba(255,255,255,0.1)',
+                          borderRadius: `${Math.min(16, theme.engine.cardRadius / 2)}px`,
+                        }}
+                      >
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.palette.primary }} />
+                        <span>{theme.name}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h3 className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors truncate">
+                          {theme.name}
+                        </h3>
+                        <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
+                          {theme.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 mt-2.5">
+                      {requiresCardMod && (
+                        <span 
+                          onClick={(e) => {
+                            if (onOpenDoctor) {
+                              e.stopPropagation();
+                              onOpenDoctor();
+                            }
+                          }}
+                          title="Requires lovelace-card-mod for blur and styling"
+                          className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80 cursor-pointer transition-colors"
+                        >
+                          <Puzzle className="w-2.5 h-2.5" />
+                          card-mod
+                        </span>
+                      )}
+
+                      {theme.requirements?.recommendedCards && theme.requirements.recommendedCards.length > 0 ? (
+                        theme.requirements.recommendedCards.map((card, idx) => (
+                          <span
+                            key={idx}
+                            onClick={(e) => {
+                              if (onOpenDoctor) {
+                                e.stopPropagation();
+                                onOpenDoctor();
+                              }
+                            }}
+                            title={`${card.name}: ${card.description}`}
+                            className="text-[9px] px-1.5 py-0.5 rounded border border-slate-700/60 bg-slate-800/80 text-slate-300 font-medium flex items-center gap-1 cursor-pointer hover:bg-slate-700/80 transition-colors"
+                          >
+                            {card.name}
+                          </span>
+                        ))
+                      ) : (
+                        <>
+                          {theme.category === 'Kids' && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/70 border border-amber-800/60 text-amber-300 font-medium">
+                              Mushroom
+                            </span>
+                          )}
+                          {(theme.category === 'Glass' || theme.category === 'Neon') && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/70 border border-blue-800/60 text-blue-300 font-medium">
+                              Bubble Card
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                        {theme.category}
+                      </span>
+                      <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: theme.palette.primary }} />
+                    </div>
+
+                    <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOverviewThemeId(theme.id);
+                        }}
+                        title="Live Overview Modal (Left-Click)"
+                        className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerDuplicate(theme);
+                        }}
+                        title="Duplicate Theme"
+                        className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
+
+                      {theme.isInstalled && (
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            if (window.confirm(`Uninstall "${theme.name}" from Home Assistant /config/themes?`)) {
+                              await handleUninstallFromHa(theme);
+                            }
+                          }}
+                          title="Uninstall theme from Home Assistant"
+                          className="p-1.5 rounded-lg hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-colors"
+                        >
+                          <HardDriveDownload className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
+                      {theme.isCustom && !theme.isInstalled && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm(`Delete theme "${theme.name}"?`)) {
+                              onDeleteTheme(theme.id);
+                            }
+                          }}
+                          title="Delete Theme"
+                          className="p-1.5 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectTheme(theme.id);
+                          onSwitchToEditor();
+                        }}
+                        title="Edit in Designer"
+                        className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm transition-colors"
+                      >
+                        <span>Edit</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {isSelectMode && (
