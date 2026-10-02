@@ -162,7 +162,7 @@ export const App: React.FC = () => {
       )}
       <div className="absolute inset-0 z-0 bg-slate-950/75 backdrop-blur-xl pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col h-full w-full overflow-hidden">
+      <div className="relative flex flex-col h-full w-full overflow-hidden">
         <Navbar
           activeTheme={activeTheme}
           allThemes={themes}
