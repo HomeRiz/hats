@@ -419,11 +419,34 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
           <input
             type="checkbox"
             checked={engine.scanlines}
-            onChange={(e) => updateEngine({ scanlines: e.target.checked })}
+            onChange={(e) =>
+              updateEngine({
+                scanlines: e.target.checked,
+                ...(e.target.checked && !engine.scanlineIntensity ? { scanlineIntensity: 0.05 } : {}),
+              })
+            }
             title="Toggles CRT / Cyberpunk holographic horizontal scanlines overlay across the dashboard"
             className="w-4 h-4 rounded text-blue-600 bg-slate-800 border-slate-700 cursor-pointer"
           />
         </div>
+
+        {engine.scanlines && (
+          <div className="space-y-1">
+            <div className="flex justify-between text-slate-400">
+              <span title="How dark the scanlines are. Needs card-mod support turned on in the Cards tab.">Scanline Intensity</span>
+              <span className="font-mono text-slate-200">{Math.round((engine.scanlineIntensity ?? 0) * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0.01"
+              max="0.15"
+              step="0.01"
+              value={engine.scanlineIntensity ?? 0.04}
+              onChange={(e) => updateEngine({ scanlineIntensity: parseFloat(e.target.value) })}
+              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

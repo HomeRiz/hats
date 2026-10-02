@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   those cards. Turned on, the theme sets that card's own variables (Mushroom,
   Bubble Card, Layout Card, Button Card) and lists it as a requirement.
 - The Custom Components list now includes Button Card and Stack-in-Card.
+- The Cyber Scanlines Overlay switch now does something: it draws the CRT
+  scanlines over the dashboard, with an intensity slider. It needs card-mod.
 
 ## [1.0.0] - 2026-10-02
 

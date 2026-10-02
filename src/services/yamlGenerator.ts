@@ -200,6 +200,19 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
     }`
     : '';
 
+  const scanlineAlpha = Math.min(0.6, Math.max(0, engine.scanlineIntensity ?? 0) * 4).toFixed(2);
+  const scanlineRule = engine.scanlines
+    ? `
+    :host::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(0, 0, 0, ${scanlineAlpha}) 0px, rgba(0, 0, 0, ${scanlineAlpha}) 1px, transparent 1px, transparent 3px);
+    }`
+    : '';
+
   const cardModYaml = `  # --------------------------------------------------------------------------
   # card-mod Injections: Root, View, Card, Sidebar, Header, Config, Dialog, Profile
   # --------------------------------------------------------------------------
@@ -306,7 +319,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   card-mod-view: |
     hui-view {
       background: none !important;
-    }
+    }${scanlineRule}
 
   card-mod-config: |
     ha-drawer {

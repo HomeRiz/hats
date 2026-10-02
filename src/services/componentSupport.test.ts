@@ -75,3 +75,18 @@ describe('generated theme', () => {
     expect(legacy).not.toContain('mush-icon-border-radius');
   });
 });
+
+describe('scanlines', () => {
+  const withScanlines = (scanlines: boolean, scanlineIntensity = 0.05) =>
+    generateHomeAssistantThemeYaml(bare({ engine: { ...defaultGlassTheme.engine, scanlines, scanlineIntensity } }), 'cdn');
+
+  it('draws the overlay only when scanlines are on', () => {
+    expect(withScanlines(true)).toContain('repeating-linear-gradient(0deg');
+    expect(withScanlines(false)).not.toContain('repeating-linear-gradient(0deg');
+  });
+
+  it('gets darker as the intensity goes up', () => {
+    expect(withScanlines(true, 0.02)).toContain('rgba(0, 0, 0, 0.08)');
+    expect(withScanlines(true, 0.1)).toContain('rgba(0, 0, 0, 0.40)');
+  });
+});
