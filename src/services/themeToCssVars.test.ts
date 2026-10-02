@@ -103,4 +103,15 @@ describe('themeToCssVars light themes', () => {
     expect(themeToCssVars(minimalTheme, 'light').vars['mdc-theme-surface']).toBe('#ffffff');
     expect(themeToCssVars(lightTheme, 'dark').vars['mdc-theme-surface']).not.toBe('#ffffff');
   });
+
+  it('uses black text in light mode so it stays readable over translucent cards', () => {
+    const { vars } = themeToCssVars(lightTheme);
+    expect(vars['primary-text-color']).toBe('#000000');
+    expect(vars['secondary-text-color']).toBe('rgba(0, 0, 0, 0.72)');
+  });
+
+  it('keeps the theme text colours in dark mode', () => {
+    const { vars } = themeToCssVars(minimalTheme, 'dark');
+    expect(vars['primary-text-color']).not.toBe('#000000');
+  });
 });

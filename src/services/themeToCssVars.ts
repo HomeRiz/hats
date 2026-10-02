@@ -20,6 +20,11 @@ const LIGHT_BASE_VARS: Record<string, string> = {
   'mdc-theme-on-primary': '#ffffff',
 };
 
+const LIGHT_TEXT_VARS: Record<string, string> = {
+  'primary-text-color': '#000000',
+  'secondary-text-color': 'rgba(0, 0, 0, 0.72)',
+};
+
 const LIGHT_THEME_THRESHOLD = 0.6;
 
 function perceivedBrightness(color: string | undefined): number | null {
@@ -59,7 +64,8 @@ export function themeToCssVars(
 
   const vars: Record<string, string> = {};
   const base = mode === 'light' ? LIGHT_BASE_VARS : {};
-  for (const [key, value] of Object.entries({ ...base, ...flat, ...modeVars })) {
+  const text = mode === 'light' ? LIGHT_TEXT_VARS : {};
+  for (const [key, value] of Object.entries({ ...base, ...flat, ...modeVars, ...text })) {
     if (typeof value === 'string') vars[key] = value;
   }
   return { name: themeName, vars };
