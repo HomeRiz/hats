@@ -3,6 +3,7 @@ import { ThemeConfig, CommunityThemeSubmission } from '../types/theme';
 import { defaultThemes, defaultGlassTheme } from '../presets/defaultThemes';
 import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
 import { processBackgroundImage } from '../services/imageProcessor';
+import { mergeSyncedThemes } from '../services/themeSync';
 import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
 
 const STORAGE_KEY_CUSTOM = 'hats_custom_themes_v2';
@@ -102,18 +103,7 @@ export function useThemeStore() {
       const installed = await fetchInstalledHaThemes();
       if (installed && installed.length > 0) {
         const cleanInstalled = installed.filter(t => !t.name.toLowerCase().startsWith('ultimate'));
-        setThemes(prev => {
-          const customDrafts = prev.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
-          const serverThemeIds = new Set(cleanInstalled.map(t => t.id));
-          const nonCollidingCustom = customDrafts.filter(c => !serverThemeIds.has(c.id));
-          const prevById = new Map(prev.map(t => [t.id, t]));
-          const mergedInstalled = cleanInstalled.map(server => {
-            const local = prevById.get(server.id);
-            const localEditedDuringSync = local?.updatedAt && new Date(local.updatedAt).getTime() > syncStartedAt;
-            return localEditedDuringSync ? local! : server;
-          });
-          return [...mergedInstalled, ...nonCollidingCustom];
-        });
+        setThemes(prev => mergeSyncedThemes(prev, cleanInstalled, defaultThemes, syncStartedAt));
       }
     } catch (e) {
       console.warn('Could not auto-sync themes from Home Assistant:', e);
