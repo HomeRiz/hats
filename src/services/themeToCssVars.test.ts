@@ -115,3 +115,32 @@ describe('themeToCssVars light themes', () => {
     expect(vars['primary-text-color']).not.toBe('#000000');
   });
 });
+
+describe('themeToCssVars wallpapers', () => {
+  const withBackground = (background: Record<string, unknown>) =>
+    ({ ...minimalTheme, id: 'photo-theme', background: { ...minimalTheme.background, ...background } }) as ThemeConfig;
+
+  it('points a bundled picture at its absolute address so the preview frame can load it', () => {
+    const { vars } = themeToCssVars(withBackground({ type: 'image', imageUrl: './assets/forest-abc123.jpg' }));
+    expect(vars['background-image']).toContain('http://localhost/assets/forest-abc123.jpg');
+    expect(vars['hats-background']).toContain('http://localhost/assets/forest-abc123.jpg');
+    expect(vars['lovelace-background']).toBe('var(--background-image)');
+    expect(vars['background-image']).not.toContain('cdn.jsdelivr.net');
+  });
+
+  it('keeps an embedded picture as it is', () => {
+    const { vars } = themeToCssVars(withBackground({ type: 'image', imageUrl: 'data:image/webp;base64,AAAA' }));
+    expect(vars['background-image']).toContain('data:image/webp;base64,AAAA');
+  });
+
+  it('keeps a remote https picture as it is', () => {
+    const { vars } = themeToCssVars(withBackground({ type: 'image', imageUrl: 'https://example.com/wall.jpg' }));
+    expect(vars['background-image']).toContain('https://example.com/wall.jpg');
+  });
+
+  it('does not touch themes that use a gradient', () => {
+    const { vars } = themeToCssVars(withBackground({ type: 'gradient', gradientString: 'linear-gradient(red, blue)' }));
+    expect(vars['background-image']).toContain('linear-gradient(red, blue)');
+  });
+});
+

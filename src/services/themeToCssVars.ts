@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml';
-import { generateHomeAssistantThemeYaml } from './yamlGenerator';
+import { generateHomeAssistantThemeYaml, fallbackBackgroundUrl } from './yamlGenerator';
 import { ThemeConfig } from '../types/theme';
 
 const LIGHT_BASE_VARS: Record<string, string> = {
@@ -48,6 +48,14 @@ export function isLightTheme(theme: ThemeConfig): boolean {
   return brightness !== null && brightness > LIGHT_THEME_THRESHOLD;
 }
 
+function bundledPictureUrl(theme: ThemeConfig): string | null {
+  const { type, imageUrl } = theme.background;
+  if (type !== 'image' || !imageUrl) return null;
+  if (/^(data:|https?:|\/local\/)/i.test(imageUrl)) return null;
+  const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
+  return new URL(imageUrl, base).href;
+}
+
 export function themeToCssVars(
   theme: ThemeConfig,
   requestedMode?: 'dark' | 'light',
@@ -65,8 +73,10 @@ export function themeToCssVars(
   const vars: Record<string, string> = {};
   const base = mode === 'light' ? LIGHT_BASE_VARS : {};
   const text = mode === 'light' ? LIGHT_TEXT_VARS : {};
+  const picture = bundledPictureUrl(theme);
+  const placeholder = fallbackBackgroundUrl(theme.id);
   for (const [key, value] of Object.entries({ ...base, ...flat, ...modeVars, ...text })) {
-    if (typeof value === 'string') vars[key] = value;
+    if (typeof value === 'string') vars[key] = picture ? value.split(placeholder).join(picture) : value;
   }
   return { name: themeName, vars };
 }

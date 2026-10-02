@@ -16,6 +16,10 @@ function svgToBase64DataUri(svg: string): string {
   return `url('data:image/svg+xml;base64,${b64}')`;
 }
 
+export function fallbackBackgroundUrl(themeId: string): string {
+  return `https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/${themeId}/default.webp`;
+}
+
 export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSource: 'cdn' | 'local' | 'embedded' = 'local'): string {
   const sanitizedReport = validateAndSanitizeTheme(theme);
   const safeTheme = sanitizedReport.sanitizedTheme;
@@ -52,7 +56,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
     } else if (backgroundSource === 'embedded' && background.imageUrl) {
       baseBg = `url('${background.imageUrl}')`;
     } else {
-      baseBg = `url('https://cdn.jsdelivr.net/gh/HomeRiz/hats@main/www/hats/backgrounds/${safeTheme.id}/default.webp')`;
+      baseBg = `url('${fallbackBackgroundUrl(safeTheme.id)}')`;
     }
   } else if (background.type === 'gradient' && background.gradientString) {
     baseBg = background.gradientString;
