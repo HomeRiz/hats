@@ -232,6 +232,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   };
 
   const overviewTargetTheme = themes.find((t) => t.id === overviewThemeId) || null;
+  const overviewThemes = useMemo(() => {
+    const ordered = themePacks.flatMap((pack) => pack.variants);
+    if (ordered.some((t) => t.id === overviewThemeId)) return ordered;
+    return overviewTargetTheme ? [overviewTargetTheme] : ordered;
+  }, [themePacks, overviewThemeId, overviewTargetTheme]);
 
   return (
     <div className="h-full flex flex-col p-6 overflow-y-auto max-w-7xl mx-auto space-y-6 relative select-none">
@@ -783,11 +788,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           isOpen={Boolean(overviewTargetTheme)}
           onClose={() => setOverviewThemeId(null)}
           theme={overviewTargetTheme}
-          allThemes={(() => {
-            const pack = themePacks.find((p) => p.variants.some((v) => v.id === overviewTargetTheme.id));
-            if (pack && pack.variants.length > 1) return pack.variants;
-            return filteredThemes.length > 0 ? filteredThemes : themes;
-          })()}
+          allThemes={overviewThemes}
           onSelectTheme={(newId) => setOverviewThemeId(newId)}
           onEditTheme={(id) => {
             onSelectTheme(id);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   X,
   ChevronLeft,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { sanitizeThemeCss } from '../../services/themeSecurityValidator';
+import { groupThemesIntoPacks, locateInPacks } from '../../services/themePacks';
 import { LiveRenderBooting } from '../preview/LiveRenderBooting';
 import { LiveRenderFailed } from '../preview/LiveRenderFailed';
 import { useLiveRenderPreview } from '../../contexts/LiveRenderPreviewContext';
@@ -66,23 +67,21 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
     }
   };
 
-  const currentIndex = allThemes.findIndex((t) => t.id === theme.id);
+  const packs = useMemo(() => groupThemesIntoPacks(allThemes), [allThemes]);
+  const position = useMemo(() => locateInPacks(packs, theme.id), [packs, theme.id]);
   const hasMultiple = allThemes.length > 1;
-  const isPackPreview = hasMultiple && allThemes.every((t) => t.sourceUrl && t.sourceUrl === theme.sourceUrl);
-  const prevTheme = hasMultiple ? allThemes[(currentIndex - 1 + allThemes.length) % allThemes.length] : null;
-  const nextTheme = hasMultiple ? allThemes[(currentIndex + 1) % allThemes.length] : null;
+  const packVariants = position?.pack.variants ?? [theme];
+  const isPackPreview = packVariants.length > 1;
+  const prevTheme = hasMultiple ? position?.prev ?? null : null;
+  const nextTheme = hasMultiple ? position?.next ?? null : null;
 
   const handleNext = useCallback(() => {
-    if (!hasMultiple) return;
-    const nextIdx = (currentIndex + 1) % allThemes.length;
-    onSelectTheme(allThemes[nextIdx].id);
-  }, [currentIndex, allThemes, hasMultiple, onSelectTheme]);
+    if (nextTheme) onSelectTheme(nextTheme.id);
+  }, [nextTheme, onSelectTheme]);
 
   const handlePrev = useCallback(() => {
-    if (!hasMultiple) return;
-    const prevIdx = (currentIndex - 1 + allThemes.length) % allThemes.length;
-    onSelectTheme(allThemes[prevIdx].id);
-  }, [currentIndex, allThemes, hasMultiple, onSelectTheme]);
+    if (prevTheme) onSelectTheme(prevTheme.id);
+  }, [prevTheme, onSelectTheme]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -197,7 +196,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
             </button>
 
             <span className="text-xs text-slate-400 font-mono hidden sm:inline px-2 py-1 bg-slate-900 rounded-lg border border-slate-800">
-              {currentIndex + 1} / {allThemes.length}
+              {isPackPreview ? (position?.variantIndex ?? 0) + 1 : (position?.packIndex ?? 0) + 1} / {isPackPreview ? packVariants.length : packs.length}
             </span>
 
             <button
@@ -216,7 +215,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
 
           {isPackPreview && (
             <div className="w-44 shrink-0 h-full overflow-y-auto border-r border-slate-800 bg-slate-950/80 py-2">
-              {allThemes.map((variant) => (
+              {packVariants.map((variant) => (
                 <button
                   key={variant.id}
                   type="button"
