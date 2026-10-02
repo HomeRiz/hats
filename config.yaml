@@ -6,14 +6,11 @@ url: "https://github.com/HomeRiz/hats"
 arch:
   - aarch64
   - amd64
-init: true
 startup: services
-boot: auto
 ingress: true
 ingress_port: 4287
 panel_icon: "mdi:hat-fedora"
 panel_title: "HATS"
-panel_admin: true
 homeassistant_api: true
 map:
   - type: homeassistant_config
