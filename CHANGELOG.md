@@ -5,14 +5,6 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Fixed
-
-- The Copy Name and Copy buttons in the install dialog did nothing when HATS
-  was opened over plain http, which is how most Home Assistant installs are
-  reached on the local network. They now copy there as well.
-
 ## [1.1.0] - 2026-10-03
 
 ### Added
