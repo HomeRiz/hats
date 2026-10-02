@@ -7,7 +7,7 @@ cyberpunk-2077:
   primary-font-family: '''Rajdhani'', ''Roboto'''
   red-color: '#F44638'
   primary-background: url()
-  background-image: center / cover no-repeat fixed url('https://raw.githubusercontent.com/flejz/hass-cyberpunk-2077-theme/master/assets/background.jpg')
+  background-image: center / cover no-repeat fixed url('https://raw.githubusercontent.com/HomeRiz/hats/main/src/assets/backgrounds/cyberpunk-2077.jpg')
   accent-color: var(--red-color)
   app-header-background-color: var(--dark-purple-color)
   app-header-edit-background-color: var(--dark-purple-color)
