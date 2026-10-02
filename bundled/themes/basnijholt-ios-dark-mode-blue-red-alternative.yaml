@@ -1,7 +1,7 @@
 ios-dark-mode-blue-red-alternative:
   modes:
     dark: {}
-  background-image: center / cover no-repeat fixed url('/local/ios-themes/homekit-bg-blue-red.jpg')
+  background-image: center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/basnijholt/lovelace-ios-themes@a37376d918fcfe4785be99910dc9a7200ac37da9/themes/homekit-bg-blue-red.jpg')
   lovelace-background: var(--background-image)
   primary-color: '#ff9f09'
   light-primary-color: '#B6B6C1'
