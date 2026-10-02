@@ -1,7 +1,8 @@
 import React, { useState, Suspense, lazy } from 'react';
-import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap, Edit3 } from 'lucide-react';
+import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap, Edit3, Puzzle } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { EngineSettings } from './EngineSettings';
+import { ComponentsEditor } from './ComponentsEditor';
 const PaletteEditor = lazy(() => import('./PaletteEditor').then((m) => ({ default: m.PaletteEditor })));
 const BackgroundStudio = lazy(() => import('./BackgroundStudio').then((m) => ({ default: m.BackgroundStudio })));
 const SvgPatternEditor = lazy(() => import('./SvgPatternEditor').then((m) => ({ default: m.SvgPatternEditor })));
@@ -20,7 +21,7 @@ interface ThemeEditorProps {
 }
 
 export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpenExport }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'engine' | 'palette' | 'background' | 'svg' | 'css' | 'info'>('engine');
+  const [activeSubTab, setActiveSubTab] = useState<'engine' | 'palette' | 'background' | 'svg' | 'components' | 'css' | 'info'>('engine');
 
   const tabs = [
     { 
@@ -46,6 +47,12 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
       label: 'SVG Patterns', 
       icon: <Shapes className="w-3.5 h-3.5" />,
       tooltip: 'SVG Patterns: Vector overlays, electric arcs, ocean waves, cloud silhouettes, and circuit traces'
+    },
+    {
+      id: 'components',
+      label: 'Cards',
+      icon: <Puzzle className="w-3.5 h-3.5" />,
+      tooltip: 'Cards: Turn theme support on or off for card-mod, Mushroom, Bubble Card, Layout Card, Button Card and Stack-in-Card'
     },
     { 
       id: 'css', 
@@ -143,6 +150,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
             <SvgPatternEditor theme={theme} onChange={onChange} />
           </Suspense>
         )}
+        {activeSubTab === 'components' && <ComponentsEditor theme={theme} onChange={onChange} />}
         {activeSubTab === 'css' && (
           <Suspense fallback={<SubTabLoading />}>
             <CustomCssEditor theme={theme} onChange={onChange} />

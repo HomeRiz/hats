@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The live preview now has a view for each supported custom card: Mushroom,
   Bubble Card, Layout Card, Button Card, Stack-in-Card and card-mod, each with
   demo entities, so you can see how a theme looks on them before installing.
+- A new Cards tab in the designer turns theme support on or off for each of
+  those cards. Turned on, the theme sets that card's own variables (Mushroom,
+  Bubble Card, Layout Card, Button Card) and lists it as a requirement.
 
 ## [1.0.0] - 2026-10-02
 

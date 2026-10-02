@@ -61,6 +61,8 @@ export interface BackgroundSettings {
   avgColor?: string;
 }
 
+export type CustomComponentId = 'card-mod' | 'mushroom' | 'bubble-card' | 'layout-card' | 'button-card' | 'stack-in-card';
+
 export interface RecommendedCard {
   name: string;
   slug: string;
@@ -99,6 +101,7 @@ export interface ThemeConfig {
   isInstalled?: boolean;
   installedFilePath?: string;
   requirements?: ThemeRequirements;
+  components?: Partial<Record<CustomComponentId, boolean>>;
   palette: PaletteColors;
   engine: EngineSettings;
   background: BackgroundSettings;
