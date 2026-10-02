@@ -22,7 +22,7 @@
 
 ## Submitting themes to GitHub
 
-HATS can open a pull request with your theme. It needs a GitHub token. The token always stays on
+HATS can open a pull request with your theme, or open an issue to report a bug with a theme or request that one is removed. It needs a GitHub token. The token always stays on
 the HATS server: it is only ever sent to `api.github.com`, never to your browser.
 
 ### 1. Create the token
@@ -35,7 +35,7 @@ new token**.
     (`repo`, `workflow`, `admin:*`, `delete_repo`, `user`, ...).
   - **HATS repository is private, or you're testing before it's public:** `public_repo` cannot see
     a private repository. Instead create a **fine-grained token**, limit it to that one repository,
-    and grant only **Contents: Read and write** and **Pull requests: Read and write**.
+    and grant only **Contents: Read and write**, **Pull requests: Read and write** and **Issues: Read and write**.
 - Set a short expiry (30–90 days) and re-create it when it lapses.
 
 ### 2. Save it, so you don't paste it every time
@@ -54,5 +54,5 @@ Two ways to save it; either is fine, and both stay on the server:
   plain token on screen — the in-app Save button above avoids that entirely, since it never displays
   the token back to you.
 
-Either way, a token you type directly into the **Submit PR** dialog without saving it anywhere is
+Either way, a token you type directly into the **Send PR / Issue** dialog without saving it anywhere is
 used once for that submission and then discarded; you'll need to paste it again next time.

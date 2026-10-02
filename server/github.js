@@ -17,13 +17,39 @@ class GitHubApiError extends Error {
 function friendlyError(status, apiMessage, step) {
   if (status === 401) return 'GitHub rejected the token. Check that it is correct and has not expired.';
   if (status === 403) {
-    return `GitHub refused ${step}: the token is missing a permission (it needs "public_repo", or Contents and Pull requests write for a fine-grained token) or the rate limit was reached. (${apiMessage})`;
+    return `GitHub refused ${step}: the token is missing a permission (it needs "public_repo", or Contents, Pull requests and Issues write for a fine-grained token) or the rate limit was reached. (${apiMessage})`;
   }
   if (status === 404) {
     return `GitHub could not find the resource for ${step}. If ${TARGET_REPO} is private, a "public_repo" token cannot see it: use a token that has access to that repository.`;
   }
   if (status === 422) return `GitHub rejected ${step}: ${apiMessage}`;
   return `GitHub error ${status} while ${step}: ${apiMessage}`;
+}
+
+function createGithubClient({ token, apiBase, doFetch }) {
+  return async (method, path, body, step = 'contacting GitHub') => {
+    const res = await doFetch(`${apiBase}${path}`, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'hats-home-assistant-theme-store',
+        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(20000),
+    });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {
+    }
+    if (!res.ok) {
+      throw new GitHubApiError(friendlyError(res.status, String(data?.message || res.statusText || ''), step), res.status);
+    }
+    return data;
+  };
 }
 
 export async function submitThemePullRequest(params, options = {}) {
@@ -48,29 +74,7 @@ export async function submitThemePullRequest(params, options = {}) {
     String(params.themeId || params.themeName || '').toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme';
   const themeName = String(params.themeName || themeId).slice(0, 100);
 
-  const gh = async (method, path, body, step = 'contacting GitHub') => {
-    const res = await doFetch(`${apiBase}${path}`, {
-      method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'hats-home-assistant-theme-store',
-        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-      },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-      signal: AbortSignal.timeout(20000),
-    });
-    let data = null;
-    try {
-      data = await res.json();
-    } catch {
-    }
-    if (!res.ok) {
-      throw new GitHubApiError(friendlyError(res.status, String(data?.message || res.statusText || ''), step), res.status);
-    }
-    return data;
-  };
+  const gh = createGithubClient({ token, apiBase, doFetch });
 
   try {
     progress('Checking your GitHub token...');
@@ -176,6 +180,35 @@ export async function submitThemePullRequest(params, options = {}) {
     );
 
     return { success: true, prUrl: pr.html_url, prNumber: pr.number };
+  } catch (err) {
+    const message = err instanceof GitHubApiError ? err.message : `Could not reach GitHub: ${err?.message || 'network error'}`;
+    return { success: false, error: message.split(token).join('***') };
+  }
+}
+
+export async function submitThemeIssue(params, options = {}) {
+  const token = String(params.token || '').trim();
+  const targetRepo = params.targetRepo || TARGET_REPO;
+  const apiBase = options.apiBase || 'https://api.github.com';
+  const doFetch = options.fetchImpl || fetch;
+
+  if (!token) return { success: false, error: 'No GitHub token is configured.' };
+  if (!/^[\w-]{20,255}$/.test(token)) {
+    return { success: false, error: 'That does not look like a GitHub token (unexpected characters or length).' };
+  }
+  if (!/^[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/.test(targetRepo)) return { success: false, error: 'Invalid target repository.' };
+  const title = String(params.title || '').trim().slice(0, 200);
+  if (!title) return { success: false, error: 'The issue needs a title.' };
+
+  const kind = params.kind === 'removal' ? 'Removal request' : 'Bug report';
+  const themeName = String(params.themeName || '').trim().slice(0, 100);
+  const header = `**Type:** ${kind}${themeName ? `\n**Theme:** ${themeName}` : ''}`;
+  const body = `${header}\n\n${String(params.body || '').slice(0, 5000)}\n\n_Opened with [HATS](https://github.com/HomeRiz/hats)_`;
+
+  const gh = createGithubClient({ token, apiBase, doFetch });
+  try {
+    const issue = await gh('POST', `/repos/${targetRepo}/issues`, { title, body }, 'opening the issue');
+    return { success: true, issueUrl: issue.html_url, issueNumber: issue.number };
   } catch (err) {
     const message = err instanceof GitHubApiError ? err.message : `Could not reach GitHub: ${err?.message || 'network error'}`;
     return { success: false, error: message.split(token).join('***') };

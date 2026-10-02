@@ -190,7 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600/90 hover:bg-purple-600 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-purple-500/25"
         >
           <GitPullRequest className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Submit PR</span>
+          <span className="hidden sm:inline">Send PR / Issue</span>
         </button>
 
         <button

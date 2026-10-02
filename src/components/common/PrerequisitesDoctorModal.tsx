@@ -503,7 +503,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
             </h3>
             <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
               <p className="text-[11px] text-slate-400">
-                Used only by <span className="font-semibold text-slate-300">Submit PR</span> to fork {githubStatus.targetRepo}, commit your
+                Used only by <span className="font-semibold text-slate-300">Send PR / Issue</span> to fork {githubStatus.targetRepo}, commit your
                 theme and open a pull request. It stays on the add-on server, is only sent to api.github.com, and is never shown back in
                 this UI.
               </p>
@@ -560,7 +560,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               ) : (
                 <p className="text-[11px] text-amber-400">
                   Saving from here needs HATS running as a Home Assistant Add-on. In standalone/dev mode, paste the token directly in the
-                  Submit PR dialog instead (used once, never saved).
+                  Send PR / Issue dialog instead (used once, never saved).
                 </p>
               )}
 
@@ -581,7 +581,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               <p className="text-[11px] text-slate-500">
                 Token scope: classic token &rarr; tick only <span className="font-semibold">public_repo</span>. Private repository &rarr;
                 use a fine-grained token limited to that repository with <span className="font-semibold">Contents</span> and{' '}
-                <span className="font-semibold">Pull requests</span> set to Read and write. Avoid <code>repo</code>, <code>admin:*</code>,{' '}
+                <span className="font-semibold">Pull requests</span> and <span className="font-semibold">Issues</span> set to Read and write. Avoid <code>repo</code>, <code>admin:*</code>,{' '}
                 <code>delete_repo</code> and <code>user</code>.
               </p>
             </div>

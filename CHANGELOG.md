@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- The Submit PR button is now Send PR / Issue. Besides sending a theme as a
+  pull request, the same dialog can open an issue on the HATS repository to
+  report a bug with a theme or to ask for a theme to be removed.
+
 ## [1.0.0] - 2026-10-02
 
 First public release of HATS, the Home Assistant Theme Store.

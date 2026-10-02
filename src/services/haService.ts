@@ -320,3 +320,29 @@ export async function submitThemeViaServer(
     return { success: false, error: err?.message || 'Could not reach the HATS add-on' };
   }
 }
+
+export interface SubmitIssueResult {
+  success: boolean;
+  issueUrl?: string;
+  issueNumber?: number;
+  error?: string;
+}
+
+export async function submitIssueViaServer(options: {
+  kind: 'bug' | 'removal';
+  themeName?: string;
+  title: string;
+  body?: string;
+  token?: string;
+}): Promise<SubmitIssueResult> {
+  try {
+    const res = await fetch(getApiUrl('api/github/submit-issue'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...MUTATING_HEADERS },
+      body: JSON.stringify({ ...options, token: options.token || undefined }),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Could not reach the HATS add-on' };
+  }
+}

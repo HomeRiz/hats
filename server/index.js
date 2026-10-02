@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import * as yaml from 'js-yaml';
 import { loadThemeYaml, readThemeColors, fallbackGradient } from './themeValues.js';
 import crypto from 'crypto';
-import { submitThemePullRequest, TARGET_REPO, isPlausibleToken } from './github.js';
+import { submitThemePullRequest, submitThemeIssue, TARGET_REPO, isPlausibleToken } from './github.js';
 import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 
@@ -1002,6 +1002,27 @@ app.post('/api/github/submit-pr', async (req, res) => {
       yamlContent: sanitizeThemeYamlContent(yamlContent),
       backgroundDataUrl: typeof backgroundDataUrl === 'string' ? backgroundDataUrl : undefined,
       title: typeof title === 'string' ? title : undefined,
+      body: typeof body === 'string' ? body : undefined,
+    });
+    res.status(result.success ? 200 : 502).json(result);
+  } finally {
+    submissionInFlight = false;
+  }
+});
+
+app.post('/api/github/submit-issue', async (req, res) => {
+  if (submissionInFlight) return res.status(429).json({ success: false, error: 'A submission is already running.' });
+  const { kind, themeName, title, body, token } = req.body || {};
+  if (typeof title !== 'string' || !title.trim()) {
+    return res.status(400).json({ success: false, error: 'title is required' });
+  }
+  submissionInFlight = true;
+  try {
+    const result = await submitThemeIssue({
+      token: getGithubToken() || (typeof token === 'string' ? token : ''),
+      kind: kind === 'removal' ? 'removal' : 'bug',
+      themeName: typeof themeName === 'string' ? themeName : undefined,
+      title,
       body: typeof body === 'string' ? body : undefined,
     });
     res.status(result.success ? 200 : 502).json(result);
