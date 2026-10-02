@@ -1,8 +1,8 @@
-# Home Assistant Add-on: HATS (Home Assistant Theme Store)
+# Home Assistant App: HATS (Home Assistant Theme Store)
 
 ## How to Install
 
-1. In Home Assistant, navigate to **Settings** → **Add-ons** → **Add-on Store**.
+1. In Home Assistant, go to **Settings** → **Apps** and click **Install app** to open the **App store**.
 2. Click the three dots (**⋮**) in the top right corner and select **Repositories**.
 3. Add the repository URL: `https://github.com/HomeRiz/hats`
 4. Find **HATS - Home Assistant Theme Store** in the store list and click **Install**.
@@ -23,7 +23,7 @@
 ## Submitting themes to GitHub
 
 HATS can open a pull request with your theme. It needs a GitHub token. The token always stays on
-the add-on server: it is only ever sent to `api.github.com`, never to your browser.
+the HATS server: it is only ever sent to `api.github.com`, never to your browser.
 
 ### 1. Create the token
 
@@ -42,11 +42,11 @@ new token**.
 
 Two ways to save it; either is fine, and both stay on the server:
 
-- **In the app (recommended):** open **HATS Setup** in HATS, scroll to **GitHub Token for Theme
-  Submissions**, paste the token, and click **Save**. This writes it into the add-on's own
+- **In HATS (recommended):** open **HATS Setup** in HATS, scroll to **GitHub Token for Theme
+  Submissions**, paste the token, and click **Save**. This writes it into the app's own
   Configuration and restarts HATS to apply it (a few seconds of downtime while it does).
-- **Settings → Add-ons → HATS → Configuration:** paste it into the **GitHub token** field there
-  instead and click **Save**, then restart the add-on yourself for it to take effect.
+- **Settings → Apps → HATS → Configuration:** paste it into the **GitHub token** field there
+  instead and click **Save**, then restart the app yourself for it to take effect.
 - **Via `secrets.yaml`:** put the real token in `/config/secrets.yaml`, e.g.
   `hats_github_token: ghp_xxxxxxxxxxxx`, then in that same Configuration page switch to YAML mode
   and set `github_token: !secret hats_github_token`. Home Assistant has a known bug where re-saving

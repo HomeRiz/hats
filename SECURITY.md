@@ -1,6 +1,6 @@
 # Security Policy
 
-HATS is a Home Assistant add-on. It runs with access to your `/config` directory and, depending on
+HATS is a Home Assistant app. It runs with access to your `/config` directory and, depending on
 configuration, the Home Assistant Supervisor and Core APIs. A vulnerability here can affect your
 Home Assistant instance directly, not just the web UI — please report issues privately rather than
 as a public GitHub issue.
@@ -34,7 +34,7 @@ private contact channel — without vulnerability details in the issue itself �
 
 ### What to expect
 
-This is a small, community-maintained add-on, maintained on a best-effort basis rather than under a
+This is a small, community-maintained app, maintained on a best-effort basis rather than under a
 formal SLA:
 
 - **Acknowledgement**: within a few days of the report.
@@ -47,15 +47,15 @@ formal SLA:
   a GitHub Security Advisory. We ask reporters to hold off on public disclosure until a fix has
   shipped.
 - **Declined reports**: if something is reported that turns out not to be a vulnerability (e.g.
-  expected add-on behavior, or something only exploitable with prior admin access to Home
+  expected app behavior, or something only exploitable with prior admin access to Home
   Assistant), we'll explain why and close it — you're welcome to push back if you disagree.
 
 ## Scope
 
-In scope: the HATS add-on itself — its server (`server/`), frontend (`src/`), Docker image, and
+In scope: the HATS app itself - its server (`server/`), frontend (`src/`), Docker image, and
 its interaction with the Home Assistant Supervisor and Core APIs.
 
 Out of scope: Home Assistant Core, Home Assistant Supervisor, HACS, or other third-party
-integrations and add-ons — please report those to their own maintainers. Issues that require an
+integrations and apps - please report those to their own maintainers. Issues that require an
 attacker to already have admin access to your Home Assistant instance are generally lower priority,
 since that level of access already grants broad control over the system.

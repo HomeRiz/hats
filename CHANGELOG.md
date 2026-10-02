@@ -36,13 +36,13 @@ First public release of HATS, the Home Assistant Theme Store.
 - HATS Signature Nature - Alpine Storm Lake as the default theme, with the
   lake photo built in so it works offline.
 - Keyboard focus rings and reduced-motion support.
-- PNG add-on icon and logo.
-- GitHub Actions workflow that typechecks, tests, builds, lints the add-on
+- PNG app icon and logo.
+- GitHub Actions workflow that typechecks, tests, builds, lints the app
   configuration and builds the Docker image.
 
 ### Changed
 
-- The add-on is reachable through Ingress only.
+- The app is reachable through Ingress only.
 - Code-split the Themes and Community tabs, the Designer sub-tabs and the
   on-demand modals to reduce the initial bundle.
 - Upgraded to React 19, Vite 8, Tailwind CSS 4, TypeScript 7, Express 5 and

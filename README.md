@@ -6,8 +6,8 @@
 
 **The Interactive Visual Designer, Community Store, Live Lovelace Sandbox, and Generator for Home Assistant Themes**
 
-[![Home Assistant Add-on](https://img.shields.io/badge/Home%20Assistant-Add--on-41BDF5.svg?style=flat-square&logo=home-assistant)](https://www.home-assistant.io)
-[![Ingress Support](https://img.shields.io/badge/Ingress-Ready-success.svg?style=flat-square)](https://www.home-assistant.io/addons/)
+[![Home Assistant App](https://img.shields.io/badge/Home%20Assistant-App-41BDF5.svg?style=flat-square&logo=home-assistant)](https://www.home-assistant.io)
+[![Ingress Support](https://img.shields.io/badge/Ingress-Ready-success.svg?style=flat-square)](https://www.home-assistant.io/apps/)
 [![HACS Companion](https://img.shields.io/badge/HACS-Companion-orange.svg?style=flat-square)](https://hacs.xyz)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 
@@ -19,7 +19,7 @@
 
 ## 📖 Overview
 
-**HATS** (**H**ome **A**ssistant **T**heme **S**tore) is an all-in-one Home Assistant Add-on and visual theme studio designed to simplify theme discovery, visual customization, and environment configuration.
+**HATS** (**H**ome **A**ssistant **T**heme **S**tore) is an all-in-one Home Assistant App and visual theme studio designed to simplify theme discovery, visual customization, and environment configuration.
 
 Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-window Web UI, HATS connects directly to your Home Assistant instance to inspect prerequisites, auto-configure theme directories, download companion card dependencies via HACS, and apply custom glassmorphism themes with zero manual YAML editing required.
 
@@ -43,9 +43,9 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
 
 ## 🚀 Installation
 
-### As a Home Assistant Add-on (Recommended)
+### As a Home Assistant App (Recommended)
 
-1. In Home Assistant, navigate to **Settings** → **Add-ons** → **Add-on Store**.
+1. In Home Assistant, go to **Settings** → **Apps** and click **Install app** to open the **App store**.
 2. Click the top-right menu (**⋮**) and select **Repositories**.
 3. Add the repository URL:
    ```text
@@ -79,7 +79,7 @@ frontend:
 
 ## ⚙️ Configuration
 
-The add-on works out-of-the-box with default options, but can be customized in the **Configuration** tab:
+The app works out-of-the-box with default options, but can be customized in the **Configuration** tab:
 
 ```yaml
 themes_directory: "/config/themes"
@@ -95,17 +95,17 @@ auto_reload_themes: true
 
 ---
 
-## 🏗️ Add-on Container Architecture & `run.sh`
+## 🏗️ App Container Architecture & `run.sh`
 
-HATS is packaged as an official Home Assistant Ingress Add-on built from a multi-stage Docker image:
+HATS is packaged as a Home Assistant Ingress App built from a multi-stage Docker image:
 
 - **`Dockerfile`**: Builds the React + TypeScript single-page application and bundles it with a lightweight Express backend running on Node 20.
 - **`run.sh`**: The mandatory container startup entrypoint. When Home Assistant Supervisor starts the container:
   - **I.** Ensures `/config/themes` exists on the host filesystem.
   - **II.** Ensures `/config/www/hats/backgrounds` exists on the host filesystem.
   - **III.** Launches the Ingress server (`exec node server/index.js`) on port `4287`.
-- **`config.yaml`**: Home Assistant add-on manifest specifying Ingress routes, permissions (`manager` role to reload themes and manage storage), options, and architecture compatibility.
-- **`repository.yaml`**: Home Assistant add-on repository descriptor.
+- **`config.yaml`**: Home Assistant app manifest specifying the Ingress route, permissions (Home Assistant API access to reload themes), the `/config` mapping, options, and architecture compatibility.
+- **`repository.yaml`**: Home Assistant app repository descriptor.
 
 ---
 
