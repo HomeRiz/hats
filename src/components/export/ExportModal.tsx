@@ -23,6 +23,10 @@ import {
   restartHomeAssistant 
 } from '../../services/haService';
 import { copyText } from '../../utils/copyText';
+import { downloadFile } from '../../utils/download';
+import { buildThemeBundle } from '../../services/themeBundle';
+import { useStandalone } from '../../state/useStandalone';
+import { IS_HOSTED } from '../../runtime';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -37,9 +41,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   theme,
   onThemeSaved,
 }) => {
+  const standalone = useStandalone();
   const [activeTab, setActiveTab] = useState<'theme' | 'view'>('theme');
   const [copied, setCopied] = useState(false);
   const [copiedThemeName, setCopiedThemeName] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
   const [installingToHa, setInstallingToHa] = useState(false);
   const [installResult, setInstallResult] = useState<{
     success: boolean;
@@ -58,6 +65,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   if (!isOpen) return null;
 
   const isAlreadyInstalled = Boolean(theme.isInstalled);
+  const canInstall = !IS_HOSTED && !standalone;
 
   const yamlContent = activeTab === 'theme' 
     ? generateHomeAssistantThemeYaml(theme, 'local')
@@ -75,16 +83,17 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     setTimeout(() => setCopiedThemeName(false), 2000);
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([yamlContent], { type: 'text/yaml' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = activeTab === 'theme' ? `${theme.id}.yaml` : 'per-view-background.yaml';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleDownload = async () => {
+    setDownloading(true);
+    setDownloadError(null);
+    try {
+      const bundle = await buildThemeBundle(theme);
+      downloadFile(bundle.fileName, bundle.bytes as BlobPart, 'application/zip');
+    } catch (err: any) {
+      setDownloadError(err?.message || 'Could not build the zip file');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const handleInstallToHa = async () => {
@@ -170,7 +179,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
           <div className="flex items-center gap-2 font-bold text-white text-sm">
             <Download className="w-4 h-4 text-blue-400" />
-            <span>Export & Install: <span className="text-blue-300 font-semibold">{theme.name}</span></span>
+            <span>{canInstall ? 'Export & Install' : 'Export'}: <span className="text-blue-300 font-semibold">{theme.name}</span></span>
             {isAlreadyInstalled && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/50">
                 Installed
@@ -327,11 +336,29 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             }`}
           >
             <Code2 className="w-3.5 h-3.5" />
-            <span>Per-View card_mod Snippet</span>
+            <span>Per-View card_mod Snippet (UIX / card-mod)</span>
           </button>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto bg-slate-950">
+          {activeTab === 'view' && (
+            <div className="mb-3 rounded-xl border border-slate-800 bg-slate-900/70 p-3 text-xs text-slate-300 leading-relaxed space-y-2">
+              <p>
+                <strong className="text-white">What it does.</strong> The theme sets one background for the whole dashboard.
+                This snippet gives a single dashboard view its own background, using the image of this theme. It is optional.
+              </p>
+              <ol className="list-decimal pl-5 space-y-0.5">
+                <li>Open the dashboard and click the pencil icon (Edit dashboard).</li>
+                <li>Open the three dots menu and choose <strong>Raw configuration editor</strong>.</li>
+                <li>
+                  Under <code className="text-blue-300">views:</code>, paste the snippet as a new view, or copy only its{' '}
+                  <code className="text-blue-300">card_mod:</code> block into a view you already have.
+                </li>
+                <li>Change <code className="text-blue-300">title</code> and <code className="text-blue-300">path</code> if needed, then save.</li>
+              </ol>
+              <p>This needs UIX or card-mod. The downloaded zip contains this snippet and the same steps in its README.</p>
+            </div>
+          )}
           <pre className="font-mono text-xs text-slate-300 whitespace-pre-wrap leading-relaxed select-all">
             {yamlContent}
           </pre>
@@ -339,11 +366,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
         <div className="p-4 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900">
           <span className="text-[11px] text-slate-400">
-            {activeTab === 'theme' 
-              ? (isAlreadyInstalled 
-                  ? 'Click "Save Changes" to update /config/themes and reload HA.' 
-                  : 'Click "Install Directly" to save to /config/themes and reload HA.')
-              : 'Paste into Lovelace view raw configuration editor.'}
+            {activeTab === 'view'
+              ? 'Optional. Gives one dashboard view its own background.'
+              : !canInstall
+              ? 'Copy the YAML, or download a zip with every file in the folder Home Assistant expects.'
+              : isAlreadyInstalled
+              ? 'Click "Save Changes" to update /config/themes and reload HA.'
+              : 'Click "Install Directly" to save to /config/themes and reload HA.'}
           </span>
 
           <div className="flex items-center gap-2 flex-wrap">
@@ -357,12 +386,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              disabled={downloading}
+              title="Zip with the theme file, the background image and a README, in the folder layout Home Assistant expects"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors disabled:opacity-50"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download</span>
+              <span>{downloading ? 'Preparing...' : 'Download .zip'}</span>
             </button>
 
+            {canInstall && (
             <button
               onClick={handleInstallToHa}
               disabled={installingToHa}
@@ -379,8 +411,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   : (isAlreadyInstalled ? 'Save Changes to Home Assistant' : 'Install Directly to Home Assistant')}
               </span>
             </button>
+            )}
           </div>
         </div>
+
+        {downloadError && (
+          <div className="bg-red-500/10 border-t border-red-500/30 p-2.5 text-center text-xs font-medium text-red-400">
+            {downloadError}
+          </div>
+        )}
 
         {installResult && !installResult.success && (
           <div className="bg-red-500/10 border-t border-red-500/30 p-2.5 text-center text-xs font-medium text-red-400">

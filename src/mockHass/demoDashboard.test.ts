@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DEMO_DASHBOARD } from './demoDashboard';
 import { DEMO_ENTITIES } from './demoEntities';
-import { MOD_SOURCES } from './modSources';
 
 function collect(value: unknown, out: { types: Set<string>; entities: Set<string> }) {
   if (Array.isArray(value)) {
@@ -29,11 +28,29 @@ describe('demoDashboard', () => {
     for (const family of families) {
       expect([...found.types].some((t) => t.startsWith(family))).toBe(true);
     }
-    expect(DEMO_DASHBOARD.views.some((v: any) => v.type === 'custom:grid-layout')).toBe(true);
     expect(JSON.stringify(DEMO_DASHBOARD)).toContain('card_mod');
   });
 
-  it('has one view per loaded mod plus the home view', () => {
-    expect(DEMO_DASHBOARD.views).toHaveLength(Object.keys(MOD_SOURCES).length + 1);
+  it('is a single home view, with no extra tab per card family', () => {
+    expect(DEMO_DASHBOARD.views.map((v: any) => v.path)).toEqual(['home']);
+  });
+
+  it('places the home cards in a fixed grid so they never move', () => {
+    const home: any = DEMO_DASHBOARD.views[0];
+    expect(home.type).toBe('custom:grid-layout');
+    expect(home.cards).toHaveLength(3);
+    expect(home.cards.every((card: any) => card.type === 'vertical-stack')).toBe(true);
+    expect(JSON.stringify(home.cards)).not.toContain('masonry');
+  });
+
+  it('shows every card family on the home view so one page is enough to compare', () => {
+    const home = DEMO_DASHBOARD.views.find((v: any) => v.path === 'home');
+    const homeFound = { types: new Set<string>(), entities: new Set<string>() };
+    collect(home, homeFound);
+    for (const family of ['custom:mushroom-', 'custom:bubble-card', 'custom:button-card', 'custom:stack-in-card']) {
+      expect([...homeFound.types].some((t) => t.startsWith(family))).toBe(true);
+    }
+    expect(JSON.stringify(home)).toContain('card_mod');
+    expect(JSON.stringify(home)).toContain('Layout Card');
   });
 });

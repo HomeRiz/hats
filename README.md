@@ -31,10 +31,11 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
 - 🔬 **Live Lovelace Sandbox**: Interactive dashboard preview featuring simulated Mushroom cards, climate sliders, weather widgets, media controls, and status chips.
 - 🩺 **HA Environment & Prerequisites Doctor**:
   - Live inspection of `configuration.yaml` for theme directives (`themes: !include_dir_merge_named themes`).
-  - Automatic detection of `lovelace-card-mod` on disk (`/config/www/community/lovelace-card-mod`).
+  - Automatic detection of `lovelace-card-mod` on disk (`/config/www/community/lovelace-card-mod`) or of [UIX](https://github.com/Lint-Free-Technology/uix) set up as an integration, with a **UIX / card-mod switch** to choose which one HATS checks and configures.
   - Dynamic extraction of live `hacstag` version identifiers directly from HA storage.
   - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
 - 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.
+- 🗜️ **Zip export and Import**: **Export > Download .zip** gives you the theme YAML and its background image already placed in the folders Home Assistant expects (`config/themes`, `config/www/hats/backgrounds/<theme>`), an optional per-view snippet and a README with the manual install steps. **Import** loads a theme YAML, plus an optional background image and per-view snippet.
 - 🖼️ **Artwork & Background Studio**: Upload custom wallpapers (PNG, JPG, WebP), perform automatic 16:9 center crops, and save assets directly to `/config/www/hats/backgrounds/`.
 - 🌐 **Pop-Out Fullscreen Mode**: Launch HATS in a full dedicated browser tab (<kbd>↗</kbd>) through Ingress. HATS is reachable only through Home Assistant Ingress (admin users); it publishes no host port and refuses direct network access.
 - 🚀 **In-App GitHub Theme Submission**: Validate, package, and generate YAML for custom themes with one-click links to propose additions to the official repository.
@@ -69,6 +70,15 @@ frontend:
   extra_module_url:
     - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
 ```
+
+### UIX or card-mod
+
+HATS supports both [UIX](https://github.com/Lint-Free-Technology/uix) and card-mod. They read the same `card-mod-*` theme keys, so every HATS theme works with either. Use the **Styling Engine** switch in the Doctor to choose the one you use, and HATS will check and configure that one:
+
+- **UIX**: installed as an integration (HACS, then Settings, Devices & services, Add integration). It loads itself, so no `extra_module_url` entry is needed and Auto-Fix only adds the themes directive.
+- **card-mod**: the setup above, with `extra_module_url` registered in `configuration.yaml`.
+
+Only one can run at a time. UIX's migration guide says to uninstall card-mod first, and HATS warns if both are active. When you switch to UIX, **Remove card-mod from config** takes the entry out of `configuration.yaml` (with a backup); you still uninstall card-mod in HACS and restart Home Assistant yourself.
 
 ### How the Doctor Streamlines Setup:
 - **Missing Plugin**: HATS displays a direct **"Install via HACS"** button opening `http://<ha-host>:8123/hacs/repository/190927524`.
@@ -126,6 +136,58 @@ npm run dev
 ```
 
 Open [http://localhost:4287](http://localhost:4287) in your browser.
+
+---
+
+## 💻 Desktop App (Windows, Linux, macOS)
+
+The same code also builds as a normal desktop app, so you can design themes without Home Assistant. It runs the same server and live preview locally (on `127.0.0.1` only), with the card-mod, Bubble Card, Mushroom, Layout Card, Button Card and Stack-in-Card preview mods bundled.
+
+What changes compared to the Home Assistant app:
+- Nothing is installed into Home Assistant. When a theme is ready, use **Export > Copy** or **Export > Download .zip**. The zip holds the theme and its background image in the folders Home Assistant expects, plus a README with the install steps.
+- The HA Doctor, HACS checks and the UIX / card-mod switch are hidden, since they only make sense inside Home Assistant.
+
+Build it yourself:
+
+```bash
+npm install
+npm run dist:mac     # macOS: Apple silicon + Intel (.dmg, .zip)
+npm run dist:win     # Windows x64 (installer + portable .exe)
+npm run dist:linux   # Linux x64 (.AppImage, .deb)
+```
+
+Output goes to `release/`. Build each target on its own OS (the **Desktop builds** workflow does this for all three). To try it without packaging, run `npm run desktop:prepare` once and then `npm run electron:dev`.
+
+The builds are not code signed, so macOS and Windows show a warning on first launch (macOS: right-click the app and choose Open; Windows: More info, Run anyway).
+
+---
+
+## 🔎 Preview-only site (no install, no access to your Home Assistant)
+
+The same code also builds as a static website that previews any public GitHub theme repo, exactly as its author published it, inside the real Home Assistant frontend. It has no server, no access to `/config`, and no token, so there is nothing to install or trust. It is the lightweight way to see a theme before downloading it from HACS.
+
+Open it with a link:
+
+```
+https://<site>/?repo=OWNER/REPO
+https://<site>/?repo=OWNER/REPO&theme=Theme%20Name
+https://<site>/?repo=OWNER/REPO&branch=dev&theme=Theme%20Name
+```
+
+- `repo` is `owner/repo` or a `github.com` / `raw.githubusercontent.com` link. Other hosts are ignored.
+- `theme` picks one theme from a repo that has several (by name or id). Without it, the first one is shown.
+- Images the theme loads from `/local/...` are found in the repo and loaded from there when the repo contains them.
+- It also works inside the Home Assistant app and the desktop app with the same links.
+
+A theme author can put a badge in their README (HACS shows READMEs):
+
+```markdown
+[![Preview in HATS](https://img.shields.io/badge/Preview-HATS-0A84FF)](https://<site>/?repo=OWNER/REPO)
+```
+
+Build it yourself with `npm run build:hosted` (output in `hosted-dist/`, about 180 MB). Set `HATS_BASE_PATH=/name` if it is served from a subfolder. The **Preview site** workflow deploys it to GitHub Pages: enable Pages with source **GitHub Actions** in the repository settings, then run the workflow.
+
+Limits: GitHub allows 60 unauthenticated API requests per hour per IP, so a busy network can hit a rate limit (it then tries the usual `themes/<repo>.yaml` locations). Themes that need a card or integration you don't have installed will look different in a real Home Assistant, as they do anywhere else.
 
 ---
 

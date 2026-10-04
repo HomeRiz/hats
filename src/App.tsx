@@ -8,12 +8,19 @@ import { LiveRenderPreviewProvider, LiveRenderPreviewContextValue } from './cont
 import { applyThemeToLivePreview } from './services/mockFrontendBridge';
 import { generateHomeAssistantThemeYaml } from './services/yamlGenerator';
 import { getHaDiagnostics } from './services/haService';
+import { useStandalone, detectStandalone } from './state/useStandalone';
+import { useLiveRenderSlot } from './state/useLiveRenderSlot';
+import { IS_HOSTED } from './runtime';
+import { importThemesFromGitHubRepo } from './services/githubImporter';
+import { parsePreviewParams, pickRequestedTheme } from './services/previewParams';
+import { ThemeConfig } from './types/theme';
 
 const LIVE_RENDER_BOOT_TIMEOUT_MS = 25000;
 
 const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
 const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
 const SubmitPrModal = lazy(() => import('./components/github/SubmitPrModal').then((m) => ({ default: m.SubmitPrModal })));
+const ImportModal = lazy(() => import('./components/import/ImportModal').then((m) => ({ default: m.ImportModal })));
 const ExportModal = lazy(() => import('./components/export/ExportModal').then((m) => ({ default: m.ExportModal })));
 const PrerequisitesDoctorModal = lazy(() => import('./components/common/PrerequisitesDoctorModal').then((m) => ({ default: m.PrerequisitesDoctorModal })));
 
@@ -48,17 +55,18 @@ export const App: React.FC = () => {
 
 
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [isSubmitPrOpen, setIsSubmitPrOpen] = useState(false);
   const [isDoctorOpen, setIsDoctorOpen] = useState(false);
   const [needsSetup, setNeedsSetup] = useState(false);
+  const standalone = useStandalone();
+  const [remote, setRemote] = useState<{ state: 'loading' | 'error' | 'info'; message: string } | null>(null);
 
   const [liveRenderReady, setLiveRenderReady] = useState(false);
   const [liveRenderTimedOut, setLiveRenderTimedOut] = useState(false);
   const [liveRenderRetryTick, setLiveRenderRetryTick] = useState(0);
   const liveRenderIframeRef = useRef<HTMLIFrameElement | null>(null);
-  const liveRenderSlotElRef = useRef<HTMLDivElement | null>(null);
-  const [hasLiveRenderSlot, setHasLiveRenderSlot] = useState(false);
-  const [liveRenderSlotRect, setLiveRenderSlotRect] = useState<DOMRect | null>(null);
+  const { registerSlot: registerLiveRenderSlot, slotRect: liveRenderSlotRect } = useLiveRenderSlot();
 
   useEffect(() => {
     if (liveRenderReady) return;
@@ -70,29 +78,6 @@ export const App: React.FC = () => {
     setLiveRenderTimedOut(false);
     setLiveRenderRetryTick((t) => t + 1);
   }, []);
-
-  const registerLiveRenderSlot = useCallback((el: HTMLDivElement | null) => {
-    liveRenderSlotElRef.current = el;
-    setHasLiveRenderSlot(!!el);
-    if (!el) setLiveRenderSlotRect(null);
-  }, []);
-
-  useEffect(() => {
-    if (!hasLiveRenderSlot) return;
-    const el = liveRenderSlotElRef.current;
-    if (!el) return;
-    const update = () => setLiveRenderSlotRect(el.getBoundingClientRect());
-    update();
-    const resizeObserver = new ResizeObserver(update);
-    resizeObserver.observe(el);
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update, true);
-    };
-  }, [hasLiveRenderSlot]);
 
   const applyLiveRenderTheme = useCallback((themeName: string, themeVars: Record<string, string>) => {
     return applyThemeToLivePreview(liveRenderIframeRef.current, themeName, themeVars);
@@ -109,7 +94,19 @@ export const App: React.FC = () => {
     [liveRenderReady, liveRenderTimedOut, registerLiveRenderSlot, applyLiveRenderTheme, retryLiveRender]
   );
 
+  const importThemes = useCallback(
+    (imported: ThemeConfig[]) => {
+      setThemes((prev) => [...imported, ...prev.filter((t) => !imported.some((i) => i.id === t.id))]);
+      if (imported[0]) setActiveThemeId(imported[0].id);
+    },
+    [setThemes, setActiveThemeId]
+  );
+
   const checkDiagnostics = async () => {
+    if (await detectStandalone()) {
+      setNeedsSetup(false);
+      return;
+    }
     const diag = await getHaDiagnostics();
     if (diag) {
       setNeedsSetup(
@@ -121,6 +118,54 @@ export const App: React.FC = () => {
   useEffect(() => {
     checkDiagnostics();
   }, []);
+
+  useEffect(() => {
+    const request = parsePreviewParams(window.location.search);
+    if (!request) return;
+    let cancelled = false;
+    setRemote({ state: 'loading', message: `Loading ${request.theme ?? request.repo} from GitHub...` });
+    importThemesFromGitHubRepo(request.repo, { branch: request.branch, keepRaw: true }).then((result) => {
+      if (cancelled) return;
+      if (!result.success) {
+        setRemote({ state: 'error', message: result.message });
+        return;
+      }
+      const previews = result.themes.map((t) => ({ ...t, id: `preview-${t.id}`, isCustom: false }));
+      setThemes((prev) => [...previews, ...prev.filter((t) => !previews.some((p) => p.id === t.id))]);
+      const chosen = pickRequestedTheme(previews, request.theme);
+      if (chosen) {
+        setActiveThemeId(chosen.id);
+        setActiveTab('editor');
+      }
+      const asked = request.theme?.toLowerCase();
+      const matched = chosen && asked && (chosen.name.toLowerCase() === asked || chosen.id.toLowerCase() === asked);
+      if (chosen && asked && !matched) {
+        setRemote({
+          state: 'info',
+          message: `"${request.theme}" was not found in ${result.repoName}, so this shows "${chosen.name}". The theme list at the top has the others.`,
+        });
+      } else {
+        setRemote(null);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const editCopyOfPreview = () => {
+    const copy: ThemeConfig = {
+      ...activeTheme,
+      id: `custom-theme-${Date.now().toString(36)}`,
+      rawTheme: undefined,
+      isCustom: true,
+      isInstalled: false,
+      installedFilePath: undefined,
+      updatedAt: new Date().toISOString(),
+    };
+    setThemes((prev) => [copy, ...prev]);
+    setActiveThemeId(copy.id);
+  };
 
   const { background, customSvgOverlay } = activeTheme;
   let appBgStyle: React.CSSProperties = {};
@@ -172,11 +217,34 @@ export const App: React.FC = () => {
           previewMode={previewMode}
           setPreviewMode={setPreviewMode}
           onOpenExport={() => setIsExportOpen(true)}
+          onOpenImport={() => setIsImportOpen(true)}
           onOpenSubmitPr={() => setIsSubmitPrOpen(true)}
           onNewTheme={() => createNewTheme()}
           onOpenDoctor={() => setIsDoctorOpen(true)}
           needsSetup={needsSetup}
+          previewOnly={IS_HOSTED}
+          standalone={standalone}
         />
+
+        {remote && (
+          <div
+            role="status"
+            className={`px-4 py-2 text-xs font-medium border-b flex items-center justify-between gap-3 ${
+              remote.state === 'error'
+                ? 'bg-rose-950/70 border-rose-800/60 text-rose-200'
+                : remote.state === 'info'
+                ? 'bg-amber-950/70 border-amber-800/60 text-amber-200'
+                : 'bg-blue-950/70 border-blue-800/60 text-blue-200'
+            }`}
+          >
+            <span>{remote.message}</span>
+            {remote.state !== 'loading' && (
+              <button onClick={() => setRemote(null)} aria-label="Dismiss" className="shrink-0 opacity-70 hover:opacity-100">
+                Dismiss
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="flex-1 flex overflow-hidden relative">
           {activeTab === 'editor' && (
@@ -186,6 +254,7 @@ export const App: React.FC = () => {
                   theme={activeTheme}
                   onChange={updateActiveTheme}
                   onOpenExport={() => setIsExportOpen(true)}
+                  onEditCopy={editCopyOfPreview}
                 />
               </div>
 
@@ -213,20 +282,18 @@ export const App: React.FC = () => {
                 onNewTheme={() => createNewTheme()}
                 onDuplicateTheme={duplicateTheme}
                 onDeleteTheme={deleteTheme}
-                onSyncHaThemes={syncInstalledThemesFromHa}
-                onImportThemes={(imported) => {
-                  setThemes((prev) => [...imported, ...prev.filter((t) => !imported.some((i) => i.id === t.id))]);
-                  if (imported[0]) setActiveThemeId(imported[0].id);
-                }}
+                onSyncHaThemes={IS_HOSTED || standalone ? undefined : syncInstalledThemesFromHa}
+                onImportThemes={importThemes}
                 onSwitchToEditor={() => setActiveTab('editor')}
-                onOpenDoctor={() => setIsDoctorOpen(true)}
+                onOpenDoctor={standalone ? undefined : () => setIsDoctorOpen(true)}
                 isDoctorReady={!needsSetup}
+                standalone={standalone}
               />
               </Suspense>
             </div>
           )}
 
-          {activeTab === 'community' && (
+          {activeTab === 'community' && !IS_HOSTED && (
             <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
               <Suspense fallback={<TabLoading />}>
               <CommunityHub
@@ -276,6 +343,16 @@ export const App: React.FC = () => {
             onThemeSaved={() => {
               updateActiveTheme({ isInstalled: true });
             }}
+          />
+        </Suspense>
+      )}
+
+      {isImportOpen && (
+        <Suspense fallback={null}>
+          <ImportModal
+            isOpen={isImportOpen}
+            onClose={() => setIsImportOpen(false)}
+            onImport={importThemes}
           />
         </Suspense>
       )}

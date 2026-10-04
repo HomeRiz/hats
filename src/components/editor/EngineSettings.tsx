@@ -433,7 +433,7 @@ export const EngineSettings: React.FC<EngineSettingsProps> = ({ theme, onChange 
         {engine.scanlines && (
           <div className="space-y-1">
             <div className="flex justify-between text-slate-400">
-              <span title="How dark the scanlines are. Needs card-mod support turned on in the Cards tab.">Scanline Intensity</span>
+              <span title="How dark the scanlines are. Needs UIX / card-mod support turned on in the Cards tab.">Scanline Intensity</span>
               <span className="font-mono text-slate-200">{Math.round((engine.scanlineIntensity ?? 0) * 100)}%</span>
             </div>
             <input

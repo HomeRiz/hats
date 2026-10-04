@@ -6,6 +6,7 @@ import { resolveBundledPicture } from './bundledPicture';
 
 export interface HaStatusResult {
   isAddon: boolean;
+  standalone?: boolean;
   configDir: string;
   themesDir: string;
   themesExists: boolean;
@@ -26,6 +27,11 @@ export interface DiagnosticsResult {
   hasFrontend: boolean;
   hasThemesDirective: boolean;
   hasCardMod: boolean;
+  stylingEngine: 'card-mod' | 'uix' | 'both' | 'none';
+  hasUix: boolean;
+  uixOnDisk: boolean;
+  uixNeedsSetup: boolean;
+  stylingConflict: boolean;
   cardModOnDisk: boolean;
   cardModHacstag: string;
   cardModExactUrl?: string;
@@ -98,7 +104,7 @@ export async function getHaDiagnostics(): Promise<DiagnosticsResult | null> {
   return null;
 }
 
-export async function fixHaConfiguration(options: { addThemes?: boolean; addCardMod?: boolean; hacstag?: string; exactUrl?: string } = {}): Promise<FixConfigResult> {
+export async function fixHaConfiguration(options: { addThemes?: boolean; addCardMod?: boolean; removeCardMod?: boolean; hacstag?: string; exactUrl?: string } = {}): Promise<FixConfigResult> {
   try {
     const res = await fetch(getApiUrl('api/ha/fix-config'), {
       method: 'POST',

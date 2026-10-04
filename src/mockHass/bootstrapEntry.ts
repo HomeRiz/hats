@@ -23,6 +23,7 @@ try {
       expires: Date.now() + 1000 * 60 * 60 * 24 * 365,
     })
   );
+  window.localStorage.setItem('dockedSidebar', JSON.stringify('auto'));
 } catch {
 }
 

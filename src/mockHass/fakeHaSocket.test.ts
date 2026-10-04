@@ -189,7 +189,7 @@ describe('createFakeHaSocket - themes and lovelace', () => {
     const store = new MockHassStore(DEMO_ENTITIES);
     const conn = await connectToFakeSocket(store);
     const result: any = await conn.sendMessagePromise({ type: 'lovelace/config' });
-    expect(result.views.map((v: any) => v.path)).toEqual(['home', 'mushroom', 'bubble-card', 'layout-card', 'button-card', 'stack-in-card', 'card-mod']);
+    expect(result.views.map((v: any) => v.path)).toEqual(['home']);
     conn.close();
   });
 

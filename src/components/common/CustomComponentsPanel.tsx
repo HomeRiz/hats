@@ -5,23 +5,26 @@ import { ThemeConfig, RequiredIntegration } from '../../types/theme';
 import { useHacsRepositories } from '../../services/useHacsRepositories';
 import { getIntegrationStatus, IntegrationState } from '../../services/integrationStatus';
 import { DiagnosticsResult } from '../../services/haService';
+import { UIX_REPO_URL } from '../../state/useStylingEngine';
 
 interface CustomComponentsPanelProps {
   themes: ThemeConfig[];
   isActive: boolean;
   diagnostics: DiagnosticsResult | null;
   isCardModInstalled: boolean;
+  isUixInstalled: boolean;
   getHacsUrl: (repoId: string | number) => string;
 }
 
 const RECOMMENDED_CARDS = [
-  { id: 'card-mod', name: 'lovelace-card-mod', desc: 'Glass blur & CSS theme shaders', hacsId: 190927524 },
+  { id: 'uix', name: 'UIX', desc: 'Styling engine that reads card-mod theme keys (use one, not both)', hacsId: 0, href: UIX_REPO_URL },
+  { id: 'card-mod', name: 'lovelace-card-mod', desc: 'Glass blur & CSS theme shaders (or use UIX)', hacsId: 190927524 },
   { id: 'mushroom', name: 'Mushroom Cards', desc: 'Modern sleek UI sliders & chips', hacsId: 444350375 },
   { id: 'bubble-card', name: 'Bubble Card', desc: 'Pop-up glassmorphism subviews', hacsId: 680112919 },
   { id: 'layout-card', name: 'Layout Card', desc: 'Advanced CSS grid & masonry', hacsId: 156434866 },
   { id: 'button-card', name: 'Button Card', desc: 'Fully customisable buttons', hacsId: 146194325 },
   { id: 'stack-in-card', name: 'Stack-in-Card', desc: 'Merge several cards into one', hacsId: 248954055 },
-] as const;
+] as ReadonlyArray<{ id: string; name: string; desc: string; hacsId: number; href?: string }>;
 
 const STATE_LABEL: Record<IntegrationState, string> = {
   installed: 'Installed',
@@ -46,6 +49,7 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
   isActive,
   diagnostics,
   isCardModInstalled,
+  isUixInstalled,
   getHacsUrl,
 }) => {
   const { repositories, loading, available } = useHacsRepositories(isActive);
@@ -70,7 +74,7 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
 
   const recommendedCardsWithStatus = RECOMMENDED_CARDS.map((card) => ({
     ...card,
-    installed: card.id === 'card-mod' ? isCardModInstalled : Boolean(diagnostics?.detectedCards.includes(card.id)),
+    installed: card.id === 'card-mod' ? isCardModInstalled : card.id === 'uix' ? isUixInstalled : Boolean(diagnostics?.detectedCards.includes(card.id)),
   }));
 
   return (
@@ -98,14 +102,14 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
                   </span>
                 ) : (
                   <a
-                    href={getHacsUrl(card.hacsId)}
+                    href={card.href ?? getHacsUrl(card.hacsId)}
                     target="_blank"
                     rel="noreferrer"
-                    title="Install via HACS"
+                    title={card.href ? 'Open on GitHub' : 'Install via HACS'}
                     className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors shadow-sm"
                   >
                     <DownloadCloud className="w-3 h-3" />
-                    <span>Install in HACS</span>
+                    <span>{card.href ? 'View on GitHub' : 'Install in HACS'}</span>
                     <ExternalLink className="w-2.5 h-2.5 opacity-70" />
                   </a>
                 )}

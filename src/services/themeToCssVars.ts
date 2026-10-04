@@ -53,10 +53,27 @@ function bundledPictureUrl(theme: ThemeConfig): string | null {
   return theme.background.type === 'image' ? resolveBundledPicture(theme.background.imageUrl) : null;
 }
 
+export function rawThemeToCssVars(
+  name: string,
+  data: Record<string, unknown>,
+  mode: 'dark' | 'light',
+): { name: string; vars: Record<string, string> } {
+  const { modes, ...flat } = data as { modes?: Record<string, Record<string, unknown>> } & Record<string, unknown>;
+  const modeVars = modes && typeof modes === 'object' ? modes[mode] ?? {} : {};
+  const base = mode === 'light' ? LIGHT_BASE_VARS : {};
+  const vars: Record<string, string> = {};
+  for (const [key, value] of Object.entries({ ...base, ...flat, ...modeVars })) {
+    if (typeof value === 'string') vars[key] = value;
+    else if (typeof value === 'number') vars[key] = String(value);
+  }
+  return { name, vars };
+}
+
 export function themeToCssVars(
   theme: ThemeConfig,
   requestedMode?: 'dark' | 'light',
 ): { name: string; vars: Record<string, string> } {
+  if (theme.rawTheme) return rawThemeToCssVars(theme.name, theme.rawTheme.data, requestedMode ?? 'dark');
   const mode = requestedMode ?? (isLightTheme(theme) ? 'light' : 'dark');
   const yamlText = generateHomeAssistantThemeYaml(theme, 'embedded');
   const parsed = yaml.load(yamlText) as Record<string, unknown>;

@@ -3,6 +3,8 @@ import { Sliders, Palette, Image as ImageIcon, Shapes, Code, Info, Zap, Edit3, P
 import { ThemeConfig } from '../../types/theme';
 import { EngineSettings } from './EngineSettings';
 import { ComponentsEditor } from './ComponentsEditor';
+import { useStandalone } from '../../state/useStandalone';
+import { IS_HOSTED } from '../../runtime';
 const PaletteEditor = lazy(() => import('./PaletteEditor').then((m) => ({ default: m.PaletteEditor })));
 const BackgroundStudio = lazy(() => import('./BackgroundStudio').then((m) => ({ default: m.BackgroundStudio })));
 const SvgPatternEditor = lazy(() => import('./SvgPatternEditor').then((m) => ({ default: m.SvgPatternEditor })));
@@ -18,9 +20,11 @@ interface ThemeEditorProps {
   theme: ThemeConfig;
   onChange: (updates: Partial<ThemeConfig>) => void;
   onOpenExport?: () => void;
+  onEditCopy?: () => void;
 }
 
-export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpenExport }) => {
+export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpenExport, onEditCopy }) => {
+  const standalone = useStandalone();
   const [activeSubTab, setActiveSubTab] = useState<'engine' | 'palette' | 'background' | 'svg' | 'components' | 'css' | 'info'>('engine');
 
   const tabs = [
@@ -52,13 +56,13 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
       id: 'components',
       label: 'Cards',
       icon: <Puzzle className="w-3.5 h-3.5" />,
-      tooltip: 'Cards: Turn theme support on or off for card-mod, Mushroom, Bubble Card, Layout Card, Button Card and Stack-in-Card'
+      tooltip: 'Cards: Turn theme support on or off for UIX / card-mod, Mushroom, Bubble Card, Layout Card, Button Card and Stack-in-Card'
     },
     { 
       id: 'css', 
       label: 'Custom CSS', 
       icon: <Code className="w-3.5 h-3.5" />,
-      tooltip: 'Custom CSS: card-mod custom stylesheet rules, keyframe animations, and shadow DOM styling'
+      tooltip: 'Custom CSS: UIX / card-mod custom stylesheet rules, keyframe animations, and shadow DOM styling'
     },
     { 
       id: 'info', 
@@ -67,6 +71,47 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
       tooltip: 'Info: Author details, GitHub handle, and theme mood description'
     },
   ];
+
+  if (theme.rawTheme) {
+    const keys = Object.keys(theme.rawTheme.data);
+    const cardModRules = keys.filter((k) => k.startsWith('card-mod')).length;
+    return (
+      <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-y-auto p-5 space-y-4 text-xs text-slate-300">
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">Preview, exactly as published</div>
+          <h2 className="text-lg font-bold text-white mt-1">{theme.name}</h2>
+          <p className="text-slate-400 mt-0.5">
+            from{' '}
+            <a
+              href={`https://github.com/${theme.rawTheme.source}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-400 hover:text-blue-300 underline"
+            >
+              {theme.rawTheme.source}
+            </a>
+          </p>
+        </div>
+        <p className="leading-relaxed">
+          The dashboard on the right uses this theme's own YAML untouched: {keys.length} top-level entries
+          {cardModRules > 0 ? `, ${cardModRules} of them UIX / card-mod rules` : ''}. Nothing is installed or changed in your Home Assistant.
+        </p>
+        {onEditCopy && (
+          <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <p className="leading-relaxed text-slate-400">
+              Want to tweak it? HATS can make an editable copy, but it rebuilds the theme from its colors and glass settings, so some details of the original are lost.
+            </p>
+            <button
+              onClick={onEditCopy}
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold"
+            >
+              Edit a copy in HATS
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
@@ -97,11 +142,13 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
           </span>
         </div>
 
-        {onOpenExport && (
+        {onOpenExport && !IS_HOSTED && (
           <div className="flex justify-center">
             <button
               onClick={onOpenExport}
-              title={theme.isInstalled ? "Save Changes to Home Assistant /config/themes" : "Install and Activate Theme in Home Assistant"}
+              title={standalone
+                ? 'Save this theme to your HATS themes folder'
+                : theme.isInstalled ? "Save Changes to Home Assistant /config/themes" : "Install and Activate Theme in Home Assistant"}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shadow-sm transition-all flex items-center justify-center gap-1.5 ${
                 theme.isInstalled 
                   ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20' 
@@ -109,7 +156,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
               }`}
             >
               <Zap className="w-3.5 h-3.5" />
-              <span>{theme.isInstalled ? 'Save to HA' : 'Install to HA'}</span>
+              <span>{standalone ? 'Save theme' : theme.isInstalled ? 'Save to HA' : 'Install to HA'}</span>
             </button>
           </div>
         )}

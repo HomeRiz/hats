@@ -67,4 +67,16 @@ describe('rewriteRootRelativePaths', () => {
     const output = rewriteRootRelativePaths(input, '/prefix', '/mock-frontend');
     expect(output).toBe('fetch(`/prefix/mock-frontend/static/locale-data/intl-${e.toLowerCase()}/${t}.json`)');
   });
+
+  it('rewrites unquoted CSS url() references', () => {
+    const input = '@font-face{src:url(/static/fonts/roboto/Roboto-Regular.woff2) format("woff2")}';
+    const output = rewriteRootRelativePaths(input, '/hats', '/mock-frontend');
+    expect(output).toBe('@font-face{src:url(/hats/mock-frontend/static/fonts/roboto/Roboto-Regular.woff2) format("woff2")}');
+  });
+
+  it('rewrites the bare /static/ the frontend uses for its font URLs', () => {
+    const input = 'url(${(0,r.iz)(/static/)}fonts/roboto/Roboto-Thin.woff2)';
+    const output = rewriteRootRelativePaths(input, '/hats', '/mock-frontend');
+    expect(output).toBe('url(${(0,r.iz)("/hats/mock-frontend/static/")}fonts/roboto/Roboto-Thin.woff2)');
+  });
 });

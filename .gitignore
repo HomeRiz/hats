@@ -15,3 +15,5 @@ build/
 .hats-data/
 
 vendor/
+release/
+hosted-dist/

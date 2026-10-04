@@ -1,6 +1,7 @@
-import { ThemeConfig } from '../types/theme';
+import { ThemeConfig, RequiredIntegration } from '../types/theme';
 import { parseHomeAssistantThemeYaml } from './yamlParser';
 import { detectRequiredIntegrations } from './themeRequirementDetector';
+import { parseRawThemes, createLocalAssetResolver, MAX_THEME_YAML_BYTES } from './rawThemePreview';
 
 export interface GitHubImportResult {
   success: boolean;
@@ -36,7 +37,12 @@ export function parseGitHubRepoUrl(urlOrSlug: string): { owner: string; repo: st
   return null;
 }
 
-export async function importThemesFromGitHubRepo(repoInput: string): Promise<GitHubImportResult> {
+export interface ImportOptions {
+  branch?: string;
+  keepRaw?: boolean;
+}
+
+export async function importThemesFromGitHubRepo(repoInput: string, options: ImportOptions = {}): Promise<GitHubImportResult> {
   const parsed = parseGitHubRepoUrl(repoInput);
   if (!parsed) {
     if (repoInput.trim().startsWith('http') && (repoInput.endsWith('.yaml') || repoInput.endsWith('.yml'))) {
@@ -72,15 +78,58 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
   }
 
   const { owner, repo } = parsed;
+  const ref = options.branch ?? parsed.branch ?? 'HEAD';
+  const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}`;
+
+  const collectThemes = async (
+    paths: string[],
+    requiredIntegrations: RequiredIntegration[],
+    resolveAssets?: (data: Record<string, unknown>) => Record<string, unknown>,
+  ): Promise<ThemeConfig[]> => {
+    const collected: ThemeConfig[] = [];
+    for (const filePath of paths.slice(0, 15)) {
+      try {
+        const rawRes = await fetch(`${rawBase}/${filePath.split('/').map(encodeURIComponent).join('/')}`);
+        if (!rawRes.ok) continue;
+        const yamlText = await rawRes.text();
+        const rawThemes = options.keepRaw ? parseRawThemes(yamlText) : [];
+        for (const t of parseHomeAssistantThemeYaml(yamlText)) {
+          t.sourceUrl = `https://github.com/${owner}/${repo}`;
+          t.authorGithub = owner;
+          if (t.author === 'Unknown' || t.author === 'Community' || t.author === 'Imported') {
+            t.author = owner;
+          }
+          if (requiredIntegrations.length > 0) {
+            t.requirements = { ...t.requirements, requiresCardMod: t.requirements?.requiresCardMod ?? false, requiredIntegrations };
+          }
+          const raw = rawThemes.find((r) => r.name === t.name);
+          if (raw) t.rawTheme = { source: `${owner}/${repo}`, data: resolveAssets ? resolveAssets(raw.data) : raw.data };
+          collected.push(t);
+        }
+      } catch (fileErr) {
+        console.warn(`Could not parse ${filePath}:`, fileErr);
+      }
+    }
+    return collected;
+  };
+
+  const success = (themes: ThemeConfig[]): GitHubImportResult => ({
+    success: true,
+    themes,
+    message: packMessage(themes.length, `"${owner}/${repo}"`),
+    repoName: `${owner}/${repo}`,
+  });
 
   try {
-    const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/HEAD?recursive=1`);
+    const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(ref)}?recursive=1`);
     if (!treeRes.ok) {
       if (treeRes.status === 404) {
         return { success: false, themes: [], message: `Repository "${owner}/${repo}" was not found or is private.` };
       }
       if (treeRes.status === 403) {
-        return { success: false, themes: [], message: 'GitHub API rate limit reached. Try pasting a direct raw YAML file link instead.' };
+        const guessed = await collectThemes([`themes/${repo}.yaml`, `themes/${repo}/${repo}.yaml`], []);
+        if (guessed.length > 0) return success(guessed);
+        return { success: false, themes: [], message: 'GitHub API rate limit reached. Try again later, or paste a direct raw YAML file link instead.' };
       }
       throw new Error(`GitHub API returned HTTP ${treeRes.status}`);
     }
@@ -90,6 +139,7 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
 
     const yamlFiles = tree.filter((item: any) => {
       if (item.type !== 'blob') return false;
+      if (typeof item.size === 'number' && item.size > MAX_THEME_YAML_BYTES) return false;
       const path = (item.path as string).toLowerCase();
       return (
         (path.endsWith('.yaml') || path.endsWith('.yml')) &&
@@ -108,36 +158,24 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
       };
     }
 
+    const themeFolderFiles = yamlFiles.filter((item: any) => (item.path as string).toLowerCase().startsWith('themes/'));
+    const candidates = themeFolderFiles.length > 0 ? themeFolderFiles : yamlFiles;
+
     const requiredIntegrations = detectRequiredIntegrations(
       tree.filter((item: any) => item.type === 'blob').map((item: any) => item.path)
     ).map((integration) => ({ ...integration, repoFullName: `${owner}/${repo}` }));
 
-    const allImportedThemes: ThemeConfig[] = [];
-    const filesToFetch = yamlFiles.slice(0, 15);
-
-    for (const file of filesToFetch) {
-      try {
-        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${file.path}`;
-        const rawRes = await fetch(rawUrl);
-        if (rawRes.ok) {
-          const yamlText = await rawRes.text();
-          const parsedThemes = parseHomeAssistantThemeYaml(yamlText);
-          for (const t of parsedThemes) {
-            t.sourceUrl = `https://github.com/${owner}/${repo}`;
-            t.authorGithub = owner;
-            if (t.author === 'Unknown' || t.author === 'Community' || t.author === 'Imported') {
-              t.author = owner;
-            }
-            if (requiredIntegrations.length > 0) {
-              t.requirements = { ...t.requirements, requiresCardMod: t.requirements?.requiresCardMod ?? false, requiredIntegrations };
-            }
-            allImportedThemes.push(t);
-          }
-        }
-      } catch (fileErr) {
-        console.warn(`Could not parse ${file.path}:`, fileErr);
-      }
-    }
+    const resolveAssets = options.keepRaw
+      ? createLocalAssetResolver(
+          tree.filter((item: any) => item.type === 'blob').map((item: any) => item.path as string),
+          rawBase,
+        )
+      : undefined;
+    const allImportedThemes = await collectThemes(
+      candidates.map((item: any) => item.path as string),
+      requiredIntegrations,
+      resolveAssets,
+    );
 
     if (allImportedThemes.length === 0) {
       return {
@@ -147,12 +185,7 @@ export async function importThemesFromGitHubRepo(repoInput: string): Promise<Git
       };
     }
 
-    return {
-      success: true,
-      themes: allImportedThemes,
-      message: packMessage(allImportedThemes.length, `"${owner}/${repo}"`),
-      repoName: `${owner}/${repo}`,
-    };
+    return success(allImportedThemes);
   } catch (err: any) {
     return {
       success: false,

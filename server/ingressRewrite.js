@@ -21,5 +21,9 @@ export function rewriteRootRelativePaths(content, ingressPath, mountPrefix) {
       out = out.split(`${q}${target}${q}`).join(`${q}${prefix}${target}${q}`);
     }
   }
+  for (const target of PREFIX_TARGETS) {
+    out = out.split(`url(${target}`).join(`url(${prefix}${target}`);
+  }
+  out = out.split('(/static/)').join(`("${prefix}/static/")`);
   return out;
 }

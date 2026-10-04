@@ -11,17 +11,17 @@ export interface ComponentInfo {
 export const COMPONENT_CATALOG: ComponentInfo[] = [
   {
     id: 'card-mod',
-    name: 'card-mod',
+    name: 'UIX / card-mod',
     slug: 'card-mod',
-    summary: 'CSS styling for every card, the sidebar and the header',
-    effect: 'Adds the glass, sheen, sidebar and header rules. Without it the theme only sets plain colors.',
+    summary: 'CSS styling for every card, the sidebar and the header (UIX or card-mod)',
+    effect: 'Adds the glass, sheen, sidebar and header rules. Works with UIX or card-mod. Without either, the theme only sets plain colors and the selected sidebar item uses your primary color.',
   },
   {
     id: 'mushroom',
     name: 'Mushroom Cards',
     slug: 'mushroom',
     summary: 'Chips, icons and sliders from the Mushroom card set',
-    effect: 'Sets the mush-* variables so Mushroom icons, controls and chips follow your palette, radii and glass tint.',
+    effect: 'Sets the mush-* variables so Mushroom icons, controls and chips follow your palette, radii and glass tint. See the chips and the light card on Home.',
   },
   {
     id: 'bubble-card',
@@ -35,21 +35,21 @@ export const COMPONENT_CATALOG: ComponentInfo[] = [
     name: 'Layout Card',
     slug: 'layout-card',
     summary: 'Grid and masonry views',
-    effect: 'Sets the card spacing that Layout Card views use and lists Layout Card as a requirement.',
+    effect: 'Adds 12px side padding to Layout Card grids, like the Home preview, and sets the card margin of masonry views to 8px 8px 16px.',
   },
   {
     id: 'button-card',
     name: 'Button Card',
     slug: 'button-card',
     summary: 'Fully customisable button cards',
-    effect: 'Colors the Button Card ripple with your primary color and lists Button Card as a requirement.',
+    effect: 'Tints the Button Card hover and press ripple with your primary color and makes the hover stronger. Hover a Button Card on Home to see it.',
   },
   {
     id: 'stack-in-card',
     name: 'Stack-in-Card',
     slug: 'stack-in-card',
     summary: 'Several cards merged into one',
-    effect: 'Lists Stack-in-Card as a requirement. Stacked cards use the theme glass style.',
+    effect: 'Merges the cards inside a Stack-in-Card into one glass card, with no separate rounded tiles, borders or shadows. See the Stack-in-Card block on Home.',
   },
 ];
 
@@ -78,10 +78,6 @@ export function resolveComponentSupport(theme: Pick<ThemeConfig, 'components' | 
     if (typeof explicit === 'boolean') resolved[info.id] = explicit;
   }
   return resolved;
-}
-
-export function hasExplicitComponentSupport(theme: Pick<ThemeConfig, 'components'>): boolean {
-  return theme.components !== undefined;
 }
 
 export function withComponentSupport(

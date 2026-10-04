@@ -1,7 +1,7 @@
 import { ThemeConfig } from '../types/theme';
 import { hexToRgbString, generatePrimaryRamp, darkenColor, readableTextOn } from './colorEngine';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
-import { resolveComponentSupport, hasExplicitComponentSupport } from './componentSupport';
+import { resolveComponentSupport } from './componentSupport';
 
 function svgToBase64DataUri(svg: string): string {
   let cleaned = svg.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
@@ -25,14 +25,12 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   const sanitizedReport = validateAndSanitizeTheme(theme);
   const safeTheme = sanitizedReport.sanitizedTheme;
   const { name, palette, engine, background, dark, light, customSvgOverlay } = safeTheme;
-  const explicitSupport = hasExplicitComponentSupport(safeTheme);
-  const support = explicitSupport
-    ? resolveComponentSupport(safeTheme)
-    : { ...resolveComponentSupport(safeTheme), 'card-mod': true, mushroom: true, 'bubble-card': true };
+  const support = resolveComponentSupport(safeTheme);
   const primary = palette.primary;
   const accent = palette.accent || palette.primary;
   const ramp = generatePrimaryRamp(primary);
   const onPrimary = readableTextOn(primary);
+  const sidebarSelectedColor = support['card-mod'] ? onPrimary : primary;
   const selectedBg = `rgba(${hexToRgbString(primary)}, 0.88)`;
 
   const sidebarStyle = engine.sidebarStyle || 'translucent';
@@ -110,7 +108,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
 
 
   const rgb = (hex: string) => hexToRgbString(hex);
-  const mushroomBlock = explicitSupport && support.mushroom
+  const mushroomBlock = support.mushroom
     ? `
   # Mushroom Cards
   mush-rgb-red: ${rgb(palette.red)}
@@ -141,7 +139,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
 `
     : '';
 
-  const bubbleBlock = explicitSupport && support['bubble-card']
+  const bubbleBlock = support['bubble-card']
     ? `
   # Bubble Card
   bubble-accent-color: "${primary}"
@@ -159,7 +157,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
 `
     : '';
 
-  const layoutBlock = explicitSupport && support['layout-card']
+  const layoutBlock = support['layout-card']
     ? `
   # Layout Card
   masonry-view-card-margin: "8px 8px 16px"
@@ -167,12 +165,30 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
 `
     : '';
 
-  const buttonCardBlock = explicitSupport && support['button-card']
+  const buttonCardBlock = support['button-card']
     ? `
   # Button Card
+  button-card-ripple-color: "${primary}"
+  button-card-ripple-hover-opacity: "0.16"
+  button-card-ripple-pressed-opacity: "0.32"
   button-card-ripple-pressed-color: "${primary}"
   button-card-ripple-icon-color: "${primary}"
 `
+    : '';
+
+  const stack = support['stack-in-card'];
+  const stackVar = (name: string, fallback: string) => (stack ? `var(${name}, ${fallback})` : fallback);
+  const stackInnerRule = stack
+    ? `:host(.type-custom-stack-in-card) ha-card > div {
+      --hats-card-background: transparent;
+      --hats-card-radius: 0px;
+      --hats-card-border: 0px solid transparent;
+      --hats-card-shadow: none;
+      --hats-card-backdrop: none;
+      --hats-card-sheen: none;
+      --hats-card-hover-shadow: none;
+      --hats-card-hover-transform: none;
+    }`
     : '';
 
   const componentVarsBlock = `${mushroomBlock}${bubbleBlock}${layoutBlock}${buttonCardBlock}`;
@@ -319,6 +335,17 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   card-mod-view: |
     hui-view {
       background: none !important;
+    }
+    hui-view::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: var(--hats-view-background, none);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      pointer-events: none;
     }${scanlineRule}
 
   card-mod-config: |
@@ -357,10 +384,10 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
   card-mod-card: |
     ha-card {
       position: relative;
-      background: ${engine.glassTint} !important;
-      border-radius: var(--ha-card-border-radius, ${engine.cardRadius}px) !important;
-      border: ${engine.borderWidth}px solid ${engine.borderColor} !important;
-      box-shadow: ${engine.insetShadow} !important;
+      background: ${stackVar('--hats-card-background', engine.glassTint)} !important;
+      border-radius: ${stackVar('--hats-card-radius', `var(--ha-card-border-radius, ${engine.cardRadius}px)`)} !important;
+      border: ${stackVar('--hats-card-border', `${engine.borderWidth}px solid ${engine.borderColor}`)} !important;
+      box-shadow: ${stackVar('--hats-card-shadow', engine.insetShadow)} !important;
       overflow: hidden;
       transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
     }
@@ -369,8 +396,8 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
       position: absolute;
       inset: 0;
       z-index: -1;
-      backdrop-filter: var(--ha-card-backdrop-filter);
-      -webkit-backdrop-filter: var(--ha-card-backdrop-filter);
+      backdrop-filter: ${stackVar('--hats-card-backdrop', 'var(--ha-card-backdrop-filter)')};
+      -webkit-backdrop-filter: ${stackVar('--hats-card-backdrop', 'var(--ha-card-backdrop-filter)')};
       border-radius: inherit;
       pointer-events: none;
     }
@@ -379,13 +406,13 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
       position: absolute;
       inset: 0;
       z-index: 0;
-      background: var(--hats-sheen, var(--ultimate-sheen));
+      background: ${stackVar('--hats-card-sheen', 'var(--hats-sheen, var(--ultimate-sheen))')};
       border-radius: inherit;
       pointer-events: none;
     }
     ${engine.hoverGlow ? `ha-card:hover {
-      box-shadow: 0 0 ${engine.hoverGlowIntensity}px -4px var(--hats-glow-color, var(--ultimate-glow-color, ${engine.glowColor})), ${engine.insetShadow} !important;
-      transform: translateY(-2px);
+      box-shadow: ${stackVar('--hats-card-hover-shadow', `0 0 ${engine.hoverGlowIntensity}px -4px var(--hats-glow-color, var(--ultimate-glow-color, ${engine.glowColor})), ${engine.insetShadow}`)} !important;
+      transform: ${stackVar('--hats-card-hover-transform', 'translateY(-2px)')};
     }` : ''}
     ${flatBackground} {
       background: none !important;
@@ -401,6 +428,7 @@ export function generateHomeAssistantThemeYaml(theme: ThemeConfig, backgroundSou
       -webkit-backdrop-filter: none !important;
     }
     ${bubbleRadiusRule}
+    ${stackInnerRule}
 ${safeTheme.customCss ? `\n    /* Custom User Injected CSS */\n    ${safeTheme.customCss.split('\n').join('\n    ')}` : ''}
 `;
 
@@ -434,8 +462,8 @@ ${support['card-mod'] ? `  # Required by card-mod: must match theme name exactly
   sidebar-text-color: "rgba(255, 255, 255, 0.94)"
   sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
   sidebar-selected-background-color: "${selectedBg}"
-  sidebar-selected-text-color: "${onPrimary}"
-  sidebar-selected-icon-color: "${onPrimary}"
+  sidebar-selected-text-color: "${sidebarSelectedColor}"
+  sidebar-selected-icon-color: "${sidebarSelectedColor}"
   sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
   # HA Color Primary Ladder
@@ -487,8 +515,8 @@ ${tokenBlock}
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
       sidebar-selected-background-color: "${selectedBg}"
-      sidebar-selected-text-color: "${onPrimary}"
-      sidebar-selected-icon-color: "${onPrimary}"
+      sidebar-selected-text-color: "${sidebarSelectedColor}"
+      sidebar-selected-icon-color: "${sidebarSelectedColor}"
       sidebar-border-color: "rgba(255, 255, 255, 0.08)"
     light:
       primary-background-color: "${light.primaryBackground}"
@@ -500,8 +528,8 @@ ${tokenBlock}
       sidebar-text-color: "rgba(255, 255, 255, 0.94)"
       sidebar-icon-color: "rgba(228, 228, 235, 0.82)"
       sidebar-selected-background-color: "${selectedBg}"
-      sidebar-selected-text-color: "${onPrimary}"
-      sidebar-selected-icon-color: "${onPrimary}"
+      sidebar-selected-text-color: "${sidebarSelectedColor}"
+      sidebar-selected-icon-color: "${sidebarSelectedColor}"
       sidebar-border-color: "rgba(255, 255, 255, 0.08)"
 
 ${componentVarsBlock}${support['card-mod'] ? cardModYaml : ''}
@@ -511,7 +539,9 @@ ${componentVarsBlock}${support['card-mod'] ? cardModYaml : ''}
 }
 
 export function generatePerViewSnippet(theme: ThemeConfig, viewPath = 'home', viewTitle = 'Main'): string {
-  const bgUrl = theme.background.imageUrl || `/local/hats/backgrounds/${theme.id}/default.webp`;
+  if (theme.viewSnippet && theme.viewSnippet.trim()) return `${theme.viewSnippet.trim()}\n`;
+  const imageUrl = theme.background.imageUrl;
+  const bgUrl = imageUrl && /^https:\/\//.test(imageUrl) ? imageUrl : `/local/hats/backgrounds/${theme.id}/default.webp`;
   return `- title: "${viewTitle}"
   path: "${viewPath}"
   icon: "mdi:view-dashboard"

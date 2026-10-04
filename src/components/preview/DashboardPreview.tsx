@@ -26,10 +26,6 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
     applyTheme(name, vars);
   }, [useLiveRender, theme, previewMode, applyTheme]);
 
-  useEffect(() => {
-    if (!useLiveRender) return;
-    return () => registerSlot(null);
-  }, [useLiveRender, registerSlot]);
 
   if (useLiveRender) {
     return (

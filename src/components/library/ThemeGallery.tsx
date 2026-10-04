@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Plus,
   Copy,
   Trash2,
-  Upload,
   Search,
   Sparkles,
   Sliders,
@@ -19,14 +18,17 @@ import {
   HardDriveDownload,
   Eye,
   Layers,
+  Download,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { groupThemesIntoPacks } from '../../services/themePacks';
 import { GithubIcon } from '../common/icons/GithubIcon';
-import { parseHomeAssistantThemeYaml } from '../../services/yamlParser';
 import { ThemeOverviewModal } from './ThemeOverviewModal';
 import { DuplicateInfoModal } from '../common/DuplicateInfoModal';
 import { GitHubImportModal } from '../github/GitHubImportModal';
+import { IS_HOSTED } from '../../runtime';
+import { buildThemeBundle } from '../../services/themeBundle';
+import { downloadFile } from '../../utils/download';
 import { 
   applyThemeDirectlyToHa, 
   deleteHaTheme, 
@@ -45,6 +47,7 @@ interface ThemeGalleryProps {
   onOpenDoctor?: () => void;
   onSyncHaThemes?: () => Promise<void> | void;
   isDoctorReady?: boolean;
+  standalone?: boolean;
 }
 
 export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
@@ -59,11 +62,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   onOpenDoctor,
   onSyncHaThemes,
   isDoctorReady = true,
+  standalone = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'available' | 'installed' | 'kids'>('available');
   const [isSyncing, setIsSyncing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [overviewThemeId, setOverviewThemeId] = useState<string | null>(null);
 
@@ -113,6 +116,15 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     };
   }, []);
 
+  const handleDownloadTheme = async (theme: ThemeConfig) => {
+    try {
+      const bundle = await buildThemeBundle(theme);
+      downloadFile(bundle.fileName, bundle.bytes as BlobPart, 'application/zip');
+    } catch (e) {
+      console.warn('Failed to download theme:', e);
+    }
+  };
+
   const handleSyncFromHa = async () => {
     if (!onSyncHaThemes) return;
     setIsSyncing(true);
@@ -121,20 +133,6 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     } finally {
       setTimeout(() => setIsSyncing(false), 600);
     }
-  };
-
-  const handleImportYaml = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      if (text) {
-        const imported = parseHomeAssistantThemeYaml(text);
-        if (imported.length > 0) {
-          onImportThemes(imported);
-        }
-      }
-    };
-    reader.readAsText(file);
   };
 
   const triggerDuplicate = (theme: ThemeConfig) => {
@@ -251,11 +249,14 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 </span>
               </h1>
               <p className="text-xs text-slate-400 mt-1">
-                Left-click any theme for live dashboard overview. Right-click for options or batch install.
+                {standalone
+                  ? 'Left-click any theme for live dashboard overview. Right-click for options.'
+                  : 'Left-click any theme for live dashboard overview. Right-click for options or batch install.'}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              {!standalone && (
               <button
                 onClick={() => {
                   setIsSelectMode(!isSelectMode);
@@ -270,6 +271,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <CheckSquare className="w-3.5 h-3.5" />
                 <span>{isSelectMode ? 'Exit Select Mode' : 'Select'}</span>
               </button>
+              )}
 
               {onSyncHaThemes && (
                 <button
@@ -307,25 +309,6 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               )}
 
               <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Import YAML</span>
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleImportYaml(e.target.files[0]);
-                  }
-                }}
-                accept=".yaml,.yml"
-                className="hidden"
-              />
-
-              <button
                 onClick={onNewTheme}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
               >
@@ -350,14 +333,14 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
               <button
                 onClick={() => setSelectedFilter('available')}
-                title={`All available themes in the registry (${totalAvailableCount} total)`}
+                title={standalone ? `All themes (${totalAvailableCount} total)` : `All available themes in the registry (${totalAvailableCount} total)`}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
                   selectedFilter === 'available'
                     ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
                     : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
                 }`}
               >
-                <span>Available</span>
+                <span>{standalone ? 'All themes' : 'Available'}</span>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
                   selectedFilter === 'available' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
                 }`}>
@@ -365,6 +348,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 </span>
               </button>
 
+              {!standalone && (
               <button
                 onClick={() => setSelectedFilter('installed')}
                 title={`Themes currently installed in Home Assistant (${totalInstalledCount} installed)`}
@@ -382,6 +366,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   {totalInstalledCount}
                 </span>
               </button>
+              )}
 
               <button
                 onClick={() => setSelectedFilter('kids')}
@@ -397,7 +382,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
                   selectedFilter === 'kids' ? 'bg-black/30 text-amber-200' : 'bg-pink-950/80 text-pink-300'
                 }`}>
-                  {kidsInstalledCount}/{kidsAvailableCount}
+                  {standalone ? kidsAvailableCount : `${kidsInstalledCount}/${kidsAvailableCount}`}
                 </span>
               </button>
             </div>
@@ -468,7 +453,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         </div>
                       )}
 
-                      {packIsInstalled && (
+                      {packIsInstalled && !standalone && (
                         <div className="absolute top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 text-[9px] font-mono border border-emerald-600/50 backdrop-blur-md">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                           <span>Installed</span>
@@ -514,11 +499,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                               onOpenDoctor();
                             }
                           }}
-                          title="Requires lovelace-card-mod for blur and styling"
+                          title="Requires UIX or lovelace-card-mod for blur and styling"
                           className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/70 border border-purple-800/60 text-purple-300 font-medium flex items-center gap-1 hover:bg-purple-900/80 cursor-pointer transition-colors"
                         >
                           <Puzzle className="w-2.5 h-2.5" />
-                          card-mod
+                          UIX / card-mod
                         </span>
                       )}
 
@@ -586,7 +571,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         <Copy className="w-3.5 h-3.5" />
                       </button>
 
-                      {theme.isInstalled && (
+                      {theme.isInstalled && !standalone && (
                         <button
                           onClick={async (e) => {
                             e.stopPropagation();
@@ -601,7 +586,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         </button>
                       )}
 
-                      {theme.isCustom && !theme.isInstalled && (
+                      {theme.isCustom && (standalone || !theme.isInstalled) && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -636,7 +621,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         </div>
       </div>
 
-      {isSelectMode && (
+      {isSelectMode && !standalone && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl px-5 py-3 flex items-center gap-4 animate-fade-in text-xs">
           <div className="flex items-center gap-2 font-semibold text-white">
             <CheckSquare className="w-4 h-4 text-blue-400" />
@@ -661,6 +646,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <div className="h-4 w-px bg-slate-700" />
 
+          {!IS_HOSTED && (
           <button
             onClick={handleBatchInstall}
             disabled={selectedThemeIds.size === 0 || isBatchInstalling}
@@ -678,6 +664,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               </>
             )}
           </button>
+          )}
 
           <button
             onClick={() => {
@@ -709,6 +696,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             {contextMenu.theme.name}
           </div>
 
+          {!standalone && (
           <button
             onClick={() => {
               setIsSelectMode(true);
@@ -720,6 +708,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <CheckSquare className="w-3.5 h-3.5 text-blue-400" />
             <span>Select (Multi-select)</span>
           </button>
+          )}
 
           <button
             onClick={() => {
@@ -749,15 +738,15 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             onClick={async () => {
               const target = contextMenu.theme;
               setContextMenu(null);
-              await handleApplySingleTheme(target);
+              await (standalone ? handleDownloadTheme(target) : handleApplySingleTheme(target));
             }}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-slate-800 text-left transition-colors font-medium"
           >
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>{contextMenu.theme.isInstalled ? 'Apply / Save to HA' : 'Install Directly to HA'}</span>
+            {standalone ? <Download className="w-3.5 h-3.5 text-blue-400" /> : <Zap className="w-3.5 h-3.5 text-amber-400" />}
+            <span>{standalone ? 'Download' : contextMenu.theme.isInstalled ? 'Apply / Save to HA' : 'Install Directly to HA'}</span>
           </button>
 
-          {contextMenu.theme.isInstalled && (
+          {contextMenu.theme.isInstalled && !standalone && (
             <button
               onClick={async () => {
                 const target = contextMenu.theme;
@@ -803,6 +792,8 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             onSwitchToEditor();
           }}
           onApplyTheme={handleApplySingleTheme}
+          onDownloadTheme={handleDownloadTheme}
+          standalone={standalone}
           onUninstallTheme={handleUninstallFromHa}
           onDuplicateTheme={(id) => {
             const t = themes.find((item) => item.id === id);

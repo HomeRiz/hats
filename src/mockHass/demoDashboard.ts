@@ -2,23 +2,6 @@ type Card = Record<string, unknown>;
 
 const tile = (entity: string): Card => ({ type: 'tile', entity });
 
-const homeCards: Card[] = [
-  'light.living_room',
-  'light.kitchen',
-  'light.bedroom',
-  'switch.porch_plug',
-  'alarm_control_panel.home',
-  'climate.living_room',
-  'lock.front_door',
-  'cover.garage_door',
-  'media_player.living_room_speaker',
-  'sensor.living_room_temperature',
-  'sensor.front_door_battery',
-  'fan.bedroom',
-  'person.hats',
-  'sensor.power_usage',
-].map(tile);
-
 const mushroomCards: Card[] = [
   { type: 'custom:mushroom-title-card', title: 'Mushroom Cards', subtitle: 'Sliders, chips and state cards' },
   {
@@ -49,15 +32,6 @@ const bubbleCards: Card[] = [
   { type: 'custom:bubble-card', card_type: 'cover', entity: 'cover.garage_door', name: 'Garage Door' },
   { type: 'custom:bubble-card', card_type: 'media-player', entity: 'media_player.living_room_speaker', name: 'Speaker' },
   { type: 'custom:bubble-card', card_type: 'climate', entity: 'climate.living_room', name: 'Thermostat' },
-];
-
-const layoutCards: Card[] = [
-  { type: 'markdown', content: '## Layout Card\nThis view is arranged by `custom:grid-layout`.', view_layout: { 'grid-area': 'header' } },
-  { type: 'tile', entity: 'climate.living_room', view_layout: { 'grid-area': 'main' } },
-  { type: 'tile', entity: 'media_player.living_room_speaker', view_layout: { 'grid-area': 'side' } },
-  { type: 'tile', entity: 'sensor.living_room_temperature', view_layout: { 'grid-area': 'footer-a' } },
-  { type: 'tile', entity: 'sensor.power_usage', view_layout: { 'grid-area': 'footer-b' } },
-  { type: 'tile', entity: 'light.living_room', view_layout: { 'grid-area': 'footer-c' } },
 ];
 
 const buttonCards: Card[] = [
@@ -99,31 +73,55 @@ const cardModStyle = `ha-card {
 }`;
 
 const cardModCards: Card[] = [
-  { type: 'markdown', content: '## card-mod\nEach card below is styled with its own `card_mod` rules on top of the theme.', card_mod: { style: cardModStyle } },
+  { type: 'markdown', content: '## card-mod / UIX\nEach card below is styled with its own `card_mod` rules on top of the theme. Works the same with card-mod or UIX.', card_mod: { style: cardModStyle } },
   { type: 'entities', title: 'Entities', entities: ['light.living_room', 'switch.porch_plug', 'lock.front_door'], card_mod: { style: cardModStyle } },
   { type: 'glance', title: 'Glance', entities: ['sensor.living_room_temperature', 'sensor.front_door_battery', 'sensor.power_usage'], card_mod: { style: cardModStyle } },
   { type: 'tile', entity: 'climate.living_room', card_mod: { style: `ha-card { box-shadow: 0 0 24px var(--primary-color) !important; }` } },
   { type: 'button', entity: 'light.kitchen', name: 'Kitchen', show_state: true, card_mod: { style: `ha-card { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)) !important; color: white; }` } },
 ];
 
+const heading = (text: string): Card => ({ type: 'heading', heading: text, heading_style: 'subtitle' });
+
+const column = (...cards: Card[]): Card => ({ type: 'vertical-stack', cards });
+
+const homeColumns: Card[] = [
+  column(
+    heading('card-mod / UIX'),
+    cardModCards[3],
+    cardModCards[4],
+    heading('Button Card (hover and press)'),
+    { ...buttonCards[0], layout: 'icon_name_state2nd' },
+    { ...buttonCards[1], layout: 'icon_name_state2nd' }
+  ),
+  column(
+    heading('Mushroom Cards'),
+    mushroomCards[1],
+    mushroomCards[2],
+    heading('Layout Card'),
+    {
+      type: 'markdown',
+      content: 'This page is a Layout Card grid. With Layout Card support on, the theme adds side padding around the grid.',
+    },
+    heading('Standard cards'),
+    tile('climate.living_room'),
+    tile('light.living_room'),
+    tile('lock.front_door'),
+    tile('media_player.living_room_speaker')
+  ),
+  column(heading('Bubble Card'), bubbleCards[1], bubbleCards[2], heading('Stack-in-Card'), stackCards[0]),
+];
+
 export const DEMO_DASHBOARD = {
   views: [
-    { title: 'Home', path: 'home', cards: homeCards },
-    { title: 'Mushroom', path: 'mushroom', cards: mushroomCards },
-    { title: 'Bubble Card', path: 'bubble-card', cards: bubbleCards },
     {
-      title: 'Layout Card',
-      path: 'layout-card',
+      title: 'Home',
+      path: 'home',
       type: 'custom:grid-layout',
       layout: {
-        'grid-template-columns': 'repeat(3, 1fr)',
-        'grid-template-areas': '"header header header" "main main side" "footer-a footer-b footer-c"',
+        'grid-template-columns': 'repeat(auto-fit, minmax(220px, 1fr))',
         'grid-gap': '12px',
       },
-      cards: layoutCards,
+      cards: homeColumns,
     },
-    { title: 'Button Card', path: 'button-card', cards: buttonCards },
-    { title: 'Stack-in-Card', path: 'stack-in-card', cards: stackCards },
-    { title: 'card-mod', path: 'card-mod', cards: cardModCards },
   ],
 };

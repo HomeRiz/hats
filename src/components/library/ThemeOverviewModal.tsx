@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Sliders,
   HardDriveDownload,
+  Download,
 } from 'lucide-react';
 import { ThemeConfig } from '../../types/theme';
 import { sanitizeThemeCss } from '../../services/themeSecurityValidator';
@@ -26,6 +27,8 @@ interface ThemeOverviewModalProps {
   onSelectTheme: (themeId: string) => void;
   onEditTheme: (themeId: string) => void;
   onApplyTheme: (theme: ThemeConfig) => void | Promise<void>;
+  onDownloadTheme?: (theme: ThemeConfig) => void | Promise<void>;
+  standalone?: boolean;
   onUninstallTheme?: (theme: ThemeConfig) => void;
   onDuplicateTheme: (themeId: string) => void;
 }
@@ -38,6 +41,8 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
   onSelectTheme,
   onEditTheme,
   onApplyTheme,
+  onDownloadTheme,
+  standalone = false,
   onUninstallTheme,
   onDuplicateTheme,
 }) => {
@@ -51,17 +56,13 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
     applyTheme(name, vars);
   }, [useLiveRender, theme, applyTheme]);
 
-  useEffect(() => {
-    if (!useLiveRender) return;
-    return () => registerSlot(null);
-  }, [useLiveRender, registerSlot]);
   const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
   const [installing, setInstalling] = useState(false);
 
   const handleInstallClick = async () => {
     setInstalling(true);
     try {
-      await onApplyTheme(theme);
+      await (standalone && onDownloadTheme ? onDownloadTheme(theme) : onApplyTheme(theme));
     } finally {
       setInstalling(false);
     }
@@ -151,7 +152,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-white tracking-tight">{theme.name}</h2>
-                {theme.isInstalled ? (
+                {theme.isInstalled && !standalone ? (
                   <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
                     <CheckCircle2 className="w-3 h-3" />
                     <span>Installed in HA</span>
@@ -228,7 +229,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
                   }`}
                 >
                   {variant.name}
-                  {variant.isInstalled && <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 align-middle" />}
+                  {variant.isInstalled && !standalone && <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 align-middle" />}
                 </button>
               ))}
             </div>
@@ -346,7 +347,7 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-            {theme.isInstalled && onUninstallTheme && (
+            {theme.isInstalled && onUninstallTheme && !standalone && (
               <button
                 onClick={() => {
                   onClose();
@@ -376,8 +377,12 @@ export const ThemeOverviewModal: React.FC<ThemeOverviewModalProps> = ({
               disabled={installing}
               className="flex items-center justify-center gap-2 px-5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait disabled:hover:scale-100"
             >
-              <Zap className="w-4 h-4" />
-              <span>{installing ? 'Installing...' : theme.isInstalled ? 'Apply / Save to HA' : 'Install'}</span>
+              {standalone ? <Download className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+              <span>
+                {standalone
+                  ? installing ? 'Preparing...' : 'Download'
+                  : installing ? 'Installing...' : theme.isInstalled ? 'Apply / Save to HA' : 'Install'}
+              </span>
             </button>
           </div>
         </div>

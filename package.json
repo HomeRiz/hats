@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.1.0",
   "license": "GPL-3.0-or-later",
+  "description": "Home Assistant theme designer: runs as a Home Assistant app or as a standalone desktop app",
+  "author": "HomeRiz",
+  "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +15,13 @@
     "start": "node server/index.js",
     "test": "vitest run",
     "postinstall": "bash scripts/fetch-mock-frontend.sh && bash scripts/fetch-mock-mods.sh || true",
-    "build:mock-frontend-bootstrap": "node scripts/build-mock-frontend-bootstrap.mjs && node scripts/compose-mock-frontend-index.mjs"
+    "build:mock-frontend-bootstrap": "node scripts/build-mock-frontend-bootstrap.mjs && node scripts/compose-mock-frontend-index.mjs",
+    "electron:dev": "electron .",
+    "desktop:prepare": "npm run build:mock-frontend-bootstrap && npm run build",
+    "dist:mac": "npm run desktop:prepare && electron-builder --mac",
+    "dist:win": "npm run desktop:prepare && electron-builder --win",
+    "dist:linux": "npm run desktop:prepare && electron-builder --linux",
+    "build:hosted": "node scripts/build-hosted.mjs"
   },
   "dependencies": {
     "dompurify": "^3.4.16",
@@ -33,11 +42,87 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.4.20",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
     "jsdom": "^30.1.1",
     "postcss": "^8.5.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.2"
+  },
+  "build": {
+    "appId": "io.github.homeriz.hats",
+    "productName": "HATS",
+    "copyright": "HomeRiz",
+    "icon": "electron/icon.png",
+    "directories": {
+      "output": "release"
+    },
+    "asar": false,
+    "files": [
+      "electron/**/*",
+      "server/**/*",
+      "dist/**/*",
+      "bundled/**/*",
+      "translations/**/*",
+      "vendor/**/*",
+      "package.json",
+      "!**/*.test.*",
+      "!**/*.map",
+      "!vendor/mock-frontend/hass_frontend/frontend_es5/**"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "HATS-Setup-${version}-win-${arch}.exe"
+    },
+    "linux": {
+      "category": "Utility",
+      "maintainer": "HomeRiz",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "artifactName": "HATS-${version}-${os}-${arch}.${ext}",
+    "portable": {
+      "artifactName": "HATS-${version}-win-${arch}-portable.exe"
+    }
   }
 }

@@ -69,10 +69,48 @@ describe('generated theme', () => {
     expect(yaml({ 'card-mod': true })).toContain('card-mod-theme');
   });
 
-  it('does not change themes that never chose', () => {
+  it('generates exactly what the switches show for themes that never chose', () => {
     const legacy = generateHomeAssistantThemeYaml(bare(), 'cdn');
     expect(legacy).toContain('card-mod-card');
-    expect(legacy).not.toContain('mush-icon-border-radius');
+    expect(legacy).toContain('mush-icon-border-radius');
+    expect(legacy).toContain('bubble-border-radius');
+    expect(legacy).not.toContain('masonry-view-card-margin');
+  });
+
+  it('does not change anything when a switch is touched without changing it', () => {
+    const untouched = generateHomeAssistantThemeYaml(bare(), 'cdn');
+    const touched = withComponentSupport(bare(), 'card-mod', true);
+    expect(generateHomeAssistantThemeYaml(bare(touched), 'cdn')).toBe(untouched);
+  });
+
+  it('keeps the other cards as they were when one switch is turned off', () => {
+    const touched = withComponentSupport(bare(), 'card-mod', false);
+    const out = generateHomeAssistantThemeYaml(bare(touched), 'cdn');
+    expect(out).toContain('mush-icon-border-radius');
+    expect(out).toContain('bubble-border-radius');
+    expect(out).not.toContain('card-mod-');
+  });
+});
+
+describe('Stack-in-Card and Button Card', () => {
+  const yaml = (components: ThemeConfig['components']) => generateHomeAssistantThemeYaml(bare({ components }), 'cdn');
+
+  it('flattens the cards inside a Stack-in-Card only when it is turned on', () => {
+    const on = yaml({ 'stack-in-card': true });
+    expect(on).toContain(':host(.type-custom-stack-in-card) ha-card > div');
+    expect(on).toContain('--hats-card-background: transparent');
+    expect(on).toContain('background: var(--hats-card-background,');
+    const off = yaml({ 'stack-in-card': false });
+    expect(off).not.toContain('type-custom-stack-in-card');
+    expect(off).not.toContain('--hats-card-background');
+  });
+
+  it('makes the Button Card ripple visible on hover and press when turned on', () => {
+    const on = yaml({ 'button-card': true });
+    expect(on).toContain('button-card-ripple-color:');
+    expect(on).toContain('button-card-ripple-hover-opacity: "0.16"');
+    expect(on).toContain('button-card-ripple-pressed-opacity: "0.32"');
+    expect(yaml({ 'button-card': false })).not.toContain('button-card-ripple');
   });
 });
 

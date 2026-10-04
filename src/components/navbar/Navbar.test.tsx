@@ -6,7 +6,7 @@ import { defaultGlassTheme } from '../../presets/defaultThemes';
 
 afterEach(cleanup);
 
-function renderNavbar(needsSetup: boolean, onOpenDoctor = vi.fn()) {
+function renderNavbar(needsSetup: boolean, onOpenDoctor = vi.fn(), standalone = false) {
   render(
     <Navbar
       activeTheme={defaultGlassTheme}
@@ -15,10 +15,12 @@ function renderNavbar(needsSetup: boolean, onOpenDoctor = vi.fn()) {
       previewMode="dark"
       setPreviewMode={() => {}}
       onOpenExport={() => {}}
+      onOpenImport={() => {}}
       onOpenSubmitPr={() => {}}
       onNewTheme={() => {}}
       onOpenDoctor={onOpenDoctor}
       needsSetup={needsSetup}
+      standalone={standalone}
     />
   );
   return onOpenDoctor;
@@ -35,5 +37,17 @@ describe('Navbar setup button', () => {
     const onOpenDoctor = renderNavbar(true);
     fireEvent.click(screen.getByText('Setup Needed'));
     expect(onOpenDoctor).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Navbar pop-out button', () => {
+  it('opens HATS in a new tab inside Home Assistant', () => {
+    renderNavbar(false);
+    expect(screen.getByTitle('Open HATS in a Full New Browser Tab')).toBeTruthy();
+  });
+
+  it('is not shown in the standalone app', () => {
+    renderNavbar(false, vi.fn(), true);
+    expect(screen.queryByTitle('Open HATS in a Full New Browser Tab')).toBeNull();
   });
 });

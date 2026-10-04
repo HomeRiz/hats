@@ -133,7 +133,7 @@ ha-card {
         <div className="flex items-center justify-between">
           <label 
             className="font-semibold text-slate-300 flex items-center gap-1.5"
-            title="Pre-composed card-mod CSS snippets for keyframe animations, fonts, and sub-card styling"
+            title="Pre-composed UIX / card-mod CSS snippets for keyframe animations, fonts, and sub-card styling"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>Curated CSS Snippets</span>
@@ -235,10 +235,10 @@ ha-card {
         <div className="flex items-center justify-between">
           <div 
             className="flex items-center gap-1.5 font-semibold text-slate-300"
-            title="Custom CSS injected via card-mod into Home Assistant Lovelace card shadow roots"
+            title="Custom CSS injected via UIX / card-mod into Home Assistant Lovelace card shadow roots"
           >
             <Code className="w-3.5 h-3.5 text-blue-400" />
-            <span>Custom card-mod Injected CSS</span>
+            <span>Custom UIX / card-mod Injected CSS</span>
           </div>
 
           {theme.customCss && theme.customCss.trim() && (

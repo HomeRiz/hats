@@ -5,6 +5,7 @@ import {
   Users,
   Code,
   Download,
+  Upload,
   GitPullRequest,
   Sun,
   Moon,
@@ -25,10 +26,13 @@ interface NavbarProps {
   previewMode: 'dark' | 'light';
   setPreviewMode: (mode: 'dark' | 'light') => void;
   onOpenExport: () => void;
+  onOpenImport: () => void;
   onOpenSubmitPr: () => void;
   onNewTheme: () => void;
   onOpenDoctor: () => void;
   needsSetup?: boolean;
+  previewOnly?: boolean;
+  standalone?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -40,10 +44,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   previewMode,
   setPreviewMode,
   onOpenExport,
+  onOpenImport,
   onOpenSubmitPr,
   onNewTheme,
   onOpenDoctor,
   needsSetup = false,
+  previewOnly = false,
+  standalone = false,
 }) => {
   const handleOpenNewTab = () => {
     const targetUrl = window.location.href;
@@ -115,6 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>Themes</span>
         </button>
 
+        {!previewOnly && (
         <button
           onClick={() => setActiveTab('community')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all ${
@@ -126,6 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Users className="w-3.5 h-3.5" />
           <span>Community & PR</span>
         </button>
+        )}
 
         <button
           onClick={() => setActiveTab('code')}
@@ -161,6 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {previewMode === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
         </button>
 
+        {!standalone && (
         <button
           onClick={handleOpenNewTab}
           title="Open HATS in a Full New Browser Tab"
@@ -168,6 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <ExternalLink className="w-4 h-4 text-sky-400" />
         </button>
+        )}
 
         <button
           onClick={onNewTheme}
@@ -177,6 +188,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>New Theme</span>
         </button>
 
+        {!previewOnly && (
         <button
           onClick={onOpenSubmitPr}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600/90 hover:bg-purple-600 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-purple-500/25"
@@ -184,6 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <GitPullRequest className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Send PR / Issue</span>
         </button>
+        )}
 
         <button
           onClick={onOpenExport}
@@ -191,6 +204,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Download className="w-3.5 h-3.5" />
           <span>Export</span>
+        </button>
+
+        <button
+          onClick={onOpenImport}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+        >
+          <Upload className="w-3.5 h-3.5" />
+          <span>Import</span>
         </button>
       </div>
     </header>

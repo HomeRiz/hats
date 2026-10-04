@@ -17,7 +17,7 @@ export const ComponentsEditor: React.FC<ComponentsEditorProps> = ({ theme, onCha
         <Puzzle className="w-4 h-4 mt-0.5 text-purple-400 shrink-0" />
         <p>
           Choose which custom cards this theme supports. Turned on, the theme styles that card and lists it as a requirement.
-          Turned off, the theme leaves it alone.
+          Turned off, the theme leaves it alone. The Home tab of the preview shows one example of each, so you can see every change there.
         </p>
       </div>
 

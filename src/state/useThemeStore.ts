@@ -5,6 +5,7 @@ import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
 import { processBackgroundImage } from '../services/imageProcessor';
 import { mergeSyncedThemes } from '../services/themeSync';
 import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
+import { IS_HOSTED } from '../runtime';
 
 const STORAGE_KEY_CUSTOM = 'hats_custom_themes_v2';
 const STORAGE_KEY_ACTIVE = 'hats_active_theme_id_v2';
@@ -98,6 +99,7 @@ export function useThemeStore() {
   const activeTheme = themes.find(t => t.id === activeThemeId) || themes[0] || defaultGlassTheme;
 
   const syncInstalledThemesFromHa = useCallback(async () => {
+    if (IS_HOSTED) return;
     const syncStartedAt = Date.now();
     try {
       const installed = await fetchInstalledHaThemes();

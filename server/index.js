@@ -8,12 +8,14 @@ import crypto from 'crypto';
 import { submitThemePullRequest, submitThemeIssue, TARGET_REPO, isPlausibleToken } from './github.js';
 import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
+import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.INGRESS_PORT || 4287;
+const STANDALONE = process.env.HATS_STANDALONE === 'true';
 
 app.disable('x-powered-by');
 
@@ -55,6 +57,8 @@ const HACS_COMMUNITY_DIR = path.join(CONFIG_DIR, 'www', 'community');
 const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs');
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
 const HACS_REPOSITORIES_FILE = path.join(CONFIG_DIR, '.storage', 'hacs.repositories');
+const UIX_COMPONENT_DIR = path.join(CONFIG_DIR, 'custom_components', 'uix');
+const CORE_CONFIG_ENTRIES = path.join(CONFIG_DIR, '.storage', 'core.config_entries');
 const SUPERVISOR_TOKEN = process.env.SUPERVISOR_TOKEN;
 const SUPERVISOR_ROOT = process.env.HATS_SUPERVISOR_URL || 'http://supervisor';
 
@@ -445,11 +449,12 @@ if (process.env.HATS_ENABLE_LIVE_PREVIEW === 'true') {
 }
 
 app.get('/api/ha/status', (req, res) => {
-  const isAddon = fs.existsSync(CONFIG_DIR) || Boolean(SUPERVISOR_TOKEN);
+  const isAddon = !STANDALONE && (fs.existsSync(CONFIG_DIR) || Boolean(SUPERVISOR_TOKEN));
   const themesExists = fs.existsSync(THEMES_DIR);
 
   res.json({
     isAddon,
+    standalone: STANDALONE,
     configDir: CONFIG_DIR,
     themesDir: THEMES_DIR,
     themesExists,
@@ -514,7 +519,21 @@ app.get('/api/ha/diagnostics', (req, res) => {
     }
 
     const hasCardMod = hasCardModInConfig || hasCardModInResources || cardModOnDisk;
-    const cardModNeedsConfig = (cardModOnDisk || hasCardModInResources) && !hasCardModInConfig;
+    const uixOnDisk = fs.existsSync(UIX_COMPONENT_DIR);
+    let uixConfigured = false;
+    if (fs.existsSync(CORE_CONFIG_ENTRIES)) {
+      try {
+        uixConfigured = hasUixConfigEntry(fs.readFileSync(CORE_CONFIG_ENTRIES, 'utf8'));
+      } catch (err) {
+        console.debug('Could not read core.config_entries:', err);
+      }
+    }
+    const styling = detectStylingEngine({
+      cardModActive: hasCardModInConfig || hasCardModInResources,
+      uixOnDisk,
+      uixConfigured,
+    });
+    const cardModNeedsConfig = (cardModOnDisk || hasCardModInResources) && !hasCardModInConfig && !styling.uixActive;
     const themesExists = fs.existsSync(THEMES_DIR);
     let themesCount = 0;
     if (themesExists) {
@@ -532,7 +551,15 @@ app.get('/api/ha/diagnostics', (req, res) => {
       });
     }
 
-    if (cardModNeedsConfig) {
+    if (styling.conflict) {
+      issues.push({
+        id: 'styling_engine_conflict',
+        severity: 'warning',
+        title: 'card-mod and UIX Are Both Active',
+        description: 'UIX replaces card-mod and the two should not run together. Uninstall card-mod (and remove it from extra_module_url), then restart Home Assistant.',
+        canAutoFix: false,
+      });
+    } else if (cardModNeedsConfig) {
       issues.push({
         id: 'card_mod_needs_config',
         severity: 'warning',
@@ -540,12 +567,20 @@ app.get('/api/ha/diagnostics', (req, res) => {
         description: `card-mod was detected! Auto-Fix will register '${exactUrl}' in configuration.yaml to activate it.`,
         canAutoFix: true,
       });
-    } else if (!hasCardMod) {
+    } else if (styling.uixNeedsSetup) {
+      issues.push({
+        id: 'uix_needs_setup',
+        severity: 'warning',
+        title: 'UIX Installed but Not Set Up',
+        description: "UIX is on disk. Add it under Settings > Devices & services > Add integration, then refresh the page.",
+        canAutoFix: false,
+      });
+    } else if (!styling.hasStylingEngine) {
       issues.push({
         id: 'missing_card_mod',
         severity: 'warning',
-        title: 'card-mod Not Installed',
-        description: 'Advanced glassmorphism cards and custom CSS require lovelace-card-mod. Install via HACS first.',
+        title: 'No Styling Engine Installed',
+        description: 'Advanced glassmorphism cards and custom CSS need either UIX or lovelace-card-mod. Install one via HACS first.',
         canAutoFix: false,
       });
     }
@@ -555,6 +590,11 @@ app.get('/api/ha/diagnostics', (req, res) => {
       hasFrontend,
       hasThemesDirective,
       hasCardMod,
+      stylingEngine: styling.engine,
+      hasUix: styling.uixActive,
+      uixOnDisk,
+      uixNeedsSetup: styling.uixNeedsSetup,
+      stylingConflict: styling.conflict,
       cardModOnDisk,
       cardModHacstag,
       cardModExactUrl: exactUrl,
@@ -568,7 +608,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
       detectedCards,
       issues,
       readyForThemes: hasThemesDirective,
-      readyForGlassmorphism: hasThemesDirective && (hasCardModInConfig || hasCardModInResources),
+      readyForGlassmorphism: hasThemesDirective && styling.hasStylingEngine,
     });
   } catch (err) {
     console.error('Failed to run diagnostics:', err);
@@ -578,7 +618,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
 
 app.post('/api/ha/fix-config', async (req, res) => {
   try {
-    const { addThemes = true, addCardMod = true, exactUrl } = req.body || {};
+    const { addThemes = true, addCardMod = true, removeCardMod = false, exactUrl } = req.body || {};
 
     if (!fs.existsSync(CONFIG_DIR)) {
       return res.status(400).json({ error: 'Config directory not found (/config)' });
@@ -599,11 +639,11 @@ app.post('/api/ha/fix-config', async (req, res) => {
       cardModUrl = resolved.exactUrl;
     }
     const sanitizedUrl = String(cardModUrl || '').trim();
-    if (addCardMod && !CARD_MOD_URL_RE.test(sanitizedUrl)) {
+    if (addCardMod && !removeCardMod && !CARD_MOD_URL_RE.test(sanitizedUrl)) {
       return res.status(400).json({ error: 'Invalid card-mod URL. Only /hacsfiles/lovelace-card-mod/card-mod.js is accepted.' });
     }
 
-    let modified = content;
+    let modified = removeCardMod ? removeCardModFromConfig(content) : content;
     const hasFrontend = /^frontend\s*:/m.test(modified);
 
     if (hasFrontend) {
@@ -620,7 +660,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
           newFrontendContent = `\n  themes: !include_dir_merge_named themes${newFrontendContent}`;
         }
 
-        if (addCardMod && !/card-mod\.js/i.test(newFrontendContent)) {
+        if (addCardMod && !removeCardMod && !/card-mod\.js/i.test(newFrontendContent)) {
           if (/extra_module_url\s*:/m.test(newFrontendContent)) {
             newFrontendContent = newFrontendContent.replace(
               /(extra_module_url\s*:\s*\n)/m,
@@ -636,7 +676,8 @@ app.post('/api/ha/fix-config', async (req, res) => {
         modified = `${before}frontend:${newFrontendContent}${after}`;
       }
     } else {
-      const newBlock = `\n\n# Loaded by HATS (Home Assistant Theme Store)\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${sanitizedUrl}\n`;
+      const moduleLines = addCardMod && !removeCardMod ? `\n  extra_module_url:\n    - ${sanitizedUrl}` : '';
+      const newBlock = `\n\n# Loaded by HATS (Home Assistant Theme Store)\nfrontend:\n  themes: !include_dir_merge_named themes${moduleLines}\n`;
       modified = `${modified.trimEnd()}${newBlock}`;
     }
 
@@ -666,7 +707,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
     res.json({
       success: true,
       reloaded,
-      message: 'configuration.yaml updated with theme support and card-mod extra_module_url!',
+      message: removeCardMod ? 'card-mod removed from configuration.yaml. Restart Home Assistant to finish switching to UIX.' : 'configuration.yaml updated with theme support and card-mod extra_module_url!',
     });
   } catch (err) {
     console.error('Failed to fix configuration.yaml:', err);
@@ -1040,8 +1081,8 @@ app.get('/*splat', (req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`🎩 HATS (Home Assistant Theme Store) running on Ingress port ${PORT}`);
+const server = app.listen(PORT, STANDALONE ? '127.0.0.1' : undefined, () => {
+  console.log(`🎩 HATS (Home Assistant Theme Store) running on ${STANDALONE ? 'localhost' : 'Ingress'} port ${PORT}`);
   console.log(`Config Directory: ${CONFIG_DIR}`);
 });
 

@@ -20,6 +20,7 @@ import { GithubIcon } from './icons/GithubIcon';
 import { CustomComponentsPanel } from './CustomComponentsPanel';
 import { ThemeConfig } from '../../types/theme';
 import { copyText } from '../../utils/copyText';
+import { useStylingEngine, UIX_REPO_URL } from '../../state/useStylingEngine';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -42,6 +43,9 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const [diagnostics, setDiagnostics] = useState<DiagnosticsResult | null>(null);
   const [fixMessage, setFixMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [removingCardMod, setRemovingCardMod] = useState(false);
+  const { engine, setEngine } = useStylingEngine(diagnostics?.stylingEngine);
+  const useUix = engine === 'uix';
 
   const [githubStatus, setGithubStatus] = useState<GithubStatus>({ tokenConfigured: false, targetRepo: 'HomeRiz/hats', canSaveToken: false });
   const [tokenInput, setTokenInput] = useState('');
@@ -106,12 +110,28 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     setFixMessage(null);
     const res = await fixHaConfiguration({ 
       addThemes: true, 
-      addCardMod: true,
+      addCardMod: !useUix,
       exactUrl: exactCardModUrl
     });
     setFixing(false);
     if (res.success) {
-      setFixMessage(`✅ configuration.yaml successfully updated with live HA module: ${exactCardModUrl}`);
+      setFixMessage(useUix
+        ? '✅ configuration.yaml successfully updated with the themes directive.'
+        : `✅ configuration.yaml successfully updated with live HA module: ${exactCardModUrl}`);
+      fetchDiagnostics();
+      if (onConfigFixed) onConfigFixed();
+    } else {
+      setFixMessage(`❌ ${res.message}`);
+    }
+  };
+
+  const handleRemoveCardMod = async () => {
+    setRemovingCardMod(true);
+    setFixMessage(null);
+    const res = await fixHaConfiguration({ addThemes: false, addCardMod: false, removeCardMod: true });
+    setRemovingCardMod(false);
+    if (res.success) {
+      setFixMessage(`✅ ${res.message}`);
       fetchDiagnostics();
       if (onConfigFixed) onConfigFixed();
     } else {
@@ -132,7 +152,9 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
     }
   };
 
-  const yamlSnippet = `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${exactCardModUrl}`;
+  const yamlSnippet = useUix
+    ? `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes`
+    : `# Load frontend themes from themes folder\nfrontend:\n  themes: !include_dir_merge_named themes\n  extra_module_url:\n    - ${exactCardModUrl}`;
   const themesDirectiveOnly = `frontend:\n  themes: !include_dir_merge_named themes`;
   const cardModDirectiveOnly = `frontend:\n  extra_module_url:\n    - ${exactCardModUrl}`;
 
@@ -146,7 +168,9 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 
   const isCardModOnDisk = Boolean(diagnostics?.cardModOnDisk);
   const isCardModInConfig = Boolean(diagnostics?.hasCardModInConfig);
-  const isCardModNeedsConfig = Boolean(diagnostics?.cardModNeedsConfig);
+  const isCardModNeedsConfig = Boolean(diagnostics?.cardModNeedsConfig) && !useUix;
+  const isUixActive = Boolean(diagnostics?.hasUix);
+  const isUixOnDisk = Boolean(diagnostics?.uixOnDisk);
 
   return (
     <div 
@@ -226,6 +250,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               isActive={isOpen && activeTab === 'custom-components'}
               diagnostics={diagnostics}
               isCardModInstalled={Boolean(isCardModOnDisk || isCardModInConfig)}
+              isUixInstalled={isUixActive || isUixOnDisk}
               getHacsUrl={getHacsUrl}
             />
           </div>
@@ -240,6 +265,40 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               {fixMessage}
             </div>
           )}
+
+          {diagnostics?.stylingConflict && (
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 text-xs text-amber-200 leading-relaxed">
+              <strong>UIX and card-mod are both active.</strong> Only one of them should run at a time.
+              To keep UIX, uninstall card-mod in HACS, remove it from <code className="text-amber-100">extra_module_url</code>, then restart Home Assistant.
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-blue-400" />
+              Styling Engine
+            </h3>
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+              <div className="inline-flex rounded-lg border border-slate-700 overflow-hidden" role="group" aria-label="Styling engine">
+                {([['uix', 'UIX'], ['card-mod', 'card-mod']] as const).map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    aria-pressed={engine === id}
+                    onClick={() => setEngine(id)}
+                    className={`px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      engine === id ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Your themes work with both. Only one can run at a time, so pick the one you use and HATS will check and configure that one.
+              </p>
+            </div>
+          </div>
 
           {isCardModNeedsConfig && (
             <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 space-y-2 shadow-lg shadow-amber-950/30">
@@ -291,6 +350,72 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               </span>
             </div>
 
+            {useUix ? (
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col gap-3">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  {isUixActive ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                  ) : (
+                    <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  )}
+                  <div>
+                    <div className="font-semibold text-slate-200 text-sm">UIX (UI eXtension)</div>
+                    <p className="text-slate-400 mt-0.5 leading-relaxed">
+                      {isUixActive
+                        ? 'Set up in Home Assistant. It loads itself, so no extra_module_url entry is needed. Glassmorphism, backdrop-blur, and shaders will render.'
+                        : isUixOnDisk
+                        ? 'Installed, but not added yet. Go to Settings, Devices & services, Add integration, pick UIX, then refresh the page.'
+                        : 'Required for liquid glassmorphism, blur effects, and card animations. Install it from HACS, add it under Devices & services, then refresh.'}
+                    </p>
+                  </div>
+                </div>
+                <span className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase shrink-0 ${
+                  isUixActive
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    : isUixOnDisk
+                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                }`}>
+                  {isUixActive ? 'Active' : isUixOnDisk ? 'Set up needed' : 'Not Installed'}
+                </span>
+              </div>
+
+              {!isUixOnDisk && (
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                  <span className="text-[11px] text-slate-400">
+                    Add it as a custom repository in HACS (category Integration) if it is not listed.
+                  </span>
+                  <a
+                    href={UIX_REPO_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all shrink-0"
+                  >
+                    <DownloadCloud className="w-3.5 h-3.5" />
+                    <span>UIX on GitHub</span>
+                    <ExternalLink className="w-3 h-3 opacity-70" />
+                  </a>
+                </div>
+              )}
+
+              {isCardModInConfig && (
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                  <span className="text-[11px] text-amber-300/90 leading-relaxed">
+                    card-mod is still registered in configuration.yaml. UIX asks you to remove it first (a backup is made). You also need to uninstall it in HACS and restart Home Assistant.
+                  </span>
+                  <button
+                    onClick={handleRemoveCardMod}
+                    disabled={removingCardMod}
+                    className="px-3 py-1.5 rounded-lg bg-amber-600/90 hover:bg-amber-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all shrink-0 disabled:opacity-50"
+                  >
+                    <Wrench className={`w-3.5 h-3.5 ${removingCardMod ? 'animate-spin' : ''}`} />
+                    <span>{removingCardMod ? 'Removing...' : 'Remove card-mod from config'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+            ) : (
             <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col gap-3">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
@@ -351,6 +476,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 </div>
               )}
             </div>
+            )}
 
             <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start justify-between gap-4">
               <div className="flex items-start gap-3">
@@ -408,7 +534,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
             </div>
           </div>
 
-          {(!diagnostics?.hasThemesDirective || isCardModNeedsConfig || !isCardModInConfig) && (
+          {(!diagnostics?.hasThemesDirective || isCardModNeedsConfig || (!useUix && !isCardModInConfig)) && (
             <div className="p-4 rounded-xl bg-gradient-to-r from-blue-900/40 via-indigo-900/40 to-purple-900/40 border border-indigo-500/50 space-y-3 shadow-lg shadow-indigo-950/40">
               <div className="flex items-center justify-between gap-4">
                 <div>
@@ -417,7 +543,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                     1-Click Auto-Configuration Bridge
                   </h4>
                   <p className="text-slate-300 text-xs mt-0.5 leading-relaxed">
-                    Automatically inject missing theme directives and <code className="text-blue-300">extra_module_url</code> into <code className="text-blue-300">configuration.yaml</code> with automatic backup.
+                    Automatically inject missing theme directives{useUix ? '' : <> and <code className="text-blue-300">extra_module_url</code></>} into <code className="text-blue-300">configuration.yaml</code> with automatic backup.
                   </p>
                 </div>
                 <button
@@ -447,6 +573,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                   <Copy className="w-2.5 h-2.5" />
                   <span>Copy Themes Only</span>
                 </button>
+                {!useUix && (
                 <button
                   onClick={() => handleCopyYaml(cardModDirectiveOnly)}
                   title="Copy only the card-mod extra_module_url directive"
@@ -455,6 +582,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                   <Copy className="w-2.5 h-2.5" />
                   <span>Copy card-mod Only</span>
                 </button>
+                )}
                 <button
                   onClick={() => handleCopyYaml(yamlSnippet)}
                   title="Copy entire frontend YAML block"

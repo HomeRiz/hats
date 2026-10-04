@@ -107,6 +107,8 @@ export interface ThemeConfig {
   background: BackgroundSettings;
   customCss?: string;
   customSvgOverlay?: string;
+  viewSnippet?: string;
+  rawTheme?: { source: string; data: Record<string, unknown> };
   dark: {
     primaryBackground: string;
     secondaryBackground: string;

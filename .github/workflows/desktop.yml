@@ -1,0 +1,45 @@
+name: Desktop builds
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS (Apple silicon and Intel)
+            os: macos-latest
+            script: dist:mac
+          - name: Windows (x64)
+            os: windows-latest
+            script: dist:win
+          - name: Linux (x64)
+            os: ubuntu-latest
+            script: dist:linux
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - name: Make sure unzip is available
+        if: runner.os == 'Windows'
+        shell: bash
+        run: command -v unzip || choco install unzip -y --no-progress
+      - run: npm ci
+      - run: npm run ${{ matrix.script }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: hats-${{ runner.os }}
+          path: |
+            release/HATS-*
+          if-no-files-found: error

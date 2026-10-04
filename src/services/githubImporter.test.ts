@@ -141,3 +141,101 @@ describe('importThemesFromGitHubRepo', () => {
     expect(groupThemesIntoPacks(result.themes)).toHaveLength(1);
   });
 });
+
+describe('importThemesFromGitHubRepo preview options', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const respond = (tree: unknown[], files: Record<string, string>, calls: string[]) =>
+    vi.fn((url: string) => {
+      calls.push(url);
+      if (url.includes('git/trees')) {
+        return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ tree }) } as Response);
+      }
+      const hit = Object.keys(files).find((p) => url.endsWith(p));
+      return Promise.resolve(
+        hit ? ({ ok: true, status: 200, text: () => Promise.resolve(files[hit]) } as Response) : ({ ok: false, status: 404 } as Response),
+      );
+    });
+
+  it('reads the requested branch from the tree and the raw files', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal('fetch', respond([{ type: 'blob', path: 'themes/a.yaml' }], { 'themes/a.yaml': 'a:\n  primary-color: "#111"\n' }, calls));
+
+    await importThemesFromGitHubRepo('owner/repo', { branch: 'dev' });
+
+    expect(calls[0]).toContain('/git/trees/dev?recursive=1');
+    expect(calls[1]).toBe('https://raw.githubusercontent.com/owner/repo/dev/themes/a.yaml');
+  });
+
+  it('takes the branch from a /tree/ URL', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal('fetch', respond([{ type: 'blob', path: 'themes/a.yaml' }], { 'themes/a.yaml': 'a:\n  primary-color: "#111"\n' }, calls));
+
+    await importThemesFromGitHubRepo('https://github.com/owner/repo/tree/beta');
+
+    expect(calls[0]).toContain('/git/trees/beta?recursive=1');
+  });
+
+  it('prefers the themes folder over other YAML files in the repo', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      respond(
+        [
+          { type: 'blob', path: 'examples/other.yaml' },
+          { type: 'blob', path: 'themes/real.yaml' },
+        ],
+        { 'themes/real.yaml': 'real:\n  primary-color: "#222"\n', 'examples/other.yaml': 'other:\n  primary-color: "#333"\n' },
+        calls,
+      ),
+    );
+
+    const result = await importThemesFromGitHubRepo('owner/repo');
+
+    expect(result.themes.map((t) => t.name)).toEqual(['real']);
+  });
+
+  it('keeps the theme exactly as published when asked', async () => {
+    const calls: string[] = [];
+    const yamlText = 'raw:\n  primary-color: "#444"\n  some-unmodelled-var: 12px\n  card-mod-card: |\n    ha-card { color: red; }\n';
+    vi.stubGlobal('fetch', respond([{ type: 'blob', path: 'themes/raw.yaml' }], { 'themes/raw.yaml': yamlText }, calls));
+
+    const kept = await importThemesFromGitHubRepo('owner/repo', { keepRaw: true });
+    expect(kept.themes[0].rawTheme?.source).toBe('owner/repo');
+    expect(kept.themes[0].rawTheme?.data['some-unmodelled-var']).toBe('12px');
+
+    const plain = await importThemesFromGitHubRepo('owner/repo');
+    expect(plain.themes[0].rawTheme).toBeUndefined();
+  });
+
+  it('falls back to the usual HACS file locations when the API is rate limited', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) => {
+        calls.push(url);
+        if (url.includes('git/trees')) return Promise.resolve({ ok: false, status: 403 } as Response);
+        if (url.endsWith('themes/repo.yaml')) {
+          return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('repo:\n  primary-color: "#555"\n') } as Response);
+        }
+        return Promise.resolve({ ok: false, status: 404 } as Response);
+      }),
+    );
+
+    const result = await importThemesFromGitHubRepo('owner/repo');
+
+    expect(result.success).toBe(true);
+    expect(result.themes[0].name).toBe('repo');
+  });
+
+  it('reports the rate limit when nothing can be guessed', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false, status: 403 } as Response)));
+
+    const result = await importThemesFromGitHubRepo('owner/repo');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('rate limit');
+  });
+});
