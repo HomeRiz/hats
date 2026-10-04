@@ -9,6 +9,7 @@ import { submitThemePullRequest, submitThemeIssue, TARGET_REPO, isPlausibleToken
 import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
+import { isLocalHost } from './hostGuard.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,13 @@ const PORT = process.env.INGRESS_PORT || 4287;
 const STANDALONE = process.env.HATS_STANDALONE === 'true';
 
 app.disable('x-powered-by');
+
+if (STANDALONE) {
+  app.use((req, res, next) => {
+    if (isLocalHost(req.headers.host, PORT)) return next();
+    res.status(403).json({ error: 'Forbidden: unexpected Host header' });
+  });
+}
 
 const INGRESS_GATEWAY = process.env.HATS_TRUSTED_INGRESS_IP || '172.30.32.2';
 app.use((req, res, next) => {

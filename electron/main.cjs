@@ -3,6 +3,7 @@ const fs = require('fs');
 const net = require('net');
 const path = require('path');
 const { pathToFileURL } = require('url');
+const { isSameOrigin } = require('./navigation.cjs');
 
 const PREFERRED_PORT = 47287;
 const HOST = '127.0.0.1';
@@ -78,7 +79,7 @@ function createWindow(port) {
     return { action: 'deny' };
   });
   win.webContents.on('will-navigate', (event, url) => {
-    if (!url.startsWith(origin)) {
+    if (!isSameOrigin(url, origin)) {
       event.preventDefault();
       if (/^https?:/i.test(url)) shell.openExternal(url);
     }
