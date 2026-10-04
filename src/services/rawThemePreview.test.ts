@@ -28,7 +28,7 @@ describe('parseRawThemes', () => {
 
   it('returns nothing for invalid or oversized input', () => {
     expect(parseRawThemes('a: [unclosed')).toEqual([]);
-    expect(parseRawThemes('x'.repeat(600 * 1024))).toEqual([]);
+    expect(parseRawThemes('x'.repeat(5 * 1024 * 1024))).toEqual([]);
     expect(parseRawThemes('- a\n- b')).toEqual([]);
   });
 });

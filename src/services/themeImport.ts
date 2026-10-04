@@ -40,7 +40,9 @@ export function validateSnippet(text: string): string | null {
 
 export function importThemeFiles(input: ThemeImportInput): ThemeImportResult {
   if (!input.yamlText.trim()) return { ok: false, error: 'Choose or paste the theme YAML first.' };
-  if (input.yamlText.length > MAX_THEME_YAML_BYTES) return { ok: false, error: 'The theme YAML is larger than 512 KB.' };
+  if (input.yamlText.length > MAX_THEME_YAML_BYTES) {
+    return { ok: false, error: `The theme YAML is larger than ${MAX_THEME_YAML_BYTES / (1024 * 1024)} MB.` };
+  }
 
   const snippet = input.snippetText?.trim();
   if (snippet) {

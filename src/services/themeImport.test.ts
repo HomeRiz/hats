@@ -30,7 +30,7 @@ describe('importThemeFiles', () => {
   it('reports a clear error instead of importing nothing', () => {
     expect(importThemeFiles({ yamlText: '   ' })).toEqual({ ok: false, error: 'Choose or paste the theme YAML first.' });
     expect(importThemeFiles({ yamlText: 'just text' })).toMatchObject({ ok: false });
-    expect(importThemeFiles({ yamlText: 'x'.repeat(600 * 1024) })).toEqual({ ok: false, error: 'The theme YAML is larger than 512 KB.' });
+    expect(importThemeFiles({ yamlText: 'x'.repeat(5 * 1024 * 1024) })).toEqual({ ok: false, error: 'The theme YAML is larger than 4 MB.' });
   });
 
   it('refuses a broken snippet before touching the theme', () => {

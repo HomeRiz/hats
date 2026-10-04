@@ -8,6 +8,20 @@ export function loadThemeYaml(text) {
   return yaml.load(text, { schema: THEME_SCHEMA });
 }
 
+const isSetting = (value) => typeof value === 'string' || typeof value === 'number';
+
+export function looksLikeTheme(data) {
+  return Boolean(data) && typeof data === 'object' && !Array.isArray(data);
+}
+
+export function hasThemeSettings(data) {
+  if (!looksLikeTheme(data)) return false;
+  if (Object.values(data).some(isSetting)) return true;
+  const modes = data.modes;
+  if (!modes || typeof modes !== 'object') return false;
+  return Object.values(modes).some((mode) => mode && typeof mode === 'object' && Object.values(mode).some(isSetting));
+}
+
 function resolveValue(value, lookup) {
   if (typeof value === 'number') return String(value);
   if (typeof value !== 'string') return undefined;

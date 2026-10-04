@@ -2,7 +2,7 @@ import { ThemeConfig } from '../types/theme';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
 import { detectRequiresCardMod } from './themeRequirementDetector';
-import { loadThemeYaml, readThemeColors, fallbackGradient } from '../../server/themeValues.js';
+import { loadThemeYaml, readThemeColors, fallbackGradient, looksLikeTheme } from '../../server/themeValues.js';
 
 export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
   try {
@@ -14,7 +14,7 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
     const themes: ThemeConfig[] = [];
 
     for (const [themeName, themeData] of Object.entries(doc)) {
-      if (!themeData || typeof themeData !== 'object') continue;
+      if (!looksLikeTheme(themeData)) continue;
 
       const colors = readThemeColors(themeData);
       const primary = colors.primary || '#0A84FF';

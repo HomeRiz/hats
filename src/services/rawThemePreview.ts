@@ -1,11 +1,11 @@
-import { loadThemeYaml } from '../../server/themeValues.js';
+import { loadThemeYaml, looksLikeTheme } from '../../server/themeValues.js';
 
 export interface RawThemeEntry {
   name: string;
   data: Record<string, unknown>;
 }
 
-export const MAX_THEME_YAML_BYTES = 512 * 1024;
+export const MAX_THEME_YAML_BYTES = 4 * 1024 * 1024;
 
 export function parseRawThemes(yamlText: string): RawThemeEntry[] {
   if (typeof yamlText !== 'string' || yamlText.length > MAX_THEME_YAML_BYTES) return [];
@@ -17,7 +17,7 @@ export function parseRawThemes(yamlText: string): RawThemeEntry[] {
   }
   if (!doc || typeof doc !== 'object' || Array.isArray(doc)) return [];
   return Object.entries(doc as Record<string, unknown>)
-    .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+    .filter(([, value]) => looksLikeTheme(value))
     .map(([name, data]) => ({ name, data: data as Record<string, unknown> }));
 }
 

@@ -15,5 +15,7 @@ export interface ThemeColors {
 }
 
 export function loadThemeYaml(text: string): unknown;
+export function looksLikeTheme(data: unknown): boolean;
+export function hasThemeSettings(data: unknown): boolean;
 export function readThemeColors(themeData: Record<string, any>): ThemeColors;
 export function fallbackGradient(colors: ThemeColors): string | undefined;

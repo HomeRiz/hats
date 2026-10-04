@@ -141,6 +141,7 @@ export async function importThemesFromGitHubRepo(repoInput: string, options: Imp
       if (item.type !== 'blob') return false;
       if (typeof item.size === 'number' && item.size > MAX_THEME_YAML_BYTES) return false;
       const path = (item.path as string).toLowerCase();
+      if (path.split('/').some((segment) => segment.startsWith('.'))) return false;
       return (
         (path.endsWith('.yaml') || path.endsWith('.yml')) &&
         !path.includes('hacs.json') &&

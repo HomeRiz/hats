@@ -239,3 +239,49 @@ describe('importThemesFromGitHubRepo preview options', () => {
     expect(result.message).toContain('rate limit');
   });
 });
+
+describe('importThemesFromGitHubRepo file selection', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const stubRepo = (tree: object[], files: Record<string, string>) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) => {
+        if (url.includes('git/trees')) return Promise.resolve({ ok: true, json: () => Promise.resolve({ tree }) } as Response);
+        const file = Object.keys(files).find((path) => url.endsWith(`/${path}`));
+        return Promise.resolve(
+          file ? ({ ok: true, text: () => Promise.resolve(files[file]) } as Response) : ({ ok: false, status: 404 } as Response)
+        );
+      })
+    );
+  };
+
+  it('imports a theme file that is larger than 512 KB, like one with an embedded background', async () => {
+    const big = `big-theme:\n  primary-color: "#123456"\n  background-image: "url('data:image/jpeg;base64,${'A'.repeat(600 * 1024)}')"\n`;
+    stubRepo([{ type: 'blob', path: 'themes/big.yaml', size: big.length }], { 'themes/big.yaml': big });
+    const result = await importThemesFromGitHubRepo('owner/big', { keepRaw: true });
+    expect(result.success).toBe(true);
+    expect(result.themes[0].name).toBe('big-theme');
+    expect(result.themes[0].rawTheme?.data['primary-color']).toBe('#123456');
+  });
+
+  it('does not turn project files into themes when the real theme file is missing', async () => {
+    stubRepo(
+      [
+        { type: 'blob', path: '.pre-commit-config.yaml', size: 100 },
+        { type: 'blob', path: '.github/FUNDING.yml', size: 20 },
+        { type: 'blob', path: 'docs/mkdocs.yml', size: 50 },
+      ],
+      {
+        '.pre-commit-config.yaml': 'repos:\n  - repo: https://example.com/x.git\n    hooks:\n      - id: lint\n',
+        '.github/FUNDING.yml': 'github: someone\n',
+        'docs/mkdocs.yml': 'site_name: Docs\nnav:\n  - Home: index.md\n',
+      }
+    );
+    const result = await importThemesFromGitHubRepo('owner/notheme');
+    expect(result.success).toBe(false);
+    expect(result.themes).toEqual([]);
+  });
+});
