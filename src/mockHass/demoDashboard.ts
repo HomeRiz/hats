@@ -73,7 +73,7 @@ const cardModStyle = `ha-card {
 }`;
 
 const cardModCards: Card[] = [
-  { type: 'markdown', content: '## card-mod / UIX\nEach card below is styled with its own `card_mod` rules on top of the theme. Works the same with card-mod or UIX.', card_mod: { style: cardModStyle } },
+  { type: 'markdown', content: '## UIX / card-mod\nEach card below is styled with its own `card_mod` rules on top of the theme. Works the same with UIX or card-mod.', card_mod: { style: cardModStyle } },
   { type: 'entities', title: 'Entities', entities: ['light.living_room', 'switch.porch_plug', 'lock.front_door'], card_mod: { style: cardModStyle } },
   { type: 'glance', title: 'Glance', entities: ['sensor.living_room_temperature', 'sensor.front_door_battery', 'sensor.power_usage'], card_mod: { style: cardModStyle } },
   { type: 'tile', entity: 'climate.living_room', card_mod: { style: `ha-card { box-shadow: 0 0 24px var(--primary-color) !important; }` } },
@@ -86,7 +86,7 @@ const column = (...cards: Card[]): Card => ({ type: 'vertical-stack', cards });
 
 const homeColumns: Card[] = [
   column(
-    heading('card-mod / UIX'),
+    heading('UIX / card-mod'),
     cardModCards[3],
     cardModCards[4],
     heading('Button Card (hover and press)'),

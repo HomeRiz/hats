@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { ThemeConfig } from '../types/theme';
-import { buildThemeBundle, buildThemeReadme, dataUrlToBytes, toThemeFileId } from './themeBundle';
+import { buildThemeBundle, buildThemeReadme, buildThemesBundle, dataUrlToBytes, toThemeFileId } from './themeBundle';
 
 const identity = async (theme: ThemeConfig) => theme;
 const PNG_1PX =
@@ -96,3 +96,37 @@ describe('buildThemeReadme', () => {
     expect(readme).not.toContain('/config/www/hats/backgrounds/night-glass`.');
   });
 });
+
+describe('buildThemesBundle', () => {
+  const night = withBackground({ type: 'image', imageUrl: PNG_1PX }, 'night');
+  const day = withBackground({ type: 'solid', solidColor: '#ffffff' }, 'day');
+
+  it('puts every theme in one archive with a single README', async () => {
+    const bundle = await buildThemesBundle([night, day], { embedBackground: identity });
+    const content = text(bundle.bytes);
+    expect(bundle.fileName).toBe('hats-themes.zip');
+    expect(content).toContain('config/themes/night.yaml');
+    expect(content).toContain('config/themes/day.yaml');
+    expect(content).toContain('per-view-snippets/night.yaml');
+    expect(content).toContain('config/www/hats/backgrounds/night/default.webp');
+    expect(content).not.toContain('config/www/hats/backgrounds/day/default.webp');
+    expect(content).toContain('2 Home Assistant themes exported from HATS');
+    expect(content).toContain('`night.yaml`, background included');
+    expect(content).toContain('`day.yaml`, no background image');
+  });
+
+  it('keeps ids unique when two themes clean up to the same name', async () => {
+    const bundle = await buildThemesBundle([withBackground({ type: 'solid', solidColor: '#000' }, 'A B'), withBackground({ type: 'solid', solidColor: '#000' }, 'a-b')], {
+      embedBackground: identity,
+    });
+    const content = text(bundle.bytes);
+    expect(content).toContain('config/themes/a-b.yaml');
+    expect(content).toContain('config/themes/a-b-2.yaml');
+  });
+
+  it('falls back to the single theme archive for one theme', async () => {
+    const bundle = await buildThemesBundle([night], { embedBackground: identity });
+    expect(bundle.fileName).toBe('night.zip');
+  });
+});
+

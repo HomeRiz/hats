@@ -198,6 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
         )}
 
+        {activeTab === 'editor' && (
         <button
           onClick={onOpenExport}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
@@ -205,6 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Download className="w-3.5 h-3.5" />
           <span>Export</span>
         </button>
+        )}
 
         <button
           onClick={onOpenImport}

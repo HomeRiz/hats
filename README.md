@@ -31,7 +31,7 @@ Operating seamlessly through Home Assistant **Ingress** or as a dedicated full-w
 - 🔬 **Live Lovelace Sandbox**: Interactive dashboard preview featuring simulated Mushroom cards, climate sliders, weather widgets, media controls, and status chips.
 - 🩺 **HA Environment & Prerequisites Doctor**:
   - Live inspection of `configuration.yaml` for theme directives (`themes: !include_dir_merge_named themes`).
-  - Automatic detection of `lovelace-card-mod` on disk (`/config/www/community/lovelace-card-mod`) or of [UIX](https://github.com/Lint-Free-Technology/uix) set up as an integration, with a **UIX / card-mod switch** to choose which one HATS checks and configures.
+  - Automatic detection of [UIX](https://github.com/Lint-Free-Technology/uix) set up as an integration or of `lovelace-card-mod` on disk (`/config/www/community/lovelace-card-mod`), with a **UIX / card-mod switch** to choose which one HATS checks and configures.
   - Dynamic extraction of live `hacstag` version identifiers directly from HA storage.
   - **1-Click Auto-Fix**: Automatically backs up and injects missing theme directives and `extra_module_url` references.
 - 📦 **1-Click Direct Theme Installer**: Writes generated theme definitions directly to `/config/themes/` and automatically triggers Home Assistant's `frontend.reload_themes` service.

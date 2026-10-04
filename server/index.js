@@ -563,8 +563,8 @@ app.get('/api/ha/diagnostics', (req, res) => {
       issues.push({
         id: 'styling_engine_conflict',
         severity: 'warning',
-        title: 'card-mod and UIX Are Both Active',
-        description: 'UIX replaces card-mod and the two should not run together. Uninstall card-mod (and remove it from extra_module_url), then restart Home Assistant.',
+        title: 'UIX and card-mod Are Both Active',
+        description: 'Only one of them should run at a time. To keep UIX, uninstall card-mod (and remove it from extra_module_url), then restart Home Assistant.',
         canAutoFix: false,
       });
     } else if (cardModNeedsConfig) {

@@ -279,6 +279,7 @@ export const App: React.FC = () => {
                   setActiveThemeId(id);
                   setActiveTab('editor');
                 }}
+                onActivateTheme={setActiveThemeId}
                 onNewTheme={() => createNewTheme()}
                 onDuplicateTheme={duplicateTheme}
                 onDeleteTheme={deleteTheme}

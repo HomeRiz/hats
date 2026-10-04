@@ -6,11 +6,11 @@ import { defaultGlassTheme } from '../../presets/defaultThemes';
 
 afterEach(cleanup);
 
-function renderNavbar(needsSetup: boolean, onOpenDoctor = vi.fn(), standalone = false) {
+function renderNavbar(needsSetup: boolean, onOpenDoctor = vi.fn(), standalone = false, activeTab: 'editor' | 'library' | 'community' | 'code' = 'editor') {
   render(
     <Navbar
       activeTheme={defaultGlassTheme}
-      activeTab="editor"
+      activeTab={activeTab}
       setActiveTab={() => {}}
       previewMode="dark"
       setPreviewMode={() => {}}
@@ -49,5 +49,20 @@ describe('Navbar pop-out button', () => {
   it('is not shown in the standalone app', () => {
     renderNavbar(false, vi.fn(), true);
     expect(screen.queryByTitle('Open HATS in a Full New Browser Tab')).toBeNull();
+  });
+});
+
+describe('Navbar export button', () => {
+  it('is shown on the Designer tab', () => {
+    renderNavbar(false);
+    expect(screen.getByText('Export')).toBeTruthy();
+  });
+
+  it('is hidden on the other tabs', () => {
+    for (const tab of ['library', 'community', 'code'] as const) {
+      cleanup();
+      renderNavbar(false, vi.fn(), false, tab);
+      expect(screen.queryByText('Export')).toBeNull();
+    }
   });
 });

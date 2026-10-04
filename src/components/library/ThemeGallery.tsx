@@ -27,7 +27,7 @@ import { ThemeOverviewModal } from './ThemeOverviewModal';
 import { DuplicateInfoModal } from '../common/DuplicateInfoModal';
 import { GitHubImportModal } from '../github/GitHubImportModal';
 import { IS_HOSTED } from '../../runtime';
-import { buildThemeBundle } from '../../services/themeBundle';
+import { buildThemeBundle, buildThemesBundle } from '../../services/themeBundle';
 import { downloadFile } from '../../utils/download';
 import { 
   applyThemeDirectlyToHa, 
@@ -39,6 +39,7 @@ interface ThemeGalleryProps {
   themes: ThemeConfig[];
   activeThemeId: string;
   onSelectTheme: (id: string) => void;
+  onActivateTheme: (id: string) => void;
   onNewTheme: () => void;
   onDuplicateTheme: (id: string) => void;
   onDeleteTheme: (id: string) => void;
@@ -54,6 +55,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   themes,
   activeThemeId,
   onSelectTheme,
+  onActivateTheme,
   onNewTheme,
   onDuplicateTheme,
   onDeleteTheme,
@@ -78,6 +80,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   const [selectedThemeIds, setSelectedThemeIds] = useState<Set<string>>(new Set());
   const [isBatchInstalling, setIsBatchInstalling] = useState(false);
   const [batchInstallStatus, setBatchInstallStatus] = useState<string | null>(null);
+  const [isExportingSelected, setIsExportingSelected] = useState(false);
 
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -196,6 +199,22 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     setSelectedThemeIds(new Set());
   };
 
+  const handleExportSelected = async () => {
+    const chosen = themes.filter((t) => selectedThemeIds.has(t.id));
+    if (chosen.length === 0) return;
+    setIsExportingSelected(true);
+    try {
+      const bundle = await buildThemesBundle(chosen);
+      downloadFile(bundle.fileName, bundle.bytes as BlobPart, 'application/zip');
+      setBatchInstallStatus(`Exported ${chosen.length} theme${chosen.length === 1 ? '' : 's'} as ${bundle.fileName}`);
+    } catch (e) {
+      setBatchInstallStatus('Could not build the zip file');
+    } finally {
+      setIsExportingSelected(false);
+      setTimeout(() => setBatchInstallStatus(null), 2500);
+    }
+  };
+
   const handleBatchInstall = async () => {
     const toInstall = themes.filter((t) => selectedThemeIds.has(t.id));
     if (toInstall.length === 0) return;
@@ -249,14 +268,12 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 </span>
               </h1>
               <p className="text-xs text-slate-400 mt-1">
-                {standalone
-                  ? 'Left-click any theme for live dashboard overview. Right-click for options.'
-                  : 'Left-click any theme for live dashboard overview. Right-click for options or batch install.'}
+                Click a theme to select it. Double-click it or use the eye icon for a live preview. Right-click for options.
+                {' '}Use Select to export several themes at once.
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {!standalone && (
               <button
                 onClick={() => {
                   setIsSelectMode(!isSelectMode);
@@ -271,7 +288,6 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <CheckSquare className="w-3.5 h-3.5" />
                 <span>{isSelectMode ? 'Exit Select Mode' : 'Select'}</span>
               </button>
-              )}
 
               {onSyncHaThemes && (
                 <button
@@ -407,8 +423,11 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     if (isSelectMode) {
                       toggleSelectTheme(theme.id);
                     } else {
-                      setOverviewThemeId(theme.id);
+                      onActivateTheme(theme.id);
                     }
+                  }}
+                  onDoubleClick={() => {
+                    if (!isSelectMode) setOverviewThemeId(theme.id);
                   }}
                   onContextMenu={(e) => {
                     e.preventDefault();
@@ -554,7 +573,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                           e.stopPropagation();
                           setOverviewThemeId(theme.id);
                         }}
-                        title="Live Overview Modal (Left-Click)"
+                        title="Live preview (double-click)"
                         className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -621,7 +640,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         </div>
       </div>
 
-      {isSelectMode && !standalone && (
+      {isSelectMode && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 border border-slate-700/90 rounded-2xl shadow-2xl backdrop-blur-xl px-5 py-3 flex items-center gap-4 animate-fade-in text-xs">
           <div className="flex items-center gap-2 font-semibold text-white">
             <CheckSquare className="w-4 h-4 text-blue-400" />
@@ -646,7 +665,16 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <div className="h-4 w-px bg-slate-700" />
 
-          {!IS_HOSTED && (
+          <button
+            onClick={handleExportSelected}
+            disabled={selectedThemeIds.size === 0 || isExportingSelected}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-bold shadow-lg shadow-blue-600/30 transition-all"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>{isExportingSelected ? 'Preparing...' : 'Export Selected'}</span>
+          </button>
+
+          {!IS_HOSTED && !standalone && (
           <button
             onClick={handleBatchInstall}
             disabled={selectedThemeIds.size === 0 || isBatchInstalling}
@@ -696,7 +724,6 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             {contextMenu.theme.name}
           </div>
 
-          {!standalone && (
           <button
             onClick={() => {
               setIsSelectMode(true);
@@ -708,7 +735,6 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <CheckSquare className="w-3.5 h-3.5 text-blue-400" />
             <span>Select (Multi-select)</span>
           </button>
-          )}
 
           <button
             onClick={() => {

@@ -13,6 +13,12 @@ export interface BundleDeps {
   now?: () => Date;
 }
 
+const FENCE = '```';
+const THEMES_DIRECTIVE = 'frontend:\n  themes: !include_dir_merge_named themes';
+const heading = (level: number, text: string) => `${'#'.repeat(level)} ${text}`;
+const fence = (body: string, language = '') => `${FENCE}${language}\n${body}\n${FENCE}`;
+const document = (blocks: string[]) => `${blocks.join('\n\n')}\n`;
+
 export function toThemeFileId(id: string): string {
   return id.toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme';
 }
@@ -76,50 +82,31 @@ export function buildThemeReadme(theme: ThemeConfig, hasBackgroundFile: boolean)
     ? `The snippet uses the same background image as the theme: ${external}`
     : `The snippet points to \`/local/hats/backgrounds/${id}/default.webp\`. Put an image there, or replace the \`url(...)\` value with your own image.`;
 
-  return `# ${theme.name}
-
-A Home Assistant theme exported from HATS.
-
-## What is in this archive
-
-\`\`\`
-${tree}
-\`\`\`
-
-The \`config\` folder mirrors your Home Assistant configuration folder (the one that contains \`configuration.yaml\`). Every file goes to the same place under \`/config\`.
-
-## Install
-
-${steps}
-
-${backgroundNote}
-
-## configuration.yaml
-
-Home Assistant only loads theme files if \`configuration.yaml\` has this. Add it if it is missing, and keep a single \`frontend:\` block:
-
-\`\`\`yaml
-frontend:
-  themes: !include_dir_merge_named themes
-\`\`\`
-
-## UIX or card-mod
-
-The glass blur, sidebar and header styling in this theme use \`card-mod-*\` keys. Install either UIX or card-mod from HACS. Both read the same keys. Without one of them, Home Assistant applies the colors only.
-
-## Optional: a different background for one dashboard view
-
-The theme sets one background for the whole dashboard. To give a single view its own background:
-
-1. Open the dashboard and click the pencil icon (Edit dashboard).
-2. Open the three dots menu and choose Raw configuration editor.
-3. Under \`views:\`, paste the content of \`per-view-snippet.yaml\` as a new view, or copy only its \`card_mod:\` block into a view you already have. Keep the indentation so \`card_mod:\` sits at the same level as \`title:\` and \`path:\`.
-4. Change \`title\` and \`path\` if the view already exists or you want other names, then save.
-
-${snippetImageNote}
-
-This needs UIX or card-mod, like the rest of the theme.
-`;
+  return document([
+    heading(1, theme.name),
+    'A Home Assistant theme exported from HATS.',
+    heading(2, 'What is in this archive'),
+    fence(tree),
+    'The `config` folder mirrors your Home Assistant configuration folder (the one that contains `configuration.yaml`). Every file goes to the same place under `/config`.',
+    heading(2, 'Install'),
+    steps,
+    backgroundNote,
+    heading(2, 'configuration.yaml'),
+    'Home Assistant only loads theme files if `configuration.yaml` has this. Add it if it is missing, and keep a single `frontend:` block:',
+    fence(THEMES_DIRECTIVE, 'yaml'),
+    heading(2, 'UIX or card-mod'),
+    'The glass blur, sidebar and header styling in this theme use `card-mod-*` keys. Install either UIX or card-mod from HACS. Both read the same keys. Without one of them, Home Assistant applies the colors only.',
+    heading(2, 'Optional: a different background for one dashboard view'),
+    'The theme sets one background for the whole dashboard. To give a single view its own background:',
+    [
+      '1. Open the dashboard and click the pencil icon (Edit dashboard).',
+      '2. Open the three dots menu and choose Raw configuration editor.',
+      '3. Under `views:`, paste the content of `per-view-snippet.yaml` as a new view, or copy only its `card_mod:` block into a view you already have. Keep the indentation so `card_mod:` sits at the same level as `title:` and `path:`.',
+      '4. Change `title` and `path` if the view already exists or you want other names, then save.',
+    ].join('\n'),
+    snippetImageNote,
+    'This needs UIX or card-mod, like the rest of the theme.',
+  ]);
 }
 
 export async function buildThemeBundle(sourceTheme: ThemeConfig, deps: BundleDeps = {}): Promise<ThemeBundle> {
@@ -138,4 +125,96 @@ export async function buildThemeBundle(sourceTheme: ThemeConfig, deps: BundleDep
   }
 
   return { fileName: `${theme.id}.zip`, bytes: createZip(entries, deps.now?.()) };
+}
+
+interface PreparedTheme {
+  theme: ThemeConfig;
+  imageBytes: Uint8Array | null;
+}
+
+function uniqueIds(themes: ThemeConfig[]): ThemeConfig[] {
+  const seen = new Map<string, number>();
+  return themes.map((theme) => {
+    const base = toThemeFileId(theme.id);
+    const count = (seen.get(base) ?? 0) + 1;
+    seen.set(base, count);
+    return { ...theme, id: count === 1 ? base : `${base}-${count}` };
+  });
+}
+
+function backgroundNote(item: PreparedTheme): string {
+  if (item.imageBytes) return 'background included';
+  if (externalImageUrl(item.theme)) return `background loaded from ${externalImageUrl(item.theme)}`;
+  if (item.theme.background.type === 'image') return `no image included, put yours at /config/www/hats/backgrounds/${item.theme.id}/default.webp`;
+  return 'no background image';
+}
+
+export function buildThemesReadme(items: PreparedTheme[]): string {
+  const withImages = items.filter((item) => item.imageBytes);
+  const list = items.map((item) => `- **${item.theme.name}**: \`${item.theme.id}.yaml\`, ${backgroundNote(item)}`).join('\n');
+  const steps = [
+    'Copy every file in `config/themes` to `/config/themes` in Home Assistant.',
+    ...(withImages.length > 0
+      ? [
+          'Copy the folders in `config/www/hats/backgrounds` to `/config/www/hats/backgrounds`. Home Assistant serves them at `/local/hats/backgrounds/<theme>/default.webp`, which is the address the themes use. If `/config/www` did not exist before, restart Home Assistant once so it is served.',
+        ]
+      : []),
+    'Make sure `configuration.yaml` loads the themes folder (see below).',
+    'Reload the themes: Developer tools, YAML, Reload themes. A restart works too.',
+    'Select a theme: click your name at the bottom of the sidebar, open Profile, and pick it under Theme.',
+  ]
+    .map((step, index) => `${index + 1}. ${step}`)
+    .join('\n');
+
+  const multiTree = [
+    'config/',
+    '  themes/            one YAML file per theme',
+    '  www/hats/backgrounds/<theme>/default.webp   only for themes with an uploaded image',
+    'per-view-snippets/   one optional snippet per theme',
+    'README.md',
+  ].join('\n');
+
+  return document([
+    heading(1, 'HATS themes'),
+    `${items.length} Home Assistant themes exported from HATS.`,
+    heading(2, 'What is in this archive'),
+    fence(multiTree),
+    'The `config` folder mirrors your Home Assistant configuration folder (the one that contains `configuration.yaml`). Every file goes to the same place under `/config`.',
+    heading(2, 'Themes'),
+    list,
+    heading(2, 'Install'),
+    steps,
+    heading(2, 'configuration.yaml'),
+    'Home Assistant only loads theme files if `configuration.yaml` has this. Add it if it is missing, and keep a single `frontend:` block:',
+    fence(THEMES_DIRECTIVE, 'yaml'),
+    heading(2, 'UIX or card-mod'),
+    'The glass blur, sidebar and header styling in these themes use `card-mod-*` keys. Install either UIX or card-mod from HACS. Both read the same keys. Without one of them, Home Assistant applies the colors only.',
+    heading(2, 'Optional: a different background for one dashboard view'),
+    'Each file in `per-view-snippets` gives one dashboard view the background of its theme:',
+    [
+      '1. Open the dashboard and click the pencil icon (Edit dashboard).',
+      '2. Open the three dots menu and choose Raw configuration editor.',
+      '3. Under `views:`, paste the snippet as a new view, or copy only its `card_mod:` block into a view you already have. Keep the indentation so `card_mod:` sits at the same level as `title:` and `path:`.',
+      '4. Change `title` and `path` if needed, then save.',
+    ].join('\n'),
+    'This needs UIX or card-mod, like the rest of the theme.',
+  ]);
+}
+
+export async function buildThemesBundle(sourceThemes: ThemeConfig[], deps: BundleDeps = {}): Promise<ThemeBundle> {
+  if (sourceThemes.length === 1) return buildThemeBundle(sourceThemes[0], deps);
+  const embed = deps.embedBackground ?? embedBundledBackground;
+  const embedded = await Promise.all(sourceThemes.map((theme) => embed(theme)));
+  const items: PreparedTheme[] = uniqueIds(embedded).map((theme) => ({
+    theme,
+    imageBytes: theme.background.type === 'image' ? dataUrlToBytes(theme.background.imageUrl) : null,
+  }));
+
+  const entries: ZipEntry[] = [{ path: 'README.md', data: buildThemesReadme(items) }];
+  for (const { theme, imageBytes } of items) {
+    entries.push({ path: `config/themes/${theme.id}.yaml`, data: generateHomeAssistantThemeYaml(theme, 'local') });
+    entries.push({ path: `per-view-snippets/${theme.id}.yaml`, data: generatePerViewSnippet(theme) });
+    if (imageBytes) entries.push({ path: `config/www/hats/backgrounds/${theme.id}/default.webp`, data: imageBytes });
+  }
+  return { fileName: 'hats-themes.zip', bytes: createZip(entries, deps.now?.()) };
 }
