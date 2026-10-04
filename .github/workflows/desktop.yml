@@ -3,7 +3,7 @@ name: Desktop builds
 on:
   workflow_dispatch:
   push:
-    tags: ["v*"]
+    tags: ["v*", "[0-9]*.[0-9]*.[0-9]*"]
 
 permissions:
   contents: read
