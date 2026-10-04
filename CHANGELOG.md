@@ -5,6 +5,53 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-05
+
+### Added
+
+- A standalone desktop app for macOS, Windows and Linux. It runs the designer
+  and the live preview on your own computer, with no Home Assistant needed, and
+  only answers to the local machine.
+- A preview-only website at https://homeriz.github.io/hats/. Open it with
+  `?repo=OWNER/REPO` to see any public GitHub theme repo exactly as its author
+  published it, in the real Home Assistant frontend. It installs nothing.
+- Download .zip in the export dialog. The zip holds the theme and its
+  background image in the folders Home Assistant expects, a per-view snippet
+  and a README with the install steps.
+- Select several themes in the library and use Export Selected to download
+  them in one zip.
+- An Import dialog for a theme YAML, a background image and a per-view
+  snippet, in the top bar next to Export.
+- UIX as a styling engine next to card-mod, chosen with a switch in the Doctor.
+- The per-view tab of the export dialog now explains what the snippet does
+  and where to paste it.
+
+### Changed
+
+- In the theme library, a click selects a theme. A double click or the eye icon
+  opens its preview. Export is shown only on the Designer tab.
+- In the standalone app, the actions that only make sense inside Home
+  Assistant are gone: Sync HA, the Installed filter, Install and the pop-out
+  button. Download takes the place of Install.
+- The live preview is a single Home page, a Layout Card grid with an example of
+  every card family, so one page is enough to compare changes.
+- Each card switch in the Cards tab now matches what the theme generates.
+  Stack-in-Card merges the cards inside it into one glass card, and the Button
+  Card ripple is stronger on hover and press.
+- UIX is named before card-mod in the interface and the docs.
+
+### Fixed
+
+- The live preview no longer goes blank after Edit in Designer from the theme
+  dialog.
+- The per-view background snippet now works on themes made in HATS.
+- The selected item in the sidebar stays visible when card-mod is off.
+- The local server refuses requests with an unexpected Host header, and the
+  desktop window only follows links that really point to the app.
+- Theme files larger than 512 KB, like ones with an embedded background image,
+  now import and preview. A repository without a theme file no longer
+  produces a made-up theme.
+
 ## [1.1.0] - 2026-10-03
 
 ### Added
