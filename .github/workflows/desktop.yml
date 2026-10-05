@@ -6,14 +6,15 @@ on:
     tags: ["v*", "[0-9]*.[0-9]*.[0-9]*"]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -39,6 +40,9 @@ jobs:
         run: command -v unzip || choco install unzip -y --no-progress
       - run: npm ci
       - run: npm run ${{ matrix.script }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v7
         with:
           name: hats-${{ runner.os }}
