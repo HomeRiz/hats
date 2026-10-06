@@ -49,3 +49,17 @@ jobs:
           path: |
             release/HATS-*
           if-no-files-found: error
+      - name: Upload binaries to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/HATS-*.dmg
+            release/HATS-*.zip
+            release/HATS-*.exe
+            release/HATS-Setup-*.exe
+            release/HATS-*.AppImage
+            release/HATS-*.deb
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
