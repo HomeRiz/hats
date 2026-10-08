@@ -254,7 +254,7 @@ export const App: React.FC = () => {
                   theme={activeTheme}
                   onChange={updateActiveTheme}
                   onOpenExport={() => setIsExportOpen(true)}
-                  onEditCopy={editCopyOfPreview}
+                  onEditCopy={IS_HOSTED ? undefined : editCopyOfPreview}
                 />
               </div>
 

@@ -139,6 +139,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   };
 
   const triggerDuplicate = (theme: ThemeConfig) => {
+    if (IS_HOSTED) return;
     const isSuppressed = localStorage.getItem('hats_suppress_duplicate_modal') === 'true';
     if (isSuppressed) {
       onDuplicateTheme(theme.id);
@@ -301,6 +302,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 </button>
               )}
 
+              {!IS_HOSTED && (
               <button
                 onClick={() => setIsGitHubImportOpen(true)}
                 title="Import themes from any public GitHub repo"
@@ -309,6 +311,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <GithubIcon className="w-3.5 h-3.5 text-blue-400" />
                 <span>Import GitHub</span>
               </button>
+              )}
 
               {onOpenDoctor && (
                 <button
@@ -324,6 +327,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 </button>
               )}
 
+              {!IS_HOSTED && (
               <button
                 onClick={onNewTheme}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow-blue-500/25"
@@ -331,6 +335,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create</span>
               </button>
+              )}
             </div>
           </div>
 
@@ -579,6 +584,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         <Eye className="w-3.5 h-3.5" />
                       </button>
 
+                      {!IS_HOSTED && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -589,6 +595,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </button>
+                      )}
 
                       {theme.isInstalled && !standalone && (
                         <button
@@ -605,7 +612,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                         </button>
                       )}
 
-                      {theme.isCustom && (standalone || !theme.isInstalled) && (
+                      {theme.isCustom && !IS_HOSTED && (standalone || !theme.isInstalled) && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -748,6 +755,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <span>Edit in Designer</span>
           </button>
 
+          {!IS_HOSTED && (
           <button
             onClick={() => {
               const target = contextMenu.theme;
@@ -759,6 +767,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <Copy className="w-3.5 h-3.5 text-slate-400" />
             <span>Duplicate Theme</span>
           </button>
+          )}
 
           <button
             onClick={async () => {
@@ -788,7 +797,7 @@ export const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             </button>
           )}
 
-          {contextMenu.theme.isCustom && (
+          {contextMenu.theme.isCustom && !IS_HOSTED && (
             <button
               onClick={() => {
                 const target = contextMenu.theme;

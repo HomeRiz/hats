@@ -181,6 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
         )}
 
+        {!previewOnly && (
         <button
           onClick={onNewTheme}
           className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
@@ -188,6 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Plus className="w-3.5 h-3.5" />
           <span>New Theme</span>
         </button>
+        )}
 
         <GithubRepoButton />
 
@@ -211,6 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
         )}
 
+        {!previewOnly && (
         <button
           onClick={onOpenImport}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
@@ -218,6 +221,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Upload className="w-3.5 h-3.5" />
           <span>Import</span>
         </button>
+        )}
       </div>
     </header>
   );

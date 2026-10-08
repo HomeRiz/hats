@@ -43,6 +43,13 @@ const initialCommunitySubmissions: CommunityThemeSubmission[] = [];
 export function useThemeStore() {
   const [themes, setThemes] = useState<ThemeConfig[]>(() => {
     const custom = loadSavedCustomThemes();
+    if (IS_HOSTED) {
+      try {
+        localStorage.removeItem(STORAGE_KEY_CUSTOM);
+      } catch {
+      }
+      return [...defaultThemes];
+    }
     return [...defaultThemes, ...custom];
   });
 
@@ -69,6 +76,7 @@ export function useThemeStore() {
 
   useEffect(() => {
     const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
+    if (IS_HOSTED) return;
     const withoutPixels = (t: ThemeConfig): ThemeConfig =>
       t.background.imageUrl?.startsWith('data:')
         ? { ...t, background: { ...t.background, type: 'gradient', imageUrl: undefined } }
