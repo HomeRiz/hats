@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { GithubIcon } from '../common/icons/GithubIcon';
 import { previewUrlForRepo, repoSlugFromInput } from '../../services/previewParams';
 
@@ -6,16 +7,34 @@ export const GithubRepoButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
+  const [position, setPosition] = useState({ top: 0, left: 0 });
   const box = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const close = (e: MouseEvent) => {
-      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (!box.current?.contains(target) && !panel.current?.contains(target)) setOpen(false);
     };
+    const hide = () => setOpen(false);
     document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
+    window.addEventListener('resize', hide);
+    window.addEventListener('blur', hide);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      window.removeEventListener('resize', hide);
+      window.removeEventListener('blur', hide);
+    };
   }, [open]);
+
+  const toggle = () => {
+    if (!open) {
+      const rect = box.current?.getBoundingClientRect();
+      if (rect) setPosition({ top: rect.bottom + 8, left: Math.max(8, rect.right - 320) });
+    }
+    setOpen((o) => !o);
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,17 +49,19 @@ export const GithubRepoButton: React.FC = () => {
   return (
     <div ref={box} className="relative hidden md:block">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggle}
         title="Preview any theme repo from GitHub"
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
       >
         <GithubIcon className="w-3.5 h-3.5" />
         <span>GitHub</span>
       </button>
-      {open && (
+      {open && createPortal(
         <form
+          ref={panel}
           onSubmit={submit}
-          className="absolute right-0 top-full mt-2 w-80 z-50 p-3 rounded-xl bg-slate-900 border border-slate-700 shadow-xl space-y-2"
+          style={{ position: 'fixed', top: position.top, left: position.left }}
+          className="w-80 z-[55] p-3 rounded-xl bg-slate-900 border border-slate-700 shadow-xl space-y-2"
         >
           <label className="block text-[11px] font-semibold text-slate-300">Theme repository</label>
           <input
@@ -60,7 +81,8 @@ export const GithubRepoButton: React.FC = () => {
           >
             Preview in HATS
           </button>
-        </form>
+        </form>,
+        document.body,
       )}
     </div>
   );
