@@ -36,3 +36,25 @@ export function pickRequestedTheme<T extends { id: string; name: string }>(theme
   const wanted = requested.toLowerCase();
   return themes.find((t) => t.name.toLowerCase() === wanted || t.id.toLowerCase() === wanted) ?? themes[0];
 }
+
+export function repoSlugFromInput(input: string): string | null {
+  const text = input.trim();
+  if (!text) return null;
+  if (SLUG.test(text)) return text;
+  const withScheme = /^[a-z]+:\/\//i.test(text) ? text : `https://${text}`;
+  let url: URL;
+  try {
+    url = new URL(withScheme);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:' || url.hostname !== 'github.com' && url.hostname !== 'www.github.com') return null;
+  const [owner, repo] = url.pathname.split('/').filter(Boolean);
+  if (!owner || !repo) return null;
+  const slug = `${owner}/${repo.replace(/\.git$/i, '')}`;
+  return SLUG.test(slug) ? slug : null;
+}
+
+export function previewUrlForRepo(slug: string, location: { origin: string; pathname: string }): string {
+  return `${location.origin}${location.pathname}?repo=${slug}`;
+}

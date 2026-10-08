@@ -16,6 +16,7 @@ import {
 import { HatsLogo } from '../common/HatsLogo';
 import { ThemeConfig } from '../../types/theme';
 import { ActiveThemeDropdown } from './ActiveThemeDropdown';
+import { GithubRepoButton } from './GithubRepoButton';
 
 interface NavbarProps {
   activeTheme: ThemeConfig;
@@ -187,6 +188,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Plus className="w-3.5 h-3.5" />
           <span>New Theme</span>
         </button>
+
+        <GithubRepoButton />
 
         {!previewOnly && (
         <button

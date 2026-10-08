@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parsePreviewParams, pickRequestedTheme } from './previewParams';
+import { parsePreviewParams, pickRequestedTheme, repoSlugFromInput, previewUrlForRepo } from './previewParams';
 
 describe('parsePreviewParams', () => {
   it('accepts an owner/repo slug with branch and theme', () => {
@@ -50,5 +50,32 @@ describe('pickRequestedTheme', () => {
     expect(pickRequestedTheme(themes, 'missing')?.id).toBe('one');
     expect(pickRequestedTheme(themes)?.id).toBe('one');
     expect(pickRequestedTheme([], 'x')).toBeUndefined();
+  });
+});
+
+describe('repoSlugFromInput', () => {
+  it('accepts a slug', () => {
+    expect(repoSlugFromInput('basnijholt/lovelace-ios-dark-mode-theme')).toBe('basnijholt/lovelace-ios-dark-mode-theme');
+  });
+
+  it('accepts full and partial github urls', () => {
+    const want = 'basnijholt/lovelace-ios-dark-mode-theme';
+    expect(repoSlugFromInput('https://github.com/basnijholt/lovelace-ios-dark-mode-theme')).toBe(want);
+    expect(repoSlugFromInput('  github.com/basnijholt/lovelace-ios-dark-mode-theme/  ')).toBe(want);
+    expect(repoSlugFromInput('https://github.com/basnijholt/lovelace-ios-dark-mode-theme.git')).toBe(want);
+    expect(repoSlugFromInput('https://github.com/basnijholt/lovelace-ios-dark-mode-theme/tree/master/themes')).toBe(want);
+  });
+
+  it('rejects other hosts and junk', () => {
+    expect(repoSlugFromInput('')).toBeNull();
+    expect(repoSlugFromInput('https://evil.test/a/b')).toBeNull();
+    expect(repoSlugFromInput('https://github.com/onlyowner')).toBeNull();
+    expect(repoSlugFromInput('javascript:alert(1)')).toBeNull();
+  });
+});
+
+describe('previewUrlForRepo', () => {
+  it('keeps the current path', () => {
+    expect(previewUrlForRepo('a/b', { origin: 'https://homeriz.github.io', pathname: '/hats/' })).toBe('https://homeriz.github.io/hats/?repo=a/b');
   });
 });
