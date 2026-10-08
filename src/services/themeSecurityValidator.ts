@@ -110,7 +110,7 @@ export function sanitizeSvgCode(rawSvg: string): { valid: boolean; sanitized: st
 
 const SAFE_COLOR = /^(?:#[0-9a-f]{3,8}|(?:rgb|rgba|hsl|hsla)\([0-9.,%\s/-]{1,60}\)|[a-z]{3,20})$/i;
 const SAFE_CSS_VALUE = /^[a-z0-9#%.,()\s/+*-]{0,300}$/i;
-const SAFE_IMAGE_URL = /^(?:\/local\/[\w./-]{1,200}|https:\/\/[\w.-]{1,100}\/[\w./%~+@-]{0,300})$/;
+const SAFE_IMAGE_URL = /^(?:\/local\/[\w./-]{1,200}|\/hacsfiles\/[\w./-]{1,200}|https?:\/\/[\w.-]{1,100}\/[\w./%~+@-]{0,300}|data:image\/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]{1,700000})$/;
 
 function safeColor(v: unknown, fallback: string): string {
   const t = typeof v === 'string' ? v.trim() : '';

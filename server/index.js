@@ -10,6 +10,25 @@ import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
 import { isLocalHost } from './hostGuard.js';
+import { extractPalette } from './paletteExtract.js';
+
+const DEFAULT_PALETTE = {
+  primary: '#0A84FF',
+  accent: '#0A84FF',
+  purple: '#BF5AF2',
+  pink: '#FF375F',
+  red: '#FF453A',
+  indigo: '#5E5CE6',
+  blue: '#0A84FF',
+  lightBlue: '#66D4CF',
+  cyan: '#5AC8F5',
+  teal: '#6AC4DC',
+  green: '#32D74B',
+  yellow: '#FFD60A',
+  orange: '#FF9F0A',
+  brown: '#AC8E68',
+  grey: '#8E8E93',
+};
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -240,21 +259,9 @@ function parseThemeFile(fullPath, isInstalled) {
         updatedAt: mtime,
         createdAt: mtime,
         palette: {
+          ...extractPalette(themeData, DEFAULT_PALETTE, 'dark'),
           primary,
           accent,
-          purple: themeData['purple-color'] || '#BF5AF2',
-          pink: themeData['pink-color'] || '#FF375F',
-          red: themeData['red-color'] || '#FF453A',
-          indigo: themeData['indigo-color'] || '#5E5CE6',
-          blue: themeData['blue-color'] || '#0A84FF',
-          lightBlue: themeData['light-blue-color'] || '#66D4CF',
-          cyan: themeData['cyan-color'] || '#5AC8F5',
-          teal: themeData['teal-color'] || '#6AC4DC',
-          green: themeData['green-color'] || '#32D74B',
-          yellow: themeData['yellow-color'] || '#FFD60A',
-          orange: themeData['orange-color'] || '#FF9F0A',
-          brown: themeData['brown-color'] || '#AC8E68',
-          grey: themeData['grey-color'] || '#8E8E93',
         },
         engine: {
           engineType: category === 'Kids' ? 'kids' : category === 'Neon' ? 'neon' : category === 'Velvet' ? 'velvet' : 'glass',

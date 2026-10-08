@@ -1,8 +1,37 @@
 import { ThemeConfig } from '../types/theme';
 import { defaultGlassTheme } from '../presets/defaultThemes';
 import { validateAndSanitizeTheme } from './themeSecurityValidator';
+import { extractPalette } from './colorEngine';
 import { detectRequiresCardMod } from './themeRequirementDetector';
 import { loadThemeYaml, readThemeColors, fallbackGradient, looksLikeTheme } from '../../server/themeValues.js';
+
+function isValidImageUrl(url: string): boolean {
+  if (url.startsWith('http://') || url.startsWith('https://')) return true;
+  if (url.startsWith('/local/')) return true;
+  if (url.startsWith('/hacsfiles/')) return true;
+  if (url.startsWith('./') || url.startsWith('../')) return true;
+  if (url.length > 0 && url.charAt(0) !== '/' && !url.includes('://')) return true;
+  if (url.startsWith('data:image/jpeg') || url.startsWith('data:image/jpg') || url.startsWith('data:image/png') || url.startsWith('data:image/webp') || url.startsWith('data:image/gif') || url.startsWith('data:image/svg')) return true;
+  return false;
+}
+
+function extractImageUrl(str: string): string | undefined {
+  if (!str || typeof str !== 'string') return undefined;
+  const trimmed = str.trim();
+  const urlStart = trimmed.indexOf('url(');
+  if (urlStart === -1) {
+    if (isValidImageUrl(trimmed)) return trimmed;
+    return undefined;
+  }
+  const contentStart = urlStart + 4;
+  const closeParen = trimmed.indexOf(')', contentStart);
+  if (closeParen === -1) return undefined;
+  let content = trimmed.slice(contentStart, closeParen).trim();
+  if (content.startsWith('"') && content.endsWith('"')) content = content.slice(1, -1);
+  else if (content.startsWith("'") && content.endsWith("'")) content = content.slice(1, -1);
+  if (isValidImageUrl(content)) return content;
+  return undefined;
+}
 
 export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
   try {
@@ -20,28 +49,72 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
       const primary = colors.primary || '#0A84FF';
       const accent = colors.accent || primary;
       const bg = colors.background;
-      
+
       let customSvgOverlay: string | undefined;
-      const b64SvgMatch = typeof bg === 'string' ? bg.match(/url\(['"]data:image\/svg\+xml;base64,([^'"]+)['"]\)/) : null;
-      if (b64SvgMatch) {
-        try {
-          if (typeof window !== 'undefined' && typeof window.atob === 'function') {
-            customSvgOverlay = decodeURIComponent(escape(window.atob(b64SvgMatch[1])));
-          } else if (typeof Buffer !== 'undefined') {
-            customSvgOverlay = Buffer.from(b64SvgMatch[1], 'base64').toString('utf-8');
+      if (typeof bg === 'string' && bg.includes('data:image/svg')) {
+        const svgStart = bg.indexOf('data:image/svg');
+        if (svgStart !== -1) {
+          const base64Start = bg.indexOf(';base64,', svgStart);
+          if (base64Start !== -1) {
+            const dataStart = base64Start + 8;
+            const endQuote = bg.indexOf('"', dataStart);
+            const endSingle = bg.indexOf("'", dataStart);
+            const endParen = bg.indexOf(')', dataStart);
+
+            let endIdx = -1;
+            if (endQuote !== -1) endIdx = endQuote;
+            if (endSingle !== -1 && (endIdx === -1 || endSingle < endIdx)) endIdx = endSingle;
+            if (endParen !== -1 && (endIdx === -1 || endParen < endIdx)) endIdx = endParen;
+
+            if (endIdx !== -1) {
+              const b64Data = bg.slice(dataStart, endIdx);
+              try {
+                if (typeof window !== 'undefined' && typeof window.atob === 'function') {
+                  customSvgOverlay = decodeURIComponent(escape(window.atob(b64Data)));
+                } else if (typeof Buffer !== 'undefined') {
+                  customSvgOverlay = Buffer.from(b64Data, 'base64').toString('utf-8');
+                }
+              } catch {}
+            }
           }
-        } catch {}
+        }
       }
 
       let bgUrl: string | undefined;
       let gradientString: string | undefined;
-      if (typeof bg === 'string') {
-        if (bg.includes('http') || bg.includes('/local/')) {
-          const urlMatch = bg.match(/url\(['"]?(http[^'"]+|\/local\/[^'"]+)['"]?\)/);
-          if (urlMatch) bgUrl = urlMatch[1];
-        } else if (bg.includes('gradient')) {
-          const gradMatch = bg.match(/linear-gradient\([^)]+\)/);
-          if (gradMatch) gradientString = gradMatch[0];
+
+      const bgKeys = ['lovelace-background', 'background-image', 'primary-background-color'];
+      for (const key of bgKeys) {
+        const val = themeData[key];
+        if (typeof val === 'string') {
+          bgUrl = extractImageUrl(val);
+          if (bgUrl) break;
+        }
+      }
+
+      if (!bgUrl && themeData.modes && typeof themeData.modes === 'object') {
+        for (const mode of Object.values(themeData.modes)) {
+          if (mode && typeof mode === 'object') {
+            const modeObj = mode as Record<string, any>;
+            for (const key of bgKeys) {
+              const val = modeObj[key];
+              if (typeof val === 'string') {
+                bgUrl = extractImageUrl(val);
+                if (bgUrl) break;
+              }
+            }
+            if (bgUrl) break;
+          }
+        }
+      }
+
+      if (typeof bg === 'string' && bg.includes('gradient')) {
+        const gradStart = bg.indexOf('linear-gradient(');
+        if (gradStart !== -1) {
+          const closeParen = bg.indexOf(')', gradStart);
+          if (closeParen !== -1) {
+            gradientString = bg.slice(gradStart, closeParen + 1);
+          }
         }
       }
 
@@ -65,22 +138,9 @@ export function parseHomeAssistantThemeYaml(rawYaml: string): ThemeConfig[] {
         isCustom: true,
         updatedAt: new Date().toISOString(),
         palette: {
-          ...defaultGlassTheme.palette,
+          ...extractPalette(themeData, defaultGlassTheme.palette, 'dark'),
           primary,
           accent,
-          purple: themeData['purple-color'] || defaultGlassTheme.palette.purple,
-          pink: themeData['pink-color'] || defaultGlassTheme.palette.pink,
-          red: themeData['red-color'] || defaultGlassTheme.palette.red,
-          indigo: themeData['indigo-color'] || defaultGlassTheme.palette.indigo,
-          blue: themeData['blue-color'] || defaultGlassTheme.palette.blue,
-          lightBlue: themeData['light-blue-color'] || defaultGlassTheme.palette.lightBlue,
-          cyan: themeData['cyan-color'] || defaultGlassTheme.palette.cyan,
-          teal: themeData['teal-color'] || defaultGlassTheme.palette.teal,
-          green: themeData['green-color'] || defaultGlassTheme.palette.green,
-          yellow: themeData['yellow-color'] || defaultGlassTheme.palette.yellow,
-          orange: themeData['orange-color'] || defaultGlassTheme.palette.orange,
-          brown: themeData['brown-color'] || defaultGlassTheme.palette.brown,
-          grey: themeData['grey-color'] || defaultGlassTheme.palette.grey,
         },
         engine: {
           ...defaultGlassTheme.engine,

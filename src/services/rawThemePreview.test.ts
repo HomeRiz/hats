@@ -2,6 +2,40 @@ import { describe, expect, it } from 'vitest';
 import { parseRawThemes, createLocalAssetResolver } from './rawThemePreview';
 import { rawThemeToCssVars } from './themeToCssVars';
 
+describe('rawThemeToCssVars wallpaper aliasing', () => {
+  const wall = "center / cover no-repeat fixed url('data:image/jpeg;base64,AAAA')";
+
+  it('mirrors background-image into lovelace-background', () => {
+    const { vars } = rawThemeToCssVars('t', { 'background-image': wall }, 'dark');
+    expect(vars['lovelace-background']).toBe(wall);
+  });
+
+  it('mirrors lovelace-background into background-image', () => {
+    const { vars } = rawThemeToCssVars('t', { 'lovelace-background': wall }, 'dark');
+    expect(vars['background-image']).toBe(wall);
+  });
+
+  it('drops script-style payloads but keeps wallpapers and card-mod css', () => {
+    const { vars } = rawThemeToCssVars('t', {
+      'background-image': wall,
+      'card-mod-card': 'ha-card { border: 1px solid red; }',
+      a: 'url(javascript:alert(1))',
+      b: '@import url(https://x.test/a.css)',
+      c: 'expression(alert(1))',
+      d: "url('data:text/html;base64,AAAA')",
+      e: "url('data:image/svg+xml;base64,AAAA')",
+    }, 'dark');
+    expect(vars['background-image']).toBe(wall);
+    expect(vars['card-mod-card']).toContain('border');
+    for (const k of ['a', 'b', 'c', 'd', 'e']) expect(vars[k]).toBeUndefined();
+  });
+
+  it('keeps an explicit lovelace-background', () => {
+    const { vars } = rawThemeToCssVars('t', { 'background-image': wall, 'lovelace-background': '#000' }, 'dark');
+    expect(vars['lovelace-background']).toBe('#000');
+  });
+});
+
 const YAML = `
 My Theme:
   primary-color: "#ff0000"

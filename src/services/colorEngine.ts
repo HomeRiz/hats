@@ -1,20 +1,7 @@
-export function hexToRgb(hex: string): [number, number, number] {
-  const cleanHex = hex.replace(/^#/, '');
-  if (cleanHex.length === 3) {
-    const r = parseInt(cleanHex[0] + cleanHex[0], 16);
-    const g = parseInt(cleanHex[1] + cleanHex[1], 16);
-    const b = parseInt(cleanHex[2] + cleanHex[2], 16);
-    return [r, g, b];
-  }
-  const num = parseInt(cleanHex.substring(0, 6), 16);
-  return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
-}
+import { hexToRgb, rgbToHex } from '../../server/paletteExtract.js';
 
-export function rgbToHex(r: number, g: number, b: number): string {
-  const clamp = (v: number) => Math.max(0, Math.min(255, Math.round(v)));
-  const toHex = (v: number) => clamp(v).toString(16).padStart(2, '0');
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
+export { hexToRgb, rgbToHex, normalizeHex, parseColor, extractPalette } from '../../server/paletteExtract.js';
+export type { PaletteColors } from '../../server/paletteExtract.js';
 
 export function hexToRgbString(hex: string): string {
   try {
@@ -85,17 +72,3 @@ export function readableTextOn(bgHex: string): string {
   }
 }
 
-export function normalizeHex(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const v = value.trim();
-  let m = v.match(/^#?([0-9a-f]{3})$/i);
-  if (m) {
-    const h = m[1];
-    return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`.toUpperCase();
-  }
-  m = v.match(/^#?([0-9a-f]{6})(?:[0-9a-f]{2})?$/i);
-  if (m) return `#${m[1]}`.toUpperCase();
-  m = v.match(/^rgba?\(\s*(\d{1,3}(?:\.\d+)?)\s*[, ]\s*(\d{1,3}(?:\.\d+)?)\s*[, ]\s*(\d{1,3}(?:\.\d+)?)\s*(?:[,/]\s*[\d.]+%?\s*)?\)$/i);
-  if (m) return rgbToHex(Number(m[1]), Number(m[2]), Number(m[3])).toUpperCase();
-  return null;
-}

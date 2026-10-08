@@ -27,6 +27,7 @@ const LIGHT_TEXT_VARS: Record<string, string> = {
 };
 
 const LIGHT_THEME_THRESHOLD = 0.6;
+const UNSAFE_RAW_VALUE = /javascript:|vbscript:|@import|expression\s*\(|<\s*\/?\s*(?:script|iframe|object|embed)|data:\s*(?:text\/html|image\/svg)/i;
 
 function perceivedBrightness(color: string | undefined): number | null {
   if (!color) return null;
@@ -63,9 +64,12 @@ export function rawThemeToCssVars(
   const base = mode === 'light' ? LIGHT_BASE_VARS : {};
   const vars: Record<string, string> = {};
   for (const [key, value] of Object.entries({ ...base, ...flat, ...modeVars })) {
-    if (typeof value === 'string') vars[key] = value;
-    else if (typeof value === 'number') vars[key] = String(value);
+    if (typeof value === 'string') {
+      if (!UNSAFE_RAW_VALUE.test(value)) vars[key] = value;
+    } else if (typeof value === 'number') vars[key] = String(value);
   }
+  if (vars['background-image'] && !vars['lovelace-background']) vars['lovelace-background'] = vars['background-image'];
+  if (vars['lovelace-background'] && !vars['background-image']) vars['background-image'] = vars['lovelace-background'];
   return { name, vars };
 }
 
