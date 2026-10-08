@@ -1,7 +1,7 @@
 {
   "name": "hats",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "GPL-3.0-or-later",
   "description": "Home Assistant theme designer: runs as a Home Assistant app or as a standalone desktop app",
   "author": "HomeRiz",

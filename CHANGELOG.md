@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-10-08
+
+### Added
+
+- A GitHub button in the top bar. Paste a repository link or `owner/name` and
+  HATS opens that repository's themes in the preview, so nobody has to edit the
+  address by hand.
+- Browse HACS themes in the Community tab. Search, sort and filter every theme
+  repository in the HACS catalog, see its license and stars, and preview it.
+  A daily workflow builds the index the list reads.
+- The desktop installers for macOS, Windows and Linux are attached to the
+  GitHub release when a version tag is pushed.
+
+### Changed
+
+- The preview website is read only. It no longer offers New Theme, Import,
+  Create, Duplicate, Delete or Copy, it lists only the built-in themes, and
+  themes opened from a repository are never saved in the browser.
+- Previewed themes that set no accent or Bubble Card color now use their active
+  state color, then their primary color, then their accent color. Mushroom
+  Cards and Button Card keep their own default colors.
+- Copying the same repository theme twice opens the existing copy, and
+  identical saved copies are merged into one when the page loads.
+- The README now explains how card mods behave when a theme sets nothing for
+  them, and the GitHub Pages link is at the top.
+
+### Fixed
+
+- Wallpapers that a theme embeds as a `data:image` URL, or sets as
+  `background-image` instead of `lovelace-background`, now show in the preview.
+- Themes that use their own color names, such as `primary-color` plus component
+  variables, now fill the Palette tab with matching colors instead of defaults.
+- The editor sections stay open for themes previewed from GitHub, with a banner
+  naming the source repository.
+- Light themes that set no card background no longer show dark cards with
+  unreadable text.
+- The GitHub popover is no longer hidden behind the live preview.
+
 ## [1.2.0] - 2026-10-05
 
 ### Added
