@@ -54,6 +54,21 @@ function bundledPictureUrl(theme: ThemeConfig): string | null {
   return theme.background.type === 'image' ? resolveBundledPicture(theme.background.imageUrl) : null;
 }
 
+const ACTIVE_COLOR_VARS = ['accent-color', 'bubble-accent-color'];
+
+function inheritMissingColors(vars: Record<string, string>): void {
+  const brightness = perceivedBrightness(vars['primary-background-color']);
+  if (brightness !== null && brightness > LIGHT_THEME_THRESHOLD && !vars['card-background-color']) {
+    vars['card-background-color'] = vars['ha-card-background'] ?? vars['paper-card-background-color'] ?? vars['secondary-background-color'] ?? '#ffffff';
+  }
+  if (vars['bubble-default-color']) return;
+  const active = vars['state-icon-active-color'] ?? vars['primary-color'] ?? vars['accent-color'];
+  if (!active) return;
+  for (const key of ACTIVE_COLOR_VARS) {
+    if (!vars[key]) vars[key] = active;
+  }
+}
+
 export function rawThemeToCssVars(
   name: string,
   data: Record<string, unknown>,
@@ -70,10 +85,7 @@ export function rawThemeToCssVars(
   }
   if (vars['background-image'] && !vars['lovelace-background']) vars['lovelace-background'] = vars['background-image'];
   if (vars['lovelace-background'] && !vars['background-image']) vars['background-image'] = vars['lovelace-background'];
-  if (!vars['bubble-accent-color'] && !vars['bubble-default-color']) {
-    const brand = vars['primary-color'] ?? vars['accent-color'];
-    if (brand) vars['bubble-accent-color'] = brand;
-  }
+  inheritMissingColors(vars);
   return { name, vars };
 }
 

@@ -18,6 +18,41 @@ describe('rawThemeToCssVars bubble color', () => {
   });
 });
 
+describe('rawThemeToCssVars inherited colors', () => {
+  it('uses the theme active color for the accent and bubble buttons', () => {
+    const { vars } = rawThemeToCssVars('t', { 'primary-color': '#c1c1c1', 'state-icon-active-color': '#ffb750' }, 'dark');
+    expect(vars['accent-color']).toBe('#ffb750');
+    expect(vars['bubble-accent-color']).toBe('#ffb750');
+  });
+
+  it('falls back to the primary color, then the accent color', () => {
+    expect(rawThemeToCssVars('t', { 'primary-color': '#c1c1c1' }, 'dark').vars['bubble-accent-color']).toBe('#c1c1c1');
+    expect(rawThemeToCssVars('t', { 'accent-color': 'crimson' }, 'dark').vars['bubble-accent-color']).toBe('crimson');
+  });
+
+  it('keeps colors the theme sets', () => {
+    const { vars } = rawThemeToCssVars('t', { 'primary-color': '#c1c1c1', 'accent-color': '#ff0000', 'bubble-accent-color': '#00ff00' }, 'dark');
+    expect(vars['accent-color']).toBe('#ff0000');
+    expect(vars['bubble-accent-color']).toBe('#00ff00');
+  });
+
+  it('leaves a theme with its own bubble default alone', () => {
+    expect(rawThemeToCssVars('t', { 'primary-color': 'red', 'bubble-default-color': '#123456' }, 'dark').vars['bubble-accent-color']).toBeUndefined();
+  });
+
+  it('does not touch mushroom or state colors', () => {
+    const { vars } = rawThemeToCssVars('t', { 'primary-color': '#c1c1c1' }, 'dark');
+    expect(vars['mush-rgb-state-light']).toBeUndefined();
+    expect(vars['state-active-color']).toBeUndefined();
+    expect(vars['rgb-state-light-color']).toBeUndefined();
+  });
+
+  it('gives a light theme a light card background when it sets none', () => {
+    expect(rawThemeToCssVars('t', { 'primary-background-color': '#F7F9FB', 'secondary-background-color': '#ffffff' }, 'dark').vars['card-background-color']).toBe('#ffffff');
+    expect(rawThemeToCssVars('t', { 'primary-background-color': '#111111' }, 'dark').vars['card-background-color']).toBeUndefined();
+  });
+});
+
 describe('rawThemeToCssVars wallpaper aliasing', () => {
   const wall = "center / cover no-repeat fixed url('data:image/jpeg;base64,AAAA')";
 
