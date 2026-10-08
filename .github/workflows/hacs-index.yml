@@ -1,0 +1,62 @@
+name: HACS theme index
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hacs-index
+  cancel-in-progress: false
+
+jobs:
+  index:
+    name: Build and publish the HACS theme index
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.HACS_INDEX_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node scripts/build-hacs-index.mjs "$RUNNER_TEMP/hacs-themes.json"
+      - name: Publish to the hacs-index branch
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          next="$RUNNER_TEMP/hacs-themes.json"
+          previous="$RUNNER_TEMP/previous.json"
+
+          if ! gh api "repos/$repo/branches/hacs-index" >/dev/null 2>&1; then
+            gh api "repos/$repo/git/refs" -f ref=refs/heads/hacs-index -f sha="$GITHUB_SHA" >/dev/null
+          fi
+
+          sha=$(gh api "repos/$repo/contents/hacs-themes.json?ref=hacs-index" --jq .sha 2>/dev/null || true)
+          previous_count=0
+          if [ -n "$sha" ]; then
+            gh api -H "Accept: application/vnd.github.raw" "repos/$repo/contents/hacs-themes.json?ref=hacs-index" > "$previous"
+            previous_count=$(jq '.themes | length' "$previous")
+            if [ "$(jq -S 'del(.generatedAt)' "$previous")" = "$(jq -S 'del(.generatedAt)' "$next")" ]; then
+              echo "Index unchanged"
+              exit 0
+            fi
+          fi
+
+          next_count=$(jq '.themes | length' "$next")
+          echo "repos in index: previous=$previous_count next=$next_count"
+          if [ "$previous_count" -gt 0 ] && [ "$next_count" -lt $((previous_count / 2)) ]; then
+            echo "Index shrank by more than half, refusing to publish" >&2
+            exit 1
+          fi
+
+          gh api -X PUT "repos/$repo/contents/hacs-themes.json" \
+            -f message="Update HACS theme index" \
+            -f branch=hacs-index \
+            -f content="$(base64 -w0 "$next")" \
+            ${sha:+-f sha="$sha"} >/dev/null
