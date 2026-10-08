@@ -160,7 +160,16 @@ Output goes to `release/`. Build each target on its own operating system. The **
 
 ## Environment and prerequisites Doctor
 
-Modern themes, such as the HATS Signature Collection, need two things in `configuration.yaml`: the themes directory directive and the card-mod (or UIX) module. The `frontend:` key may appear only once, so both go under it:
+Modern themes, such as the HATS Signature Collection, need the themes directory directive in `configuration.yaml`, plus a styling engine, which is either UIX or card-mod. The `frontend:` key may appear only once, so everything goes under it.
+
+With **UIX**, only the themes directive is needed:
+
+```yaml
+frontend:
+  themes: !include_dir_merge_named themes
+```
+
+With **card-mod**, the module also has to be registered with `extra_module_url`:
 
 ```yaml
 frontend:
@@ -169,14 +178,16 @@ frontend:
     - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
 ```
 
+The `extra_module_url` entry is only for card-mod. UIX is installed as an integration and loads itself.
+
 ### UIX or card-mod
 
 HATS supports [UIX](https://github.com/Lint-Free-Technology/uix) and card-mod. Both read the same `card-mod-*` theme keys, so every HATS theme works with either. Use the **Styling Engine** switch in the Doctor to choose the one you use.
 
-- **UIX** is installed as an integration through HACS. It loads itself, so no `extra_module_url` entry is needed and Auto-Fix only adds the themes directive.
-- **card-mod** needs `extra_module_url` registered in `configuration.yaml`, as shown above.
+- **UIX** is installed as an integration through HACS (Settings, Devices & services, Add integration). No `extra_module_url` entry is needed, and Auto-Fix only adds the themes directive.
+- **card-mod** needs the `extra_module_url` entry shown above, which Auto-Fix adds for you.
 
-Only one can run at a time. The UIX migration guide says to uninstall card-mod first, and HATS warns if both are active. When you switch to UIX, **Remove card-mod from config** removes the entry from `configuration.yaml` after making a backup. You still uninstall card-mod in HACS and restart Home Assistant yourself.
+Only one can run at a time. The UIX migration guide says to uninstall card-mod first, and HATS warns if both are active. When you switch to UIX, **Remove card-mod from config** removes the `extra_module_url` entry from `configuration.yaml` after making a backup. You still uninstall card-mod in HACS and restart Home Assistant yourself.
 
 ### What the Doctor does
 
