@@ -70,6 +70,10 @@ export function rawThemeToCssVars(
   }
   if (vars['background-image'] && !vars['lovelace-background']) vars['lovelace-background'] = vars['background-image'];
   if (vars['lovelace-background'] && !vars['background-image']) vars['background-image'] = vars['lovelace-background'];
+  if (!vars['bubble-accent-color'] && !vars['bubble-default-color']) {
+    const brand = vars['primary-color'] ?? vars['accent-color'];
+    if (brand) vars['bubble-accent-color'] = brand;
+  }
   return { name, vars };
 }
 

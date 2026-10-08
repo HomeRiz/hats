@@ -2,6 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { parseRawThemes, createLocalAssetResolver } from './rawThemePreview';
 import { rawThemeToCssVars } from './themeToCssVars';
 
+describe('rawThemeToCssVars bubble color', () => {
+  it('uses the theme color when the theme sets no bubble color', () => {
+    expect(rawThemeToCssVars('t', { 'primary-color': 'steelblue', 'accent-color': 'crimson' }, 'dark').vars['bubble-accent-color']).toBe('steelblue');
+    expect(rawThemeToCssVars('t', { 'accent-color': 'crimson' }, 'dark').vars['bubble-accent-color']).toBe('crimson');
+  });
+
+  it('keeps a bubble color the theme sets', () => {
+    expect(rawThemeToCssVars('t', { 'primary-color': 'red', 'bubble-accent-color': '#123456' }, 'dark').vars['bubble-accent-color']).toBe('#123456');
+    expect(rawThemeToCssVars('t', { 'primary-color': 'red', 'bubble-default-color': '#123456' }, 'dark').vars['bubble-accent-color']).toBeUndefined();
+  });
+
+  it('adds nothing for a theme without colors', () => {
+    expect(rawThemeToCssVars('t', {}, 'dark').vars['bubble-accent-color']).toBeUndefined();
+  });
+});
+
 describe('rawThemeToCssVars wallpaper aliasing', () => {
   const wall = "center / cover no-repeat fixed url('data:image/jpeg;base64,AAAA')";
 
