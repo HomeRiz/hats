@@ -43,7 +43,7 @@ formal SLA:
   data without authentication) are prioritized for a patch release as soon as practical. Lower
   severity issues are scheduled into a normal release.
 - **Disclosure**: once a fix is released, we credit the reporter (unless you'd rather stay
-  anonymous) and publish a summary in the [changelog](CHANGELOG.md) and, for anything significant,
+  anonymous) and publish a summary in the [changelog](docs/CHANGELOG.md) and, for anything significant,
   a GitHub Security Advisory. We ask reporters to hold off on public disclosure until a fix has
   shipped.
 - **Declined reports**: if something is reported that turns out not to be a vulnerability (e.g.
