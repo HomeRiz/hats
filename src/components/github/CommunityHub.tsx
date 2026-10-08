@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { CommunityThemeSubmission, ThemeConfig } from '../../types/theme';
 import { normalizeHex } from '../../services/colorEngine';
+import { HacsThemeBrowser } from './HacsThemeBrowser';
 
 interface CommunityHubProps {
   submissions: CommunityThemeSubmission[];
@@ -45,6 +46,8 @@ export const CommunityHub: React.FC<CommunityHubProps> = ({
           <span>Propose New Theme</span>
         </button>
       </div>
+
+      <HacsThemeBrowser />
 
       <div className="space-y-4">
         {submissions.length === 0 ? (
