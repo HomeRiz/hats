@@ -28,27 +28,27 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
   const [activeSubTab, setActiveSubTab] = useState<'engine' | 'palette' | 'background' | 'svg' | 'components' | 'css' | 'info'>('engine');
 
   const tabs = [
-    { 
-      id: 'engine', 
-      label: 'Engine', 
+    {
+      id: 'engine',
+      label: 'Engine',
       icon: <Sliders className="w-3.5 h-3.5" />,
       tooltip: 'Engine: Core visual styles, card corner radii, frosted glass blur, specular sheen, and sidebar translucency'
     },
-    { 
-      id: 'palette', 
-      label: 'Palette', 
+    {
+      id: 'palette',
+      label: 'Palette',
       icon: <Palette className="w-3.5 h-3.5" />,
       tooltip: 'Palette: Primary accents, glow colors, Home Assistant color ramps, and RGB tokens'
     },
-    { 
-      id: 'background', 
-      label: 'Artwork', 
+    {
+      id: 'background',
+      label: 'Artwork',
       icon: <ImageIcon className="w-3.5 h-3.5" />,
       tooltip: 'Artwork: Upload wallpaper, choose atmospheric gradients, and fine-tune image post-processing'
     },
-    { 
-      id: 'svg', 
-      label: 'SVG Patterns', 
+    {
+      id: 'svg',
+      label: 'SVG Patterns',
       icon: <Shapes className="w-3.5 h-3.5" />,
       tooltip: 'SVG Patterns: Vector overlays, electric arcs, ocean waves, cloud silhouettes, and circuit traces'
     },
@@ -58,63 +58,46 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
       icon: <Puzzle className="w-3.5 h-3.5" />,
       tooltip: 'Cards: Turn theme support on or off for UIX / card-mod, Mushroom, Bubble Card, Layout Card, Button Card and Stack-in-Card'
     },
-    { 
-      id: 'css', 
-      label: 'Custom CSS', 
+    {
+      id: 'css',
+      label: 'Custom CSS',
       icon: <Code className="w-3.5 h-3.5" />,
       tooltip: 'Custom CSS: UIX / card-mod custom stylesheet rules, keyframe animations, and shadow DOM styling'
     },
-    { 
-      id: 'info', 
-      label: 'Info', 
+    {
+      id: 'info',
+      label: 'Info',
       icon: <Info className="w-3.5 h-3.5" />,
       tooltip: 'Info: Author details, GitHub handle, and theme mood description'
     },
   ];
 
-  if (theme.rawTheme) {
-    const keys = Object.keys(theme.rawTheme.data);
-    const cardModRules = keys.filter((k) => k.startsWith('card-mod')).length;
-    return (
-      <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-y-auto p-5 space-y-4 text-xs text-slate-300">
-        <div>
-          <div className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">Preview, exactly as published</div>
-          <h2 className="text-lg font-bold text-white mt-1">{theme.name}</h2>
-          <p className="text-slate-400 mt-0.5">
-            from{' '}
+  return (
+    <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
+      {theme.rawTheme && (
+        <div className="px-3.5 py-2 bg-emerald-950/40 border-b border-emerald-800/60 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold shrink-0">From GitHub</span>
             <a
               href={`https://github.com/${theme.rawTheme.source}`}
               target="_blank"
               rel="noreferrer"
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-blue-400 hover:text-blue-300 underline text-xs truncate"
             >
               {theme.rawTheme.source}
             </a>
-          </p>
-        </div>
-        <p className="leading-relaxed">
-          The dashboard on the right uses this theme's own YAML untouched: {keys.length} top-level entries
-          {cardModRules > 0 ? `, ${cardModRules} of them UIX / card-mod rules` : ''}. Nothing is installed or changed in your Home Assistant.
-        </p>
-        {onEditCopy && (
-          <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
-            <p className="leading-relaxed text-slate-400">
-              Want to tweak it? HATS can make an editable copy, but it rebuilds the theme from its colors and glass settings, so some details of the original are lost.
-            </p>
+          </div>
+          {onEditCopy && (
             <button
               onClick={onEditCopy}
-              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold"
+              title="Create an editable copy (rebuilds from extracted colors and settings)"
+              className="shrink-0 px-2 py-1 text-[11px] font-semibold bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 rounded-lg transition-colors"
             >
-              Edit a copy in HATS
+              Copy
             </button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-full flex flex-col bg-slate-950/80 border-r border-slate-800/80 overflow-hidden">
+          )}
+        </div>
+      )}
       <div className="p-3.5 border-b border-slate-800/80 space-y-2.5 shrink-0">
         <div className="flex items-center justify-between gap-2.5">
           <div className="relative flex-1 group">
@@ -126,7 +109,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
               title="Click to edit theme name. This name will appear in Home Assistant theme picker."
               className="w-full bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-blue-500/60 focus:border-blue-500 font-bold text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded-xl pl-3 pr-7 py-1.5 transition-all shadow-inner"
             />
-            <div 
+            <div
               className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-400 transition-colors"
               title="Click box to edit theme name"
             >
@@ -134,7 +117,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ theme, onChange, onOpe
             </div>
           </div>
 
-          <span 
+          <span
             className="text-[11px] text-slate-400 font-medium shrink-0 truncate max-w-[120px]"
             title={`Created by ${theme.author}`}
           >
