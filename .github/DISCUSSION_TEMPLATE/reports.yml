@@ -1,0 +1,31 @@
+title: "[Report] "
+body:
+  - type: input
+    id: repo
+    attributes:
+      label: Theme repository link
+      placeholder: https://github.com/owner/theme-repo
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did you see it?
+      options:
+        - Preview website
+        - Desktop app
+        - Home Assistant app
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: HATS version
+      placeholder: "1.2.1"
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong?
+      description: What you expected and what you saw. A screenshot helps.
+    validations:
+      required: true
