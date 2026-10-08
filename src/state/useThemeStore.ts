@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ThemeConfig, CommunityThemeSubmission } from '../types/theme';
 import { defaultThemes, defaultGlassTheme } from '../presets/defaultThemes';
 import { fetchInstalledHaThemes, deleteHaTheme } from '../services/haService';
+import { dedupeIdenticalThemes } from '../services/themeDedupe';
 import { processBackgroundImage } from '../services/imageProcessor';
 import { mergeSyncedThemes } from '../services/themeSync';
 import alpineLightningLake from '../assets/backgrounds/alpine-lightning-lake.jpg';
@@ -30,7 +31,7 @@ function loadSavedCustomThemes(): ThemeConfig[] {
     if (!saved) return [];
     const parsed: ThemeConfig[] = JSON.parse(saved);
     if (Array.isArray(parsed)) {
-      return parsed.filter(t => t && t.id && !t.name.toLowerCase().startsWith('ultimate') && !t.id.toLowerCase().startsWith('ultimate'));
+      return dedupeIdenticalThemes(parsed.filter(t => t && t.id && !t.name.toLowerCase().startsWith('ultimate') && !t.id.toLowerCase().startsWith('ultimate')));
     }
     return [];
   } catch {
@@ -42,7 +43,6 @@ const initialCommunitySubmissions: CommunityThemeSubmission[] = [];
 
 export function useThemeStore() {
   const [themes, setThemes] = useState<ThemeConfig[]>(() => {
-    const custom = loadSavedCustomThemes();
     if (IS_HOSTED) {
       try {
         localStorage.removeItem(STORAGE_KEY_CUSTOM);
@@ -50,6 +50,7 @@ export function useThemeStore() {
       }
       return [...defaultThemes];
     }
+    const custom = loadSavedCustomThemes();
     return [...defaultThemes, ...custom];
   });
 
@@ -75,8 +76,8 @@ export function useThemeStore() {
   });
 
   useEffect(() => {
-    const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
     if (IS_HOSTED) return;
+    const customOnly = themes.filter(t => t.isCustom && !t.installedFilePath && !t.name.toLowerCase().startsWith('ultimate'));
     const withoutPixels = (t: ThemeConfig): ThemeConfig =>
       t.background.imageUrl?.startsWith('data:')
         ? { ...t, background: { ...t.background, type: 'gradient', imageUrl: undefined } }

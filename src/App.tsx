@@ -13,6 +13,7 @@ import { useLiveRenderSlot } from './state/useLiveRenderSlot';
 import { IS_HOSTED } from './runtime';
 import { importThemesFromGitHubRepo } from './services/githubImporter';
 import { parsePreviewParams, pickRequestedTheme } from './services/previewParams';
+import { copyIdForPreview } from './services/themeDedupe';
 import { ThemeConfig } from './types/theme';
 
 const LIVE_RENDER_BOOT_TIMEOUT_MS = 25000;
@@ -154,9 +155,14 @@ export const App: React.FC = () => {
   }, []);
 
   const editCopyOfPreview = () => {
+    const copyId = copyIdForPreview(activeTheme.rawTheme?.source ?? activeTheme.id, activeTheme.name);
+    if (themes.some((t) => t.id === copyId)) {
+      setActiveThemeId(copyId);
+      return;
+    }
     const copy: ThemeConfig = {
       ...activeTheme,
-      id: `custom-theme-${Date.now().toString(36)}`,
+      id: copyId,
       rawTheme: undefined,
       isCustom: true,
       isInstalled: false,
