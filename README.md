@@ -134,6 +134,17 @@ Compared with the Home Assistant app:
 - Nothing is installed into Home Assistant. When a theme is ready, use **Export > Copy** or **Export > Download .zip**.
 - The Doctor, HACS checks and the UIX and card-mod switch are hidden, since they only apply inside Home Assistant.
 
+### Where your files go
+
+The desktop app keeps a folder called **HATS** in your Documents folder:
+
+| Folder | What it holds |
+|---|---|
+| `Documents/HATS/Exports` | The folder the save dialog opens in when you download a theme zip. You can pick another place in the dialog. |
+| `Documents/HATS/Imported` | A copy of every theme you import, as a `.yaml` file with its background image next to it. Importing the same theme again replaces that copy. |
+
+Open them from the **File** menu with **Open HATS Folder**, **Open Exports Folder** and **Open Imported Themes Folder**. Themes you create and edit are kept inside the app between launches, and **Export** is how you save them as files.
+
 To build it yourself:
 
 ```bash

@@ -96,9 +96,10 @@ export const App: React.FC = () => {
   );
 
   const importThemes = useCallback(
-    (imported: ThemeConfig[]) => {
+    (imported: ThemeConfig[], notice?: string) => {
       setThemes((prev) => [...imported, ...prev.filter((t) => !imported.some((i) => i.id === t.id))]);
       if (imported[0]) setActiveThemeId(imported[0].id);
+      if (notice) setRemote({ state: 'info', message: notice });
     },
     [setThemes, setActiveThemeId]
   );

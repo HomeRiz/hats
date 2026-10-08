@@ -10,6 +10,7 @@ import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
 import { isLocalHost } from './hostGuard.js';
+import { ensureLibrary, saveImportedTheme } from './standaloneLibrary.js';
 import { extractPalette } from './paletteExtract.js';
 
 const DEFAULT_PALETTE = {
@@ -1088,6 +1089,25 @@ app.post('/api/github/submit-issue', async (req, res) => {
     submissionInFlight = false;
   }
 });
+
+const LIBRARY_DIR = STANDALONE && process.env.HATS_LIBRARY_DIR ? process.env.HATS_LIBRARY_DIR : null;
+if (LIBRARY_DIR) {
+  const libraryFolders = ensureLibrary(LIBRARY_DIR);
+
+  app.get('/api/standalone/library', (_req, res) => {
+    res.json(libraryFolders);
+  });
+
+  app.post('/api/standalone/save-import', (req, res) => {
+    try {
+      const { yamlText, imageDataUrl } = req.body || {};
+      const saved = saveImportedTheme({ libraryDir: LIBRARY_DIR, yamlText, imageDataUrl });
+      res.json({ saved: true, folder: saved.importedDir, file: path.basename(saved.yamlPath) });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+}
 
 app.get('/*splat', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

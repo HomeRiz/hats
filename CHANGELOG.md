@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   A daily workflow builds the index the list reads.
 - The desktop installers for macOS, Windows and Linux are attached to the
   GitHub release when a version tag is pushed.
+- The desktop app now has a default HATS folder in Documents. The save dialog
+  for an exported zip opens in its Exports folder, and every theme you import
+  is also saved there, with its background image, in the Imported folder. The
+  File menu opens each folder.
 
 ### Changed
 

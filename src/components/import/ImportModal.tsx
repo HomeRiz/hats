@@ -4,11 +4,14 @@ import { ThemeConfig } from '../../types/theme';
 import { defaultGlassTheme } from '../../presets/defaultThemes';
 import { processBackgroundImage } from '../../services/imageProcessor';
 import { importThemeFiles, validateImageFile, ImportedImage } from '../../services/themeImport';
+import { saveImportToLibrary } from '../../services/standaloneLibrary';
+import { useStandalone } from '../../state/useStandalone';
+import { IS_HOSTED } from '../../runtime';
 
 interface ImportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onImport: (themes: ThemeConfig[]) => void;
+  onImport: (themes: ThemeConfig[], notice?: string) => void;
 }
 
 const pickerClass =
@@ -17,6 +20,7 @@ const textareaClass =
   'w-full mt-2 rounded-lg bg-slate-950 border border-slate-800 p-2 font-mono text-[11px] text-slate-300 leading-relaxed focus:outline-none focus:border-blue-500';
 
 export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImport }) => {
+  const standalone = useStandalone();
   const [yamlText, setYamlText] = useState('');
   const [yamlName, setYamlName] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -66,7 +70,12 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
         setError(result.error);
         return;
       }
-      onImport(result.themes);
+      let notice: string | undefined;
+      if (standalone && !IS_HOSTED) {
+        const saved = await saveImportToLibrary(yamlText, image?.dataUrl);
+        if (saved) notice = `Saved a copy of the imported theme to ${saved.folder}`;
+      }
+      onImport(result.themes, notice);
       onClose();
     } catch (err: any) {
       setError(err?.message || 'Could not import these files.');

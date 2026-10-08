@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, dialog } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog, session } = require('electron');
 const fs = require('fs');
 const net = require('net');
 const path = require('path');
@@ -24,30 +24,45 @@ async function pickPort() {
   throw new Error('No free local port for HATS');
 }
 
+function resolveLibraryDir(fallbackDir) {
+  const candidates = [path.join(app.getPath('documents'), 'HATS'), path.join(fallbackDir, 'library')];
+  for (const dir of candidates) {
+    try {
+      fs.mkdirSync(path.join(dir, 'Imported'), { recursive: true });
+      fs.mkdirSync(path.join(dir, 'Exports'), { recursive: true });
+      return dir;
+    } catch {
+    }
+  }
+  throw new Error('HATS could not create a folder for your themes');
+}
+
 async function startServer() {
   const dataDir = path.join(app.getPath('userData'), 'hats-data');
   fs.mkdirSync(dataDir, { recursive: true });
+  const libraryDir = resolveLibraryDir(dataDir);
   const port = await pickPort();
 
   process.env.HATS_STANDALONE = 'true';
   process.env.HATS_ENABLE_LIVE_PREVIEW = 'true';
   process.env.HA_CONFIG_DIR = dataDir;
+  process.env.HATS_LIBRARY_DIR = libraryDir;
   process.env.INGRESS_PORT = String(port);
 
   await import(pathToFileURL(path.join(__dirname, '..', 'server', 'index.js')).href);
-  return { port, dataDir };
+  return { port, dataDir, libraryDir };
 }
 
-function buildMenu(dataDir) {
+function buildMenu(libraryDir) {
   const template = [
     ...(process.platform === 'darwin' ? [{ role: 'appMenu' }] : []),
     {
       label: 'File',
       submenu: [
-        {
-          label: 'Open Themes Folder',
-          click: () => shell.openPath(path.join(dataDir, 'themes')),
-        },
+        { label: 'Open HATS Folder', click: () => shell.openPath(libraryDir) },
+        { label: 'Open Exports Folder', click: () => shell.openPath(path.join(libraryDir, 'Exports')) },
+        { label: 'Open Imported Themes Folder', click: () => shell.openPath(path.join(libraryDir, 'Imported')) },
+        { type: 'separator' },
         process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' },
       ],
     },
@@ -102,8 +117,12 @@ if (!app.requestSingleInstanceLock()) {
 
   app.whenReady().then(async () => {
     try {
-      const { port, dataDir } = await startServer();
-      buildMenu(dataDir);
+      const { port, libraryDir } = await startServer();
+      buildMenu(libraryDir);
+      session.defaultSession.on('will-download', (_event, item) => {
+        const name = path.basename(item.getFilename() || 'theme.zip');
+        item.setSaveDialogOptions({ defaultPath: path.join(libraryDir, 'Exports', name) });
+      });
       mainWindow = createWindow(port);
       app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow(port);
