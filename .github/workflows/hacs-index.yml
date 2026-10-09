@@ -37,7 +37,9 @@ jobs:
             gh api "repos/$repo/git/refs" -f ref=refs/heads/hacs-index -f sha="$GITHUB_SHA" >/dev/null
           fi
 
-          sha=$(gh api "repos/$repo/contents/hacs-themes.json?ref=hacs-index" --jq .sha 2>/dev/null || true)
+          if ! sha=$(gh api "repos/$repo/contents/hacs-themes.json?ref=hacs-index" --jq .sha 2>/dev/null); then
+            sha=""
+          fi
           previous_count=0
           if [ -n "$sha" ]; then
             gh api -H "Accept: application/vnd.github.raw" "repos/$repo/contents/hacs-themes.json?ref=hacs-index" > "$previous"
