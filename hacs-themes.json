@@ -1,0 +1,1850 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-09T23:46:14.504Z",
+  "source": "https://data-v2.hacs.xyz/theme/data.json",
+  "themes": [
+    {
+      "full_name": "3ative/3ative-blue-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 8,
+      "pushed_at": "2026-05-14T02:28:27Z",
+      "files": [
+        {
+          "path": "themes/3ative_blue.yaml",
+          "themes": [
+            "3ative_blue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "78wesley/Home-Assistant-Darkish-Theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 6,
+      "pushed_at": "2025-12-23T22:41:20Z",
+      "files": [
+        {
+          "path": "themes/darkish.yaml",
+          "themes": [
+            "darkish"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "aFFekopp/dark_teal",
+      "default_branch": "master",
+      "license": null,
+      "stars": 31,
+      "pushed_at": "2022-03-15T09:06:42Z",
+      "files": [
+        {
+          "path": "themes/dark_teal.yaml",
+          "themes": [
+            "dark_teal"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "am80l/sundown",
+      "default_branch": "master",
+      "license": null,
+      "stars": 5,
+      "pushed_at": "2020-07-29T01:28:19Z",
+      "files": [
+        {
+          "path": "themes/sundown.yaml",
+          "themes": [
+            "sundown"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "awolkers/home-assistant-themes",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 19,
+      "pushed_at": "2024-11-29T08:50:12Z",
+      "files": [
+        {
+          "path": "themes/dark_themes.yaml",
+          "themes": [
+            "Dark Blue",
+            "Dark Green",
+            "Dark Orange",
+            "Dark Pink",
+            "Dark Turqoise",
+            "Dark Yellow"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "basnijholt/lovelace-ios-dark-mode-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 492,
+      "pushed_at": "2022-11-03T15:53:32Z",
+      "files": [
+        {
+          "path": "themes/ios-dark-mode.yaml",
+          "themes": [
+            "ios-dark-mode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "basnijholt/lovelace-ios-light-mode-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 9,
+      "pushed_at": "2020-01-20T19:48:02Z",
+      "files": [
+        {
+          "path": "themes/ios-light-mode.yaml",
+          "themes": [
+            "ios-light-mode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "basnijholt/lovelace-ios-themes",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 881,
+      "pushed_at": "2026-07-21T05:47:07Z",
+      "files": [
+        {
+          "path": "themes/ios-themes.yaml",
+          "themes": [
+            "ios-light-mode-blue-red-alternative",
+            "ios-light-mode-blue-red",
+            "ios-dark-mode-blue-red-alternative",
+            "ios-dark-mode-blue-red",
+            "ios-light-mode-dark-blue-alternative",
+            "ios-light-mode-dark-blue",
+            "ios-dark-mode-dark-blue-alternative",
+            "ios-dark-mode-dark-blue",
+            "ios-light-mode-dark-green-alternative",
+            "ios-light-mode-dark-green",
+            "ios-dark-mode-dark-green-alternative",
+            "ios-dark-mode-dark-green",
+            "ios-light-mode-light-blue-alternative",
+            "ios-light-mode-light-blue",
+            "ios-dark-mode-light-blue-alternative",
+            "ios-dark-mode-light-blue",
+            "ios-light-mode-light-green-alternative",
+            "ios-light-mode-light-green",
+            "ios-dark-mode-light-green-alternative",
+            "ios-dark-mode-light-green",
+            "ios-light-mode-orange-alternative",
+            "ios-light-mode-orange",
+            "ios-dark-mode-orange-alternative",
+            "ios-dark-mode-orange",
+            "ios-light-mode-red-alternative",
+            "ios-light-mode-red",
+            "ios-dark-mode-red-alternative",
+            "ios-dark-mode-red"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "bbbenji/synthwave-hass",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 207,
+      "pushed_at": "2026-10-05T07:14:05Z",
+      "files": [
+        {
+          "path": "themes/synthwave.yaml",
+          "themes": [
+            "synthwave"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "brezlord/BrezNET-iOS",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 2,
+      "pushed_at": "2026-09-26T01:26:42Z",
+      "files": [
+        {
+          "path": "themes/breznet_ios.yaml",
+          "themes": [
+            "BrezNET iOS"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "catppuccin/home-assistant",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 506,
+      "pushed_at": "2026-10-07T19:04:05Z",
+      "files": [
+        {
+          "path": "themes/catppuccin.yaml",
+          "themes": [
+            "Catppuccin Latte",
+            "Catppuccin Frappe",
+            "Catppuccin Macchiato",
+            "Catppuccin Mocha",
+            "Catppuccin Auto Latte Frappe",
+            "Catppuccin Auto Latte Macchiato",
+            "Catppuccin Auto Latte Mocha"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "coltondick/nordic-theme-main",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "stars": 44,
+      "pushed_at": "2026-05-04T15:11:53Z",
+      "files": [
+        {
+          "path": "themes/nordic-blue.yaml",
+          "themes": [
+            "nordic-blue"
+          ]
+        },
+        {
+          "path": "themes/nordic.yaml",
+          "themes": [
+            "nordic"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "DickSwart/swart_ninja_dark_theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 5,
+      "pushed_at": "2022-03-04T09:56:36Z",
+      "files": [
+        {
+          "path": "themes/swart_ninja_dark.yaml",
+          "themes": [
+            "swart_ninja_dark"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Djelle/milcomarmy",
+      "default_branch": "main",
+      "license": "Unlicense",
+      "stars": 2,
+      "pushed_at": "2024-10-14T13:49:58Z",
+      "files": [
+        {
+          "path": "themes/milcomarmy.yaml",
+          "themes": [
+            "MilCom Army",
+            "MilCom Army - Monotone",
+            "MilCom Army - Emphasize",
+            "MilCom Army - Attention"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "einschmidt/github_dark_theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 8,
+      "pushed_at": "2023-08-23T06:12:41Z",
+      "files": [
+        {
+          "path": "themes/github_dark_theme.yaml",
+          "themes": [
+            "Github Dark Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "einschmidt/github_light_theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 5,
+      "pushed_at": "2023-12-01T17:56:43Z",
+      "files": [
+        {
+          "path": "themes/github_light_theme.yaml",
+          "themes": [
+            "Github Light Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Eonasdan/home-assistant-bootstrap-5-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 3,
+      "pushed_at": "2024-03-05T21:41:07Z",
+      "files": [
+        {
+          "path": "themes/bootstrap5/bootstrap5.yaml",
+          "themes": [
+            "bootstrap5"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "estiens/sweet_pink_hass_theme",
+      "default_branch": "main",
+      "license": "GPL-3.0",
+      "stars": 7,
+      "pushed_at": "2026-04-16T22:22:47Z",
+      "files": [
+        {
+          "path": "themes/sweetpink.yaml",
+          "themes": [
+            "sweetpink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "f17mkx/everyday-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-05-13T18:05:28Z",
+      "files": [
+        {
+          "path": "themes/everyday.yaml",
+          "themes": [
+            "everyday"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "fi-sch/ux_goodie_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 11,
+      "pushed_at": "2022-05-27T21:05:56Z",
+      "files": [
+        {
+          "path": "themes/ux_goodie.yaml",
+          "themes": [
+            "ux_goodie"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "flejz/hass-cyberpunk-2077-theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 73,
+      "pushed_at": "2026-05-05T14:07:19Z",
+      "files": [
+        {
+          "path": "themes/cyberpunk-2077.yaml",
+          "themes": [
+            "cyberpunk-2077"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "florent6901/home-assistant-nuit_mediterraneenne",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-09-04T12:26:16Z",
+      "files": [
+        {
+          "path": "themes/Nuit Mediterraneenne Dark.yaml",
+          "themes": [
+            "Nuit Mediterraneenne Dark"
+          ]
+        },
+        {
+          "path": "themes/Nuit Mediterraneenne Halo.yaml",
+          "themes": [
+            "Nuit Mediterraneenne Halo"
+          ]
+        },
+        {
+          "path": "themes/Nuit Mediterraneenne Silver.yaml",
+          "themes": [
+            "Nuit Mediterraneenne Silver"
+          ]
+        },
+        {
+          "path": "themes/Nuit Mediterraneenne.yaml",
+          "themes": [
+            "Nuit Mediterraneenne"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/amoled",
+      "default_branch": "master",
+      "license": null,
+      "stars": 33,
+      "pushed_at": "2024-04-26T07:50:09Z",
+      "files": [
+        {
+          "path": "themes/amoled.yaml",
+          "themes": [
+            "amoled"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/aqua-fiesta",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2024-02-19T09:54:24Z",
+      "files": [
+        {
+          "path": "themes/aqua_fiesta.yaml",
+          "themes": [
+            "aqua_fiesta"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/blackened",
+      "default_branch": "master",
+      "license": null,
+      "stars": 10,
+      "pushed_at": "2024-02-16T11:09:26Z",
+      "files": [
+        {
+          "path": "themes/blackened.yaml",
+          "themes": [
+            "blackened"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/blue-night",
+      "default_branch": "master",
+      "license": null,
+      "stars": 8,
+      "pushed_at": "2024-05-14T07:03:49Z",
+      "files": [
+        {
+          "path": "themes/blue_night.yaml",
+          "themes": [
+            "blue_night"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/christmas",
+      "default_branch": "master",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2023-03-27T23:57:09Z",
+      "files": [
+        {
+          "path": "themes/christmas.yaml",
+          "themes": [
+            "christmas"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/dark-mint",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2023-03-27T21:57:12Z",
+      "files": [
+        {
+          "path": "themes/dark_mint.yaml",
+          "themes": [
+            "dark_mint"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/dark-orange",
+      "default_branch": "master",
+      "license": null,
+      "stars": 12,
+      "pushed_at": "2023-03-22T19:58:15Z",
+      "files": [
+        {
+          "path": "themes/dark_orange.yaml",
+          "themes": [
+            "dark_orange"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/grey-night",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2024-02-19T10:56:21Z",
+      "files": [
+        {
+          "path": "themes/grey_night.yaml",
+          "themes": [
+            "grey_night"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/halloween",
+      "default_branch": "master",
+      "license": null,
+      "stars": 3,
+      "pushed_at": "2023-03-27T19:57:15Z",
+      "files": [
+        {
+          "path": "themes/halloween.yaml",
+          "themes": [
+            "halloween"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/material-dark-green",
+      "default_branch": "master",
+      "license": null,
+      "stars": 2,
+      "pushed_at": "2023-03-27T02:57:14Z",
+      "files": [
+        {
+          "path": "themes/material_dark_green.yaml",
+          "themes": [
+            "material_dark_green"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/material-dark-pink",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2023-03-27T19:57:38Z",
+      "files": [
+        {
+          "path": "themes/material_dark_pink.yaml",
+          "themes": [
+            "material_dark_pink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/material-dark-red",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2023-03-22T23:57:27Z",
+      "files": [
+        {
+          "path": "themes/material_dark_red.yaml",
+          "themes": [
+            "material_dark_red"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/midnight",
+      "default_branch": "master",
+      "license": null,
+      "stars": 55,
+      "pushed_at": "2026-06-19T21:30:40Z",
+      "files": [
+        {
+          "path": "themes/midnight.yaml",
+          "themes": [
+            "midnight"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/midnight-blue",
+      "default_branch": "master",
+      "license": null,
+      "stars": 6,
+      "pushed_at": "2023-03-27T22:57:02Z",
+      "files": [
+        {
+          "path": "themes/midnight_blue.yaml",
+          "themes": [
+            "midnight_blue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/nord",
+      "default_branch": "master",
+      "license": null,
+      "stars": 14,
+      "pushed_at": "2023-04-03T13:58:06Z",
+      "files": [
+        {
+          "path": "themes/nord.yaml",
+          "themes": [
+            "nord"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/solarized-light",
+      "default_branch": "master",
+      "license": null,
+      "stars": 4,
+      "pushed_at": "2023-03-27T02:57:14Z",
+      "files": [
+        {
+          "path": "themes/solarized_light.yaml",
+          "themes": [
+            "solarized_light"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/stell-blue-with-colors",
+      "default_branch": "master",
+      "license": null,
+      "stars": 2,
+      "pushed_at": "2024-02-19T08:32:24Z",
+      "files": [
+        {
+          "path": "themes/stell_blue_with_colors.yaml",
+          "themes": [
+            "stell_blue_with_colors"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/teal",
+      "default_branch": "master",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2023-04-03T14:07:08Z",
+      "files": [
+        {
+          "path": "themes/teal.yaml",
+          "themes": [
+            "teal"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "home-assistant-community-themes/vaporwave-pink",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 5,
+      "pushed_at": "2022-06-17T14:41:05Z",
+      "files": [
+        {
+          "path": "themes/vaporwave-pink.yaml",
+          "themes": [
+            "vaporwave-pink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "houtknots/UglyChristmas-Theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2026-02-26T18:40:16Z",
+      "files": [
+        {
+          "path": "themes/uglychristmas.yaml",
+          "themes": [
+            "uglychristmas"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "iosue-iulianus/homeassistant-pipboy-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 32,
+      "pushed_at": "2026-03-20T22:57:08Z",
+      "files": [
+        {
+          "path": "themes/pipboy.yaml",
+          "themes": [
+            "Pip-Boy",
+            "Pip-Boy Amber",
+            "Pip-Boy Purple",
+            "Pip-Boy White",
+            "Pip-Boy Blue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "jbsky/ha-glass-dashboard",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 5,
+      "pushed_at": "2026-08-27T21:19:41Z",
+      "files": [
+        {
+          "path": "themes/glass-dynamic/glass-dynamic.yaml",
+          "themes": [
+            "weather-dynamic"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JOHLC/transparentblue",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 34,
+      "pushed_at": "2026-04-08T12:33:21Z",
+      "files": [
+        {
+          "path": "themes/transparentblue.yaml",
+          "themes": [
+            "transparentblue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/google_dark_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 143,
+      "pushed_at": "2023-01-12T22:47:14Z",
+      "files": [
+        {
+          "path": "themes/google_dark_theme.yaml",
+          "themes": [
+            "Google Dark Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/google_light_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 54,
+      "pushed_at": "2023-01-12T22:52:07Z",
+      "files": [
+        {
+          "path": "themes/google_light_theme.yaml",
+          "themes": [
+            "Google Light Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/google-theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 151,
+      "pushed_at": "2024-01-23T15:01:38Z",
+      "files": [
+        {
+          "path": "themes/google_theme.yaml",
+          "themes": [
+            "Google Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/ios_dark_mode_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 27,
+      "pushed_at": "2023-01-12T22:58:52Z",
+      "files": [
+        {
+          "path": "themes/ios_dark_mode.yaml",
+          "themes": [
+            "iOS Dark Mode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/ios_light_mode_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 15,
+      "pushed_at": "2023-01-12T22:54:45Z",
+      "files": [
+        {
+          "path": "themes/ios_light_mode.yaml",
+          "themes": [
+            "iOS Light Mode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/ios-theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 43,
+      "pushed_at": "2023-01-13T19:19:48Z",
+      "files": [
+        {
+          "path": "themes/ios_theme.yaml",
+          "themes": [
+            "iOS Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "JuanMTech/macOS-Theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 97,
+      "pushed_at": "2023-01-13T19:20:50Z",
+      "files": [
+        {
+          "path": "themes/macos.yaml",
+          "themes": [
+            "macOS Theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "kizza/homeassistant-gruvbox-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 3,
+      "pushed_at": "2026-09-04T00:19:56Z",
+      "files": [
+        {
+          "path": "themes/gruvbox.yaml",
+          "themes": [
+            "Gruvbox"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "knightburton/minimal-ninja-theme",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "stars": 9,
+      "pushed_at": "2025-10-20T17:15:49Z",
+      "files": [
+        {
+          "path": "themes/minimal-ninja.yaml",
+          "themes": [
+            "Minimal Ninja"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "KTibow/lovelace-soft-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 52,
+      "pushed_at": "2024-01-07T01:57:21Z",
+      "files": [
+        {
+          "path": "themes/soft.yaml",
+          "themes": [
+            "Soft UI"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "loryanstrant/blackout",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 2,
+      "pushed_at": "2026-06-29T01:16:42Z",
+      "files": [
+        {
+          "path": "themes/blackout.yaml",
+          "themes": [
+            "Blackout"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "loryanstrant/ha-weylandyutani",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 28,
+      "pushed_at": "2026-06-29T01:16:36Z",
+      "files": [
+        {
+          "path": "themes/weylandyutani.yaml",
+          "themes": [
+            "weylandyutani"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Madelena/Metrology-for-Hass",
+      "default_branch": "main",
+      "license": null,
+      "stars": 687,
+      "pushed_at": "2024-05-06T02:54:40Z",
+      "files": [
+        {
+          "path": "themes/metro.yaml",
+          "themes": [
+            "________________________________________Common Base (Do Not Use)",
+            "________________________________________Common Base 2 (Do Not Use)",
+            "________________________________________Common Base 3 (Do Not Use)",
+            "________________________________________Common Base 4 (Do Not Use)",
+            "________________________________________Common Base 5 (Do Not Use)",
+            "Metro Red",
+            "Fluent Red",
+            "Metro Blue",
+            "Fluent Blue",
+            "Metro Green",
+            "Fluent Green",
+            "Metro Orange",
+            "Fluent Orange",
+            "Metro Purple",
+            "Fluent Purple",
+            "Metro Slate",
+            "Fluent Slate"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "malcolmturnbull/draculaish-ha-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 15,
+      "pushed_at": "2023-10-13T02:30:40Z",
+      "files": [
+        {
+          "path": "themes/draculaish.yaml",
+          "themes": [
+            "Draculaish",
+            "Draculaish-Pink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "mikosoft83/hass-windows10-themes",
+      "default_branch": "master",
+      "license": null,
+      "stars": 13,
+      "pushed_at": "2026-06-29T19:43:59Z",
+      "files": [
+        {
+          "path": "themes/windows10/windows-10-blue-gray.yaml",
+          "themes": [
+            "Windows 10 Blue Gray"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-brick-red.yaml",
+          "themes": [
+            "Windows 10 Brick Red"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-camouflage-desert.yaml",
+          "themes": [
+            "Windows 10 Camouflage Desert"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-camouflage.yaml",
+          "themes": [
+            "Windows 10 Camouflage"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-cool-blue-bright.yaml",
+          "themes": [
+            "Windows 10 Cool Blue Bright"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-cool-blue.yaml",
+          "themes": [
+            "Windows 10 Cool Blue"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-default-blue.yaml",
+          "themes": [
+            "Windows 10 Default Blue"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-gold.yaml",
+          "themes": [
+            "Windows 10 Gold"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-gray-brown.yaml",
+          "themes": [
+            "Windows 10 Gray Brown"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-gray-dark.yaml",
+          "themes": [
+            "Windows 10 Gray Dark"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-gray.yaml",
+          "themes": [
+            "Windows 10 Gray"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-green.yaml",
+          "themes": [
+            "Windows 10 Green"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-iris-pastel.yaml",
+          "themes": [
+            "Windows 10 Iris Pastel"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-iris-spring.yaml",
+          "themes": [
+            "Windows 10 Iris Spring"
+          ]
+        },
+        {
+          "path": "themes/windows10/windows-10-liddy-green.yaml",
+          "themes": [
+            "Windows 10 Liddy Green"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "mjs271/arcticForest-dark_HA",
+      "default_branch": "main",
+      "license": "NOASSERTION",
+      "stars": 2,
+      "pushed_at": "2026-07-07T03:57:30Z",
+      "files": [
+        {
+          "path": "themes/arcticForest_dark.yaml",
+          "themes": [
+            "arcticForest_dark"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "myleskeeffe/clear-theme-dark-vibrant",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2021-02-10T10:21:44Z",
+      "files": [
+        {
+          "path": "themes/clear-dark-vibrant.yaml",
+          "themes": [
+            "clear-dark-vibrant"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "naofireblade/clear-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 21,
+      "pushed_at": "2024-01-06T22:26:08Z",
+      "files": [
+        {
+          "path": "themes/clear.yaml",
+          "themes": [
+            "clear"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "naofireblade/clear-theme-dark",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 16,
+      "pushed_at": "2020-10-08T10:10:57Z",
+      "files": [
+        {
+          "path": "themes/clear-dark.yaml",
+          "themes": [
+            "clear-dark"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Neekster/MidnightTeal",
+      "default_branch": "master",
+      "license": null,
+      "stars": 3,
+      "pushed_at": "2022-03-11T20:50:36Z",
+      "files": [
+        {
+          "path": "themes/MidnightTeal.yaml",
+          "themes": [
+            "Midnight Teal"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Nerwyn/material-you-theme",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "stars": 480,
+      "pushed_at": "2026-08-23T00:03:22Z",
+      "files": [
+        {
+          "path": "themes/material_you.yaml",
+          "themes": [
+            "Material You"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Nezz/homeassistant-visionos-theme",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 425,
+      "pushed_at": "2026-09-28T17:18:02Z",
+      "files": [
+        {
+          "path": "themes/Liquid Glass Tinted.yaml",
+          "themes": [
+            "Liquid Glass Tinted"
+          ]
+        },
+        {
+          "path": "themes/Liquid Glass.yaml",
+          "themes": [
+            "Liquid Glass"
+          ]
+        },
+        {
+          "path": "themes/System 7.yaml",
+          "themes": [
+            "System 7"
+          ]
+        },
+        {
+          "path": "themes/visionos.yaml",
+          "themes": [
+            "visionos"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Nihvel/your_name",
+      "default_branch": "main",
+      "license": null,
+      "stars": 61,
+      "pushed_at": "2026-05-13T17:13:01Z",
+      "files": [
+        {
+          "path": "themes/yourname.yaml",
+          "themes": [
+            "Your Name. - Kataware-doki",
+            "Your Name. - Tiamat"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "pacjo/google_dark_animated",
+      "default_branch": "master",
+      "license": null,
+      "stars": 7,
+      "pushed_at": "2021-11-22T17:05:56Z",
+      "files": [
+        {
+          "path": "themes/google_dark_animated.yaml",
+          "themes": [
+            "Google Dark Animated"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "pbeckcom/green_slate_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2019-11-20T22:22:55Z",
+      "files": [
+        {
+          "path": "themes/green_slate.yaml",
+          "themes": [
+            "green_slate"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "piitaya/lovelace-mushroom-themes",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "stars": 309,
+      "pushed_at": "2025-09-26T14:14:39Z",
+      "files": [
+        {
+          "path": "themes/mushroom-shadow.yaml",
+          "themes": [
+            "Mushroom Shadow"
+          ]
+        },
+        {
+          "path": "themes/mushroom-square-shadow.yaml",
+          "themes": [
+            "Mushroom Square Shadow"
+          ]
+        },
+        {
+          "path": "themes/mushroom-square.yaml",
+          "themes": [
+            "Mushroom Square"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "PixNyb/hass-theme-blocky",
+      "default_branch": "main",
+      "license": null,
+      "stars": 5,
+      "pushed_at": "2026-08-09T15:11:45Z",
+      "files": [
+        {
+          "path": "themes/blocky.yaml",
+          "themes": [
+            "Blocky",
+            "Blocky Red",
+            "Blocky Green",
+            "Blocky Purple",
+            "Blocky Yellow",
+            "Blocky Orange",
+            "Blocky Pink",
+            "Blocky Teal"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "PlayFaster/very-dark-black-ha-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 2,
+      "pushed_at": "2026-09-20T19:22:36Z",
+      "files": [
+        {
+          "path": "themes/very_dark_black_ha_theme.yaml",
+          "themes": [
+            "Black with White",
+            "Black with Blue",
+            "Black with Cyan",
+            "Black with Emerald",
+            "Black with Green",
+            "Black with Indigo",
+            "Black with Orange",
+            "Black with Pink",
+            "Black with Red",
+            "Black with Silver",
+            "Black with Violet"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Poeschl/slate_red",
+      "default_branch": "master",
+      "license": "Apache-2.0",
+      "stars": 1,
+      "pushed_at": "2026-04-20T20:09:55Z",
+      "files": [
+        {
+          "path": "themes/slate_red.yaml",
+          "themes": [
+            "slate_red"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Raznor09/raznor-obsidian",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-07-03T08:23:23Z",
+      "files": [
+        {
+          "path": "themes/raznor-obsidian.yaml",
+          "themes": [
+            "raznor_base_settings",
+            "Raznor Obsidian - Blue",
+            "Raznor Obsidian - Purple",
+            "Raznor Obsidian - Green",
+            "Raznor Obsidian - Red",
+            "Raznor Obsidian - Orange"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "ricardoquecria/caule-themes-pack-1",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 340,
+      "pushed_at": "2023-10-05T00:53:45Z",
+      "files": [
+        {
+          "path": "themes/caule-themes-pack-1.yaml",
+          "themes": [
+            "Caule Black Rose",
+            "Caule Black Purple",
+            "Caule Black Blue",
+            "Caule Black Aqua",
+            "Caule Black Green",
+            "Caule Black Yellow",
+            "Caule Black Orange",
+            "Caule Black Coral",
+            "Caule Black Pink",
+            "Caule Black Gray",
+            "Caule Black Rose Glass",
+            "Caule Black Purple Glass",
+            "Caule Black Blue Glass",
+            "Caule Black Aqua Glass",
+            "Caule Black Green Glass",
+            "Caule Black Yellow Glass",
+            "Caule Black Orange Glass",
+            "Caule Black Coral Glass",
+            "Caule Black Pink Glass",
+            "Caule Black Gray Glass",
+            "Caule Light Rose",
+            "Caule Light Purple",
+            "Caule Light Blue",
+            "Caule Light Aqua",
+            "Caule Light Green",
+            "Caule Light Yellow",
+            "Caule Light Orange",
+            "Caule Light Coral",
+            "Caule Light Pink",
+            "Caule Light Gray",
+            "Caule Dark Rose",
+            "Caule Dark Purple",
+            "Caule Dark Blue",
+            "Caule Dark Aqua",
+            "Caule Dark Green",
+            "Caule Dark Yellow",
+            "Caule Dark Orange",
+            "Caule Dark Coral",
+            "Caule Dark Pink",
+            "Caule Dark Gray"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "robex2005/MorphHomeX",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 3,
+      "pushed_at": "2026-08-03T06:14:17Z",
+      "files": [
+        {
+          "path": "themes/morphhomex-inset.yaml",
+          "themes": [
+            "morphhomex-light-inset",
+            "morphhomex-dark-inset",
+            "morphhomex-dark-taupe-inset",
+            "morphhomex-dark-graphite-inset",
+            "morphhomex-dark-ash-inset",
+            "morphhomex-dark-onyx-inset"
+          ]
+        },
+        {
+          "path": "themes/morphhomex.yaml",
+          "themes": [
+            "morphhomex-light",
+            "morphhomex-dark",
+            "morphhomex-dark-taupe",
+            "morphhomex-dark-graphite",
+            "morphhomex-dark-ash",
+            "morphhomex-dark-onyx"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "robinwittebol/whatsapp-theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 19,
+      "pushed_at": "2025-08-23T22:46:31Z",
+      "files": [
+        {
+          "path": "themes/whatsapp_theme.yaml",
+          "themes": [
+            "whatsapp_theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "seangreen2/slate_theme",
+      "default_branch": "master",
+      "license": null,
+      "stars": 141,
+      "pushed_at": "2026-09-25T17:23:19Z",
+      "files": [
+        {
+          "path": "themes/slate.yaml",
+          "themes": [
+            "slate"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "skynet01/homeassistant-skynet-theme",
+      "default_branch": "main",
+      "license": "GPL-3.0",
+      "stars": 3,
+      "pushed_at": "2026-07-07T23:02:51Z",
+      "files": [
+        {
+          "path": "themes/skynet_dark_v2.yaml",
+          "themes": [
+            "skynet_dark_v2"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "SnakeFist007/ha_vastayan_bond",
+      "default_branch": "main",
+      "license": null,
+      "stars": 3,
+      "pushed_at": "2023-02-28T15:06:25Z",
+      "files": [
+        {
+          "path": "themes/vastayan_bond.yaml",
+          "themes": [
+            "Vastayan Bond"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Stormrage-DJ/ha_theme_star_wars_dark",
+      "default_branch": "main",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2025-08-22T17:49:28Z",
+      "files": [
+        {
+          "path": "themes/star_wars_dark.yaml",
+          "themes": [
+            "Star Wars Dark"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Stormrage-DJ/ha_theme_star_wars_light",
+      "default_branch": "main",
+      "license": null,
+      "stars": 0,
+      "pushed_at": "2025-08-22T17:50:18Z",
+      "files": [
+        {
+          "path": "themes/star_wars_light.yaml",
+          "themes": [
+            "Star Wars Light"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 22,
+      "pushed_at": "2026-08-09T10:13:08Z",
+      "files": [
+        {
+          "path": "themes/liquid_glass.yaml",
+          "themes": [
+            "Liquid Glass",
+            "Liquid Glass Auto (experimental)",
+            "Liquid Glass Light only",
+            "Liquid Glass Compact",
+            "Liquid Glass Sunset",
+            "Liquid Glass Floorplan",
+            "Liquid Glass Lite"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "taikun114/Blue-Theme-by-taikun114",
+      "default_branch": "main",
+      "license": null,
+      "stars": 1,
+      "pushed_at": "2026-04-05T14:35:07Z",
+      "files": [
+        {
+          "path": "themes/Blue-Theme-by-taikun114.yaml",
+          "themes": [
+            "Blue Theme by taikun114"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "tgcowell/waves",
+      "default_branch": "master",
+      "license": null,
+      "stars": 108,
+      "pushed_at": "2023-03-26T08:21:03Z",
+      "files": [
+        {
+          "path": "themes/waves.yaml",
+          "themes": [
+            "waves"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "th3jesta/ha-lcars",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 589,
+      "pushed_at": "2026-10-09T01:03:03Z",
+      "files": [
+        {
+          "path": "themes/lcars.yaml",
+          "themes": [
+            "(DO NOT USE/MODIFY)=== LCARS variables",
+            "(DO NOT USE/MODIFY)=== Base customizations",
+            "(DO NOT USE/MODIFY)=== card-mod CSS",
+            "LCARS 25C",
+            "LCARS 25C (Blue Alert)",
+            "LCARS 25C (Red Alert)",
+            "LCARS 25C (Yellow Alert)",
+            "LCARS Breen",
+            "LCARS Cardassia",
+            "LCARS Classic",
+            "LCARS Default",
+            "LCARS Kronos",
+            "LCARS Picard [LCARdS Blue Accent]",
+            "LCARS Picard [LCARdS Red Accent]",
+            "LCARS Lower Decks I",
+            "LCARS Lower Decks II",
+            "LCARS Modern",
+            "LCARS Navigation",
+            "LCARS Nemesis Blue",
+            "LCARS Picard I",
+            "LCARS Picard II",
+            "LCARS Red Alert",
+            "LCARS Romulus",
+            "LCARS TNG",
+            "LCARS TNGbuttons",
+            "LCARS Transporter",
+            "LCARS Zeldaar"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "TilmanGriesel/graphite",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 462,
+      "pushed_at": "2026-06-08T19:35:46Z",
+      "files": [
+        {
+          "path": "themes/graphite-auto.yaml",
+          "themes": [
+            "Graphite Auto"
+          ]
+        },
+        {
+          "path": "themes/graphite-eink-dark.yaml",
+          "themes": [
+            "Graphite E-ink Dark"
+          ]
+        },
+        {
+          "path": "themes/graphite-eink-light.yaml",
+          "themes": [
+            "Graphite E-ink Light"
+          ]
+        },
+        {
+          "path": "themes/graphite-light.yaml",
+          "themes": [
+            "Graphite Light"
+          ]
+        },
+        {
+          "path": "themes/graphite.yaml",
+          "themes": [
+            "Graphite"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "veniplex/hass-idx-theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 2,
+      "pushed_at": "2025-05-05T09:17:17Z",
+      "files": [
+        {
+          "path": "themes/idx.yaml",
+          "themes": [
+            "IDX"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1032,
+      "pushed_at": "2026-10-04T10:52:34Z",
+      "files": [
+        {
+          "path": "themes/Frosted Glass Dark Lite.yaml",
+          "themes": [
+            "Frosted Glass Dark Lite"
+          ]
+        },
+        {
+          "path": "themes/Frosted Glass Dark.yaml",
+          "themes": [
+            "Frosted Glass Dark"
+          ]
+        },
+        {
+          "path": "themes/Frosted Glass Light Lite.yaml",
+          "themes": [
+            "Frosted Glass Light Lite"
+          ]
+        },
+        {
+          "path": "themes/Frosted Glass Light.yaml",
+          "themes": [
+            "Frosted Glass Light"
+          ]
+        },
+        {
+          "path": "themes/Frosted Glass Lite.yaml",
+          "themes": [
+            "Frosted Glass Lite"
+          ]
+        },
+        {
+          "path": "themes/Frosted Glass.yaml",
+          "themes": [
+            "Frosted Glass"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "williamahartman/noctis-solarized",
+      "default_branch": "master",
+      "license": null,
+      "stars": 7,
+      "pushed_at": "2022-03-06T20:37:36Z",
+      "files": [
+        {
+          "path": "themes/noctis-solarized.yaml",
+          "themes": [
+            "noctis-solarized"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "wowgamr/animated-weather-card",
+      "default_branch": "master",
+      "license": null,
+      "stars": 30,
+      "pushed_at": "2026-08-15T23:17:39Z",
+      "files": [
+        {
+          "path": "themes/animated-weather-card.yaml",
+          "themes": [
+            "Animated Weather Card"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Xitee1/ha-amoled-theme",
+      "default_branch": "main",
+      "license": null,
+      "stars": 6,
+      "pushed_at": "2025-08-10T12:52:31Z",
+      "files": [
+        {
+          "path": "themes/amoled.yaml",
+          "themes": [
+            "Amoled",
+            "Amoled+"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "yakidd/NeumorphixHome",
+      "default_branch": "main",
+      "license": null,
+      "stars": 11,
+      "pushed_at": "2026-09-19T09:07:55Z",
+      "files": [
+        {
+          "path": "themes/neumorphix-inset.yaml",
+          "themes": [
+            "neumorphix-light-inset",
+            "neumorphix-dark-inset",
+            "neumorphix-claude-inset"
+          ]
+        },
+        {
+          "path": "themes/neumorphix.yaml",
+          "themes": [
+            "neumorphix-light",
+            "neumorphix-dark",
+            "neumorphix-claude"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Yeelight/ha_yeelight_themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-06-23T02:18:39Z",
+      "files": [
+        {
+          "path": "themes/yeelight.yaml",
+          "themes": [
+            "Yeelight Light",
+            "Yeelight Dark",
+            "Yeelight Panel",
+            "Yeelight Classic Light",
+            "Yeelight Classic Dark",
+            "Yeelight Minimal"
+          ]
+        }
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "repo": "arsaboo/oxford_blue_theme",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "aFFekopp/noctis",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "Banditen01/vintage_theme",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "AmoebeLabs/HA-Theme_M3-07-DarkOliveGreen",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "AmoebeLabs/HA-Theme_M3-04-Magenta",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "AmoebeLabs/HA-Theme_M3-C11-Purple",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "silasmariusz/Bubble_Theme_2026",
+      "reason": "no valid theme files"
+    },
+    {
+      "repo": "mycrouch/gradient-themes",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "mattschwarz/tet-49-theme",
+      "reason": "no commit in catalog"
+    }
+  ]
+}
