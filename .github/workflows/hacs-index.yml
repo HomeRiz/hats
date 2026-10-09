@@ -15,7 +15,7 @@ concurrency:
 jobs:
   index:
     name: Build and publish the HACS theme index
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       GH_TOKEN: ${{ secrets.HACS_INDEX_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
