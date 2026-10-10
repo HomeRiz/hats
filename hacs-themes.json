@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-09T23:46:14.504Z",
+  "generatedAt": "2026-10-10T09:51:07.824Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -87,7 +87,7 @@
       "full_name": "basnijholt/lovelace-ios-dark-mode-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 492,
+      "stars": 493,
       "pushed_at": "2022-11-03T15:53:32Z",
       "files": [
         {
@@ -1582,7 +1582,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 589,
-      "pushed_at": "2026-10-09T01:03:03Z",
+      "pushed_at": "2026-10-10T00:35:26Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
