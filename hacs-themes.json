@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-11T10:00:46.990Z",
+  "generatedAt": "2026-10-12T10:50:17.274Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1167,7 +1167,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 426,
+      "stars": 427,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1296,7 +1296,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 2,
-      "pushed_at": "2026-09-20T19:22:36Z",
+      "pushed_at": "2026-10-11T19:23:21Z",
       "files": [
         {
           "path": "themes/very_dark_black_ha_theme.yaml",
@@ -1530,7 +1530,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 22,
+      "stars": 23,
       "pushed_at": "2026-08-09T10:13:08Z",
       "files": [
         {
@@ -1582,7 +1582,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 589,
-      "pushed_at": "2026-10-11T00:09:56Z",
+      "pushed_at": "2026-10-12T00:18:58Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1622,7 +1622,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 462,
+      "stars": 461,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
