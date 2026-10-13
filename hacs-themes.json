@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-12T10:50:17.274Z",
+  "generatedAt": "2026-10-13T10:36:39.589Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1581,8 +1581,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 589,
-      "pushed_at": "2026-10-12T00:18:58Z",
+      "stars": 590,
+      "pushed_at": "2026-10-13T02:28:40Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1676,7 +1676,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1033,
+      "stars": 1034,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
