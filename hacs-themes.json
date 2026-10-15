@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-14T08:44:03.874Z",
+  "generatedAt": "2026-10-15T08:19:06.178Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1167,7 +1167,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 427,
+      "stars": 428,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1582,7 +1582,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 590,
-      "pushed_at": "2026-10-14T00:12:01Z",
+      "pushed_at": "2026-10-14T23:46:20Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1620,7 +1620,7 @@
     },
     {
       "full_name": "TilmanGriesel/graphite",
-      "default_branch": "main",
+      "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
       "stars": 461,
       "pushed_at": "2026-06-08T19:35:46Z",
