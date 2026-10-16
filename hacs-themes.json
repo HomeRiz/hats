@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-15T08:19:06.178Z",
+  "generatedAt": "2026-10-16T08:11:38.162Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -931,7 +931,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 687,
+      "stars": 688,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1153,7 +1153,7 @@
       "default_branch": "main",
       "license": "Apache-2.0",
       "stars": 480,
-      "pushed_at": "2026-08-23T00:03:22Z",
+      "pushed_at": "2026-10-16T00:08:18Z",
       "files": [
         {
           "path": "themes/material_you.yaml",
@@ -1295,7 +1295,7 @@
       "full_name": "PlayFaster/very-dark-black-ha-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 2,
+      "stars": 3,
       "pushed_at": "2026-10-11T19:23:21Z",
       "files": [
         {
@@ -1581,8 +1581,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 590,
-      "pushed_at": "2026-10-14T23:46:20Z",
+      "stars": 591,
+      "pushed_at": "2026-10-15T23:35:07Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1676,7 +1676,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1036,
+      "stars": 1038,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
