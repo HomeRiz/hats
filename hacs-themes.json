@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-16T08:11:38.162Z",
+  "generatedAt": "2026-10-17T07:48:51.384Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -190,7 +190,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 506,
-      "pushed_at": "2026-10-11T00:22:17Z",
+      "pushed_at": "2026-10-17T00:24:59Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -354,7 +354,7 @@
       "full_name": "flejz/hass-cyberpunk-2077-theme",
       "default_branch": "master",
       "license": null,
-      "stars": 73,
+      "stars": 72,
       "pushed_at": "2026-05-05T14:07:19Z",
       "files": [
         {
@@ -856,7 +856,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1152,7 +1152,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 480,
+      "stars": 481,
       "pushed_at": "2026-10-16T00:08:18Z",
       "files": [
         {
@@ -1485,7 +1485,7 @@
       "full_name": "SnakeFist007/ha_vastayan_bond",
       "default_branch": "main",
       "license": null,
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2023-02-28T15:06:25Z",
       "files": [
         {
@@ -1581,8 +1581,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 591,
-      "pushed_at": "2026-10-15T23:35:07Z",
+      "stars": 592,
+      "pushed_at": "2026-10-16T23:20:43Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
