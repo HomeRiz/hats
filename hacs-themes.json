@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-18T08:02:48.579Z",
+  "generatedAt": "2026-10-19T08:53:10.350Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -856,7 +856,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 4,
+      "stars": 5,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1528,7 +1528,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 592,
-      "pushed_at": "2026-10-17T22:56:43Z",
+      "pushed_at": "2026-10-18T22:52:27Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
