@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-19T08:53:10.350Z",
+  "generatedAt": "2026-10-20T08:32:59.900Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -202,6 +202,21 @@
             "Catppuccin Auto Latte Frappe",
             "Catppuccin Auto Latte Macchiato",
             "Catppuccin Auto Latte Mocha"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "catthode/home-assistant",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-09-16T16:07:35Z",
+      "files": [
+        {
+          "path": "themes/catthode.yaml",
+          "themes": [
+            "Catthode"
           ]
         }
       ]
@@ -928,6 +943,21 @@
       ]
     },
     {
+      "full_name": "luigi-regolo/Edera",
+      "default_branch": "main",
+      "license": "GPL-3.0",
+      "stars": 5,
+      "pushed_at": "2026-10-19T20:42:58Z",
+      "files": [
+        {
+          "path": "themes/edera.yaml",
+          "themes": [
+            "Edera"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
@@ -970,6 +1000,23 @@
           "themes": [
             "Draculaish",
             "Draculaish-Pink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "mattschwarz/tet-49-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-08-25T22:45:13Z",
+      "files": [
+        {
+          "path": "themes/tet-49.yaml",
+          "themes": [
+            "TET-49",
+            "TET-49 Amber",
+            "TET-49 Tesseract"
           ]
         }
       ]
@@ -1089,6 +1136,60 @@
       ]
     },
     {
+      "full_name": "mycrouch/gradient-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-07-08T14:00:17Z",
+      "files": [
+        {
+          "path": "themes/airtouch_gradients.yaml",
+          "themes": [
+            "Gradient Blue",
+            "Gradient Sky",
+            "Gradient Cyan",
+            "Gradient Teal",
+            "Gradient Emerald",
+            "Gradient Green",
+            "Gradient Lime",
+            "Gradient Gold",
+            "Gradient Amber",
+            "Gradient Orange",
+            "Gradient Red",
+            "Gradient Crimson",
+            "Gradient Pink",
+            "Gradient Magenta",
+            "Gradient Purple",
+            "Gradient Violet",
+            "Gradient Indigo",
+            "Gradient Midnight",
+            "Gradient Steel",
+            "Gradient Slate",
+            "Pastel Blue",
+            "Pastel Sky",
+            "Pastel Cyan",
+            "Pastel Teal",
+            "Pastel Emerald",
+            "Pastel Green",
+            "Pastel Lime",
+            "Pastel Gold",
+            "Pastel Amber",
+            "Pastel Orange",
+            "Pastel Red",
+            "Pastel Crimson",
+            "Pastel Pink",
+            "Pastel Magenta",
+            "Pastel Purple",
+            "Pastel Violet",
+            "Pastel Indigo",
+            "Pastel Midnight",
+            "Pastel Steel",
+            "Pastel Slate"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "myleskeeffe/clear-theme-dark-vibrant",
       "default_branch": "master",
       "license": "MIT",
@@ -1167,7 +1268,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 429,
+      "stars": 431,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1528,7 +1629,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 592,
-      "pushed_at": "2026-10-18T22:52:27Z",
+      "pushed_at": "2026-10-20T00:09:09Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1785,11 +1886,7 @@
       "reason": "no valid theme files"
     },
     {
-      "repo": "mycrouch/gradient-themes",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "mattschwarz/tet-49-theme",
+      "repo": "skynet01/homeassistant-macos-system7-theme",
       "reason": "no commit in catalog"
     }
   ]
