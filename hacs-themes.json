@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-20T08:32:59.900Z",
+  "generatedAt": "2026-10-21T08:35:13.848Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1514,6 +1514,22 @@
       ]
     },
     {
+      "full_name": "skynet01/homeassistant-macos-system7-theme",
+      "default_branch": "main",
+      "license": "GPL-3.0",
+      "stars": 3,
+      "pushed_at": "2026-09-02T00:55:02Z",
+      "files": [
+        {
+          "path": "themes/macos_system7.yaml",
+          "themes": [
+            "MacOS System 7 eink theme",
+            "MacOS System 7 color theme"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "skynet01/homeassistant-skynet-theme",
       "default_branch": "main",
       "license": "GPL-3.0",
@@ -1628,8 +1644,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 592,
-      "pushed_at": "2026-10-20T00:09:09Z",
+      "stars": 594,
+      "pushed_at": "2026-10-20T23:40:50Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1723,7 +1739,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1041,
+      "stars": 1046,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -1886,7 +1902,7 @@
       "reason": "no valid theme files"
     },
     {
-      "repo": "skynet01/homeassistant-macos-system7-theme",
+      "repo": "andrikos1325/aurum-hud",
       "reason": "no commit in catalog"
     }
   ]
