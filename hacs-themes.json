@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-21T08:35:13.848Z",
+  "generatedAt": "2026-10-22T08:37:35.266Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -189,7 +189,7 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 506,
+      "stars": 507,
       "pushed_at": "2026-10-17T00:24:59Z",
       "files": [
         {
@@ -309,7 +309,7 @@
       "full_name": "Eonasdan/home-assistant-bootstrap-5-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2024-03-05T21:41:07Z",
       "files": [
         {
@@ -917,7 +917,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 2,
-      "pushed_at": "2026-06-29T01:16:42Z",
+      "pushed_at": "2026-10-22T02:13:53Z",
       "files": [
         {
           "path": "themes/blackout.yaml",
@@ -1433,6 +1433,21 @@
       ]
     },
     {
+      "full_name": "RazerPC/Dark-Moon",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-10-21T23:59:21Z",
+      "files": [
+        {
+          "path": "themes/dark_moon.yaml",
+          "themes": [
+            "Dark Moon"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "Raznor09/raznor-obsidian",
       "default_branch": "main",
       "license": "MIT",
@@ -1645,7 +1660,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 594,
-      "pushed_at": "2026-10-20T23:40:50Z",
+      "pushed_at": "2026-10-21T23:56:10Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1685,7 +1700,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 462,
+      "stars": 463,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1903,6 +1918,10 @@
     },
     {
       "repo": "andrikos1325/aurum-hud",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Cooper81/cyber-neon-themes",
       "reason": "no commit in catalog"
     }
   ]
