@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-22T08:37:35.266Z",
+  "generatedAt": "2026-10-23T08:33:06.776Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -932,7 +932,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 28,
-      "pushed_at": "2026-06-29T01:16:36Z",
+      "pushed_at": "2026-10-22T09:53:53Z",
       "files": [
         {
           "path": "themes/weylandyutani.yaml",
@@ -1437,7 +1437,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 1,
-      "pushed_at": "2026-10-21T23:59:21Z",
+      "pushed_at": "2026-10-22T14:13:31Z",
       "files": [
         {
           "path": "themes/dark_moon.yaml",
@@ -1608,7 +1608,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 23,
+      "stars": 24,
       "pushed_at": "2026-08-09T10:13:08Z",
       "files": [
         {
@@ -1660,7 +1660,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 594,
-      "pushed_at": "2026-10-21T23:56:10Z",
+      "pushed_at": "2026-10-22T23:55:04Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1754,7 +1754,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1046,
+      "stars": 1047,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
