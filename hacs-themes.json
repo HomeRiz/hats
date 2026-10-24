@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-23T08:33:06.776Z",
+  "generatedAt": "2026-10-24T08:08:03.798Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -189,8 +189,8 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 507,
-      "pushed_at": "2026-10-17T00:24:59Z",
+      "stars": 509,
+      "pushed_at": "2026-10-23T23:50:00Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -901,7 +901,7 @@
       "full_name": "KTibow/lovelace-soft-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 52,
+      "stars": 53,
       "pushed_at": "2024-01-07T01:57:21Z",
       "files": [
         {
@@ -947,7 +947,7 @@
       "default_branch": "main",
       "license": "GPL-3.0",
       "stars": 5,
-      "pushed_at": "2026-10-19T20:42:58Z",
+      "pushed_at": "2026-10-23T19:29:56Z",
       "files": [
         {
           "path": "themes/edera.yaml",
@@ -1660,7 +1660,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 594,
-      "pushed_at": "2026-10-22T23:55:04Z",
+      "pushed_at": "2026-10-23T23:47:06Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1700,7 +1700,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 463,
+      "stars": 464,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1754,7 +1754,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1047,
+      "stars": 1048,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
