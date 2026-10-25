@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-24T08:08:03.798Z",
+  "generatedAt": "2026-10-25T08:25:57.289Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -117,7 +117,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 881,
+      "stars": 882,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -189,8 +189,8 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 509,
-      "pushed_at": "2026-10-23T23:50:00Z",
+      "stars": 510,
+      "pushed_at": "2026-10-24T22:22:12Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -946,7 +946,7 @@
       "full_name": "luigi-regolo/Edera",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 5,
+      "stars": 6,
       "pushed_at": "2026-10-23T19:29:56Z",
       "files": [
         {
@@ -1268,7 +1268,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 431,
+      "stars": 433,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1437,7 +1437,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 1,
-      "pushed_at": "2026-10-22T14:13:31Z",
+      "pushed_at": "2026-10-24T11:15:40Z",
       "files": [
         {
           "path": "themes/dark_moon.yaml",
@@ -1548,7 +1548,7 @@
       "full_name": "skynet01/homeassistant-skynet-theme",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2026-07-07T23:02:51Z",
       "files": [
         {
@@ -1659,8 +1659,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 594,
-      "pushed_at": "2026-10-23T23:47:06Z",
+      "stars": 595,
+      "pushed_at": "2026-10-24T22:59:33Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1754,7 +1754,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1048,
+      "stars": 1050,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -1922,6 +1922,18 @@
     },
     {
       "repo": "Cooper81/cyber-neon-themes",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "kerdx/home-everforest",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Azentrius/home-assistant-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Catalina-Automation/sabino-ha",
       "reason": "no commit in catalog"
     }
   ]
