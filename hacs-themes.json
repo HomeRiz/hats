@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-25T08:25:57.289Z",
+  "generatedAt": "2026-10-26T08:56:05.966Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -79,6 +79,21 @@
             "Dark Pink",
             "Dark Turqoise",
             "Dark Yellow"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Azentrius/home-assistant-theme",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "stars": 0,
+      "pushed_at": "2026-10-26T03:46:44Z",
+      "files": [
+        {
+          "path": "themes/azentrius.yaml",
+          "themes": [
+            "Azentrius"
           ]
         }
       ]
@@ -1253,7 +1268,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 481,
+      "stars": 482,
       "pushed_at": "2026-10-16T00:08:18Z",
       "files": [
         {
@@ -1268,7 +1283,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 433,
+      "stars": 434,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1659,8 +1674,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 595,
-      "pushed_at": "2026-10-24T22:59:33Z",
+      "stars": 596,
+      "pushed_at": "2026-10-25T23:05:12Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1700,7 +1715,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 464,
+      "stars": 465,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1754,7 +1769,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1050,
+      "stars": 1051,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -1926,10 +1941,6 @@
     },
     {
       "repo": "kerdx/home-everforest",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "Azentrius/home-assistant-theme",
       "reason": "no commit in catalog"
     },
     {
