@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-26T08:56:05.966Z",
+  "generatedAt": "2026-10-27T09:00:15.503Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -201,10 +201,25 @@
       ]
     },
     {
+      "full_name": "Catalina-Automation/sabino-ha",
+      "default_branch": "main",
+      "license": "GPL-3.0",
+      "stars": 0,
+      "pushed_at": "2026-10-26T16:39:06Z",
+      "files": [
+        {
+          "path": "themes/sabino.yaml",
+          "themes": [
+            "Sabino"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 510,
+      "stars": 513,
       "pushed_at": "2026-10-24T22:22:12Z",
       "files": [
         {
@@ -1268,7 +1283,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 482,
+      "stars": 483,
       "pushed_at": "2026-10-16T00:08:18Z",
       "files": [
         {
@@ -1283,7 +1298,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 434,
+      "stars": 435,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1362,7 +1377,7 @@
       "full_name": "piitaya/lovelace-mushroom-themes",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 309,
+      "stars": 308,
       "pushed_at": "2025-09-26T14:14:39Z",
       "files": [
         {
@@ -1623,8 +1638,8 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 24,
-      "pushed_at": "2026-08-09T10:13:08Z",
+      "stars": 23,
+      "pushed_at": "2026-10-26T15:57:43Z",
       "files": [
         {
           "path": "themes/liquid_glass.yaml",
@@ -1674,8 +1689,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 596,
-      "pushed_at": "2026-10-25T23:05:12Z",
+      "stars": 595,
+      "pushed_at": "2026-10-27T00:16:45Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1769,7 +1784,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1051,
+      "stars": 1053,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -1941,10 +1956,6 @@
     },
     {
       "repo": "kerdx/home-everforest",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "Catalina-Automation/sabino-ha",
       "reason": "no commit in catalog"
     }
   ]
