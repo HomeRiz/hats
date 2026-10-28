@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-27T09:00:15.503Z",
+  "generatedAt": "2026-10-28T09:40:29.055Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -64,10 +64,26 @@
       ]
     },
     {
+      "full_name": "andrikos1325/aurum-hud",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-10-08T17:58:40Z",
+      "files": [
+        {
+          "path": "themes/aurum_hud.yaml",
+          "themes": [
+            "Aurum HUD",
+            "Aurum HUD Cyan"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "awolkers/home-assistant-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 19,
+      "stars": 20,
       "pushed_at": "2024-11-29T08:50:12Z",
       "files": [
         {
@@ -87,8 +103,8 @@
       "full_name": "Azentrius/home-assistant-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 0,
-      "pushed_at": "2026-10-26T03:46:44Z",
+      "stars": 1,
+      "pushed_at": "2026-10-27T14:55:50Z",
       "files": [
         {
           "path": "themes/azentrius.yaml",
@@ -132,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 882,
+      "stars": 883,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -204,8 +220,8 @@
       "full_name": "Catalina-Automation/sabino-ha",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 0,
-      "pushed_at": "2026-10-26T16:39:06Z",
+      "stars": 1,
+      "pushed_at": "2026-10-27T15:59:18Z",
       "files": [
         {
           "path": "themes/sabino.yaml",
@@ -796,7 +812,7 @@
       "full_name": "JuanMTech/google_dark_theme",
       "default_branch": "master",
       "license": null,
-      "stars": 143,
+      "stars": 144,
       "pushed_at": "2023-01-12T22:47:14Z",
       "files": [
         {
@@ -976,7 +992,7 @@
       "full_name": "luigi-regolo/Edera",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 6,
+      "stars": 7,
       "pushed_at": "2026-10-23T19:29:56Z",
       "files": [
         {
@@ -1689,8 +1705,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 595,
-      "pushed_at": "2026-10-27T00:16:45Z",
+      "stars": 597,
+      "pushed_at": "2026-10-28T00:19:38Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1730,7 +1746,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 465,
+      "stars": 466,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1945,10 +1961,6 @@
     {
       "repo": "silasmariusz/Bubble_Theme_2026",
       "reason": "no valid theme files"
-    },
-    {
-      "repo": "andrikos1325/aurum-hud",
-      "reason": "no commit in catalog"
     },
     {
       "repo": "Cooper81/cyber-neon-themes",
