@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-28T09:40:29.055Z",
+  "generatedAt": "2026-10-29T09:59:11.878Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 883,
+      "stars": 882,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -284,6 +284,22 @@
           "path": "themes/nordic.yaml",
           "themes": [
             "nordic"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Cooper81/cyber-neon-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-10-21T09:59:53Z",
+      "files": [
+        {
+          "path": "themes/cyber-neon.yaml",
+          "themes": [
+            "Cyber",
+            "Neon"
           ]
         }
       ]
@@ -1299,7 +1315,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 483,
+      "stars": 482,
       "pushed_at": "2026-10-16T00:08:18Z",
       "files": [
         {
@@ -1654,7 +1670,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 23,
+      "stars": 24,
       "pushed_at": "2026-10-26T15:57:43Z",
       "files": [
         {
@@ -1705,8 +1721,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 597,
-      "pushed_at": "2026-10-28T00:19:38Z",
+      "stars": 598,
+      "pushed_at": "2026-10-29T00:41:25Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1961,10 +1977,6 @@
     {
       "repo": "silasmariusz/Bubble_Theme_2026",
       "reason": "no valid theme files"
-    },
-    {
-      "repo": "Cooper81/cyber-neon-themes",
-      "reason": "no commit in catalog"
     },
     {
       "repo": "kerdx/home-everforest",
