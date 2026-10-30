@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-29T09:59:11.878Z",
+  "generatedAt": "2026-10-30T10:01:43.989Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -271,7 +271,7 @@
       "full_name": "coltondick/nordic-theme-main",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 44,
+      "stars": 43,
       "pushed_at": "2026-05-04T15:11:53Z",
       "files": [
         {
@@ -284,22 +284,6 @@
           "path": "themes/nordic.yaml",
           "themes": [
             "nordic"
-          ]
-        }
-      ]
-    },
-    {
-      "full_name": "Cooper81/cyber-neon-themes",
-      "default_branch": "main",
-      "license": "MIT",
-      "stars": 0,
-      "pushed_at": "2026-10-21T09:59:53Z",
-      "files": [
-        {
-          "path": "themes/cyber-neon.yaml",
-          "themes": [
-            "Cyber",
-            "Neon"
           ]
         }
       ]
@@ -479,7 +463,7 @@
       "full_name": "home-assistant-community-themes/amoled",
       "default_branch": "master",
       "license": null,
-      "stars": 33,
+      "stars": 34,
       "pushed_at": "2024-04-26T07:50:09Z",
       "files": [
         {
@@ -1610,7 +1594,7 @@
       "full_name": "skynet01/homeassistant-skynet-theme",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 4,
+      "stars": 5,
       "pushed_at": "2026-07-07T23:02:51Z",
       "files": [
         {
@@ -1722,7 +1706,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 598,
-      "pushed_at": "2026-10-29T00:41:25Z",
+      "pushed_at": "2026-10-30T00:41:45Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1977,6 +1961,10 @@
     {
       "repo": "silasmariusz/Bubble_Theme_2026",
       "reason": "no valid theme files"
+    },
+    {
+      "repo": "Cooper81/cyber-neon-themes",
+      "reason": "no commit in catalog"
     },
     {
       "repo": "kerdx/home-everforest",
