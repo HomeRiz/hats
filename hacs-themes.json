@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-02T11:07:14.641Z",
+  "generatedAt": "2026-11-03T10:53:13.208Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -930,6 +930,22 @@
       ]
     },
     {
+      "full_name": "kerdx/home-everforest",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-10-20T16:13:54Z",
+      "files": [
+        {
+          "path": "themes/everforest.yaml",
+          "themes": [
+            "Everforest Light",
+            "Everforest Dark"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
@@ -1316,7 +1332,7 @@
       "default_branch": "main",
       "license": "Apache-2.0",
       "stars": 482,
-      "pushed_at": "2026-10-16T00:08:18Z",
+      "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
           "path": "themes/material_you.yaml",
@@ -1671,7 +1687,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 24,
-      "pushed_at": "2026-10-26T15:57:43Z",
+      "pushed_at": "2026-11-02T11:53:55Z",
       "files": [
         {
           "path": "themes/liquid_glass.yaml",
@@ -1722,7 +1738,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 601,
-      "pushed_at": "2026-11-02T00:24:52Z",
+      "pushed_at": "2026-11-03T03:21:19Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1762,7 +1778,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 468,
+      "stars": 469,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1816,7 +1832,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1058,
+      "stars": 1060,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -1979,7 +1995,23 @@
       "reason": "no valid theme files"
     },
     {
-      "repo": "kerdx/home-everforest",
+      "repo": "CodeArcade-ctrl/quiet-horizon-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "CodeArcade-ctrl/ambient-worlds-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "kjanko/lumina-homeassistant-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "CodeArcade-ctrl/ambient-atlas-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "ngoviet/palette-axi-neon",
       "reason": "no commit in catalog"
     }
   ]
