@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-03T10:53:13.208Z",
+  "generatedAt": "2026-11-04T10:55:36.073Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -103,7 +103,7 @@
       "full_name": "Azentrius/home-assistant-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 1,
+      "stars": 2,
       "pushed_at": "2026-11-01T15:41:47Z",
       "files": [
         {
@@ -949,7 +949,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 6,
+      "stars": 7,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1610,7 +1610,7 @@
       "full_name": "skynet01/homeassistant-macos-system7-theme",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2026-09-02T00:55:02Z",
       "files": [
         {
@@ -1738,7 +1738,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 601,
-      "pushed_at": "2026-11-03T03:21:19Z",
+      "pushed_at": "2026-11-04T01:07:07Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1778,7 +1778,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 469,
+      "stars": 470,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1832,7 +1832,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1060,
+      "stars": 1062,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2012,6 +2012,10 @@
     },
     {
       "repo": "ngoviet/palette-axi-neon",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "marcelhoffs/ha-wave",
       "reason": "no commit in catalog"
     }
   ]
