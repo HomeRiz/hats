@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-05T10:56:40.230Z",
+  "generatedAt": "2026-11-06T10:53:12.258Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 882,
+      "stars": 883,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -235,8 +235,8 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 515,
-      "pushed_at": "2026-11-04T19:05:03Z",
+      "stars": 517,
+      "pushed_at": "2026-11-06T07:32:55Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -342,13 +342,30 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-05T08:28:56Z",
+      "pushed_at": "2026-11-05T11:47:51Z",
       "files": [
         {
           "path": "themes/braise_glass.yaml",
           "themes": [
             "Braise Glass",
-            "Braise Glass Lite"
+            "Braise Glass Lite",
+            "Braise Glass Amethyst",
+            "Braise Glass Amethyst Lite"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "dougbaptista/ha_tema_futurista",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-05T18:52:59Z",
+      "files": [
+        {
+          "path": "themes/doug-futurista.yaml",
+          "themes": [
+            "Doug Futurista"
           ]
         }
       ]
@@ -1055,7 +1072,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 688,
+      "stars": 689,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1347,7 +1364,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 482,
+      "stars": 484,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1441,7 +1458,7 @@
       "full_name": "piitaya/lovelace-mushroom-themes",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 308,
+      "stars": 310,
       "pushed_at": "2025-09-26T14:14:39Z",
       "files": [
         {
@@ -1611,7 +1628,7 @@
       "full_name": "seangreen2/slate_theme",
       "default_branch": "master",
       "license": null,
-      "stars": 141,
+      "stars": 142,
       "pushed_at": "2026-09-25T17:23:19Z",
       "files": [
         {
@@ -1754,7 +1771,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 602,
-      "pushed_at": "2026-11-05T01:22:54Z",
+      "pushed_at": "2026-11-06T01:25:18Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1848,7 +1865,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1064,
+      "stars": 1065,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
