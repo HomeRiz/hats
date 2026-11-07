@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-06T10:53:12.258Z",
+  "generatedAt": "2026-11-07T10:09:33.090Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 883,
+      "stars": 885,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -342,7 +342,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-05T11:47:51Z",
+      "pushed_at": "2026-11-06T18:44:33Z",
       "files": [
         {
           "path": "themes/braise_glass.yaml",
@@ -350,7 +350,13 @@
             "Braise Glass",
             "Braise Glass Lite",
             "Braise Glass Amethyst",
-            "Braise Glass Amethyst Lite"
+            "Braise Glass Amethyst Lite",
+            "Braise Glass Lagoon",
+            "Braise Glass Lagoon Lite",
+            "Braise Glass Sapphire",
+            "Braise Glass Sapphire Lite",
+            "Braise Glass Fuchsia",
+            "Braise Glass Fuchsia Lite"
           ]
         }
       ]
@@ -1364,7 +1370,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 484,
+      "stars": 483,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1770,8 +1776,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 602,
-      "pushed_at": "2026-11-06T01:25:18Z",
+      "stars": 603,
+      "pushed_at": "2026-11-07T00:42:55Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1865,7 +1871,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1065,
+      "stars": 1066,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
