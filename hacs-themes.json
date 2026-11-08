@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-07T10:09:33.090Z",
+  "generatedAt": "2026-11-08T10:23:40.465Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1064,7 +1064,7 @@
       "default_branch": "main",
       "license": "GPL-3.0",
       "stars": 7,
-      "pushed_at": "2026-11-05T09:33:15Z",
+      "pushed_at": "2026-11-07T16:40:51Z",
       "files": [
         {
           "path": "themes/edera.yaml",
@@ -1777,7 +1777,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-07T00:42:55Z",
+      "pushed_at": "2026-11-08T00:17:27Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
