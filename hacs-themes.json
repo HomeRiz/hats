@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-08T10:23:40.465Z",
+  "generatedAt": "2026-11-09T11:32:15.902Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -236,7 +236,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 517,
-      "pushed_at": "2026-11-06T07:32:55Z",
+      "pushed_at": "2026-11-09T06:28:42Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -342,7 +342,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-06T18:44:33Z",
+      "pushed_at": "2026-11-08T12:27:57Z",
       "files": [
         {
           "path": "themes/braise_glass.yaml",
@@ -366,7 +366,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-05T18:52:59Z",
+      "pushed_at": "2026-11-08T10:59:01Z",
       "files": [
         {
           "path": "themes/doug-futurista.yaml",
@@ -1078,7 +1078,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 689,
+      "stars": 688,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1370,7 +1370,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 483,
+      "stars": 484,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1777,7 +1777,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-08T00:17:27Z",
+      "pushed_at": "2026-11-09T00:37:58Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1817,7 +1817,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 470,
+      "stars": 471,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1871,7 +1871,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1066,
+      "stars": 1067,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
