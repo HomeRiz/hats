@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-09T11:32:15.902Z",
+  "generatedAt": "2026-11-10T11:12:37.621Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -236,7 +236,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 517,
-      "pushed_at": "2026-11-09T06:28:42Z",
+      "pushed_at": "2026-11-09T23:40:12Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -263,6 +263,61 @@
           "path": "themes/catthode.yaml",
           "themes": [
             "Catthode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "CodeArcade-ctrl/ambient-atlas-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-10-25T20:39:58Z",
+      "files": [
+        {
+          "path": "themes/ambient-atlas.yaml",
+          "themes": [
+            "Alpine Morning",
+            "Circuit Garden",
+            "Moonlit Atelier"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "CodeArcade-ctrl/ambient-worlds-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-10-25T17:27:51Z",
+      "files": [
+        {
+          "path": "themes/ambient-worlds.yaml",
+          "themes": [
+            "Coastal Light",
+            "Desert Observatory",
+            "Midnight Library"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "CodeArcade-ctrl/quiet-horizon-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 2,
+      "pushed_at": "2026-10-25T17:21:43Z",
+      "files": [
+        {
+          "path": "themes/home-atmospheres.yaml",
+          "themes": [
+            "Quiet Horizon",
+            "Aurora Drift",
+            "Golden Hour",
+            "Rainy Window",
+            "Botanical Calm",
+            "Mono Studio",
+            "Neon Arcade"
           ]
         }
       ]
@@ -1000,6 +1055,21 @@
       ]
     },
     {
+      "full_name": "kjanko/lumina-homeassistant-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 19,
+      "pushed_at": "2026-11-09T14:50:56Z",
+      "files": [
+        {
+          "path": "themes/lumina.yaml",
+          "themes": [
+            "Lumina"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "knightburton/minimal-ninja-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
@@ -1078,7 +1148,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 688,
+      "stars": 689,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1415,6 +1485,22 @@
       ]
     },
     {
+      "full_name": "ngoviet/palette-axi-neon",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-02T19:30:56Z",
+      "files": [
+        {
+          "path": "themes/palette_axi_neon.yaml",
+          "themes": [
+            "palette-axi-neon",
+            "palette-axi-cockpit"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "Nihvel/your_name",
       "default_branch": "main",
       "license": null,
@@ -1725,7 +1811,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 24,
+      "stars": 25,
       "pushed_at": "2026-11-02T11:53:55Z",
       "files": [
         {
@@ -1777,7 +1863,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-09T00:37:58Z",
+      "pushed_at": "2026-11-10T03:18:32Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1817,7 +1903,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 471,
+      "stars": 472,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -2038,31 +2124,23 @@
       "reason": "no commit in catalog"
     },
     {
-      "repo": "CodeArcade-ctrl/quiet-horizon-theme",
-      "reason": "no commit in catalog"
-    },
-    {
       "repo": "williamcorsel/ha-tokyo-night",
       "reason": "no commit in catalog"
     },
     {
-      "repo": "CodeArcade-ctrl/ambient-worlds-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "kjanko/lumina-homeassistant-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "CodeArcade-ctrl/ambient-atlas-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "ngoviet/palette-axi-neon",
-      "reason": "no commit in catalog"
-    },
-    {
       "repo": "marcelhoffs/ha-wave",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "cheycron/flatcap-homeassistant",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Tropie1988/home-assistant-retro-themes",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "CPetrevski/ha-nerv-magi-theme",
       "reason": "no commit in catalog"
     }
   ]
