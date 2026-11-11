@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-10T11:12:37.621Z",
+  "generatedAt": "2026-11-11T10:58:03.590Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 885,
+      "stars": 886,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -1058,7 +1058,7 @@
       "full_name": "kjanko/lumina-homeassistant-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 19,
+      "stars": 20,
       "pushed_at": "2026-11-09T14:50:56Z",
       "files": [
         {
@@ -1187,6 +1187,25 @@
           "themes": [
             "Draculaish",
             "Draculaish-Pink"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "marcelhoffs/ha-wave",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-03T20:26:10Z",
+      "files": [
+        {
+          "path": "themes/wave_themes.yaml",
+          "themes": [
+            "Purple wave",
+            "Sapphire wave",
+            "Emerald wave",
+            "Bordeaux wave",
+            "Ocean wave"
           ]
         }
       ]
@@ -1455,7 +1474,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 436,
+      "stars": 435,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1863,7 +1882,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-10T03:18:32Z",
+      "pushed_at": "2026-11-11T01:06:17Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1903,7 +1922,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 472,
+      "stars": 473,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1957,7 +1976,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1067,
+      "stars": 1068,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2125,10 +2144,6 @@
     },
     {
       "repo": "williamcorsel/ha-tokyo-night",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "marcelhoffs/ha-wave",
       "reason": "no commit in catalog"
     },
     {
