@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-11T10:58:03.590Z",
+  "generatedAt": "2026-11-12T11:10:28.645Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 886,
+      "stars": 887,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -236,7 +236,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 517,
-      "pushed_at": "2026-11-09T23:40:12Z",
+      "pushed_at": "2026-11-11T16:45:20Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -541,7 +541,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-09-04T12:26:16Z",
+      "pushed_at": "2026-11-11T13:02:07Z",
       "files": [
         {
           "path": "themes/Nuit Mediterraneenne Dark.yaml",
@@ -873,7 +873,7 @@
       "full_name": "iosue-iulianus/homeassistant-pipboy-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 32,
+      "stars": 33,
       "pushed_at": "2026-03-20T22:57:08Z",
       "files": [
         {
@@ -914,6 +914,31 @@
           "path": "themes/transparentblue.yaml",
           "themes": [
             "transparentblue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "jrx-code/ji-ha-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-05T16:33:28Z",
+      "files": [
+        {
+          "path": "themes/ji-engineering.yaml",
+          "themes": [
+            "JI Engineering",
+            "JI Baltic",
+            "JI Polish",
+            "JI Tatra",
+            "JI Mazury",
+            "JI Forest",
+            "JI Graphite",
+            "JI Copper",
+            "JI Nord",
+            "JI HighVis",
+            "JI Terminal"
           ]
         }
       ]
@@ -1459,7 +1484,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 484,
+      "stars": 485,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1474,7 +1499,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 435,
+      "stars": 436,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1618,7 +1643,7 @@
       "full_name": "PlayFaster/very-dark-black-ha-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 3,
+      "stars": 4,
       "pushed_at": "2026-10-11T19:23:21Z",
       "files": [
         {
@@ -1770,7 +1795,7 @@
       "full_name": "skynet01/homeassistant-skynet-theme",
       "default_branch": "main",
       "license": "GPL-3.0",
-      "stars": 6,
+      "stars": 7,
       "pushed_at": "2026-07-07T23:02:51Z",
       "files": [
         {
@@ -1866,7 +1891,7 @@
       "full_name": "tgcowell/waves",
       "default_branch": "master",
       "license": null,
-      "stars": 108,
+      "stars": 110,
       "pushed_at": "2023-03-26T08:21:03Z",
       "files": [
         {
@@ -1882,7 +1907,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-11T01:06:17Z",
+      "pushed_at": "2026-11-12T02:09:30Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1922,7 +1947,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 473,
+      "stars": 474,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1976,7 +2001,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1068,
+      "stars": 1071,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2028,6 +2053,23 @@
           "path": "themes/noctis-solarized.yaml",
           "themes": [
             "noctis-solarized"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "williamcorsel/ha-tokyo-night",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-04T18:42:27Z",
+      "files": [
+        {
+          "path": "themes/tokyo-night.yaml",
+          "themes": [
+            "Tokyo Night",
+            "Tokyo Night Storm",
+            "Tokyo Night Moon"
           ]
         }
       ]
@@ -2137,14 +2179,6 @@
     {
       "repo": "silasmariusz/Bubble_Theme_2026",
       "reason": "no valid theme files"
-    },
-    {
-      "repo": "jrx-code/ji-ha-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "williamcorsel/ha-tokyo-night",
-      "reason": "no commit in catalog"
     },
     {
       "repo": "cheycron/flatcap-homeassistant",
