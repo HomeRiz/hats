@@ -27,6 +27,12 @@ It runs in three ways:
 - **Desktop app** for Windows, macOS and Linux, with no Home Assistant needed.
 - **Preview website**, a read-only page that previews any public GitHub theme repository.
 
+### HATS Lite
+
+[HATS Lite](https://github.com/HomeRiz/hats-lite) is a lighter companion. It is a Home Assistant integration instead of an app, and it adds a **Themes** page to the sidebar. There you can browse themes, preview them on your own dashboard next to the one you use now, try one for 30 seconds with an automatic way back, and design a simple theme of your own. Its Gallery has one entry for the 21 original HATS themes, and an administrator can add any of them with the Add to my themes button.
+
+Install it from the Home Assistant Marketplace (Home Assistant 2026.11 and newer) or from HACS as a custom repository, then add the integration under Settings, Devices and services. The HATS Lite README has the steps. HATS is the place to design something fully custom, and HATS Lite is the quick way to switch themes from inside Home Assistant.
+
 ---
 
 ## Live preview
