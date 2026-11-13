@@ -11,6 +11,7 @@ import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } fr
 import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
 import { isLocalHost } from './hostGuard.js';
 import { cleanThemeId as toThemeId, resolveInside } from './themeIds.js';
+import { apiLimiter } from './rateLimit.js';
 import { ensureLibrary, saveImportedTheme } from './standaloneLibrary.js';
 import { extractPalette } from './paletteExtract.js';
 
@@ -55,6 +56,8 @@ app.use((req, res, next) => {
   if (ip !== INGRESS_GATEWAY) return res.status(403).json({ error: 'Forbidden: use Home Assistant Ingress' });
   next();
 });
+
+app.use(apiLimiter);
 
 app.use((req, res, next) => {
   if (req.method === 'GET' || req.method === 'HEAD') return next();

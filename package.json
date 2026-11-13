@@ -26,6 +26,7 @@
   "dependencies": {
     "dompurify": "^3.4.17",
     "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
     "home-assistant-js-websocket": "^9.8.1",
     "js-yaml": "^5.5.0",
     "lucide-react": "^1.70.0",
