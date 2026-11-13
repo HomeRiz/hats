@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 2026-11-13: Fixed the minimatch denial of service advisory (GHSA-g3hv-75wg-m249) in the desktop build tools. It affected a development dependency only and nothing that ships in the app.
 - 2026-11-13: Fixed the findings of the first code scan. Theme files and folders are now checked to stay inside their folder, theme ids are trimmed without a slow pattern, file names are logged as separate arguments, and the server now has a request limit per minute (3000 for the app, 30000 for the live preview files).
+- 2026-11-13: The CSS cleaning of theme files no longer deletes script, style and similar tags, it turns their opening bracket into `&lt;`, and does it as the very last step so no later removal can join the pieces of a tag again. The server side cleaning moved to its own file and both versions have tests.
 
 ## [1.3.0] - 2026-11-13
 
