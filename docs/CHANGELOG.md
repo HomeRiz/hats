@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-13
+
 ### Security
 
 - 2026-11-13: Fixed the minimatch denial of service advisory (GHSA-g3hv-75wg-m249) in the desktop build tools. It affected a development dependency only and nothing that ships in the app.
