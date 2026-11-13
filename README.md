@@ -25,7 +25,7 @@ It runs in three ways:
 
 - **Home Assistant app**, through Ingress, connected to your own instance.
 - **Desktop app** for Windows, macOS and Linux, with no Home Assistant needed.
-- **Preview website**, a read-only page that previews any public GitHub theme repository.
+- **Preview website**, a read-only page that previews any public GitHub theme repository and lists every theme of the HACS and Home Assistant Marketplace catalog.
 
 ### HATS Lite
 
@@ -52,6 +52,7 @@ For example, [the iOS dark mode theme](https://homeriz.github.io/hats/?repo=basn
 - `repo` is `owner/repo` or a `github.com` or `raw.githubusercontent.com` link. Other hosts are ignored.
 - `theme` picks one theme from a repository that has several, by name or id. Without it the first one is shown.
 - Wallpapers that a theme embeds as `data:image` or loads from `/local/...` are found and shown when the repository contains them.
+- The **Browse themes** tab lists every theme repository of the HACS and Home Assistant Marketplace catalog, with its license and stars. Search, sort and filter it, then press Preview to open one. The list is refreshed daily.
 - The page is read-only. It offers no import, create, duplicate or delete, and it does not keep the themes you open.
 - HATS hosts none of the themes. It reads the files straight from the author's repository, so themes without a license are never copied or stored.
 
@@ -256,7 +257,7 @@ The output is in `hosted-dist/` and is about 180 MB. Set `HATS_BASE_PATH=/name` 
 
 ### HACS theme index
 
-The **HACS theme index** workflow runs daily. It reads the HACS theme catalog, records each repository's license, stars, last push and theme files, and publishes the result to the `hacs-index` branch, which the Browse HACS themes section reads.
+The **HACS theme index** workflow runs daily. It reads the HACS theme catalog, records each repository's license, stars, last push and theme files, and publishes the result to the `hacs-index` branch, which the Browse themes list reads, in the apps and on the preview website. The Home Assistant Marketplace uses the same HACS catalog, so one index covers both.
 
 ---
 
