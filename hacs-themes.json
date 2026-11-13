@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-12T11:10:28.645Z",
+  "generatedAt": "2026-11-13T10:58:46.454Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -420,7 +420,7 @@
       "full_name": "dougbaptista/ha_tema_futurista",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 0,
+      "stars": 1,
       "pushed_at": "2026-11-08T10:59:01Z",
       "files": [
         {
@@ -1499,7 +1499,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 436,
+      "stars": 438,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1780,7 +1780,7 @@
       "default_branch": "main",
       "license": "GPL-3.0",
       "stars": 4,
-      "pushed_at": "2026-09-02T00:55:02Z",
+      "pushed_at": "2026-11-12T19:07:31Z",
       "files": [
         {
           "path": "themes/macos_system7.yaml",
@@ -1855,7 +1855,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 25,
+      "stars": 27,
       "pushed_at": "2026-11-02T11:53:55Z",
       "files": [
         {
@@ -1907,7 +1907,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 603,
-      "pushed_at": "2026-11-12T02:09:30Z",
+      "pushed_at": "2026-11-13T01:43:11Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2001,7 +2001,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1071,
+      "stars": 1073,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
