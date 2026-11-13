@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for the Home Assistant Marketplace (Home Assistant 2026.11 and newer), which replaces the HACS integration. HATS detects which one is installed. The Doctor and the requirements list read the installed plugins from the Marketplace, name it in the texts and links, and Auto-Fix writes the card-mod address the system serves (`/local/community/lovelace-card-mod/card-mod.js`). HACS keeps working as before.
+
 ### Security
 
 - 2026-10-26: Updated all npm dependencies to the latest releases, including Electron 45, Express 5.3 and DOMPurify.
