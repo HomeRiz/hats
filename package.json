@@ -124,5 +124,9 @@
     "portable": {
       "artifactName": "HATS-${version}-win-${arch}-portable.exe"
     }
+  },
+  "overrides": {
+    "minimatch@^10.2.5": "^11.0.1",
+    "minimatch@^9.0.3": "^11.0.1"
   }
 }
