@@ -107,7 +107,7 @@ export async function importThemesFromGitHubRepo(repoInput: string, options: Imp
           collected.push(t);
         }
       } catch (fileErr) {
-        console.warn(`Could not parse ${filePath}:`, fileErr);
+        console.warn('Could not parse', filePath, fileErr);
       }
     }
     return collected;

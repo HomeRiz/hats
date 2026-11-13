@@ -1,3 +1,5 @@
+import { cleanThemeId } from './themeIds.js';
+
 export const TARGET_REPO = 'HomeRiz/hats';
 
 export function isPlausibleToken(token) {
@@ -71,7 +73,7 @@ export async function submitThemePullRequest(params, options = {}) {
 
   const [owner, repo] = targetRepo.split('/');
   const themeId =
-    String(params.themeId || params.themeName || '').toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme';
+    cleanThemeId(params.themeId || params.themeName || '');
   const themeName = String(params.themeName || themeId).slice(0, 100);
 
   const gh = createGithubClient({ token, apiBase, doFetch });

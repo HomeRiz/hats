@@ -88,7 +88,7 @@ describe('buildHacsIndex', () => {
   it('keeps valid repos, reports skipped ones and sends the token', async () => {
     const seen = [];
     const wrapped = async (url, init) => {
-      if (url.includes('api.github.com')) seen.push(init?.headers?.Authorization);
+      if (new URL(url).hostname === 'api.github.com') seen.push(init?.headers?.Authorization);
       return fetchImpl(url, init);
     };
     const index = await buildHacsIndex({

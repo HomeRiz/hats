@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - 2026-11-13: Fixed the minimatch denial of service advisory (GHSA-g3hv-75wg-m249) in the desktop build tools. It affected a development dependency only and nothing that ships in the app.
+- 2026-11-13: Fixed the findings of the first code scan. Theme files and folders are now checked to stay inside their folder, theme ids are trimmed without a slow pattern, file names are logged as separate arguments, and the server now has a request limit per minute (3000 for the app, 30000 for the live preview files).
 
 ## [1.3.0] - 2026-11-13
 

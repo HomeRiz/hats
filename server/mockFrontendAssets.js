@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { rewriteRootRelativePaths, normalizeIngressPath } from './ingressRewrite.js';
+import { assetLimiter } from './rateLimit.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const VENDOR_DIR = path.join(__dirname, '..', 'vendor', 'mock-frontend', 'hass_frontend');
@@ -25,6 +26,7 @@ export function mountMockFrontendStatic(app, { vendorDir = VENDOR_DIR } = {}) {
     return;
   }
 
+  app.use(MOUNT_PREFIX, assetLimiter);
   app.get(`${MOUNT_PREFIX}/*splat`, (req, res) => {
     const relPath = req.params.splat.join('/');
     const filePath = path.resolve(dir, relPath);

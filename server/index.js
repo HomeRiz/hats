@@ -10,6 +10,8 @@ import { fetchHacsRepositories } from './haWebsocket.js';
 import { mountMockFrontendStatic, mountMockFrontendBootstrap, mountMockMods } from './mockFrontendAssets.js';
 import { detectStylingEngine, hasUixConfigEntry, removeCardModFromConfig } from './stylingEngine.js';
 import { isLocalHost } from './hostGuard.js';
+import { cleanThemeId as toThemeId, resolveInside } from './themeIds.js';
+import { apiLimiter } from './rateLimit.js';
 import { ensureLibrary, saveImportedTheme } from './standaloneLibrary.js';
 import { extractPalette } from './paletteExtract.js';
 
@@ -54,6 +56,8 @@ app.use((req, res, next) => {
   if (ip !== INGRESS_GATEWAY) return res.status(403).json({ error: 'Forbidden: use Home Assistant Ingress' });
   next();
 });
+
+app.use(apiLimiter);
 
 app.use((req, res, next) => {
   if (req.method === 'GET' || req.method === 'HEAD') return next();
@@ -106,7 +110,7 @@ const DATA_DIR = process.env.HATS_DATA_DIR || (fs.existsSync('/data') ? '/data' 
 const META_DIR = path.join(DATA_DIR, 'theme-meta');
 const DEFAULT_WWW_DIR = path.join(CONFIG_DIR, 'www', 'hats', 'backgrounds');
 const sha256 = text => crypto.createHash('sha256').update(text).digest('hex');
-const metaPath = id => path.join(META_DIR, `${String(id).replace(/[^a-z0-9_-]/g, '-')}.json`);
+const metaPath = id => resolveInside(META_DIR, `${String(id).replace(/[^a-z0-9_-]/g, '-')}.json`);
 
 function readImportMeta(themeFullPath) {
   try {
@@ -140,7 +144,7 @@ function sanitizeThemeYamlContent(rawYaml) {
   if (!rawYaml || typeof rawYaml !== 'string') return rawYaml;
   let content = rawYaml;
 
-  content = content.replace(/url\(["']?data:image\/svg\+xml;utf8,([^"')]+)["']?\)/g, (match, rawSvg) => {
+  content = content.replace(/url\(["']?data:image\/svg\+xml;utf8,([^"')]{1,200000})["']?\)/g, (match, rawSvg) => {
     try {
       const decoded = decodeURIComponent(rawSvg);
       const b64 = Buffer.from(decoded, 'utf-8').toString('base64');
@@ -798,22 +802,22 @@ app.post('/api/ha/apply-theme', async (req, res) => {
       fs.mkdirSync(THEMES_DIR, { recursive: true });
     }
 
-    const cleanThemeId = (themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme');
+    const cleanThemeId = toThemeId(themeId);
     const cleanFileName = `${cleanThemeId}.yaml`;
-    const filePath = path.join(THEMES_DIR, cleanFileName);
+    const filePath = resolveInside(THEMES_DIR, cleanFileName);
     fs.writeFileSync(filePath, sanitizedYaml, 'utf8');
 
     if (bgBuffer) {
-      const themeBgDir = path.join(WWW_DIR, cleanThemeId);
+      const themeBgDir = resolveInside(WWW_DIR, cleanThemeId);
       fs.mkdirSync(themeBgDir, { recursive: true });
-      fs.writeFileSync(path.join(themeBgDir, 'default.webp'), bgBuffer);
+      fs.writeFileSync(resolveInside(themeBgDir, 'default.webp'), bgBuffer);
     }
 
     try {
       if (themeMeta && typeof themeMeta === 'object' && themeMeta.engine && themeMeta.palette) {
         const saved = JSON.parse(JSON.stringify(themeMeta));
         saved.id = cleanThemeId;
-        const wallpaperOnDisk = fs.existsSync(path.join(WWW_DIR, cleanThemeId, 'default.webp'));
+        const wallpaperOnDisk = fs.existsSync(resolveInside(WWW_DIR, cleanThemeId, 'default.webp'));
         const url = saved.background && saved.background.imageUrl;
         if (saved.background && saved.background.type === 'image' && (!url || String(url).startsWith('/local/') || String(url).startsWith('data:'))) {
           saved.background.imageUrl =
@@ -861,9 +865,9 @@ app.post('/api/ha/apply-theme', async (req, res) => {
 app.delete('/api/ha/theme/:themeId', async (req, res) => {
   try {
     const { themeId } = req.params;
-    const cleanThemeId = (themeId.toLowerCase().replace(/[^a-z0-9_-]/g, '-').replace(/^-+|-+$/g, '') || 'theme');
+    const cleanThemeId = toThemeId(themeId);
     const cleanFileName = `${cleanThemeId}.yaml`;
-    const filePath = path.join(THEMES_DIR, cleanFileName);
+    const filePath = resolveInside(THEMES_DIR, cleanFileName);
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
@@ -871,12 +875,12 @@ app.delete('/api/ha/theme/:themeId', async (req, res) => {
 
     try { fs.rmSync(metaPath(cleanThemeId), { force: true }); } catch { }
 
-    const themeBgDir = path.join(WWW_DIR, cleanThemeId);
+    const themeBgDir = resolveInside(WWW_DIR, cleanThemeId);
     if (fs.existsSync(themeBgDir)) {
       try {
         fs.rmSync(themeBgDir, { recursive: true, force: true });
       } catch (bgErr) {
-        console.debug(`Could not remove background folder ${themeBgDir}:`, bgErr.message);
+        console.debug('Could not remove background folder', themeBgDir, bgErr.message);
       }
     }
 
