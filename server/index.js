@@ -85,6 +85,7 @@ const HACS_COMMUNITY_DIR = path.join(CONFIG_DIR, 'www', 'community');
 const HACS_CUSTOM_COMPONENTS = path.join(CONFIG_DIR, 'custom_components', 'hacs');
 const LOVELACE_RESOURCES = path.join(CONFIG_DIR, '.storage', 'lovelace_resources');
 const HACS_REPOSITORIES_FILE = path.join(CONFIG_DIR, '.storage', 'hacs.repositories');
+const MARKETPLACE_REPOSITORIES_FILE = path.join(CONFIG_DIR, '.storage', 'marketplace.repositories');
 const UIX_COMPONENT_DIR = path.join(CONFIG_DIR, 'custom_components', 'uix');
 const CORE_CONFIG_ENTRIES = path.join(CONFIG_DIR, '.storage', 'core.config_entries');
 const SUPERVISOR_TOKEN = process.env.SUPERVISOR_TOKEN;
@@ -125,6 +126,8 @@ function readThemeMeta(id, rawYaml) {
   return null;
 }
 const SUPERVISOR_API = `${SUPERVISOR_ROOT}/core/api`;
+const CARD_MOD_HACS_URL = '/hacsfiles/lovelace-card-mod/card-mod.js';
+const CARD_MOD_MARKETPLACE_URL = '/local/community/lovelace-card-mod/card-mod.js';
 const CARD_MOD_URL_RE = /^\/(?:hacsfiles|local\/community)\/lovelace-card-mod\/card-mod\.js(?:\?hacstag=[A-Za-z0-9_-]{1,40})?$/;
 const IMAGE_MAGIC = [
   b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
@@ -398,6 +401,12 @@ function scanInstalledThemes() {
   return results;
 }
 
+function detectPackageManager() {
+  if (fs.existsSync(MARKETPLACE_REPOSITORIES_FILE)) return 'marketplace';
+  if (fs.existsSync(HACS_CUSTOM_COMPONENTS)) return 'hacs';
+  return null;
+}
+
 function resolveCardModResourceInfo() {
   let exactUrl = null;
   let hacstag = null;
@@ -417,7 +426,25 @@ function resolveCardModResourceInfo() {
     }
   }
 
-  if (!exactUrl && fs.existsSync(HACS_REPOSITORIES_FILE)) {
+  const cardModJsPath = path.join(CONFIG_DIR, 'www', 'community', 'lovelace-card-mod', 'card-mod.js');
+  const cardModDir = path.join(CONFIG_DIR, 'www', 'community', 'lovelace-card-mod');
+  const onDisk = fs.existsSync(cardModJsPath) || fs.existsSync(cardModDir);
+  const usesMarketplace = fs.existsSync(MARKETPLACE_REPOSITORIES_FILE);
+  const cardModDefaultUrl = usesMarketplace ? CARD_MOD_MARKETPLACE_URL : CARD_MOD_HACS_URL;
+
+  if (!exactUrl && usesMarketplace) {
+    try {
+      const rawMarketplace = JSON.parse(fs.readFileSync(MARKETPLACE_REPOSITORIES_FILE, 'utf8'));
+      const repos = rawMarketplace?.data || {};
+      const cardModRepo = repos['190927524'] || Object.values(repos).find(r => r.full_name === 'thomasloven/lovelace-card-mod');
+      if (cardModRepo && onDisk) {
+        exactUrl = CARD_MOD_MARKETPLACE_URL;
+        hacstag = '';
+      }
+    } catch (e) {
+      console.debug('Error reading marketplace.repositories:', e);
+    }
+  } else if (!exactUrl && fs.existsSync(HACS_REPOSITORIES_FILE)) {
     try {
       const rawHacs = JSON.parse(fs.readFileSync(HACS_REPOSITORIES_FILE, 'utf8'));
       const repos = rawHacs?.data || {};
@@ -433,16 +460,12 @@ function resolveCardModResourceInfo() {
     }
   }
 
-  const cardModJsPath = path.join(CONFIG_DIR, 'www', 'community', 'lovelace-card-mod', 'card-mod.js');
-  const cardModDir = path.join(CONFIG_DIR, 'www', 'community', 'lovelace-card-mod');
-  const onDisk = fs.existsSync(cardModJsPath) || fs.existsSync(cardModDir);
-
   if (!exactUrl && onDisk) {
-    exactUrl = '/hacsfiles/lovelace-card-mod/card-mod.js';
+    exactUrl = cardModDefaultUrl;
   }
 
   return {
-    exactUrl: exactUrl || '/hacsfiles/lovelace-card-mod/card-mod.js',
+    exactUrl: exactUrl || cardModDefaultUrl,
     hacstag: hacstag || '',
     onDisk,
   };
@@ -501,7 +524,8 @@ app.get('/api/ha/diagnostics', (req, res) => {
     }
 
     const detectedCards = [];
-    const hasHacs = fs.existsSync(HACS_CUSTOM_COMPONENTS);
+    const packageManager = detectPackageManager();
+    const hasHacs = packageManager !== null;
 
     const { exactUrl, hacstag: cardModHacstag, onDisk: cardModOnDisk } = resolveCardModResourceInfo();
 
@@ -618,6 +642,7 @@ app.get('/api/ha/diagnostics', (req, res) => {
       hasCardModInResources,
       cardModNeedsConfig,
       hasHacs,
+      packageManager,
       themesExists,
       themesCount,
       themesDir: THEMES_DIR,
@@ -656,7 +681,7 @@ app.post('/api/ha/fix-config', async (req, res) => {
     }
     const sanitizedUrl = String(cardModUrl || '').trim();
     if (addCardMod && !removeCardMod && !CARD_MOD_URL_RE.test(sanitizedUrl)) {
-      return res.status(400).json({ error: 'Invalid card-mod URL. Only /hacsfiles/lovelace-card-mod/card-mod.js is accepted.' });
+      return res.status(400).json({ error: 'Invalid card-mod URL. Only /hacsfiles/lovelace-card-mod/card-mod.js or /local/community/lovelace-card-mod/card-mod.js is accepted.' });
     }
 
     let modified = removeCardMod ? removeCardModFromConfig(content) : content;

@@ -24,19 +24,38 @@ function withTimeout(promise, ms, message) {
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
-const EMPTY_HACS_SNAPSHOT = { available: false, repositories: [] };
+const EMPTY_REPOSITORY_SNAPSHOT = { available: false, source: null, repositories: [] };
+
+const REPOSITORY_LIST_COMMANDS = [
+  { source: 'marketplace', type: 'marketplace/repositories/list' },
+  { source: 'hacs', type: 'hacs/repositories/list' },
+];
+
+async function listRepositories(connection) {
+  let lastError;
+  for (const { source, type } of REPOSITORY_LIST_COMMANDS) {
+    try {
+      const repos = await withTimeout(
+        connection.sendMessagePromise({ type }),
+        CONNECT_TIMEOUT_MS,
+        `ha-websocket-${source}-fetch-timeout`
+      );
+      return { source, repos };
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}
 
 export async function fetchHacsRepositories(supervisorToken) {
-  return withHaConnection(supervisorToken, EMPTY_HACS_SNAPSHOT, async (connection) => {
-    const repos = await withTimeout(
-      connection.sendMessagePromise({ type: 'hacs/repositories/list' }),
-      CONNECT_TIMEOUT_MS,
-      'ha-websocket-hacs-fetch-timeout'
-    );
+  return withHaConnection(supervisorToken, EMPTY_REPOSITORY_SNAPSHOT, async (connection) => {
+    const { source, repos } = await listRepositories(connection);
     return {
       available: true,
+      source,
       repositories: repos.map((r) => ({
-        id: r.id,
+        id: String(r.id),
         fullName: r.full_name,
         domain: r.domain,
         category: r.category,
