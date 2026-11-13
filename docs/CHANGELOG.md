@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The README introduces [HATS Lite](https://github.com/HomeRiz/hats-lite), a lighter Home Assistant integration that adds a Themes page to the sidebar for browsing, previewing, trying and designing themes, with one Gallery entry for the 21 original HATS themes.
+
 ### Added
 
 - Support for the Home Assistant Marketplace (Home Assistant 2026.11 and newer), which replaces the HACS integration. HATS detects which one is installed. The Doctor and the requirements list read the installed plugins from the Marketplace, name it in the texts and links, and Auto-Fix writes the card-mod address the system serves (`/local/community/lovelace-card-mod/card-mod.js`). HACS keeps working as before.
