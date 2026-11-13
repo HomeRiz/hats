@@ -11,14 +11,19 @@ export interface HacsRepository {
 
 export interface HacsRepositoriesData {
   available: boolean;
+  source: 'marketplace' | 'hacs' | null;
   loading: boolean;
   repositories: HacsRepository[];
 }
 
-const EMPTY: { available: boolean; repositories: HacsRepository[] } = { available: false, repositories: [] };
+const EMPTY: { available: boolean; source: 'marketplace' | 'hacs' | null; repositories: HacsRepository[] } = {
+  available: false,
+  source: null,
+  repositories: [],
+};
 
 export function useHacsRepositories(enabled: boolean): HacsRepositoriesData {
-  const [data, setData] = useState<{ available: boolean; repositories: HacsRepository[] }>(EMPTY);
+  const [data, setData] = useState<{ available: boolean; source: 'marketplace' | 'hacs' | null; repositories: HacsRepository[] }>(EMPTY);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -39,5 +44,5 @@ export function useHacsRepositories(enabled: boolean): HacsRepositoriesData {
     };
   }, [enabled]);
 
-  return { available: data.available, loading, repositories: data.repositories };
+  return { available: data.available, source: data.source ?? null, loading, repositories: data.repositories };
 }

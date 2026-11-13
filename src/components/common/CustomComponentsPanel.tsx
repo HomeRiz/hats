@@ -3,7 +3,7 @@ import { Puzzle, CheckCircle2, XCircle, HelpCircle, ExternalLink, Check, Downloa
 import { GithubIcon } from './icons/GithubIcon';
 import { ThemeConfig, RequiredIntegration } from '../../types/theme';
 import { useHacsRepositories } from '../../services/useHacsRepositories';
-import { getIntegrationStatus, IntegrationState } from '../../services/integrationStatus';
+import { getIntegrationStatus, IntegrationState, packageManagerName } from '../../services/integrationStatus';
 import { DiagnosticsResult } from '../../services/haService';
 import { UIX_REPO_URL } from '../../state/useStylingEngine';
 
@@ -26,10 +26,10 @@ const RECOMMENDED_CARDS = [
   { id: 'stack-in-card', name: 'Stack-in-Card', desc: 'Merge several cards into one', hacsId: 248954055 },
 ] as ReadonlyArray<{ id: string; name: string; desc: string; hacsId: number; href?: string }>;
 
-const STATE_LABEL: Record<IntegrationState, string> = {
-  installed: 'Installed',
-  not_installed: 'In HACS - not installed',
-  unknown_to_hacs: 'Not found in HACS',
+const stateLabel = (state: IntegrationState, name: string): string => {
+  if (state === 'installed') return 'Installed';
+  if (state === 'not_installed') return `In ${name} - not installed`;
+  return `Not found in ${name}`;
 };
 
 const STATE_STYLE: Record<IntegrationState, string> = {
@@ -52,7 +52,10 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
   isUixInstalled,
   getHacsUrl,
 }) => {
-  const { repositories, loading, available } = useHacsRepositories(isActive);
+  const { repositories, loading, available, source } = useHacsRepositories(isActive);
+  const packageManager = source ?? diagnostics?.packageManager;
+  const pmName = packageManagerName(packageManager);
+  const isMarketplace = packageManager === 'marketplace';
   const [selectedThemeId, setSelectedThemeId] = useState<string>('');
 
   const themesWithIntegrations = useMemo(
@@ -105,11 +108,11 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
                     href={card.href ?? getHacsUrl(card.hacsId)}
                     target="_blank"
                     rel="noreferrer"
-                    title={card.href ? 'Open on GitHub' : 'Install via HACS'}
+                    title={card.href ? 'Open on GitHub' : `Install via ${pmName}`}
                     className="px-2.5 py-1 rounded-md bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] flex items-center gap-1 transition-colors shadow-sm"
                   >
                     <DownloadCloud className="w-3 h-3" />
-                    <span>{card.href ? 'View on GitHub' : 'Install in HACS'}</span>
+                    <span>{card.href ? 'View on GitHub' : `Install in ${pmName}`}</span>
                     <ExternalLink className="w-2.5 h-2.5 opacity-70" />
                   </a>
                 )}
@@ -147,7 +150,7 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
 
             {!available && !loading && (
               <div className="p-3 rounded-xl border border-amber-700/60 bg-amber-950/40 text-amber-300">
-                Couldn't reach HACS - showing requirements without live installed status. Is HACS installed and running?
+                Couldn't reach {pmName} - showing requirements without live installed status. {isMarketplace ? 'Is the Marketplace enabled in Home Assistant?' : 'Is HACS installed and running?'}
               </div>
             )}
 
@@ -161,8 +164,10 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
                     onClick={() => openIntegration(integration)}
                     title={
                       status.state === 'unknown_to_hacs'
-                        ? 'Not matched in HACS - opens the repository on GitHub, add it as a custom repository in HACS to install'
-                        : 'Opens this integration in HACS'
+                        ? isMarketplace
+                          ? 'Not matched in Marketplace - opens the repository on GitHub, add it from the link in the Marketplace to install'
+                          : 'Not matched in HACS - opens the repository on GitHub, add it as a custom repository in HACS to install'
+                        : `Opens this integration in ${pmName}`
                     }
                     className="w-full flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/60 transition-colors text-left"
                   >
@@ -174,7 +179,7 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
                       className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-medium ${STATE_STYLE[status.state]}`}
                     >
                       {STATE_ICON[status.state]}
-                      {STATE_LABEL[status.state]}
+                      {stateLabel(status.state, pmName)}
                       <ExternalLink className="w-3 h-3 opacity-60" />
                     </span>
                   </button>
@@ -186,10 +191,18 @@ export const CustomComponentsPanel: React.FC<CustomComponentsPanelProps> = ({
               <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-400 space-y-1.5">
                 <p className="font-semibold text-slate-300 flex items-center gap-1.5">
                   <GithubIcon className="w-3.5 h-3.5" />
-                  Adding an integration HACS doesn't know about
+                  Adding an integration {pmName} doesn't know about
                 </p>
                 <p>
-                  Open HACS &rarr; the &vellip; menu &rarr; <strong className="text-slate-300">Custom repositories</strong>,
+                  {isMarketplace ? (
+                    <>
+                      Open the Marketplace &rarr; the &vellip; menu &rarr; <strong className="text-slate-300">Add from link</strong> (or <strong className="text-slate-300">Custom repositories</strong>),
+                    </>
+                  ) : (
+                    <>
+                      Open HACS &rarr; the &vellip; menu &rarr; <strong className="text-slate-300">Custom repositories</strong>,
+                    </>
+                  )}
                   paste the repository URL (opened above), and pick category <strong className="text-slate-300">Integration</strong>.
                 </p>
               </div>
