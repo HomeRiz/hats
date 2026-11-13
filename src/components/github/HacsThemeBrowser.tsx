@@ -13,7 +13,7 @@ import { previewUrlForRepo } from '../../services/previewParams';
 
 const PAGE = 24;
 
-export const HacsThemeBrowser: React.FC = () => {
+export const HacsThemeBrowser: React.FC<{ hosted?: boolean }> = ({ hosted = false }) => {
   const [index, setIndex] = useState<HacsIndex | null>(null);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
@@ -41,9 +41,11 @@ export const HacsThemeBrowser: React.FC = () => {
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-base font-bold text-white">Browse HACS themes</h2>
+        <h2 className="text-base font-bold text-white">Browse HACS and Marketplace themes</h2>
         <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-          Every theme repository in the HACS catalog. Preview one in your own HATS, then install it. HATS hosts none of these files, it only points at the author's repository.
+          {hosted
+            ? 'Every theme repository in the HACS and Home Assistant Marketplace catalog. Preview one here, then install it from HACS or the Marketplace in Home Assistant. HATS hosts none of these files, it reads them from the repository of the author.'
+            : 'Every theme repository in the HACS and Home Assistant Marketplace catalog. Preview one in your own HATS, then install it. HATS hosts none of these files, it only points at the author\'s repository.'}
         </p>
       </div>
 

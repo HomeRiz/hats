@@ -123,7 +123,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>Themes</span>
         </button>
 
-        {!previewOnly && (
         <button
           onClick={() => setActiveTab('community')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all ${
@@ -133,9 +132,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           }`}
         >
           <Users className="w-3.5 h-3.5" />
-          <span>Community & PR</span>
+          <span>{previewOnly ? 'Browse themes' : 'Community & PR'}</span>
         </button>
-        )}
 
         <button
           onClick={() => setActiveTab('code')}

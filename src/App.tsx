@@ -20,6 +20,7 @@ const LIVE_RENDER_BOOT_TIMEOUT_MS = 25000;
 
 const ThemeGallery = lazy(() => import('./components/library/ThemeGallery').then((m) => ({ default: m.ThemeGallery })));
 const CommunityHub = lazy(() => import('./components/github/CommunityHub').then((m) => ({ default: m.CommunityHub })));
+const HacsThemeBrowser = lazy(() => import('./components/github/HacsThemeBrowser').then((m) => ({ default: m.HacsThemeBrowser })));
 const SubmitPrModal = lazy(() => import('./components/github/SubmitPrModal').then((m) => ({ default: m.SubmitPrModal })));
 const ImportModal = lazy(() => import('./components/import/ImportModal').then((m) => ({ default: m.ImportModal })));
 const ExportModal = lazy(() => import('./components/export/ExportModal').then((m) => ({ default: m.ExportModal })));
@@ -298,6 +299,16 @@ export const App: React.FC = () => {
                 standalone={standalone}
               />
               </Suspense>
+            </div>
+          )}
+
+          {activeTab === 'community' && IS_HOSTED && (
+            <div className="flex-1 h-full overflow-y-auto bg-slate-950/40 backdrop-blur-md">
+              <div className="p-6 max-w-6xl mx-auto text-slate-200">
+                <Suspense fallback={<TabLoading />}>
+                  <HacsThemeBrowser hosted />
+                </Suspense>
+              </div>
             </div>
           )}
 
