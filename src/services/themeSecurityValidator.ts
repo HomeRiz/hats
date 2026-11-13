@@ -8,23 +8,31 @@ export interface ValidationReport {
   sanitizedTheme: ThemeConfig;
 }
 
+const MAX_PASSES = 64;
+const TAG_OPEN = /<(?=\s*\/?\s*(?:script|style|iframe|object|embed))/gi;
+
 export function sanitizeThemeCss(rawCss: string): string {
   if (!rawCss || typeof rawCss !== 'string') return '';
   let css = rawCss;
 
-  for (let pass = 0; pass < 8; pass++) {
+  let settled = false;
+  for (let pass = 0; pass < MAX_PASSES; pass++) {
     const before = css;
-    css = css.replace(/<\s*\/?\s*(?:script|style|iframe|object|embed)[^>]*>/gi, '');
+    css = css.replace(TAG_OPEN, '&lt;');
     css = css.replace(/javascript\s*:/gi, '');
     css = css.replace(/expression\s*\([^)]*\)/gi, '');
     css = css.replace(/behavior\s*:[^;}]*/gi, '');
     css = css.replace(/-moz-binding\s*:[^;}]*/gi, '');
     css = css.replace(/\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g, '');
+    css = css.replace(/\{\{|\{%|\{#/g, '');
     css = css.replace(/@import[^;]*;?/gi, '');
     css = css.replace(/url\(\s*['"]?\s*(?:https?:)?\/\/[^)]*\)/gi, 'none');
-    if (css === before) break;
+    if (css === before) {
+      settled = true;
+      break;
+    }
   }
-  css = css.replace(/\{\{|\{%|\{#/g, '');
+  if (!settled) return '';
 
   css = css.replace(/(:(?:host|ha-sidebar|ha-app-layout|hui-view|ha-card)[^{}]*::(?:before|after)\s*\{[^}]*?position\s*:\s*fixed[^}]*?\})/gi, (block) => {
     if (!/pointer-events\s*:\s*none/i.test(block)) {
@@ -40,7 +48,7 @@ export function sanitizeThemeCss(rawCss: string): string {
     return match;
   });
 
-  return css;
+  return css.replace(TAG_OPEN, '&lt;');
 }
 
 let svgPurifier: ReturnType<typeof DOMPurify> | null = null;
