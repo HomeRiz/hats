@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getIntegrationStatus } from './integrationStatus';
+import { getIntegrationStatus, packageManagerName } from './integrationStatus';
 import type { HacsRepository } from './useHacsRepositories';
 
 const HACS_REPOS: HacsRepository[] = [
@@ -26,5 +26,23 @@ describe('getIntegrationStatus', () => {
   it('returns unknown_to_hacs when the HACS repository list is unavailable', () => {
     const status = getIntegrationStatus({ name: 'tado', domain: 'tado' }, []);
     expect(status).toEqual({ state: 'unknown_to_hacs', hacsRepoId: null });
+  });
+});
+
+describe('packageManagerName', () => {
+  it('returns Marketplace for a Marketplace source', () => {
+    expect(packageManagerName('marketplace')).toBe('Marketplace');
+  });
+
+  it('returns HACS for a HACS source', () => {
+    expect(packageManagerName('hacs')).toBe('HACS');
+  });
+
+  it('returns HACS when the source is null, as on older Home Assistant versions', () => {
+    expect(packageManagerName(null)).toBe('HACS');
+  });
+
+  it('returns HACS when the source is missing', () => {
+    expect(packageManagerName(undefined)).toBe('HACS');
   });
 });

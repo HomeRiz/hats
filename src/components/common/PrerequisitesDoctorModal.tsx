@@ -21,6 +21,7 @@ import { CustomComponentsPanel } from './CustomComponentsPanel';
 import { ThemeConfig } from '../../types/theme';
 import { copyText } from '../../utils/copyText';
 import { useStylingEngine, UIX_REPO_URL } from '../../state/useStylingEngine';
+import { packageManagerName } from '../../services/integrationStatus';
 
 interface PrerequisitesDoctorModalProps {
   isOpen: boolean;
@@ -53,7 +54,8 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
   const [tokenMessage, setTokenMessage] = useState<string | null>(null);
 
   const haHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-  const getHacsUrl = (repoId: string | number) => `http://${haHost}:8123/hacs/repository/${repoId}`;
+  const managerPath = diagnostics?.packageManager === 'marketplace' ? 'marketplace' : 'hacs';
+  const getHacsUrl = (repoId: string | number) => `http://${haHost}:8123/${managerPath}/repository/${repoId}`;
 
   const fetchDiagnostics = async () => {
     setLoading(true);
@@ -102,8 +104,14 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
 
   if (!isOpen) return null;
 
-  const exactCardModUrl = diagnostics?.cardModExactUrl || `/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=${diagnostics?.cardModHacstag || '190927524421'}`;
+  const pmName = packageManagerName(diagnostics?.packageManager);
+  const isMarketplace = diagnostics?.packageManager === 'marketplace';
+  const cardModFallbackUrl = isMarketplace
+    ? '/local/community/lovelace-card-mod/card-mod.js'
+    : `/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=${diagnostics?.cardModHacstag || '190927524421'}`;
+  const exactCardModUrl = diagnostics?.cardModExactUrl || cardModFallbackUrl;
   const cardModTag = diagnostics?.cardModHacstag || (exactCardModUrl.includes('hacstag=') ? exactCardModUrl.split('hacstag=')[1] : '');
+  const hasCardModTag = exactCardModUrl.includes('hacstag=');
 
   const handleAutoFix = async () => {
     setFixing(true);
@@ -204,7 +212,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                 )}
               </h2>
               <p className="text-xs text-slate-400">
-                Inspect, install missing plugins via HACS, and 1-click configure required YAML directives
+                Inspect, install missing plugins via {pmName}, and 1-click configure required YAML directives
               </p>
             </div>
           </div>
@@ -269,7 +277,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
           {diagnostics?.stylingConflict && (
             <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 text-xs text-amber-200 leading-relaxed">
               <strong>UIX and card-mod are both active.</strong> Only one of them should run at a time.
-              To keep UIX, uninstall card-mod in HACS, remove it from <code className="text-amber-100">extra_module_url</code>, then restart Home Assistant.
+              To keep UIX, uninstall card-mod in {pmName}, remove it from <code className="text-amber-100">extra_module_url</code>, then restart Home Assistant.
             </div>
           )}
 
@@ -310,7 +318,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                   </h4>
                   <p className="text-amber-300/80 text-xs mt-0.5 leading-relaxed">
                     The plugin was found in <code className="text-amber-200 bg-amber-950/60 px-1 py-0.5 rounded">/config/www/community/lovelace-card-mod</code>. 
-                    Click <strong>Auto-Fix YAML Bridge</strong> below to register it in <code className="text-amber-200">configuration.yaml</code> with tag <code className="text-amber-200">?hacstag={cardModTag}</code>.
+                    Click <strong>Auto-Fix YAML Bridge</strong> below to register it in <code className="text-amber-200">configuration.yaml</code>{hasCardModTag && <> with tag <code className="text-amber-200">?hacstag={cardModTag}</code></>}.
                   </p>
                 </div>
               </div>
@@ -366,7 +374,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                         ? 'Set up in Home Assistant. It loads itself, so no extra_module_url entry is needed. Glassmorphism, backdrop-blur, and shaders will render.'
                         : isUixOnDisk
                         ? 'Installed, but not added yet. Go to Settings, Devices & services, Add integration, pick UIX, then refresh the page.'
-                        : 'Required for liquid glassmorphism, blur effects, and card animations. Install it from HACS, add it under Devices & services, then refresh.'}
+                        : `Required for liquid glassmorphism, blur effects, and card animations. Install it from ${pmName}, add it under Devices & services, then refresh.`}
                     </p>
                   </div>
                 </div>
@@ -384,7 +392,9 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               {!isUixOnDisk && (
                 <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
                   <span className="text-[11px] text-slate-400">
-                    Add it as a custom repository in HACS (category Integration) if it is not listed.
+                    {isMarketplace
+                      ? 'Add it from link in the Marketplace if it is not listed.'
+                      : 'Add it as a custom repository in HACS (category Integration) if it is not listed.'}
                   </span>
                   <a
                     href={UIX_REPO_URL}
@@ -402,7 +412,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               {isCardModInConfig && (
                 <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
                   <span className="text-[11px] text-amber-300/90 leading-relaxed">
-                    card-mod is still registered in configuration.yaml. UIX asks you to remove it first (a backup is made). You also need to uninstall it in HACS and restart Home Assistant.
+                    card-mod is still registered in configuration.yaml. UIX asks you to remove it first (a backup is made). You also need to uninstall it in {pmName} and restart Home Assistant.
                   </span>
                   <button
                     onClick={handleRemoveCardMod}
@@ -437,10 +447,10 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                     </div>
                     <p className="text-slate-400 mt-0.5 leading-relaxed">
                       {isCardModInConfig
-                        ? `Registered in configuration.yaml (?hacstag=${cardModTag}). Glassmorphism, backdrop-blur, and shaders will render.`
+                        ? `Registered in configuration.yaml${hasCardModTag ? ` (?hacstag=${cardModTag})` : ''}. Glassmorphism, backdrop-blur, and shaders will render.`
                         : isCardModOnDisk
                         ? `Downloaded in /config/www/community/! Click Auto-Fix to link it into configuration.yaml.`
-                        : `Required for liquid glassmorphism, blur effects, and card animations. Install from HACS repository.`}
+                        : `Required for liquid glassmorphism, blur effects, and card animations. Install it from ${pmName}.`}
                     </p>
                   </div>
                 </div>
@@ -461,7 +471,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               {!isCardModOnDisk && (
                 <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
                   <span className="text-[11px] text-slate-400">
-                    Step 1: Install plugin in HACS, then return here to Auto-Fix.
+                    Step 1: Install plugin in {pmName}, then return here to Auto-Fix.
                   </span>
                   <a
                     href={getHacsUrl(190927524)}
@@ -470,7 +480,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
                     className="px-3 py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all"
                   >
                     <DownloadCloud className="w-3.5 h-3.5" />
-                    <span>Install via HACS</span>
+                    <span>Install via {pmName}</span>
                     <ExternalLink className="w-3 h-3 opacity-70" />
                   </a>
                 </div>
@@ -482,7 +492,7 @@ export const PrerequisitesDoctorModal: React.FC<PrerequisitesDoctorModalProps> =
               <div className="flex items-start gap-3">
                 <CheckCircle2 className={`w-5 h-5 ${diagnostics?.hasHacs ? 'text-emerald-400' : 'text-slate-500'} shrink-0 mt-0.5`} />
                 <div>
-                  <div className="font-semibold text-slate-200 text-sm">HACS (Home Assistant Community Store)</div>
+                  <div className="font-semibold text-slate-200 text-sm">{isMarketplace ? 'Marketplace (Home Assistant)' : 'HACS (Home Assistant Community Store)'}</div>
                   <p className="text-slate-400 mt-0.5 leading-relaxed">
                     {diagnostics?.hasHacs
                       ? "Detected. You can install custom Lovelace cards and frontend resources with 1 click."

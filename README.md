@@ -8,7 +8,7 @@
 
 [![Live preview](https://img.shields.io/badge/Live%20preview-homeriz.github.io%2Fhats-0A84FF.svg?style=flat-square)](https://homeriz.github.io/hats/)
 [![Home Assistant App](https://img.shields.io/badge/Home%20Assistant-App-41BDF5.svg?style=flat-square&logo=home-assistant)](https://www.home-assistant.io)
-[![HACS Companion](https://img.shields.io/badge/HACS-Companion-orange.svg?style=flat-square)](https://hacs.xyz)
+[![HACS and Marketplace](https://img.shields.io/badge/HACS%20%2B%20Marketplace-Companion-orange.svg?style=flat-square)](https://hacs.xyz)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 
 [Live preview](#live-preview) | [Installation](#installation) | [Features](#features) | [Theme colors and card mods](#theme-colors-and-card-mods) | [Environment Doctor](#environment-and-prerequisites-doctor) | [Configuration](#configuration) | [Development](#development)
@@ -85,8 +85,9 @@ HATS does not change the colors of Mushroom Cards, Button Card or the meaning-ca
 - **Visual theme designer.** Real-time CSS and YAML generation with color pickers, specular highlights, border glows, ambient lighting and corner radius sliders from `8px` to `48px`.
 - **Live Lovelace preview.** A single Home page built from the real Home Assistant frontend, with an example of every supported card family.
 - **Theme library.** Browse, select, preview and export the bundled HATS themes and any themes you create.
-- **Browse HACS themes.** In the Community tab, search, sort and filter every theme repository in the HACS catalog, see its license and stars, and preview it in HATS.
-- **Environment and prerequisites Doctor.** Inspects `configuration.yaml` for theme settings, detects [UIX](https://github.com/Lint-Free-Technology/uix) or `lovelace-card-mod`, reads the live `hacstag` from Home Assistant storage, and offers a one-click fix.
+- **Browse HACS themes.** In the Community tab, search, sort and filter every theme repository in the HACS catalog (the same catalog the Home Assistant Marketplace uses), see its license and stars, and preview it in HATS.
+- **Environment and prerequisites Doctor.** Inspects `configuration.yaml` for theme settings, detects [UIX](https://github.com/Lint-Free-Technology/uix) or `lovelace-card-mod`, reads the live `hacstag` from Home Assistant storage (HACS) or the installed resource address (Marketplace), and offers a one-click fix.
+- **Works with HACS and the Marketplace.** Home Assistant 2026.11 replaced the HACS integration with a built-in Marketplace. HATS detects which one you have. The Doctor, the requirements list and the install links name the right one, and the card-mod address it writes is the one your system serves: `/local/community/lovelace-card-mod/card-mod.js` with the Marketplace, `/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...` with HACS.
 - **One-click installer.** Writes the theme to `/config/themes/` and calls `frontend.reload_themes`.
 - **Zip export and import.** Download the theme, its background image and a per-view snippet in the folders Home Assistant expects, with a README of install steps. Import loads a theme YAML, an optional background image and a per-view snippet.
 - **Artwork studio.** Upload wallpapers (PNG, JPG, WebP), crop them to 16:9 and save them to `/config/www/hats/backgrounds/`.
@@ -178,22 +179,22 @@ frontend:
     - /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=...
 ```
 
-The `extra_module_url` entry is only for card-mod. UIX is installed as an integration and loads itself.
+The `extra_module_url` entry is only for card-mod. UIX is installed as an integration and loads itself. With the Home Assistant Marketplace (2026.11 and newer) the card-mod address is `/local/community/lovelace-card-mod/card-mod.js`, without the `?hacstag=` part. Auto-Fix writes the right one for you.
 
 ### UIX or card-mod
 
 HATS supports [UIX](https://github.com/Lint-Free-Technology/uix) and card-mod. Both read the same `card-mod-*` theme keys, so every HATS theme works with either. Use the **Styling Engine** switch in the Doctor to choose the one you use.
 
-- **UIX** is installed as an integration through HACS (Settings, Devices & services, Add integration). No `extra_module_url` entry is needed, and Auto-Fix only adds the themes directive.
+- **UIX** is installed as an integration through HACS or the Marketplace (Settings, Devices & services, Add integration). No `extra_module_url` entry is needed, and Auto-Fix only adds the themes directive.
 - **card-mod** needs the `extra_module_url` entry shown above, which Auto-Fix adds for you.
 
-Only one can run at a time. The UIX migration guide says to uninstall card-mod first, and HATS warns if both are active. When you switch to UIX, **Remove card-mod from config** removes the `extra_module_url` entry from `configuration.yaml` after making a backup. You still uninstall card-mod in HACS and restart Home Assistant yourself.
+Only one can run at a time. The UIX migration guide says to uninstall card-mod first, and HATS warns if both are active. When you switch to UIX, **Remove card-mod from config** removes the `extra_module_url` entry from `configuration.yaml` after making a backup. You still uninstall card-mod in HACS or the Marketplace and restart Home Assistant yourself.
 
 ### What the Doctor does
 
-- **Missing plugin.** An **Install via HACS** button opens the plugin page in HACS.
+- **Missing plugin.** An **Install via HACS** (or **Install in Marketplace**) button opens the plugin page there.
 - **Plugin found on disk.** The **HA Setup** badge in the top bar is highlighted.
-- **Auto-Fix.** Reads the exact `hacstag` from Home Assistant storage, saves a backup (`configuration.yaml.hats_bak_<timestamp>`) and adds the required configuration.
+- **Auto-Fix.** Reads the exact `hacstag` from Home Assistant storage (HACS only, the Marketplace has none), saves a backup (`configuration.yaml.hats_bak_<timestamp>`) and adds the required configuration.
 
 ---
 

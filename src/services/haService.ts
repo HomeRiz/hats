@@ -39,6 +39,7 @@ export interface DiagnosticsResult {
   hasCardModInResources: boolean;
   cardModNeedsConfig: boolean;
   hasHacs: boolean;
+  packageManager?: 'marketplace' | 'hacs' | null;
   themesExists: boolean;
   themesCount: number;
   themesDir: string;

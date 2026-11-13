@@ -1,6 +1,12 @@
 import type { RequiredIntegration } from '../types/theme';
 import type { HacsRepository } from './useHacsRepositories';
 
+export type PackageManagerSource = 'marketplace' | 'hacs' | null;
+
+export function packageManagerName(source: PackageManagerSource | undefined): string {
+  return source === 'marketplace' ? 'Marketplace' : 'HACS';
+}
+
 export type IntegrationState = 'installed' | 'not_installed' | 'unknown_to_hacs';
 
 export interface IntegrationStatus {
