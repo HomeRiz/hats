@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-13T10:58:46.454Z",
+  "generatedAt": "2026-11-14T10:26:30.593Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -148,7 +148,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 887,
+      "stars": 888,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -235,7 +235,7 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 517,
+      "stars": 518,
       "pushed_at": "2026-11-11T16:45:20Z",
       "files": [
         {
@@ -326,7 +326,7 @@
       "full_name": "coltondick/nordic-theme-main",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 44,
+      "stars": 45,
       "pushed_at": "2026-05-04T15:11:53Z",
       "files": [
         {
@@ -873,7 +873,7 @@
       "full_name": "iosue-iulianus/homeassistant-pipboy-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 33,
+      "stars": 34,
       "pushed_at": "2026-03-20T22:57:08Z",
       "files": [
         {
@@ -1173,7 +1173,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 689,
+      "stars": 690,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1549,7 +1549,7 @@
       "default_branch": "main",
       "license": null,
       "stars": 61,
-      "pushed_at": "2026-05-13T17:13:01Z",
+      "pushed_at": "2026-11-13T12:44:53Z",
       "files": [
         {
           "path": "themes/yourname.yaml",
@@ -1644,7 +1644,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 4,
-      "pushed_at": "2026-10-11T19:23:21Z",
+      "pushed_at": "2026-11-14T02:57:14Z",
       "files": [
         {
           "path": "themes/very_dark_black_ha_theme.yaml",
@@ -1906,8 +1906,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 603,
-      "pushed_at": "2026-11-13T01:43:11Z",
+      "stars": 604,
+      "pushed_at": "2026-11-14T01:20:31Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2062,7 +2062,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-04T18:42:27Z",
+      "pushed_at": "2026-11-14T09:56:08Z",
       "files": [
         {
           "path": "themes/tokyo-night.yaml",
