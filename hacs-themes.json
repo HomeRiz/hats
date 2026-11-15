@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-14T10:26:30.593Z",
+  "generatedAt": "2026-11-15T10:53:43.291Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1499,7 +1499,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 438,
+      "stars": 439,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1907,7 +1907,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 604,
-      "pushed_at": "2026-11-14T01:20:31Z",
+      "pushed_at": "2026-11-15T00:52:50Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1947,7 +1947,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 474,
+      "stars": 475,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -2001,7 +2001,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1073,
+      "stars": 1074,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
