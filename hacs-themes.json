@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-15T10:53:43.291Z",
+  "generatedAt": "2026-11-16T11:17:59.197Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1484,7 +1484,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 485,
+      "stars": 484,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1533,7 +1533,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-02T19:30:56Z",
+      "pushed_at": "2026-11-16T10:42:29Z",
       "files": [
         {
           "path": "themes/palette_axi_neon.yaml",
@@ -1907,7 +1907,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 604,
-      "pushed_at": "2026-11-15T00:52:50Z",
+      "pushed_at": "2026-11-16T00:51:23Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1947,7 +1947,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 475,
+      "stars": 477,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
