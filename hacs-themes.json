@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-16T11:17:59.197Z",
+  "generatedAt": "2026-11-17T11:52:21.769Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -8,12 +8,27 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 8,
-      "pushed_at": "2026-05-14T02:28:27Z",
+      "pushed_at": "2026-11-17T03:38:45Z",
       "files": [
         {
           "path": "themes/3ative_blue.yaml",
           "themes": [
             "3ative_blue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "3ative/3ative-sifi-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-11-17T03:26:40Z",
+      "files": [
+        {
+          "path": "themes/3ative_sifi_01.yaml",
+          "themes": [
+            "3ATIVE SiFi 01"
           ]
         }
       ]
@@ -235,8 +250,8 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 518,
-      "pushed_at": "2026-11-11T16:45:20Z",
+      "stars": 519,
+      "pushed_at": "2026-11-16T21:31:11Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -263,6 +278,23 @@
           "path": "themes/catthode.yaml",
           "themes": [
             "Catthode"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "cheycron/flatcap-homeassistant",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-06T16:31:33Z",
+      "files": [
+        {
+          "path": "themes/flatcap.yaml",
+          "themes": [
+            "Flatcap",
+            "Flatcap Slate",
+            "Flatcap Daylight"
           ]
         }
       ]
@@ -355,6 +387,21 @@
           "themes": [
             "Cyber",
             "Neon"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "CPetrevski/ha-nerv-magi-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 4,
+      "pushed_at": "2026-11-12T02:38:11Z",
+      "files": [
+        {
+          "path": "themes/nerv_magi.yaml",
+          "themes": [
+            "NERV MAGI"
           ]
         }
       ]
@@ -1159,7 +1206,7 @@
       "default_branch": "main",
       "license": "GPL-3.0",
       "stars": 7,
-      "pushed_at": "2026-11-07T16:40:51Z",
+      "pushed_at": "2026-11-17T08:39:37Z",
       "files": [
         {
           "path": "themes/edera.yaml",
@@ -1499,7 +1546,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 439,
+      "stars": 440,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1907,7 +1954,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 604,
-      "pushed_at": "2026-11-16T00:51:23Z",
+      "pushed_at": "2026-11-17T03:30:54Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1947,7 +1994,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 477,
+      "stars": 478,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -1983,6 +2030,36 @@
       ]
     },
     {
+      "full_name": "Tropie1988/home-assistant-retro-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-11-14T00:14:26Z",
+      "files": [
+        {
+          "path": "themes/retro_os_collection.yaml",
+          "themes": [
+            "Windows 3.1 Program Manager",
+            "Windows 95 Classic",
+            "Windows 98 Classic",
+            "Windows NT 4.0 Workstation",
+            "Windows 2000 Professional",
+            "Windows XP Luna Blue",
+            "Macintosh System 6 Monochrome",
+            "Macintosh System 7 Classic",
+            "Mac OS 8 Platinum",
+            "Mac OS 9 Platinum",
+            "Mac OS X 10.0 - Cheetah Aqua",
+            "OS2 Warp 4 Merlin",
+            "Amiga Workbench 2.x",
+            "Solaris CDE Motif",
+            "BeOS R5 Tracker",
+            "Apple Lisa Office System"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "veniplex/hass-idx-theme",
       "default_branch": "main",
       "license": null,
@@ -2001,7 +2078,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1074,
+      "stars": 1075,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2181,15 +2258,27 @@
       "reason": "no valid theme files"
     },
     {
-      "repo": "cheycron/flatcap-homeassistant",
+      "repo": "edwork/gti-clark-theme",
       "reason": "no commit in catalog"
     },
     {
-      "repo": "Tropie1988/home-assistant-retro-themes",
+      "repo": "edwork/alcantara-theme",
       "reason": "no commit in catalog"
     },
     {
-      "repo": "CPetrevski/ha-nerv-magi-theme",
+      "repo": "edwork/mini-cooper-s-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "wattie2k1/power-flow-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Robote7701/console-crt-theme",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "Johnyboy1984/kemmer-theme",
       "reason": "no commit in catalog"
     }
   ]
