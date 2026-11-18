@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-17T11:52:21.769Z",
+  "generatedAt": "2026-11-18T11:42:37.765Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1115,7 +1115,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 8,
+      "stars": 9,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1546,7 +1546,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 440,
+      "stars": 441,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1902,7 +1902,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 27,
+      "stars": 28,
       "pushed_at": "2026-11-02T11:53:55Z",
       "files": [
         {
@@ -1953,8 +1953,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 604,
-      "pushed_at": "2026-11-17T03:30:54Z",
+      "stars": 605,
+      "pushed_at": "2026-11-18T02:47:05Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2075,10 +2075,39 @@
       ]
     },
     {
+      "full_name": "wattie2k1/power-flow-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-17T18:58:32Z",
+      "files": [
+        {
+          "path": "themes/power_flow.yaml",
+          "themes": [
+            "Power Flow Dark",
+            "Power Flow Light",
+            "Power Flow",
+            "Power Flow Dark Smaragd",
+            "Power Flow Light Smaragd",
+            "Power Flow Smaragd",
+            "Power Flow Dark Violett",
+            "Power Flow Light Violett",
+            "Power Flow Violett",
+            "Power Flow Dark Türkis",
+            "Power Flow Light Türkis",
+            "Power Flow Türkis",
+            "Power Flow Dark Koralle",
+            "Power Flow Light Koralle",
+            "Power Flow Koralle"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1075,
+      "stars": 1076,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2267,10 +2296,6 @@
     },
     {
       "repo": "edwork/mini-cooper-s-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "wattie2k1/power-flow-theme",
       "reason": "no commit in catalog"
     },
     {
