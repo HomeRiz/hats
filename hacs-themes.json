@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-18T11:42:37.765Z",
+  "generatedAt": "2026-11-19T11:40:03.453Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -163,7 +163,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 888,
+      "stars": 889,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -250,7 +250,7 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 519,
+      "stars": 518,
       "pushed_at": "2026-11-16T21:31:11Z",
       "files": [
         {
@@ -1953,8 +1953,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 605,
-      "pushed_at": "2026-11-18T02:47:05Z",
+      "stars": 606,
+      "pushed_at": "2026-11-19T02:22:55Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -1994,7 +1994,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 478,
+      "stars": 479,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -2107,7 +2107,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1076,
+      "stars": 1075,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
