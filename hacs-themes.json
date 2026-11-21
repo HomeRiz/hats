@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-20T11:40:02.084Z",
+  "generatedAt": "2026-11-21T11:01:55.602Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -236,7 +236,7 @@
       "default_branch": "main",
       "license": "GPL-3.0",
       "stars": 1,
-      "pushed_at": "2026-10-27T15:59:18Z",
+      "pushed_at": "2026-11-20T21:20:38Z",
       "files": [
         {
           "path": "themes/sabino.yaml",
@@ -1145,7 +1145,7 @@
       "full_name": "knightburton/minimal-ninja-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 9,
+      "stars": 10,
       "pushed_at": "2025-10-20T17:15:49Z",
       "files": [
         {
@@ -1220,7 +1220,7 @@
       "full_name": "Madelena/Metrology-for-Hass",
       "default_branch": "main",
       "license": null,
-      "stars": 690,
+      "stars": 689,
       "pushed_at": "2024-05-06T02:54:40Z",
       "files": [
         {
@@ -1546,7 +1546,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 442,
+      "stars": 443,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1872,7 +1872,7 @@
       "full_name": "Stormrage-DJ/ha_theme_star_wars_dark",
       "default_branch": "main",
       "license": null,
-      "stars": 1,
+      "stars": 2,
       "pushed_at": "2025-08-22T17:49:28Z",
       "files": [
         {
@@ -1954,7 +1954,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 608,
-      "pushed_at": "2026-11-20T02:07:06Z",
+      "pushed_at": "2026-11-21T02:01:16Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
