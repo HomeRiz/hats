@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-21T11:01:55.602Z",
+  "generatedAt": "2026-11-22T11:25:17.282Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1531,7 +1531,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 484,
+      "stars": 485,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1546,7 +1546,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 443,
+      "stars": 444,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1953,8 +1953,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 608,
-      "pushed_at": "2026-11-21T02:01:16Z",
+      "stars": 610,
+      "pushed_at": "2026-11-22T01:02:15Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2107,7 +2107,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1076,
+      "stars": 1077,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
