@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-22T11:25:17.282Z",
+  "generatedAt": "2026-11-23T12:40:47.518Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -1403,7 +1403,7 @@
       "default_branch": "main",
       "license": "NOASSERTION",
       "stars": 2,
-      "pushed_at": "2026-11-20T07:51:46Z",
+      "pushed_at": "2026-11-22T16:54:17Z",
       "files": [
         {
           "path": "themes/arcticForest_dark.yaml",
@@ -1531,7 +1531,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 485,
+      "stars": 486,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1546,7 +1546,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 444,
+      "stars": 445,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1903,7 +1903,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 28,
-      "pushed_at": "2026-11-02T11:53:55Z",
+      "pushed_at": "2026-11-23T12:34:02Z",
       "files": [
         {
           "path": "themes/liquid_glass.yaml",
@@ -1953,8 +1953,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 610,
-      "pushed_at": "2026-11-22T01:02:15Z",
+      "stars": 611,
+      "pushed_at": "2026-11-23T01:27:52Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2107,7 +2107,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1077,
+      "stars": 1078,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
