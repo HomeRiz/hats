@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-23T12:40:47.518Z",
+  "generatedAt": "2026-11-24T13:43:47.919Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -163,7 +163,7 @@
       "full_name": "basnijholt/lovelace-ios-themes",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 889,
+      "stars": 890,
       "pushed_at": "2026-07-21T05:47:07Z",
       "files": [
         {
@@ -251,7 +251,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 518,
-      "pushed_at": "2026-11-16T21:31:11Z",
+      "pushed_at": "2026-11-24T01:45:12Z",
       "files": [
         {
           "path": "themes/catppuccin.yaml",
@@ -358,7 +358,7 @@
       "full_name": "coltondick/nordic-theme-main",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 45,
+      "stars": 46,
       "pushed_at": "2026-05-04T15:11:53Z",
       "files": [
         {
@@ -474,6 +474,62 @@
           "path": "themes/doug-futurista.yaml",
           "themes": [
             "Doug Futurista"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "edwork/alcantara-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-17T01:42:41Z",
+      "files": [
+        {
+          "path": "themes/alcantara.yaml",
+          "themes": [
+            "Alcantara Graphite",
+            "Alcantara Nero",
+            "Alcantara Navy",
+            "Alcantara Cognac",
+            "Alcantara Dove",
+            "Alcantara"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "edwork/gti-clark-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-17T01:42:39Z",
+      "files": [
+        {
+          "path": "themes/gti_clark.yaml",
+          "themes": [
+            "GTI Clark",
+            "GTI Clark Dark"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "edwork/mini-cooper-s-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-17T01:42:42Z",
+      "files": [
+        {
+          "path": "themes/mini_cooper_s.yaml",
+          "themes": [
+            "Mini Cooper S",
+            "Mini Cooper S British Racing Green",
+            "Mini Cooper S Chili Red",
+            "Mini Cooper S Midnight Black",
+            "Mini Cooper S Pepper White",
+            "Mini Cooper S Zesty Yellow"
           ]
         }
       ]
@@ -961,6 +1017,21 @@
           "path": "themes/transparentblue.yaml",
           "themes": [
             "transparentblue"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Johnyboy1984/kemmer-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-11-17T18:04:34Z",
+      "files": [
+        {
+          "path": "themes/kemmer_theme.yaml",
+          "themes": [
+            "Kemmer Theme"
           ]
         }
       ]
@@ -1546,7 +1617,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 445,
+      "stars": 446,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1796,13 +1867,29 @@
       "full_name": "robinwittebol/whatsapp-theme",
       "default_branch": "main",
       "license": null,
-      "stars": 19,
+      "stars": 18,
       "pushed_at": "2025-08-23T22:46:31Z",
       "files": [
         {
           "path": "themes/whatsapp_theme.yaml",
           "themes": [
             "whatsapp_theme"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "Robote7701/console-crt-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 2,
+      "pushed_at": "2026-11-14T21:05:43Z",
+      "files": [
+        {
+          "path": "themes/console-crt.yaml",
+          "themes": [
+            "Console CRT",
+            "Console CRT (no intro)"
           ]
         }
       ]
@@ -1903,7 +1990,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 28,
-      "pushed_at": "2026-11-23T12:34:02Z",
+      "pushed_at": "2026-11-23T15:38:02Z",
       "files": [
         {
           "path": "themes/liquid_glass.yaml",
@@ -1938,7 +2025,7 @@
       "full_name": "tgcowell/waves",
       "default_branch": "master",
       "license": null,
-      "stars": 110,
+      "stars": 109,
       "pushed_at": "2023-03-26T08:21:03Z",
       "files": [
         {
@@ -1954,7 +2041,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 611,
-      "pushed_at": "2026-11-23T01:27:52Z",
+      "pushed_at": "2026-11-24T05:10:57Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2107,7 +2194,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1078,
+      "stars": 1079,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2291,23 +2378,7 @@
       "reason": "no commit in catalog"
     },
     {
-      "repo": "edwork/gti-clark-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "edwork/alcantara-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "edwork/mini-cooper-s-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "Robote7701/console-crt-theme",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "Johnyboy1984/kemmer-theme",
+      "repo": "wsclx/clear-sky-theme",
       "reason": "no commit in catalog"
     }
   ]
