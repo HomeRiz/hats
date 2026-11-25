@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-24T13:43:47.919Z",
+  "generatedAt": "2026-11-25T12:55:38.654Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -628,7 +628,7 @@
       "full_name": "flejz/hass-cyberpunk-2077-theme",
       "default_branch": "master",
       "license": null,
-      "stars": 72,
+      "stars": 73,
       "pushed_at": "2026-05-05T14:07:19Z",
       "files": [
         {
@@ -1186,7 +1186,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 9,
+      "stars": 10,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1617,7 +1617,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 446,
+      "stars": 448,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1712,7 +1712,7 @@
       "full_name": "piitaya/lovelace-mushroom-themes",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 311,
+      "stars": 312,
       "pushed_at": "2025-09-26T14:14:39Z",
       "files": [
         {
@@ -1882,7 +1882,7 @@
       "full_name": "Robote7701/console-crt-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 2,
+      "stars": 3,
       "pushed_at": "2026-11-14T21:05:43Z",
       "files": [
         {
@@ -2041,7 +2041,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 611,
-      "pushed_at": "2026-11-24T05:10:57Z",
+      "pushed_at": "2026-11-25T03:59:54Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2166,7 +2166,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 0,
-      "pushed_at": "2026-11-17T18:58:32Z",
+      "pushed_at": "2026-11-24T16:33:04Z",
       "files": [
         {
           "path": "themes/power_flow.yaml",
@@ -2194,7 +2194,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1079,
+      "stars": 1082,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2278,6 +2278,21 @@
           "path": "themes/animated-weather-card.yaml",
           "themes": [
             "Animated Weather Card"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "wsclx/clear-sky-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-11-24T19:11:44Z",
+      "files": [
+        {
+          "path": "themes/clear_sky.yaml",
+          "themes": [
+            "Clear Sky"
           ]
         }
       ]
@@ -2375,10 +2390,6 @@
     },
     {
       "repo": "sajiko5821/Dark-Orange",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "wsclx/clear-sky-theme",
       "reason": "no commit in catalog"
     }
   ]
