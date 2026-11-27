@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-26T12:34:01.527Z",
+  "generatedAt": "2026-11-27T12:20:48.602Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -250,7 +250,7 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 518,
+      "stars": 519,
       "pushed_at": "2026-11-24T01:45:12Z",
       "files": [
         {
@@ -1617,7 +1617,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 448,
+      "stars": 447,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1837,7 +1837,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 3,
-      "pushed_at": "2026-08-03T06:14:17Z",
+      "pushed_at": "2026-11-26T13:21:22Z",
       "files": [
         {
           "path": "themes/morphhomex-inset.yaml",
@@ -1890,6 +1890,21 @@
           "themes": [
             "Console CRT",
             "Console CRT (no intro)"
+          ]
+        }
+      ]
+    },
+    {
+      "full_name": "sajiko5821/Dark-Orange",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-17T18:38:02Z",
+      "files": [
+        {
+          "path": "themes/dark_orange.yaml",
+          "themes": [
+            "Dark Orange"
           ]
         }
       ]
@@ -1989,7 +2004,7 @@
       "full_name": "studio-prisma/homeassistant-theme-liquid-glass",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 28,
+      "stars": 29,
       "pushed_at": "2026-11-23T15:38:02Z",
       "files": [
         {
@@ -2041,7 +2056,7 @@
       "default_branch": "master",
       "license": "MIT",
       "stars": 611,
-      "pushed_at": "2026-11-26T03:25:57Z",
+      "pushed_at": "2026-11-27T03:33:07Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2389,7 +2404,11 @@
       "reason": "no valid theme files"
     },
     {
-      "repo": "sajiko5821/Dark-Orange",
+      "repo": "richka/ha-modern-themes",
+      "reason": "no commit in catalog"
+    },
+    {
+      "repo": "tb1337/home-assistant-opal-theme",
       "reason": "no commit in catalog"
     }
   ]
