@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-27T12:20:48.602Z",
+  "generatedAt": "2026-11-28T11:45:15.559Z",
   "source": "https://data-v2.hacs.xyz/theme/data.json",
   "themes": [
     {
@@ -250,7 +250,7 @@
       "full_name": "catppuccin/home-assistant",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 519,
+      "stars": 520,
       "pushed_at": "2026-11-24T01:45:12Z",
       "files": [
         {
@@ -358,7 +358,7 @@
       "full_name": "coltondick/nordic-theme-main",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 46,
+      "stars": 45,
       "pushed_at": "2026-05-04T15:11:53Z",
       "files": [
         {
@@ -976,7 +976,7 @@
       "full_name": "iosue-iulianus/homeassistant-pipboy-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 34,
+      "stars": 35,
       "pushed_at": "2026-03-20T22:57:08Z",
       "files": [
         {
@@ -1186,7 +1186,7 @@
       "full_name": "kizza/homeassistant-gruvbox-theme",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 10,
+      "stars": 11,
       "pushed_at": "2026-09-04T00:19:56Z",
       "files": [
         {
@@ -1602,7 +1602,7 @@
       "full_name": "Nerwyn/material-you-theme",
       "default_branch": "main",
       "license": "Apache-2.0",
-      "stars": 486,
+      "stars": 487,
       "pushed_at": "2026-11-03T03:52:22Z",
       "files": [
         {
@@ -1617,7 +1617,7 @@
       "full_name": "Nezz/homeassistant-visionos-theme",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 447,
+      "stars": 449,
       "pushed_at": "2026-09-28T17:18:02Z",
       "files": [
         {
@@ -1833,6 +1833,31 @@
       ]
     },
     {
+      "full_name": "richka/ha-modern-themes",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 0,
+      "pushed_at": "2026-11-27T06:21:28Z",
+      "files": [
+        {
+          "path": "themes/modern.yaml",
+          "themes": [
+            "Modern Red",
+            "Modern Blue",
+            "Modern Green",
+            "Modern Orange",
+            "Modern Purple",
+            "Modern Slate",
+            "Modern Teal",
+            "Modern Amber",
+            "Modern Indigo",
+            "Modern Pink",
+            "Modern Graphite"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "robex2005/MorphHomeX",
       "default_branch": "main",
       "license": "MIT",
@@ -2005,7 +2030,7 @@
       "default_branch": "main",
       "license": "MIT",
       "stars": 29,
-      "pushed_at": "2026-11-23T15:38:02Z",
+      "pushed_at": "2026-11-28T11:36:07Z",
       "files": [
         {
           "path": "themes/liquid_glass.yaml",
@@ -2037,6 +2062,26 @@
       ]
     },
     {
+      "full_name": "tb1337/home-assistant-opal-theme",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 1,
+      "pushed_at": "2026-11-27T11:57:16Z",
+      "files": [
+        {
+          "path": "themes/opal.yaml",
+          "themes": [
+            "Opal",
+            "Opal Emerald",
+            "Opal Amethyst",
+            "Opal Aquamarine",
+            "Opal Tourmaline",
+            "Opal Onyx"
+          ]
+        }
+      ]
+    },
+    {
       "full_name": "tgcowell/waves",
       "default_branch": "master",
       "license": null,
@@ -2055,8 +2100,8 @@
       "full_name": "th3jesta/ha-lcars",
       "default_branch": "master",
       "license": "MIT",
-      "stars": 611,
-      "pushed_at": "2026-11-27T03:33:07Z",
+      "stars": 612,
+      "pushed_at": "2026-11-28T03:09:33Z",
       "files": [
         {
           "path": "themes/lcars.yaml",
@@ -2096,7 +2141,7 @@
       "full_name": "TilmanGriesel/graphite",
       "default_branch": "113-all-versions-after-252-break-mushroom-title-card-font-size",
       "license": "MIT",
-      "stars": 479,
+      "stars": 481,
       "pushed_at": "2026-06-08T19:35:46Z",
       "files": [
         {
@@ -2209,7 +2254,7 @@
       "full_name": "wessamlauf/homeassistant-frosted-glass-themes",
       "default_branch": "main",
       "license": "MIT",
-      "stars": 1082,
+      "stars": 1084,
       "pushed_at": "2026-10-04T10:52:34Z",
       "files": [
         {
@@ -2402,14 +2447,6 @@
     {
       "repo": "silasmariusz/Bubble_Theme_2026",
       "reason": "no valid theme files"
-    },
-    {
-      "repo": "richka/ha-modern-themes",
-      "reason": "no commit in catalog"
-    },
-    {
-      "repo": "tb1337/home-assistant-opal-theme",
-      "reason": "no commit in catalog"
     }
   ]
 }
